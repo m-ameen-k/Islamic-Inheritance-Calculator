@@ -33,7 +33,7 @@
 
 ## 🚀 Live Demo
 
-After uploading to GitHub Pages:  
+GitHub Pages:  
 https://m-ameen-k.github.io/Islamic-Inheritance-Calculator/
 
 ---
