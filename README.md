@@ -34,7 +34,7 @@
 ## 🚀 Live Demo
 
 After uploading to GitHub Pages:  
-`https://YOUR_USERNAME.github.io/faraid-calculator/`
+`https://m-ameen-k.github.io/faraid-calculator/`
 
 ---
 
