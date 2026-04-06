@@ -117,6 +117,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 .hcard:hover{border-color:var(--pri);background:var(--pribg);transform:translateY(-1px);box-shadow:0 4px 12px rgba(26,107,74,.12)}
 .hcard.sel{border-color:var(--pri);background:var(--pribg2);box-shadow:0 0 0 3px rgba(26,107,74,.15)}
 .hcard.hide{display:none}
+.hcard.blocked{opacity:0.4;pointer-events:none;filter:grayscale(100%);}
 .hn{font-size:13px;font-weight:600;color:var(--txt);line-height:1.3}
 .har{font-family:'Amiri',serif;font-size:13px;color:var(--txt3);direction:rtl;text-align:right;margin-top:2px}
 .ctr{display:flex;align-items:center;gap:5px;margin-top:6px}
@@ -335,7 +336,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 // --- I18N DATA ---
 const T={
   en:{ 
-    s_dec:"Deceased",s_est:"Estate",s_mad:"Madhab",s_heir:"Heirs",s_res:"Result", dec_t:"Who passed away?",male:"Male — ذكر",female:"Female — أنثى", est_t:"Estate & Liabilities",curr_lbl:"Currency:", cash:"Cash",gold:"Gold",silver:"Silver",land:"Land / Property",other:"Other assets", debts:"Debts",zakat:"Unpaid Zakat", was_lbl:"Wasiyyah (Bequest)",was_con:"All heirs consent to exceed 1/3?", net_lbl:"Net Estate (after debts & wasiyyah)", mad_t:"Madhab — المذهب", heir_t:"Select Heirs — اختر الورثة", heir_hint:"Select deceased gender first, then tap heirs to add them.", calc_btn:"Calculate Shares — احسب الأنصبة", res_t:"Results — النتائج", tab_sh:"Shares — الأنصبة",tab_hj:"Hajb — الحجب",tab_asl:"أصل المسألة", tab_ass:"Assets — الأموال",tab_learn:"📘 Learn", or_txt:"— or enter total value —", no_g:"Please select who passed away first.",no_h:"Estate passes to Dhawul Arham (Mother family). Please consult a qualified scholar for proper distribution.", all_blk:"All selected heirs are blocked!", was_warn:"⚠ Wasiyyah capped to 1/3 ({m}) — heirs did not consent.", blk_title:"Blocked Heirs — المحجوبون",no_blk:"No heirs blocked — لا حجب في هذه المسألة", fetching:"Fetching...", 
+    s_dec:"Deceased",s_est:"Estate",s_mad:"Madhab",s_heir:"Heirs",s_res:"Result", dec_t:"Who passed away?",male:"Male — ذكر",female:"Female — أنثى", est_t:"Estate & Liabilities",curr_lbl:"Currency:", cash:"Cash",gold:"Gold",silver:"Silver",land:"Land / Property",other:"Other assets", debts:"Debts",zakat:"Unpaid Zakat", was_lbl:"Wasiyyah (Bequest)",was_con:"All heirs consent to exceed 1/3?", net_lbl:"Net Estate (after debts & wasiyyah)", mad_t:"Madhab — المذهب", heir_t:"Select Heirs — اختر الورثة", heir_hint:"Select deceased gender first, then tap heirs to add them.", calc_btn:"Calculate Shares — احسب الأنصبة", res_t:"Results — النتائج", tab_sh:"Shares — الأنصبة",tab_hj:"Hajb — الحجب",tab_asl:"أصل المسألة", tab_ass:"Assets — الأموال",tab_learn:"📘 Learn", or_txt:"— or enter total value —", no_g:"Please select who passed away first.",no_h:"Estate passes to Dhawul Arham (Distant Kindred). Please consult a qualified scholar for proper distribution.", all_blk:"All selected heirs are blocked!", was_warn:"⚠ Wasiyyah capped to 1/3 ({m}) — heirs did not consent.", blk_title:"Blocked Heirs — المحجوبون",no_blk:"No heirs blocked — لا حجب في هذه المسألة", fetching:"Fetching...", 
     learn_sh:`<h3>📖 Shafi'i Fara'id — الفرائض الشافعية</h3>
     <ul>
     <li><strong>الخمسة الكبار (The 5 Primary Heirs):</strong> Son, Daughter, Father, Mother, Spouse — never fully excluded.</li>
@@ -367,24 +368,24 @@ const T={
     learn_ha:`<h3>📖 فروق المذهب الحنفي</h3><ul><li>معطل حاليًا للتركيز على دقة المذهب الشافعي.</li></ul>` 
   },
   ml:{ 
-    s_dec:"മരണം",s_est:"സ്വത്ത്",s_mad:"മദ്ഹബ്",s_heir:"അവകാശി",s_res:"ഫലം", dec_t:"മരിച്ചത് ആര്?",male:"പുരുഷൻ",female:"സ്ത്രീ", est_t:"സ്വത്തും ബാധ്യതകളും",curr_lbl:"നാണ്യം:", cash:"പണം",gold:"സ്വർണ്ണം",silver:"വെള്ളി",land:"സ്ഥലം / വസ്തു",other:"മറ്റ് ആസ്തി", debts:"കടങ്ങൾ",zakat:"നൽകാത്ത സകാത്ത്", was_lbl:"വസിയ്യത്ത്",was_con:"അവകാശികൾ 1/3 കവിയാൻ സമ്മതിക്കുന്നോ?", net_lbl:"അറ്റ സ്വത്ത് (കടം & വസിയ്യത്ത് കഴിഞ്ഞ്)", mad_t:"മദ്ഹബ്", heir_t:"അവകാശികളെ തിരഞ്ഞെടുക്കുക", heir_hint:"ആദ്യം മരിച്ചയാളുടെ ലിംഗം തിരഞ്ഞെടുക്കുക, പിന്നെ അവകാശികളെ.", calc_btn:"ഓഹരി കണക്കാക്കുക", res_t:"ഫലങ്ങൾ", tab_sh:"ഓഹരികൾ",tab_hj:"ഹജ്ബ്",tab_asl:"أصل المسألة", tab_ass:"ആസ്തി",tab_learn:"📘 പഠനം", or_txt:"— അല്ലെങ്കിൽ ആകെ മൂല്യം നൽകുക —", no_g:"ആദ്യം മരിച്ചയാളുടെ ലിംഗം തിരഞ്ഞെടുക്കുക.",no_h:"സ്വത്ത് ذوو الأرحام (ഉമ്മ കുടുംബം) ലഭിക്കും. കൃത്യമായ വിതരണത്തിന് ഒരു പണ്ഡിതനെ സമീപിക്കുക.", all_blk:"തിരഞ്ഞെടുത്ത എല്ലാ അവകാശികളും ഹജ്ബ് ആണ്!", was_warn:"⚠ വസിയ്യത്ത് 1/3 ({m}) ആയി ചുരുക്കി — അവകാശികൾ സമ്മതിച്ചില്ല.", blk_title:"ഹജ്ബ് ആയ അവകാശികൾ",no_blk:"ഈ കേസിൽ ഹജ്ബ് ഇല്ല", fetching:"ലഭ്യമാക്കുന്നു...", 
+    s_dec:"മരണം",s_est:"സ്വത്ത്",s_mad:"മദ്ഹബ്",s_heir:"അവകാശി",s_res:"ഫലം", dec_t:"മരിച്ചത് ആര്?",male:"പുരുഷൻ",female:"സ്ത്രീ", est_t:"സ്വത്തും ബാധ്യതകളും",curr_lbl:"നാണ്യം:", cash:"പണം",gold:"സ്വർണ്ണം",silver:"വെള്ളി",land:"സ്ഥലം / വസ്തു",other:"മറ്റ് ആസ്തി", debts:"കടങ്ങൾ",zakat:"നൽകാത്ത സകാത്ത്", was_lbl:"വസിയ്യത്ത്",was_con:"അവകാശികൾ 1/3 കവിയാൻ സമ്മതിക്കുന്നോ?", net_lbl:"അറ്റ സ്വത്ത് (കടം & വസിയ്യത്ത് കഴിഞ്ഞ്)", mad_t:"മദ്ഹബ്", heir_t:"അവകാശികളെ തിരഞ്ഞെടുക്കുക", heir_hint:"ആദ്യം മരിച്ചയാളുടെ ലിംഗം തിരഞ്ഞെടുക്കുക, പിന്നെ അവകാശികളെ.", calc_btn:"ഓഹരി കണക്കാക്കുക", res_t:"ഫലങ്ങൾ", tab_sh:"ഓഹരികൾ",tab_hj:"ഹജ്ബ്",tab_asl:"أصل المسألة", tab_ass:"ആസ്തി",tab_learn:"📘 പഠനം", or_txt:"— അല്ലെങ്കിൽ ആകെ മൂല്യം നൽകുക —", no_g:"ആദ്യം മരിച്ചയാളുടെ ലിംഗം തിരഞ്ഞെടുക്കുക.",no_h:"സ്വത്ത് ذوو الأرحام (അടുത്ത ബന്ധുക്കൾ അല്ലാത്തവർക്ക്) ലഭിക്കും. കൃത്യമായ വിതരണത്തിന് ഒരു പണ്ഡിതനെ സമീപിക്കുക.", all_blk:"തിരഞ്ഞെടുത്ത എല്ലാ അവകാശികളും ഹജ്ബ് ആണ്!", was_warn:"⚠ വസിയ്യത്ത് 1/3 ({m}) ആയി ചുരുക്കി — അവകാശികൾ സമ്മതിച്ചില്ല.", blk_title:"ഹജ്ബ് ആയ അവകാശികൾ",no_blk:"ഈ കേസിൽ ഹജ്ബ് ഇല്ല", fetching:"ലഭ്യമാക്കുന്നു...", 
     learn_sh:`<h3>📖 ഷാഫിഈ ഫറാഇദ് നിയമങ്ങൾ</h3>
     <ul>
-    <li><strong>എപ്പോഴും അവകാശമുള്ള 5 പേർ:</strong> മകൻ, മകൾ, പിതാവ്, മാതാവ്, ഭാര്യ/ഭർത്താവ് — ഒരിക്കലും ഹജ്ബ് (തടയപ്പെടുക) ആവില്ല.</li>
-    <li><strong>حجب النقصان (ഓഹരി കുറയുന്ന രൂപം):</strong> സന്താനങ്ങൾ (فرع وارث) ഉണ്ടെങ്കിൽ ഭർത്താവ് ½→¼, ഭാര്യ ¼→⅛, മാതാവ് ⅓→⅙ എന്നിങ്ങനെ ഓഹരി കുറയുന്നു.</li>
-    <li><strong>حجب الحرمان (പൂർണമായും തടയപ്പെടുന്ന രൂപം):</strong> മകൻ → മകന്റെ മകൻ, എല്ലാ സഹോദരന്മാർ, പിതൃവ്യന്മാർ എന്നിവരെ തടയുന്നു. പിതാവ് → പിതാമഹൻ, എല്ലാ സഹോദരങ്ങൾ എന്നിവരെ തടയുന്നു.</li>
-    <li><strong>أصل المسألة:</strong> ലസാഗു (LCM). സ്ഥിരമൂല്യങ്ങൾ: 2, 3, 4, 6, 8, 12, 24.</li>
-    <li><strong>العول (ഔൾ):</strong> ഓഹരികൾ അടിസ്ഥാന സംഖ്യയെക്കാൾ വർദ്ധിച്ചാൽ → അടിസ്ഥാനം വർദ്ധിപ്പിക്കുകയും എല്ലാവർക്കും ആനുപാതികമായി ഓഹരി കുറയുകയും ചെയ്യും.</li>
-    <li><strong>الرد (റദ്ദ്):</strong> ഓഹരി നൽകിയ ശേഷം ബാക്കിയുണ്ടാവുകയും عصبة (അസബ) ഇല്ലാതിരിക്കുകയും ചെയ്താൽ → അصحاب الفروض (ഭാര്യ/ഭർത്താവ് ഒഴികെ) ക്ക് തിരികെ നൽകുന്നു.</li>
-    <li><strong>ثلث الباقي (العمريتان):</strong> ഭാര്യ/ഭർത്താവ് + പിതാവ് + മാതാവ് മാത്രം (സഹോദരങ്ങൾ ഇല്ലാതെ) വന്നാൽ → ഭാര്യ/ഭർത്താവിൻ്റെ ഓഹരി കഴിഞ്ഞു ശേഷിക്കുന്നതിൻ്റെ ⅓ മാതാവിനു ലഭിക്കും.</li>
-    <li><strong>الأخ لأم:</strong> മാതൃസഹോദരങ്ങൾക്ക് തനിയെ ⅙, ഒന്നിലധികം പേരുണ്ടെങ്കിൽ ⅓ പങ്ക്. ആൺ-പെൺ തുല്യമായിരിക്കും. അവർ ആരെയും ഹജ്ബ് ചെയ്യില്ല.</li>
-    <li><strong>الوصية (വസിയ്യത്ത്):</strong> എല്ലാ അവകാശികളുടെയും സമ്മതമില്ലാതെ ⅓ കവിയാൻ പാടില്ല. അവകാശികൾക്ക് വസിയ്യത്ത് ചെയ്യാൻ മറ്റുള്ളവരുടെ സമ്മതം നിർബന്ധമാണ്.</li>
+    <li><strong>എപ്പോഴും അവകാശമുള്ള 5 പേർ:</strong> മകൻ, മകൾ, പിതാവ്, മാതാവ്, ഭാര്യ/ഭർത്താവ് — ഒരിക്കലും ഹജ്ബ് ആവില്ല.</li>
+    <li><strong>حجب النقصان:</strong> ഭർത്താവ് ½→¼, ഭാര്യ ¼→⅛, മാതാവ് ⅓→⅙.</li>
+    <li><strong>حجب الحرمان:</strong> ഇബ്‌നു → ഇബ്‌നുൽ ഇബ്‌നിനെ + സഹോദരന്മാരെ. പിതാവ് → ജദ്ദ് + സഹോദരന്മാർ.</li>
+    <li><strong>أصل المسألة:</strong> ലസാഗു. സ്ഥിരമൂല്യങ്ങൾ: 2, 3, 4, 6, 8, 12, 24.</li>
+    <li><strong>العول:</strong> ഓഹരികൾ അടിസ്ഥാനം കവിഞ്ഞാൽ → അടിസ്ഥാനം വർദ്ധിപ്പിക്കും.</li>
+    <li><strong>الرد:</strong> ശേഷം + عصبة ഇല്ലെങ്കിൽ → أصحاب الفروض ക്ക് തിരികെ.</li>
+    <li><strong>ثلث الباقي (العمريتان):</strong> ഭാര്യ/ഭർത്താവ് + പിതാവ് + മാതാവ് മാത്രം (സഹോദരങ്ങൾ ഇല്ലാതെ) → ഭാര്യ/ഭർത്താവിൻ്റെ ഓഹരി കഴിഞ്ഞ് ശേഷിക്കുന്നതിൻ്റെ ⅓ മാതാവിനു.</li>
+    <li><strong>الأخ لأم:</strong> തനിയെ ⅙, ഒന്നിലധികം ⅓ പങ്ക്. ആൺ-പെൺ തുല്യം.</li>
+    <li><strong>الوصية(വസിയ്യത്ത്):</strong> അനുവദനം ഇല്ലാതെ ⅓ കവിയരുത്.</li>
     </ul>`, 
     learn_ha:`<h3>📖 ഹനഫി വ്യത്യാസങ്ങൾ</h3><ul><li>ഷാഫിഈ നിയമങ്ങളിൽ പൂർണ്ണ കൃത്യത ഉറപ്പാക്കാൻ താൽക്കാലികമായി നിർത്തിവച്ചിരിക്കുന്നു.</li></ul>` 
   }
 };
 
-// FULL 25 HEIRS LIST (Including Emancipators)
+// FULL 25 HEIRS LIST
 const HEIRS=[
   {id:"zawj",   en:"Husband",                    ar:"الزوج",            ml:"ഭർത്താവ്",             max:1, dec:"f"},
   {id:"zawja",  en:"Wife",                       ar:"الزوجة",           ml:"ഭാര്യ",                max:4, dec:"m"},
@@ -540,6 +541,48 @@ function har(h){
   return h.ar;
 }
 
+function updateDynamicUI() {
+    const has = id => (sel[id] || 0) > 0;
+    const fw = has("ibn") || has("bint") || has("ibn_ibn") || has("bint_ibn");
+    const mfw = has("ibn") || has("ibn_ibn");
+
+    let dynBlocked = {};
+    const blk = (id) => dynBlocked[id] = true;
+
+    if(has("ab")){["jadd","akh_sh","akh_ab","akh_um","ukht_sh","ukht_ab","ukht_um","ibn_akh_sh","ibn_akh_ab","amm_sh","amm_ab","ibn_amm_sh","ibn_amm_ab"].forEach(blk);}
+    if(has("umm")){blk("jadda_ab");blk("jadda_umm");}
+    if(has("ibn")){["ibn_ibn","bint_ibn","akh_sh","akh_ab","akh_um","ukht_sh","ukht_ab","ukht_um","ibn_akh_sh","ibn_akh_ab","amm_sh","amm_ab","ibn_amm_sh","ibn_amm_ab"].forEach(blk);}
+    if(!has("ibn")&&has("ibn_ibn")){["akh_sh","akh_ab","akh_um","ukht_sh","ukht_ab","ukht_um","ibn_akh_sh","ibn_akh_ab","amm_sh","amm_ab","ibn_amm_sh","ibn_amm_ab"].forEach(blk);}
+    
+    // In Shafii, Jadd DOES NOT block siblings. He shares with them. Only Father blocks siblings.
+    // So we do NOT block siblings if Jadd is present in Shafii.
+    if(has("akh_sh")){["akh_ab","ukht_ab","ibn_akh_sh","ibn_akh_ab","amm_sh","amm_ab","ibn_amm_sh","ibn_amm_ab","akh_um","ukht_um"].forEach(blk);}
+    if(!has("akh_sh")&&has("akh_ab")){["ibn_akh_sh","ibn_akh_ab","amm_sh","amm_ab","ibn_amm_sh","ibn_amm_ab"].forEach(blk);}
+    
+    if(fw){blk("akh_um");blk("ukht_um");}
+    if((sel["bint"]||0)>=2&&!has("ibn")&&!has("ibn_ibn")&&has("bint_ibn")) blk("bint_ibn");
+    if((sel["ukht_sh"]||0)>=2&&!has("akh_sh")&&!has("akh_ab")&&!fw) blk("ukht_ab");
+
+    const primaryMales=["zawj","ab","umm","ibn","bint","ibn_ibn","bint_ibn","jadd","jadda_ab","jadda_umm","akh_sh","akh_ab","akh_um","ukht_sh","ukht_ab","ukht_um","ibn_akh_sh","ibn_akh_ab","amm_sh","amm_ab","ibn_amm_sh","ibn_amm_ab"];
+    const hasPrimaryAsaba=primaryMales.some(id=>has(id)&&!dynBlocked[id]&&!["zawj","umm","jadda_ab","jadda_umm","akh_um","ukht_um"].includes(id));
+    if(hasPrimaryAsaba){blk("mutiq");blk("mutiqah");}
+
+    HEIRS.forEach(h => {
+        const card = document.getElementById("hc-" + h.id);
+        if (card) {
+            if (dynBlocked[h.id] && !has(h.id)) {
+                card.classList.add("blocked");
+                // Reset selection if it gets blocked
+                sel[h.id] = 0;
+                const cn = document.getElementById("cn-" + h.id);
+                if(cn) cn.textContent = "";
+            } else {
+                card.classList.remove("blocked");
+            }
+        }
+    });
+}
+
 function renderHeirs(){
   const g=document.getElementById("hgrid"); g.innerHTML="";
   HEIRS.forEach(h=>{
@@ -549,16 +592,26 @@ function renderHeirs(){
     card.id="hc-"+h.id;
     card.innerHTML=`<div class="hn">${hn(h)}</div><div class="har" style="${lang==='ar'?'direction:ltr;text-align:left;font-family:\'DM Sans\',sans-serif;':''}">${har(h)}</div>`+
       (h.max>1?`<div class="ctr"><button class="cb" data-id="${h.id}" data-d="-1">−</button><span class="cn2" id="cn-${h.id}">${c||""}</span><button class="cb" data-id="${h.id}" data-d="1">+</button></div>`:"");
-    if(h.max===1) card.addEventListener("click",()=>{sel[h.id]=sel[h.id]?0:1;card.classList.toggle("sel",!!sel[h.id]);});
+    if(h.max===1) card.addEventListener("click",()=>{
+        if(card.classList.contains("blocked")) return;
+        sel[h.id]=sel[h.id]?0:1;
+        card.classList.toggle("sel",!!sel[h.id]);
+        updateDynamicUI();
+    });
     g.appendChild(card);
   });
   g.querySelectorAll(".cb").forEach(btn=>btn.addEventListener("click",e=>{
     e.stopPropagation();
-    const id=btn.dataset.id, d=parseInt(btn.dataset.d), h=HEIRS.find(x=>x.id===id);
+    const id=btn.dataset.id;
+    const card = document.getElementById("hc-" + id);
+    if(card.classList.contains("blocked")) return;
+    const d=parseInt(btn.dataset.d), h=HEIRS.find(x=>x.id===id);
     sel[id]=Math.max(0,Math.min(h.max,(sel[id]||0)+d));
-    document.getElementById("hc-"+id)?.classList.toggle("sel",sel[id]>0);
+    card.classList.toggle("sel",sel[id]>0);
     const cn=document.getElementById("cn-"+id); if(cn) cn.textContent=sel[id]||"";
+    updateDynamicUI();
   }));
+  updateDynamicUI();
 }
 
 function setStep(n){
@@ -568,7 +621,6 @@ function setStep(n){
   }
 }
 
-// Global modal trigger
 window.showAsaba = function(titleEnc, descEnc) {
     document.getElementById('asabaModTitle').textContent = decodeURIComponent(titleEnc);
     document.getElementById('asabaModDesc').textContent = decodeURIComponent(descEnc);
@@ -584,7 +636,6 @@ function calculate(){
   if(!gender){alert(T[lang].no_g);return;}
   const active=HEIRS.filter(h=>(sel[h.id]||0)>0&&(h.dec==="b"||h.dec===gender));
   
-  // Dhawul Arham check
   if(!active.length){
       document.getElementById("resSec").style.display="block";
       document.getElementById("metrics").innerHTML=`<div class="mc" style="grid-column:1/-1;background:var(--warnbg);color:var(--warn);border-color:var(--warn);font-weight:600">${T[lang].no_h}</div>`;
@@ -607,7 +658,10 @@ function calculate(){
   if(has("umm")){blk("jadda_ab","الأم");blk("jadda_umm","الأم");}
   if(has("ibn")){["ibn_ibn","bint_ibn","akh_sh","akh_ab","akh_um","ukht_sh","ukht_ab","ukht_um","ibn_akh_sh","ibn_akh_ab","amm_sh","amm_ab","ibn_amm_sh","ibn_amm_ab"].forEach(x=>blk(x,"الابن"));}
   if(!has("ibn")&&has("ibn_ibn")){["akh_sh","akh_ab","akh_um","ukht_sh","ukht_ab","ukht_um","ibn_akh_sh","ibn_akh_ab","amm_sh","amm_ab","ibn_amm_sh","ibn_amm_ab"].forEach(x=>blk(x,"ابن الابن"));}
-  if(!has("ab")&&has("jadd")){["akh_um","ukht_um","ibn_akh_sh","ibn_akh_ab","amm_sh","amm_ab","ibn_amm_sh","ibn_amm_ab"].forEach(x=>blk(x,"الجد"));}
+  
+  // Shafii specific: Jadd does NOT block siblings. Handled in Best of 3.
+  // if(!has("ab")&&has("jadd")){["akh_um","ukht_um","ibn_akh_sh","ibn_akh_ab","amm_sh","amm_ab","ibn_amm_sh","ibn_amm_ab"].forEach(x=>blk(x,"الجد"));} // Incorrect Shafii
+
   if(has("akh_sh")){["akh_ab","ukht_ab","ibn_akh_sh","ibn_akh_ab","amm_sh","amm_ab","ibn_amm_sh","ibn_amm_ab","akh_um","ukht_um"].forEach(x=>blk(x,"الأخ الشقيق"));}
   if(!has("akh_sh")&&has("akh_ab")){["ibn_akh_sh","ibn_akh_ab","amm_sh","amm_ab","ibn_amm_sh","ibn_amm_ab"].forEach(x=>blk(x,"الأخ لأب"));}
   
@@ -616,13 +670,11 @@ function calculate(){
   if(cnt("bint")>=2&&!has("ibn")&&!has("ibn_ibn")&&has("bint_ibn"))blk("bint_ibn","بنتان فأكثر");
   if(cnt("ukht_sh")>=2&&!has("akh_sh")&&!has("akh_ab")&&!fw)blk("ukht_ab","أختان شقيقتان");
   
-  // Asaba ma'al ghayr (Sisters + Daughters)
   if((has("bint")||has("bint_ibn"))&&!has("ibn")&&!has("ibn_ibn")){
     if(has("ukht_sh")){["ukht_ab","ibn_akh_sh","ibn_akh_ab","amm_sh","amm_ab","ibn_amm_sh","ibn_amm_ab"].forEach(x=>blk(x,"الأخت الشقيقة (عصبة مع الغير)"));}
     else if(has("ukht_ab")&&!has("akh_sh")&&!has("akh_ab")){["ibn_akh_sh","ibn_akh_ab","amm_sh","amm_ab","ibn_amm_sh","ibn_amm_ab"].forEach(x=>blk(x,"الأخت لأب (عصبة مع الغير)"));}
   }
   
-  // Emancipator blocking
   const primaryMales=["zawj","ab","umm","ibn","bint","ibn_ibn","bint_ibn","jadd","jadda_ab","jadda_umm","akh_sh","akh_ab","akh_um","ukht_sh","ukht_ab","ukht_um","ibn_akh_sh","ibn_akh_ab","amm_sh","amm_ab","ibn_amm_sh","ibn_amm_ab"];
   const hasPrimaryAsaba=primaryMales.some(id=>has(id)&&!blocked[id]&&!["zawj","umm","jadda_ab","jadda_umm","akh_um","ukht_um"].includes(id));
   if(hasPrimaryAsaba){blk("mutiq","Primary Asaba");blk("mutiqah","Primary Asaba");}
@@ -635,6 +687,14 @@ function calculate(){
   const hBP=has("ab")&&has("umm");
   const noCh=!has("ibn")&&!has("bint")&&!has("ibn_ibn")&&!has("bint_ibn");
 
+  // ── Al-Mushtaraka (المشتركة) Exception ──
+  // Husband + Mother/Jaddah + Maternal Siblings + Full Brothers
+  let isMushtaraka = false;
+  if(has("zawj") && (has("umm") || has("jadda_ab") || has("jadda_umm")) && (has("akh_um") || has("ukht_um")) && has("akh_sh") && !mfw && !has("ab") && !has("jadd")) {
+      const ummShare = has("umm") ? 6 : 6; 
+      isMushtaraka = true;
+  }
+
   // ── 2. Assign Shares ──
   let shares={};
   inh.forEach(h=>{
@@ -646,7 +706,17 @@ function calculate(){
       if(hSp&&hBP&&noCh&&sib<2) shares[id]="thulth";
       else shares[id]=(fw||sib>=2)?[1,6]:[1,3];
     }
-    else if(id==="ab"||id==="jadd") shares[id]=mfw?[1,6]:(fw?[1,6]:"asaba");
+    else if(id==="ab") shares[id]=mfw?[1,6]:(fw?[1,6]:"asaba");
+    else if(id==="jadd") {
+       // Shafii: Jadd with siblings (Best of 3 logic)
+       const sibCount = cnt("akh_sh") + cnt("akh_ab") + cnt("ukht_sh") + cnt("ukht_ab");
+       if(sibCount > 0 && !has("ab") && !mfw) {
+           // We will calculate his best option later. For now, placeholder.
+           shares[id]="jadd_best";
+       } else {
+           shares[id]=mfw?[1,6]:(fw?[1,6]:"asaba");
+       }
+    }
     else if(id==="jadda_ab"||id==="jadda_umm"){
       const bothJadda=(has("jadda_ab")&&has("jadda_umm"))&&!blocked["jadda_ab"]&&!blocked["jadda_umm"];
       shares[id]=bothJadda?[1,12]:[1,6];
@@ -658,9 +728,14 @@ function calculate(){
       else if(cnt("bint")===1) shares[id]=[1,6];
       else shares[id]=cnt("bint_ibn")===1?[1,2]:[2,3];
     }
-    else if(id==="akh_sh"||id==="akh_ab"||id==="ibn_akh_sh"||id==="ibn_akh_ab"||id==="amm_sh"||id==="amm_ab"||id==="ibn_amm_sh"||id==="ibn_amm_ab"||id==="mutiq"||id==="mutiqah") shares[id]="asaba";
+    else if(id==="akh_sh"){
+        if(isMushtaraka) shares[id] = "mushtaraka";
+        else shares[id]="asaba";
+    }
+    else if(id==="akh_ab"||id==="ibn_akh_sh"||id==="ibn_akh_ab"||id==="amm_sh"||id==="amm_ab"||id==="ibn_amm_sh"||id==="ibn_amm_ab"||id==="mutiq"||id==="mutiqah") shares[id]="asaba";
     else if(id==="ukht_sh"){
-      if(has("akh_sh")||fw) shares[id]="asaba_w";
+      if(isMushtaraka) shares[id] = "mushtaraka";
+      else if(has("akh_sh")||fw) shares[id]="asaba_w";
       else shares[id]=cnt("ukht_sh")===1?[1,2]:[2,3];
     }
     else if(id==="ukht_ab"){
@@ -669,18 +744,54 @@ function calculate(){
       else shares[id]=cnt("ukht_ab")===1?[1,2]:[2,3];
     }
     else if(id==="akh_um"||id==="ukht_um"){
-      const tot=cnt("akh_um")+cnt("ukht_um");
-      shares[id]=tot===1?[1,6]:[1,3]; 
+      if(isMushtaraka) shares[id] = "mushtaraka";
+      else {
+          const tot=cnt("akh_um")+cnt("ukht_um");
+          shares[id]=tot===1?[1,6]:[1,3]; 
+      }
     }
     else shares[id]="asaba";
   });
 
+  // ── Shafi'i Grandfather (Best of 3) Logic ──
+  let jaddOption = "";
+  if(shares["jadd"] === "jadd_best") {
+      let fardSumTemp = 0;
+      let dTemp = inh.filter(h=>Array.isArray(shares[h.id])).map(h=>shares[h.id][1]);
+      let aslTemp = dTemp.length ? dTemp.reduce((a,b)=>lcm(a,b),1) : 1;
+      inh.forEach(h => { if(Array.isArray(shares[h.id])) fardSumTemp += (aslTemp/shares[h.id][1])*shares[h.id][0]; });
+      
+      let remTemp = aslTemp - fardSumTemp;
+      let sibHeads = (cnt("akh_sh")*2) + (cnt("akh_ab")*2) + cnt("ukht_sh") + cnt("ukht_ab");
+      
+      // Option 1: 1/6 of total
+      let opt1 = 1/6;
+      // Option 2: 1/3 of Remainder
+      let opt2 = (remTemp / aslTemp) * (1/3);
+      // Option 3: Muqasamah (Sharing as brother)
+      let opt3 = (remTemp / aslTemp) * (2 / (sibHeads + 2)); // Jadd counts as 2 heads
+      
+      let maxOpt = Math.max(opt1, opt2, opt3);
+      
+      if(maxOpt === opt1) {
+          shares["jadd"] = [1,6];
+          jaddOption = "السدس (1/6)";
+      } else if (maxOpt === opt2) {
+          shares["jadd"] = "thulth_baqi";
+          jaddOption = "ثلث الباقي (1/3 of Remainder)";
+      } else {
+          shares["jadd"] = "asaba_w"; // Acts as brother
+          jaddOption = "المقاسمة (Sharing as brother)";
+      }
+  }
+
   // ── 3. Find Asl (LCM of Denominators) ──
   const dens=inh.filter(h=>Array.isArray(shares[h.id])).map(h=>shares[h.id][1]);
+  if(isMushtaraka) dens.push(3); // For the shared 1/3
+  
   let asl=dens.length?dens.reduce((a,b)=>lcm(a,b),1):1;
   let fixSum=0, spShare=0;
 
-  // New Faraid Denominator Logic Strings
   let aslText = "";
   if(dens.length === 0){
      aslText = `<div style="font-size:13px;color:var(--txt2);margin-bottom:6px"><strong>Step 1 — أصل المسألة (Base Problem):</strong><br>No fixed shares (Fard). The base is exactly the total number of Asaba heads.</div>`;
@@ -737,6 +848,19 @@ function calculate(){
     fixSum+=ms;
     shares["umm"]=[ms,asl];
   }
+  
+  // Grandfather (1/3 of Remainder)
+  const jThu=inh.find(h=>h.id==="jadd"&&shares[h.id]==="thulth_baqi");
+  if(jThu){
+      let thuRem=asl-fixSum;
+      if(thuRem%3!==0){
+          asl*=3; fixSum*=3; spShare*=3; thuRem*=3;
+          inh.forEach(h=>{ if(Array.isArray(shares[h.id])) shares[h.id]=[shares[h.id][0]*3, shares[h.id][1]*3]; });
+      }
+      const js=thuRem/3;
+      fixSum+=js;
+      shares["jadd"]=[js,asl];
+  }
 
   // Awl (Increase)
   let aul=false;
@@ -748,7 +872,7 @@ function calculate(){
 
   // ── 4. Classical Integer Radd ──
   let radd=false;
-  if(!hasAsaba&&fardRem>0){
+  if(!hasAsaba&&fardRem>0 && !isMushtaraka){
     radd=true;
     let raddHeirs=inh.filter(h=>Array.isArray(shares[h.id])&&h.id!=="zawj"&&h.id!=="zawja");
     if(raddHeirs.length>0){
@@ -791,6 +915,7 @@ function calculate(){
     let sahm=0, frac="", type="";
     if(Array.isArray(s)){ sahm=(asl/s[1])*s[0]; frac=s[0]+"/"+s[1]; type="fard"; } 
     else if(s==="asaba"||s==="asaba_w"){ type=s; frac=s==="asaba"?"عصبة":"عصبة (مع الغير)"; }
+    else if(s==="mushtaraka") { type="mushtaraka"; frac="المشتركة (1/3 Shared)"; sahm = (asl/3); fixSum+=sahm;} // Mushtaraka takes 1/3
     rows.push({id:h.id, name:hn(h), ar:har(h), n, sahm, frac, type, s});
   });
 
@@ -810,16 +935,19 @@ function calculate(){
     });
   }
 
+  // Mushtaraka Heads
+  let mushHeads = 0;
+  if(isMushtaraka) {
+      mushHeads = cnt("akh_um") + cnt("ukht_um") + (cnt("akh_sh")*1) + (cnt("ukht_sh")*1); // All count as 1 head equally
+  }
+
   // ── 7. Tashih (التصحيح) using GCD for the Four Relationships ──
   let multipliers=[];
   let tashihSteps=[];
   
   rows.forEach(r=>{
     if(r.type==="fard"&&r.sahm>0){
-      if(["akh_um","ukht_um"].includes(r.id)){
-        let tot=cnt("akh_um")+cnt("ukht_um");
-        multipliers.push(tot/gcd(r.sahm,tot));
-      } else if(["jadda_ab","jadda_umm"].includes(r.id)){
+      if(["jadda_ab","jadda_umm"].includes(r.id)){
         let tot=(has("jadda_ab")&&!blocked["jadda_ab"]?1:0)+(has("jadda_umm")&&!blocked["jadda_umm"]?1:0);
         multipliers.push(tot/gcd(r.sahm,tot));
       } else {
@@ -833,32 +961,56 @@ function calculate(){
     let m = totalAsabaHeads/g;
     multipliers.push(m);
     
-    if(totalAsabaHeads===fardRem) tashihSteps.push("تماثل (Tamathul): Remainder matches heads. No scaling needed.");
-    else if(fardRem%totalAsabaHeads===0 || totalAsabaHeads%fardRem===0) tashihSteps.push(`تداخل (Tadakhul): Scaled by ${m}`);
-    else if(g>1) tashihSteps.push(`توافق (Tawafuq): Scaled by heads(${totalAsabaHeads}) ÷ GCD(${g}) = ${m}`);
-    else tashihSteps.push(`تباين (Tabayun): Scaled entirely by heads count (${m}).`);
+    if(totalAsabaHeads===fardRem) tashihSteps.push("تماثل (Tamathul): Remainder matches Asaba heads.");
+    else if(fardRem%totalAsabaHeads===0 || totalAsabaHeads%fardRem===0) tashihSteps.push(`تداخل (Tadakhul): Scaled Asaba by ${m}`);
+    else if(g>1) tashihSteps.push(`توافق (Tawafuq): Scaled Asaba by heads(${totalAsabaHeads}) ÷ GCD(${g}) = ${m}`);
+    else tashihSteps.push(`تباين (Tabayun): Scaled Asaba entirely by heads count (${m}).`);
+  }
+  
+  if(isMushtaraka) {
+      let mushSahm = asl/3;
+      let g = gcd(mushSahm, mushHeads);
+      let m = mushHeads/g;
+      multipliers.push(m);
+      if(m>1) tashihSteps.push(`تباين/توافق (Mushtaraka): Scaled 1/3 share by ${m} to divide equally among ${mushHeads} heads.`);
   }
 
   let M_tashih=multipliers.reduce((a,b)=>lcm(a,b),1);
   if(M_tashih>1){
     asl*=M_tashih;
     fardRem*=M_tashih;
-    rows.forEach(r=>{if(r.type==="fard")r.sahm*=M_tashih;});
+    rows.forEach(r=>{if(r.type==="fard" || r.type==="mushtaraka") r.sahm*=M_tashih;});
   }
 
   // Assign Asaba Shares & calculate Per Person
+  let mushRowRendered = false;
+  let finalRows = [];
+  
   rows.forEach(r=>{
     if(r.type==="asaba"||r.type==="asaba_w"){
       r.sahm=(fardRem/totalAsabaHeads)*r.heads;
-    }
-    if(["akh_um","ukht_um"].includes(r.id)){
-      let tot=cnt("akh_um")+cnt("ukht_um");
-      r.perPerson=r.sahm/(tot?tot:1); 
-    } else if(["jadda_ab","jadda_umm"].includes(r.id)){
-      let tot=(has("jadda_ab")&&!blocked["jadda_ab"]?1:0)+(has("jadda_umm")&&!blocked["jadda_umm"]?1:0);
-      r.perPerson=r.sahm/(tot?tot:1); 
-    } else {
       r.perPerson=r.sahm/r.n;
+      finalRows.push(r);
+    }
+    else if (r.type === "mushtaraka") {
+        if(!mushRowRendered) {
+             let mushSahmTotal = (asl/3);
+             let perPerson = mushSahmTotal / mushHeads;
+             if(cnt("akh_um")) finalRows.push({id:"akh_um", name:hn({en:"Maternal Brother", ar:"الأخ لأم", ml:"സഹോദരൻ (ലിഉമ്മ്)"}), ar:har({en:"Maternal Brother", ar:"الأخ لأم", ml:"സഹോദരൻ (ലിഉമ്മ്)"}), n:cnt("akh_um"), sahm:perPerson*cnt("akh_um"), frac:"المشتركة (Shared 1/3)", perPerson:perPerson});
+             if(cnt("ukht_um")) finalRows.push({id:"ukht_um", name:hn({en:"Maternal Sister", ar:"الأخت لأم", ml:"സഹോദരി (ലിഉമ്മ്)"}), ar:har({en:"Maternal Sister", ar:"الأخت لأم", ml:"സഹോദരി (ലിഉമ്മ്)"}), n:cnt("ukht_um"), sahm:perPerson*cnt("ukht_um"), frac:"المشتركة (Shared 1/3)", perPerson:perPerson});
+             if(cnt("akh_sh")) finalRows.push({id:"akh_sh", name:hn({en:"Full Brother", ar:"الأخ الشقيق", ml:"സഹോദരൻ (ശഖീഖ്)"}), ar:har({en:"Full Brother", ar:"الأخ الشقيق", ml:"സഹോദരൻ (ശഖീഖ്)"}), n:cnt("akh_sh"), sahm:perPerson*cnt("akh_sh"), frac:"المشتركة (Shared 1/3)", perPerson:perPerson});
+             if(cnt("ukht_sh")) finalRows.push({id:"ukht_sh", name:hn({en:"Full Sister", ar:"الأخت الشقيقة", ml:"സഹോദരി (ശഖീഖ)"}), ar:har({en:"Full Sister", ar:"الأخت الشقيقة", ml:"സഹോദരി (ശഖീഖ)"}), n:cnt("ukht_sh"), sahm:perPerson*cnt("ukht_sh"), frac:"المشتركة (Shared 1/3)", perPerson:perPerson});
+             mushRowRendered = true;
+        }
+    }
+    else {
+      if(["jadda_ab","jadda_umm"].includes(r.id)){
+        let tot=(has("jadda_ab")&&!blocked["jadda_ab"]?1:0)+(has("jadda_umm")&&!blocked["jadda_umm"]?1:0);
+        r.perPerson=r.sahm/(tot?tot:1); 
+      } else {
+        r.perPerson=r.sahm/r.n;
+      }
+      finalRows.push(r);
     }
   });
 
@@ -868,10 +1020,10 @@ function calculate(){
   setTimeout(()=>document.getElementById("resSec").scrollIntoView({behavior:"smooth",block:"start"}),100);
   setStep(5);
 
-  let ct=aul?"taul":radd?"tradd":mThu?"tthu":"tnorm";
-  const clMap={tnorm:"Normal — تامة",taul:"العول — Shares exceed base",tradd:"الرد — Surplus returned",tthu:"الغرّاوين — ثلث الباقي"};
+  let ct=aul?"taul":radd?"tradd":mThu?"tthu":isMushtaraka?"tthu":"tnorm";
+  const clMap={tnorm:"Normal — تامة",taul:"العول — Shares exceed base",tradd:"الرد — Surplus returned",tthu:"Special Exception Applied"};
   
-  document.getElementById("ctag").innerHTML=`<span class="ctag ${ct}">${clMap[ct]}</span>${M_tashih>1?`<span class="ctag" style="background:var(--malebg);color:var(--male);margin-right:6px">التصحيح ×${M_tashih}</span>`:""}`;
+  document.getElementById("ctag").innerHTML=`<span class="ctag ${ct}">${isMushtaraka ? "المشتركة (Al-Mushtaraka)" : clMap[ct]}</span>${M_tashih>1?`<span class="ctag" style="background:var(--malebg);color:var(--male);margin-right:6px">التصحيح ×${M_tashih}</span>`:""}`;
 
   document.getElementById("metrics").innerHTML=`
     <div class="mc"><div class="mv">${asl}</div><div class="ml">أصل المسألة</div></div>
@@ -880,28 +1032,27 @@ function calculate(){
 
   const sl=document.getElementById("sharesList"); sl.innerHTML="";
   
-  rows.forEach(r=>{
+  finalRows.forEach(r=>{
     const pct=asl>0?(r.sahm/asl*100):0;
     const amt=estate>0?Math.round(r.sahm/asl*estate):null;
     
-    // Check Asaba type and prepare modal data
     let asabaTitle = "";
     let asabaDesc = "";
-    if(r.type === "asaba" || r.type === "asaba_w") {
-        if(r.type === "asaba") {
-            asabaTitle = "عصبة بالنفس (Asaba bi-Nafsihi)";
+    if(r.type === "asaba" || r.type === "asaba_w" || r.frac === "عصبة" || r.frac.includes("عصبة")) {
+        if(r.frac === "عصبة") {
+            asabaTitle = "عصبة بالنفس (Asaba by Himself)";
             asabaDesc = lang==='ml' ? "സ്വയം അവകാശിയാകുന്നവർ (പുരുഷന്മാർ). നിശ്ചിത ഓഹരിക്കാർക്ക് (Fard) നൽകിയ ശേഷം ബാക്കിയുള്ളത് ഇവർക്ക് ലഭിക്കും. മറ്റാരുമില്ലെങ്കിൽ മുഴുവൻ സ്വത്തും ഇവർക്കാണ്." :
                         lang==='ar' ? "يأخذ الباقي تعصيباً بعد أصحاب الفروض، وإذا انفرد حاز جميع التركة." :
                         "Takes the remainder by themselves. Takes everything if alone, or whatever is left after fixed shares (Fard).";
         } else {
             let brotherId = r.id === "bint" ? "ibn" : r.id === "bint_ibn" ? "ibn_ibn" : r.id === "ukht_sh" ? "akh_sh" : "akh_ab";
             if (has(brotherId)) {
-                asabaTitle = "عصبة بالغير (Asaba bil-Ghayr)";
+                asabaTitle = "عصبة بالغير (Asaba by Others)";
                 asabaDesc = lang==='ml' ? "സഹോദരൻ്റെ സാന്നിധ്യം കാരണം അസബയാകുന്നവർ (ഉദാ: മകനോടൊപ്പം മകൾ). പുരുഷന് സ്ത്രീയുടെ ഇരട്ടി എന്ന തോതിൽ ബാക്കിയുള്ളത് പങ്കിടുന്നു." :
                             lang==='ar' ? "تصير عصبة بوجود أخيها (للذكر مثل حظ الأنثيين)." :
-                            "Becomes a residuary because of their male counterpart (brother). They share the remainder in a 2:1 ratio (Male gets twice the female).";
+                            "Becomes a residuary because of their male counterpart (brother). They share the remainder in a 2:1 ratio.";
             } else {
-                asabaTitle = "عصبة مع الغير (Asaba ma'a-Ghayr)";
+                asabaTitle = "عصبة مع الغير (Asaba with Others)";
                 asabaDesc = lang==='ml' ? "സന്താനങ്ങളുടെ (മകൾ/പൗത്രി) സാന്നിധ്യം കാരണം സഹോദരിമാർ അസബയാകുന്ന രൂപം. നിശ്ചിത ഓഹരി കഴിഞ്ഞ് ശേഷിക്കുന്നത് ഇവർക്ക് ലഭിക്കും." :
                             lang==='ar' ? "الأخوات يصرن عصبة مع البنات أو بنات الابن، فيأخذن الباقي." :
                             "Sisters become residuaries when there are female descendants (Daughters) and no brothers. They take whatever remains.";
@@ -909,9 +1060,12 @@ function calculate(){
         }
     }
     
-    const fracDisplay = r.frac.includes("عصبة") ? 
-        `<span onclick="showAsaba(decodeURIComponent('${encodeURIComponent(asabaTitle)}'), decodeURIComponent('${encodeURIComponent(asabaDesc)}'))" style="color:var(--warn);font-weight:600;background:var(--warnbg);padding:2px 6px;border-radius:4px;cursor:pointer;border:1px dashed var(--warn);display:inline-block;" title="Click for Explanation">❓ ${r.frac}</span>` 
-        : r.frac;
+    let fracDisplay = r.frac;
+    if(r.frac.includes("عصبة")) {
+         fracDisplay = `<span onclick="showAsaba(decodeURIComponent('${encodeURIComponent(asabaTitle)}'), decodeURIComponent('${encodeURIComponent(asabaDesc)}'))" style="color:var(--warn);font-weight:600;background:var(--warnbg);padding:2px 6px;border-radius:4px;cursor:pointer;border:1px dashed var(--warn);display:inline-block;" title="Click for Explanation">${r.frac}</span>`;
+    } else if (r.frac.includes("المشتركة")) {
+         fracDisplay = `<span style="color:#7b2255;font-weight:600;background:#f5e8f0;padding:2px 6px;border-radius:4px;display:inline-block;">${r.frac}</span>`;
+    }
     
     sl.innerHTML+=`<div class="rrow">
       <div><div class="rname">${r.name}${r.n>1?` (×${r.n})`:""}</div><div class="rar2" style="${lang==='ar'?'direction:ltr;text-align:left;font-family:\'DM Sans\',sans-serif;':''}">${r.ar}</div></div>
@@ -941,7 +1095,9 @@ function calculate(){
 
   const aslSteps=[];
   aslSteps.push(aslText);
+  if(jaddOption) aslSteps.push(`<div style="font-size:13px;color:var(--pri);margin-bottom:6px"><strong>ميراث الجد (Grandfather):</strong> Shafii Best of 3 applied. Assigned: <strong>${jaddOption}</strong>.</div>`);
   if(mThu) aslSteps.push(`<div style="font-size:13px;color:var(--txt2);margin-bottom:6px"><strong>الغرّاوين applied:</strong> Remainder after spouse scaled to make 1/3 exact for Mother.</div>`);
+  if(isMushtaraka) aslSteps.push(`<div style="font-size:13px;color:#7b2255;margin-bottom:6px"><strong>المشتركة (Al-Mushtaraka) applied:</strong> Full brothers share the 1/3 equally with maternal siblings.</div>`);
   if(aul) aslSteps.push(`<div style="font-size:13px;color:var(--danger);margin-bottom:6px"><strong>عول (Awl):</strong> Fixed shares exceeded base — base increased.</div>`);
   if(M_tashih>1) {
       aslSteps.push(`<div style="font-size:13px;color:var(--male);margin-bottom:6px"><strong>التصحيح (Tashih) ×${M_tashih}:</strong> Scaled up to remove decimals/fractions from shares.<br><em>Logic: ${tashihSteps.join(" ")}</em></div>`);
@@ -954,7 +1110,7 @@ function calculate(){
     </div>
     ${aslSteps.join("")}
     <div style="font-size:12px;color:var(--txt3);margin-bottom:8px;margin-top:8px">Individual share breakdown — تفصيل الأسهم</div>
-    ${rows.map(r=>`<div class="rrow">
+    ${finalRows.map(r=>`<div class="rrow">
       <div><div class="rname" style="${lang==='ar'?'direction:ltr;text-align:left;font-family:\'DM Sans\',sans-serif;':''}">${r.ar}</div><div style="font-size:12px;color:var(--txt3)">${r.name}</div></div>
       <div style="text-align:right;font-size:13px">
         <div style="font-size:11px;color:var(--txt3);margin-bottom:2px">Started as: ${r.frac}</div>
@@ -975,7 +1131,7 @@ function calculate(){
       <div class="adc tot"><div class="adcl">NET ESTATE — التركة الصافية</div><div class="adcv">${net.toLocaleString(undefined,{maximumFractionDigits:0})} ${cSym}</div></div>
     </div>
     <div style="font-size:13px;font-weight:600;color:var(--txt2);margin-bottom:8px">Each heir receives — نصيب كل وارث</div>
-    ${rows.map(r=>{const a=net>0?Math.round(r.sahm/asl*net):0;
+    ${finalRows.map(r=>{const a=net>0?Math.round(r.sahm/asl*net):0;
       return`<div class="rrow">
         <div><div class="rname">${r.name}${r.n>1?` (×${r.n})`:""}</div><div class="rar2" style="${lang==='ar'?'direction:ltr;text-align:left;font-family:\'DM Sans\',sans-serif;':''}">${r.ar}</div></div>
         <div style="text-align:right">
