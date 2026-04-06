@@ -40,9 +40,18 @@ https://m-ameen-k.github.io/Islamic-Inheritance-Calculator/
 
 ## 📂 Project Structure
 
-faraid-calculator/
-├── index.html # Complete app (HTML/CSS/JS)
-└── README.md # This file
+Islamic-Inheritance-Calculator/
+│
+├── index.html          # ONLY the HTML structure (buttons, inputs, layout)
+├── README.md           # Your excellent documentation
+│
+├── css/
+│   └── style.css       # ONLY the CSS (colors, themes, responsive design)
+│
+└── js/
+    ├── data.js         # ONLY the HEIRS list and Language Translations (T object)
+    ├── engine.js       # ONLY the Math: gcd(), lcm(), and the calculate() Fara'id logic
+    └── app.js          # ONLY UI logic: button clicks, renderHeirs(), theme switching
 
 ---
 
