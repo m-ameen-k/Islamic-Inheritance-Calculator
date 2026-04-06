@@ -40,19 +40,20 @@ https://m-ameen-k.github.io/Islamic-Inheritance-Calculator/
 
 ## 📂 Project Structure
 
+```text
 Islamic-Inheritance-Calculator/
-│
-├── index.html          # ONLY the HTML structure (buttons, inputs, layout)
-├── README.md           # Your excellent documentation
-│
+|
+├── index.html       # ONLY the HTML structure
+├── README.md        # Your excellent documentation
+|
 ├── css/
-│   └── style.css       # ONLY the CSS (colors, themes, responsive design)
-│
+|   └── style.css    # ONLY the CSS
+|
 └── js/
-    ├── data.js         # ONLY the HEIRS list and Language Translations (T object)
-    ├── engine.js       # ONLY the Math: gcd(), lcm(), and the calculate() Fara'id logic
-    └── app.js          # ONLY UI logic: button clicks, renderHeirs(), theme switching
-
+    ├── data.js      # ONLY the HEIRS list
+    ├── engine.js    # ONLY the Math logic
+    └── app.js       # ONLY UI logic
+```
 ---
 
 ## 🧪 Example Cases
