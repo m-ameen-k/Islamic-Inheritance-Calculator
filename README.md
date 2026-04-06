@@ -33,8 +33,8 @@
 
 ## 🚀 Live Demo
 
-After uploading to GitHub Pages:  
-`https://YOUR_USERNAME.github.io/faraid-calculator/`
+GitHub Pages:  
+https://m-ameen-k.github.io/Islamic-Inheritance-Calculator/
 
 ---
 
