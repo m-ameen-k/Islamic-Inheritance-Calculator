@@ -1,30 +1,56 @@
 //  ONLY UI logic: button clicks, renderHeirs(), theme switching
 // --- UI Logic and Event Listeners ---
 
-function setTheme(t){
-  const dark=t==="dark"||(t==="system"&&matchMedia("(prefers-color-scheme:dark)").matches);
-  document.documentElement.setAttribute("data-theme",dark?"dark":"light");
-  document.querySelectorAll("#themeGrp .pill").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
+// ── Theme: single toggle button, follows system on first load ──
+const _themeBtn = document.getElementById('themeToggleBtn');
+const _themeIcon = document.getElementById('themeIcon');
+
+function setTheme(mode){
+  // mode: 'dark' | 'light'
+  const isDark = mode === 'dark';
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  _themeIcon.textContent = isDark ? '☽' : '☀';
+  localStorage.setItem('faraid-theme', mode);
 }
 
-document.querySelectorAll("#themeGrp .pill").forEach(b=>b.addEventListener("click",()=>setTheme(b.dataset.t)));
-matchMedia("(prefers-color-scheme:dark)").addEventListener("change",()=>{
-  const a=document.querySelector("#themeGrp .pill.on"); if(a?.dataset.t==="system") setTheme("system");
-});
-setTheme("system");
+// Init: honour saved pref, else follow system
+(function initTheme(){
+  const saved = localStorage.getItem('faraid-theme');
+  if(saved === 'dark' || saved === 'light'){
+    setTheme(saved);
+  } else {
+    setTheme(matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+  }
+})();
 
+// Watch system changes (only if user hasn't manually set a preference)
+matchMedia('(prefers-color-scheme:dark)').addEventListener('change', e => {
+  if(!localStorage.getItem('faraid-theme')) setTheme(e.matches ? 'dark' : 'light');
+});
+
+_themeBtn.addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme');
+  setTheme(current === 'dark' ? 'light' : 'dark');
+});
+
+// ── Language switcher — 3 buttons EN | AR | ML ──
 function applyLang(){
   document.querySelectorAll("[data-i]").forEach(el=>{
     const k=el.getAttribute("data-i");
     if(T[lang] && T[lang][k]!==undefined) el.textContent=T[lang][k];
   });
-  document.querySelectorAll(".lb").forEach(b=>b.classList.toggle("on",b.dataset.l===lang));
+  // Update active lang button
+  document.querySelectorAll('#langSwitcher .ls-btn').forEach(b=>
+    b.classList.toggle('active', b.dataset.l===lang)
+  );
   document.querySelectorAll(".or-div").forEach(el=>el.textContent=T[lang].or_txt);
   renderHeirs();
   if(document.getElementById("learnContent")?.innerHTML) updateLearn();
 }
 
-document.querySelectorAll(".lb").forEach(b=>b.addEventListener("click",()=>{lang=b.dataset.l;applyLang();}));
+document.querySelectorAll('#langSwitcher .ls-btn').forEach(b=>
+  b.addEventListener('click', ()=>{ lang=b.dataset.l; applyLang(); })
+);
 
 document.querySelectorAll("#currGrp .pill").forEach(b=>b.addEventListener("click",()=>{
   cCode=b.dataset.c; cSym=b.dataset.s;
