@@ -1,5 +1,5 @@
 //  ONLY the Math: gcd(), lcm(), and the calculate() Fara'id logic
-// --- Strict Integer Math Helpers ---
+// --- Legacy arithmetic helpers (preserved for reference; not validated) ---
 function gcd(a, b) { a = Math.abs(Math.round(a)); b = Math.abs(Math.round(b)); while (b) { let t = b; b = a % b; a = t; } return a || 1; }
 function lcm(a, b) { return Math.abs(Math.round(a * b)) / gcd(a, b); }
 
@@ -466,7 +466,7 @@ function calculate() {
 
   sl.innerHTML += `<div style="margin-top:1.2rem;padding:10px 14px;background:var(--warnbg);border-radius:var(--r3);border-left:3px solid var(--warn)">
     <div style="font-size:12px;color:var(--warn);font-weight:600;margin-bottom:3px">⚠ Important Notice — تنبيه مهم</div>
-    <div style="font-size:12px;color:var(--warn)">This calculation is for educational reference. Actual inheritance distribution involves complex legal and spiritual rights and <strong>must be verified with a qualified Scholar (Usthad)</strong> before any wealth is divided.</div>
+    <div style="font-size:12px;color:var(--warn)">Under technical and scholarly validation. This legacy result is not available for estate distribution. Verify every result with a qualified Shafi'i fara'id scholar.</div>
   </div>`;
 
   const bl = active.filter(h => blocked[h.id]);

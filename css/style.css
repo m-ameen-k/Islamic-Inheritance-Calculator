@@ -375,6 +375,18 @@ body::before {
   z-index: 0
 }
 
+.validation-banner {
+  margin: -1rem 0 1.5rem;
+  padding: 14px 16px;
+  border: 2px solid var(--danger);
+  border-radius: var(--r2);
+  background: var(--dangerbg);
+  color: var(--danger);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
 .step {
   display: flex;
   flex-direction: column;
@@ -920,6 +932,20 @@ body::before {
 .calcbtn:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(18, 130, 76, 0.35);
+}
+
+.calcbtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.68;
+  transform: none;
+  box-shadow: none;
+}
+
+.calculation-disabled-reason {
+  margin-top: 8px;
+  color: var(--danger);
+  font-size: 12px;
+  text-align: center;
 }
 
 /* ==========================================================================

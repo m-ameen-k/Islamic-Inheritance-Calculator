@@ -1,19 +1,34 @@
 # ⚖️ Fara'id — علم الفرائض
 
-### Islamic Inheritance Calculator (Shafi'i School)
+### Shafi'i Inheritance Case-Preparation Tool
 
 ![Version](https://img.shields.io/badge/version-2.0-brightgreen)
 ![JavaScript](https://img.shields.io/badge/JS-ES6%2B-yellow)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
-> **Accurate, educational, and feature‑rich web app for calculating inheritance shares according to Shafi'i Fara'id rules.**
+> **Under technical and scholarly validation. This tool is for education and
+> case preparation only. Verify every result with a qualified Shafi'i fara'id
+> scholar before distributing an estate.**
+
+## Validation Status
+
+The legacy JavaScript calculator is preserved in Git for reference, but its
+calculation action is temporarily disabled while a testable TypeScript engine is
+being developed.
+
+- No calculation is represented as scholar-approved or legally valid.
+- Internet research may only enter the research corpus as
+  `PROVISIONAL — NOT YET VERIFIED FROM USER-PROVIDED KITAB`.
+- Verified mode will stop when a required rule has not been verified from the
+  user's supplied Shafi'i sources.
+- Research mode will never be the default.
 
 ---
 
-## ✨ Upgraded Features
+## Legacy Prototype Features
 
 - ✅ **25 heirs** – including emancipators.
-- 🚫 **Complete Hajb (blocking)** – son blocks grandson, father blocks siblings, etc.
+- 🚫 **Hajb demonstrations** – currently under rule-by-rule validation.
 - 📐 **Awl (العول)** – automatic when shares exceed base.
 - 🔄 **Radd (الرد)** – surplus returned when no `Asaba`.
 - 👵 **Umariyyatayn (العمريتان)** – spouse + parents (no siblings) → mother gets ⅓ of remainder.
@@ -27,7 +42,8 @@
 - 💱 **Currency selector** – INR, USD, SAR, AED, GBP.
 - 📘 **Educational tab** – explains Hajb, Awl, Radd, etc.
 - 📱 **Fully responsive** – mobile, tablet, desktop.
-- 🧮 **Strict integer math** – no floating‑point errors.
+- 🧮 **Exact arithmetic rebuild in progress** – BigInt rational arithmetic and
+  technical regression tests are being added.
 
 ---
 
@@ -56,14 +72,11 @@ Islamic-Inheritance-Calculator/
 ```
 ---
 
-## 🧪 Example Cases
+## Test Cases
 
-| Case                                   | Heirs                                                                                     | Shares                        |
-| -------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------- |
-| Husband, 1 daughter, father            | Husband ¼, daughter ½, father ¼ (asaba)                                                   | Asl = 4                       |
-| Wife, mother, 2 full sisters           | Wife ¼, mother ⅙, sisters ⅔                                                               | Awl from 12 → 13              |
-| Only husband and mother                | Husband ½, mother ⅓, remainder to mother (Radd)                                           | Asl = 6 → husband 3, mother 4 |
-| Spouse + father + mother (no siblings) | Umariyyatayn: husband ½ → remainder ½ → mother gets ⅓ of remainder (1/6), father the rest | Asl = 6                       |
+Worked inheritance examples are intentionally withheld from the authoritative
+documentation until their rule sources and expected outcomes are reviewed.
+Technical arithmetic tests do not prove fiqh correctness.
 
 ---
 
@@ -73,14 +86,16 @@ Islamic-Inheritance-Calculator/
 2. Enter **estate details**.
 3. Choose **Madhab** (Shafi'i only for now).
 4. Tap **heirs** to add them.
-5. Click **Calculate** – view shares, blocked heirs, base problem steps, and monetary values.
+5. Calculation is temporarily disabled while the validated engine is rebuilt.
 6. Click on **عصبة** labels to learn why a heir becomes a residuary.
 
 ---
 
 ## 🔒 Disclaimer
 
-⚠️ **Educational only.** Always consult a qualified scholar before dividing real inheritance.
+⚠️ **Under technical and scholarly validation.** This tool is for education and
+case preparation only. Verify every result with a qualified Shafi'i fara'id
+scholar before distributing an estate.
 
 ---
 

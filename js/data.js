@@ -1,7 +1,7 @@
 // ONLY the HEIRS list and Language Translations (T object)
 const T = {
-  en:{ 
-    s_dec:"Deceased",s_est:"Estate",s_mad:"Madhab",s_heir:"Heirs",s_res:"Result", dec_t:"Who passed away?",male:"Male — ذكر",female:"Female — أنثى", est_t:"Estate & Liabilities",curr_lbl:"Currency:", cash:"Cash",gold:"Gold",silver:"Silver",land:"Land / Property",other:"Other assets", debts:"Debts",zakat:"Unpaid Zakat", was_lbl:"Wasiyyah (Bequest)",was_con:"All heirs consent to exceed 1/3?", net_lbl:"Net Estate (after debts & wasiyyah)", mad_t:"Madhab", heir_t:"Select Heirs", heir_hint:"Select deceased gender first, then tap heirs to add them.", calc_btn:"Calculate Shares", res_t:"Results — النتائج", tab_sh:"Shares — الأنصبة",tab_hj:"Hajb — الحجب",tab_asl:"أصل المسألة", tab_ass:"Assets — الأموال",tab_learn:"📘 Learn", or_txt:"— or enter total value —", no_g:"Please select who passed away first.",no_h:"Estate passes to Dhawul Arham (Mother's Family). Please consult a qualified scholar for proper distribution.", all_blk:"All selected heirs are blocked!", was_warn:"⚠ Wasiyyah capped to 1/3 ({m}) — heirs did not consent.", blk_title:"Blocked Heirs — المحجوبون",no_blk:"No heirs blocked — لا حجب في هذه المسألة", fetching:"Fetching...", 
+  en:{
+    s_dec:"Deceased",s_est:"Estate",s_mad:"Madhab",s_heir:"Heirs",s_res:"Result", dec_t:"Who passed away?",male:"Male — ذكر",female:"Female — أنثى", est_t:"Estate & Liabilities",curr_lbl:"Currency:", cash:"Cash",gold:"Gold",silver:"Silver",land:"Land / Property",other:"Other assets", debts:"Debts",zakat:"Unpaid Zakat", was_lbl:"Wasiyyah (Bequest)",was_con:"All heirs consent to exceed 1/3?", net_lbl:"Net Estate (after debts & wasiyyah)", mad_t:"Madhab", heir_t:"Select Heirs", heir_hint:"Select deceased gender first, then tap heirs to add them.", calc_btn:"Calculate Shares",calc_disabled:"Calculation temporarily disabled during validation",calc_disabled_reason:"The legacy engine is preserved, but it is not available for estate distribution.",validation_notice:"Under technical and scholarly validation. This tool is for education and case preparation only. Verify every result with a qualified Shafi'i fara'id scholar before distributing an estate.", res_t:"Results — النتائج", tab_sh:"Shares — الأنصبة",tab_hj:"Hajb — الحجب",tab_asl:"أصل المسألة", tab_ass:"Assets — الأموال",tab_learn:"📘 Learn", or_txt:"— or enter total value —", no_g:"Please select who passed away first.",no_h:"No eligible heirs were entered. This case requires review by a qualified Shafi'i fara'id scholar.", all_blk:"All selected heirs are blocked!", was_warn:"⚠ Wasiyyah capped to 1/3 ({m}) — heirs did not consent.", blk_title:"Blocked Heirs — المحجوبون",no_blk:"No heirs blocked — لا حجب في هذه المسألة", fetching:"Fetching...",
     learn_sh:`<h3>📖 Shafi'i Fara'id — الفرائض الشافعية</h3>
     <ul>
     <li><strong>الخمسة الكبار (The 5 Primary Heirs):</strong> Son, Daughter, Father, Mother, Spouse — never fully excluded.</li>
@@ -13,11 +13,11 @@ const T = {
     <li><strong>ثلث الباقي (العمريتان):</strong> If heirs are <i>only</i> Spouse + Father + Mother (with no siblings) → the Mother receives ⅓ of the remainder after the Spouse's share.</li>
     <li><strong>الأخ لأم:</strong> Maternal sibling receives ⅙ alone, or shares ⅓ if multiple. Males and females share equally. They cannot block anyone.</li>
     <li><strong>الوصية:</strong> Max ⅓ of the estate without all heirs' consent. Cannot be given to a legal heir without unanimous permission.</li>
-    </ul>`, 
-    learn_ha:`<h3>📖 Hanafi Differences — فروق الحنفي</h3><ul><li>Currently disabled to focus on core Shafi'i accuracy.</li></ul>` 
+    </ul>`,
+    learn_ha:`<h3>📖 Hanafi Differences — فروق الحنفي</h3><ul><li>Not implemented. Only the Shafi'i validation work is currently in scope.</li></ul>`
   },
-  ar:{ 
-    s_dec:"المتوفى",s_est:"التركة",s_mad:"المذهب",s_heir:"الورثة",s_res:"النتائج", dec_t:"من المتوفى؟",male:"ذكر",female:"أنثى", est_t:"التركة والخصوم",curr_lbl:"العملة:", cash:"نقد",gold:"ذهب",silver:"فضة",land:"عقار",other:"أصول أخرى", debts:"ديون",zakat:"زكاة غير مدفوعة", was_lbl:"الوصية",was_con:"جميع الورثة يوافقون على تجاوز الثلث؟", net_lbl:"التركة الصافية بعد الديون والوصية", mad_t:"المذهب", heir_t:"اختر الورثة", heir_hint:"اختر جنس المتوفى أولاً ثم اضغط على الورثة لإضافتهم.", calc_btn:"احسب الأنصبة", res_t:"النتائج", tab_sh:"الأنصبة",tab_hj:"الحجب",tab_asl:"أصل المسألة", tab_ass:"الأموال",tab_learn:"📘 تعلم", or_txt:"— أو أدخل القيمة الإجمالية مباشرة —", no_g:"الرجاء اختيار جنس المتوفى أولاً.",no_h:"تنتقل التركة إلى ذوي الأرحام. يرجى استشارة عالم مؤهل للتوزيع الصحيح.", all_blk:"جميع الورثة المختارين محجوبون!", was_warn:"⚠ تم تخفيض الوصية إلى الثلث ({m}) لعدم موافقة الورثة.", blk_title:"الورثة المحجوبون",no_blk:"لا حجب في هذه المسألة", fetching:"جارٍ الجلب...", 
+  ar:{
+    s_dec:"المتوفى",s_est:"التركة",s_mad:"المذهب",s_heir:"الورثة",s_res:"النتائج", dec_t:"من المتوفى؟",male:"ذكر",female:"أنثى", est_t:"التركة والخصوم",curr_lbl:"العملة:", cash:"نقد",gold:"ذهب",silver:"فضة",land:"عقار",other:"أصول أخرى", debts:"ديون",zakat:"زكاة غير مدفوعة", was_lbl:"الوصية",was_con:"جميع الورثة يوافقون على تجاوز الثلث؟", net_lbl:"التركة الصافية بعد الديون والوصية", mad_t:"المذهب", heir_t:"اختر الورثة", heir_hint:"اختر جنس المتوفى أولاً ثم اضغط على الورثة لإضافتهم.", calc_btn:"احسب الأنصبة",calc_disabled:"الحساب معطّل مؤقتًا أثناء التحقق",calc_disabled_reason:"تم حفظ المحرك السابق، لكنه غير متاح لتوزيع التركات.",validation_notice:"قيد التحقق التقني والشرعي. هذه الأداة للتعليم وإعداد الحالات فقط. يجب مراجعة كل نتيجة مع عالم مؤهل في علم الفرائض على المذهب الشافعي قبل توزيع التركة.", res_t:"النتائج", tab_sh:"الأنصبة",tab_hj:"الحجب",tab_asl:"أصل المسألة", tab_ass:"الأموال",tab_learn:"📘 تعلم", or_txt:"— أو أدخل القيمة الإجمالية مباشرة —", no_g:"الرجاء اختيار جنس المتوفى أولاً.",no_h:"لم يتم إدخال ورثة مستحقين. تحتاج هذه الحالة إلى مراجعة عالم مؤهل في الفرائض الشافعية.", all_blk:"جميع الورثة المختارين محجوبون!", was_warn:"⚠ تم تخفيض الوصية إلى الثلث ({m}) لعدم موافقة الورثة.", blk_title:"الورثة المحجوبون",no_blk:"لا حجب في هذه المسألة", fetching:"جارٍ الجلب...",
     learn_sh:`<h3>📖 أحكام الفرائض الشافعية</h3>
     <ul>
     <li><strong>الخمسة الكبار:</strong> الابن، البنت، الأب، الأم، الزوج/الزوجة — لا يُحجبون أبداً.</li>
@@ -29,11 +29,11 @@ const T = {
     <li><strong>ثلث الباقي (العمريتان):</strong> إذا كان الورثة فقط: زوج/زوجة + أب + أم (ولا يوجد إخوة) → للأم ثلث ما يبقى بعد نصيب الزوج/الزوجة.</li>
     <li><strong>الأخ لأم:</strong> له السدس منفرداً أو الثلث مشتركاً. الذكر والأنثى سواء. لا يحجب أحداً.</li>
     <li><strong>الوصية:</strong> لا تتجاوز الثلث بدون موافقة الورثة. لا وصية لوارث إلا بإذن الجميع.</li>
-    </ul>`, 
-    learn_ha:`<h3>📖 فروق المذهب الحنفي</h3><ul><li>معطل حاليًا للتركيز على دقة المذهب الشافعي.</li></ul>` 
+    </ul>`,
+    learn_ha:`<h3>📖 فروق المذهب الحنفي</h3><ul><li>معطل حاليًا للتركيز على دقة المذهب الشافعي.</li></ul>`
   },
-  ml:{ 
-    s_dec:"മരണം",s_est:"സ്വത്ത്",s_mad:"മദ്ഹബ്",s_heir:"അവകാശി",s_res:"ഫലം", dec_t:"മരിച്ചത് ആര്?",male:"പുരുഷൻ",female:"സ്ത്രീ", est_t:"സ്വത്തും ബാധ്യതകളും",curr_lbl:"നാണ്യം:", cash:"പണം",gold:"സ്വർണ്ണം",silver:"വെള്ളി",land:"സ്ഥലം / വസ്തു",other:"മറ്റ് ആസ്തി", debts:"കടങ്ങൾ",zakat:"നൽകാത്ത സകാത്ത്", was_lbl:"വസിയ്യത്ത്",was_con:"അവകാശികൾ 1/3 കവിയാൻ സമ്മതിക്കുന്നോ?", net_lbl:"അറ്റ സ്വത്ത് (കടം & വസിയ്യത്ത് കഴിഞ്ഞ്)", mad_t:"മദ്ഹബ്", heir_t:"അവകാശികളെ തിരഞ്ഞെടുക്കുക", heir_hint:"ആദ്യം മരിച്ചയാളുടെ ലിംഗം തിരഞ്ഞെടുക്കുക, പിന്നെ അവകാശികളെ.", calc_btn:"ഓഹരി കണക്കാക്കുക", res_t:"ഫലങ്ങൾ", tab_sh:"ഓഹരികൾ",tab_hj:"ഹജ്ബ്",tab_asl:"അടിസ്ഥാന കണക്ക്", tab_ass:"ആസ്തി",tab_learn:"📘 പഠനം", or_txt:"— അല്ലെങ്കിൽ ആകെ മൂല്യം നൽകുക —", no_g:"ആദ്യം മരിച്ചയാളുടെ ലിംഗം തിരഞ്ഞെടുക്കുക.",no_h:"സ്വത്ത് ذوو الأرحام (ഉമ്മ കുടുംബം) ലഭിക്കും. കൃത്യമായ വിതരണത്തിന് ഒരു പണ്ഡിതനെ സമീപിക്കുക.", all_blk:"തിരഞ്ഞെടുത്ത എല്ലാ അവകാശികളും ഹജ്ബ് ആണ്!", was_warn:"⚠ വസിയ്യത്ത് 1/3 ({m}) ആയി ചുരുക്കി — അവകാശികൾ സമ്മതിച്ചില്ല.", blk_title:"ഹജ്ബ് ആയ അവകാശികൾ",no_blk:"ഈ കേസിൽ ഹജ്ബ് ഇല്ല", fetching:"ലഭ്യമാക്കുന്നു...", 
+  ml:{
+    s_dec:"മരണം",s_est:"സ്വത്ത്",s_mad:"മദ്ഹബ്",s_heir:"അവകാശി",s_res:"ഫലം", dec_t:"മരിച്ചത് ആര്?",male:"പുരുഷൻ",female:"സ്ത്രീ", est_t:"സ്വത്തും ബാധ്യതകളും",curr_lbl:"നാണ്യം:", cash:"പണം",gold:"സ്വർണ്ണം",silver:"വെള്ളി",land:"സ്ഥലം / വസ്തു",other:"മറ്റ് ആസ്തി", debts:"കടങ്ങൾ",zakat:"നൽകാത്ത സകാത്ത്", was_lbl:"വസിയ്യത്ത്",was_con:"അവകാശികൾ 1/3 കവിയാൻ സമ്മതിക്കുന്നോ?", net_lbl:"അറ്റ സ്വത്ത് (കടം & വസിയ്യത്ത് കഴിഞ്ഞ്)", mad_t:"മദ്ഹബ്", heir_t:"അവകാശികളെ തിരഞ്ഞെടുക്കുക", heir_hint:"ആദ്യം മരിച്ചയാളുടെ ലിംഗം തിരഞ്ഞെടുക്കുക, പിന്നെ അവകാശികളെ.", calc_btn:"ഓഹരി കണക്കാക്കുക",calc_disabled:"പരിശോധന നടക്കുന്നതിനാൽ കണക്കുകൂട്ടൽ താൽക്കാലികമായി നിർത്തിയിരിക്കുന്നു",calc_disabled_reason:"പഴയ എഞ്ചിൻ സൂക്ഷിച്ചിട്ടുണ്ട്; സ്വത്ത് വിതരണത്തിനായി അത് ലഭ്യമല്ല.",validation_notice:"സാങ്കേതികവും പണ്ഡിതപരവുമായ പരിശോധനയിലാണ്. ഈ ഉപകരണം പഠനത്തിനും കേസ് തയ്യാറാക്കുന്നതിനും മാത്രം. സ്വത്ത് വിതരണം ചെയ്യുന്നതിന് മുമ്പ് ഓരോ ഫലവും യോഗ്യനായ ശാഫിഈ ഫറാഇദ് പണ്ഡിതനുമായി പരിശോധിക്കുക.", res_t:"ഫലങ്ങൾ", tab_sh:"ഓഹരികൾ",tab_hj:"ഹജ്ബ്",tab_asl:"അടിസ്ഥാന കണക്ക്", tab_ass:"ആസ്തി",tab_learn:"📘 പഠനം", or_txt:"— അല്ലെങ്കിൽ ആകെ മൂല്യം നൽകുക —", no_g:"ആദ്യം മരിച്ചയാളുടെ ലിംഗം തിരഞ്ഞെടുക്കുക.",no_h:"അർഹരായ അവകാശികളെ നൽകിയിട്ടില്ല. ഈ കേസ് യോഗ്യനായ ശാഫിഈ ഫറാഇദ് പണ്ഡിതൻ പരിശോധിക്കണം.", all_blk:"തിരഞ്ഞെടുത്ത എല്ലാ അവകാശികളും ഹജ്ബ് ആണ്!", was_warn:"⚠ വസിയ്യത്ത് 1/3 ({m}) ആയി ചുരുക്കി — അവകാശികൾ സമ്മതിച്ചില്ല.", blk_title:"ഹജ്ബ് ആയ അവകാശികൾ",no_blk:"ഈ കേസിൽ ഹജ്ബ് ഇല്ല", fetching:"ലഭ്യമാക്കുന്നു...",
     learn_sh:`<h3>📖 ഷാഫിഈ ഫറാഇദ് നിയമങ്ങൾ</h3>
     <ul>
     <li><strong>എപ്പോഴും അവകാശമുള്ള 5 പേർ:</strong> മകൻ, മകൾ, പിതാവ്, മാതാവ്, ഭാര്യ/ഭർത്താവ് — ഒരിക്കലും ഹജ്ബ് (തടയപ്പെടുക) ആവില്ല.</li>
@@ -45,8 +45,8 @@ const T = {
     <li><strong>ثلث الباقي (العمريتان):</strong> ഭാര്യ/ഭർത്താവ് + പിതാവ് + മാതാവ് മാത്രം (സഹോദരങ്ങൾ ഇല്ലാതെ) വന്നാൽ → ഭാര്യ/ഭർത്താവിൻ്റെ ഓഹരി കഴിഞ്ഞു ശേഷിക്കുന്നതിൻ്റെ ⅓ മാതാവിനു ലഭിക്കും.</li>
     <li><strong>الأخ لأم:</strong> മാതൃസഹോദരങ്ങൾക്ക് തനിയെ ⅙, ഒന്നിലധികം പേരുണ്ടെങ്കിൽ ⅓ പങ്ക്. ആൺ-പെൺ തുല്യമായിരിക്കും. അവർ ആരെയും ഹജ്ബ് ചെയ്യില്ല.</li>
     <li><strong>الوصية (വസിയ്യത്ത്):</strong> എല്ലാ അവകാശികളുടെയും സമ്മതമില്ലാതെ ⅓ കവിയാൻ പാടില്ല. അവകാശികൾക്ക് വസിയ്യത്ത് ചെയ്യാൻ മറ്റുള്ളവരുടെ സമ്മതം നിർബന്ധമാണ്.</li>
-    </ul>`, 
-    learn_ha:`<h3>📖 ഹനഫി വ്യത്യാസങ്ങൾ</h3><ul><li>ഷാഫിഈ നിയമങ്ങളിൽ പൂർണ്ണ കൃത്യത ഉറപ്പാക്കാൻ താൽക്കാലികമായി നിർത്തിവച്ചിരിക്കുന്നു.</li></ul>` 
+    </ul>`,
+    learn_ha:`<h3>📖 ഹനഫി വ്യത്യാസങ്ങൾ</h3><ul><li>ഷാഫിഈ നിയമങ്ങളിൽ പൂർണ്ണ കൃത്യത ഉറപ്പാക്കാൻ താൽക്കാലികമായി നിർത്തിവച്ചിരിക്കുന്നു.</li></ul>`
   }
 };
 

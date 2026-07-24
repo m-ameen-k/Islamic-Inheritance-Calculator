@@ -40,6 +40,10 @@
   <div class="step" id="s5"><div class="sc">5</div><div class="sl" data-i="s_res">Result</div></div>
 </div>
 
+<div class="validation-banner ai" role="status" data-i="validation_notice">
+  Under technical and scholarly validation. This tool is for education and case preparation only. Verify every result with a qualified Shafi'i fara'id scholar before distributing an estate.
+</div>
+
 <div class="card ai">
   <div class="ch"><div class="cn">1</div><div class="ct" data-i="dec_t">Who passed away?</div><div class="car">من المتوفى؟</div></div>
   <div class="grd">
@@ -111,18 +115,23 @@
   <div class="ch"><div class="cn">3</div><div class="ct" data-i="mad_t">Madhab </div><div class="car"> المذهب</div></div>
   <div class="mrow">
     <button class="mbtn on" data-m="shafii" style="cursor:default">Shafi'i — شافعي</button>
-    <button class="mbtn" data-m="hanafi" disabled style="opacity:0.4; cursor:not-allowed;" title="Currently disabled for accuracy updates">Hanafi — حنفي</button>
-    <button class="mbtn" data-m="maliki" disabled style="opacity:0.4; cursor:not-allowed;" title="Currently disabled for accuracy updates">Maliki — مالكي</button>
-    <button class="mbtn" data-m="hanbali" disabled style="opacity:0.4; cursor:not-allowed;" title="Currently disabled for accuracy updates">Hanbali — حنبلي</button>
+    <button class="mbtn" data-m="hanafi" disabled title="Not implemented">Hanafi — حنفي</button>
+    <button class="mbtn" data-m="maliki" disabled title="Not implemented">Maliki — مالكي</button>
+    <button class="mbtn" data-m="hanbali" disabled title="Not implemented">Hanbali — حنبلي</button>
   </div>
-  <div class="snote" style="margin-top:10px;margin-bottom:0">⚠ System temporarily locked to strict Shafi'i rules to ensure 100% calculation accuracy.</div>
+  <div class="snote" style="margin-top:10px;margin-bottom:0">⚠ Only the Shafi'i rebuild is in scope. Its rules are still being verified.</div>
 </div>
 
 <div class="card ai">
   <div class="ch"><div class="cn">4</div><div class="ct" data-i="heir_t">Select Heirs</div><div class="car">اختر الورثة</div></div>
   <div class="hint" id="heirsHint" data-i="heir_hint">Select deceased gender first, then tap heirs.</div>
   <div class="hgrid" id="hgrid"></div>
-  <button class="calcbtn" id="calcBtn"><span data-i="calc_btn">Calculate Shares</span></button>
+  <button class="calcbtn" id="calcBtn" disabled aria-describedby="calculationDisabledReason">
+    <span data-i="calc_disabled">Calculation temporarily disabled during validation</span>
+  </button>
+  <p class="calculation-disabled-reason" id="calculationDisabledReason" data-i="calc_disabled_reason">
+    The legacy engine is preserved, but it is not available for estate distribution.
+  </p>
 </div>
 
 <div class="res card ai" id="resSec">
