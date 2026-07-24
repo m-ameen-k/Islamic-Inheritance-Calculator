@@ -267,3 +267,20 @@ applyLang();
 updateNet(); 
 renderHeirs(); 
 ["gold","silver"].forEach(m=>updateMetalDisplay(m));
+
+// Event delegation to handle tooltip taps on mobile devices
+document.body.addEventListener('click', function(e) {
+    const tooltipEl = e.target.closest('[data-tooltip]');
+    
+    // Clear the 'active' class from any currently open tooltips
+    document.querySelectorAll('[data-tooltip].active').forEach(el => {
+        if (el!== tooltipEl) {
+            el.classList.remove('active');
+        }
+    });
+
+    // Toggle the tooltip the user just tapped
+    if (tooltipEl) {
+        tooltipEl.classList.toggle('active');
+    }
+});
