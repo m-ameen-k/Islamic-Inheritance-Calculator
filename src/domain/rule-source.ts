@@ -41,6 +41,14 @@ export interface FiqhRuleRecord {
 
 export type VerifiedRuleRecord = FiqhRuleRecord & {
   readonly status: "VERIFIED";
+  readonly kitabTitle: string;
+  readonly author: string;
+  readonly chapter: string;
+  readonly pdfPage: string;
+  readonly printedPage: string;
+  readonly exactArabicQuotation: string;
+  readonly reviewer: string;
+  readonly reviewDate: string;
 };
 
 export const UNVERIFIED_RULE_MESSAGE =
@@ -59,6 +67,28 @@ export interface MissingRuleResolution {
 
 export type VerifiedModeResolution = VerifiedRuleResolution | MissingRuleResolution;
 
+function hasText(value: string | null): value is string {
+  return value !== null && value.trim().length > 0;
+}
+
+/**
+ * A VERIFIED status is necessary but not sufficient: verified mode also
+ * requires the source location, exact quotation, reviewer, and review date.
+ */
+export function isVerifiedRuleRecord(rule: FiqhRuleRecord): rule is VerifiedRuleRecord {
+  return (
+    rule.status === "VERIFIED" &&
+    hasText(rule.kitabTitle) &&
+    hasText(rule.author) &&
+    hasText(rule.chapter) &&
+    hasText(rule.pdfPage) &&
+    hasText(rule.printedPage) &&
+    hasText(rule.exactArabicQuotation) &&
+    hasText(rule.reviewer) &&
+    hasText(rule.reviewDate)
+  );
+}
+
 /**
  * Resolves one rule for verified mode without falling back to provisional,
  * disputed, disabled, or missing-rule records.
@@ -74,7 +104,7 @@ export function resolveVerifiedRule(
     (candidate): candidate is VerifiedRuleRecord =>
       candidate.ruleId === ruleId &&
       candidate.madhhab === "SHAFII" &&
-      candidate.status === "VERIFIED",
+      isVerifiedRuleRecord(candidate),
   );
 
   if (rule === undefined) {

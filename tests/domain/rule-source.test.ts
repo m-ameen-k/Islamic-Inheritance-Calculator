@@ -17,16 +17,16 @@ function makeRecord(status: RuleStatus): FiqhRuleRecord {
     conditions: [{ description: "Synthetic test condition", facts: { present: true } }],
     exclusions: [{ description: "Synthetic test exclusion", facts: { present: false } }],
     result: { type: "SYNTHETIC_TEST_RESULT" },
-    kitabTitle: null,
-    author: null,
-    chapter: null,
-    pdfPage: null,
-    printedPage: null,
-    exactArabicQuotation: null,
+    kitabTitle: "Synthetic schema test source",
+    author: "Synthetic schema test author",
+    chapter: "Synthetic schema test chapter",
+    pdfPage: "TEST-PDF-PAGE",
+    printedPage: "TEST-PRINTED-PAGE",
+    exactArabicQuotation: "نص اصطناعي لاختبار بنية البيانات فقط",
     explanation: "Tests the technical record shape only.",
     verificationNotes: "This is not a fiqh rule or inheritance expectation.",
-    reviewer: null,
-    reviewDate: null,
+    reviewer: "Synthetic schema test reviewer",
+    reviewDate: "2000-01-01",
   };
 }
 
@@ -66,6 +66,21 @@ describe("TECHNICAL_TEST: rule-source verification structure", () => {
     expect(resolveVerifiedRule(verifiedRule.ruleId, [verifiedRule])).toEqual({
       kind: "RULE_FOUND",
       rule: verifiedRule,
+    });
+  });
+
+  it("rejects a VERIFIED label when required source review metadata is absent", () => {
+    const incompleteRecord = {
+      ...makeRecord("VERIFIED"),
+      exactArabicQuotation: null,
+      reviewer: null,
+      reviewDate: null,
+    };
+
+    expect(resolveVerifiedRule(incompleteRecord.ruleId, [incompleteRecord])).toEqual({
+      kind: "MISSING_RULE",
+      ruleId: incompleteRecord.ruleId,
+      message: UNVERIFIED_RULE_MESSAGE,
     });
   });
 });
