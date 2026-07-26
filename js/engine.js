@@ -466,7 +466,7 @@ function calculate() {
 
   sl.innerHTML += `<div style="margin-top:1.2rem;padding:10px 14px;background:var(--warnbg);border-radius:var(--r3);border-left:3px solid var(--warn)">
     <div style="font-size:12px;color:var(--warn);font-weight:600;margin-bottom:3px">⚠ Important Notice — تنبيه مهم</div>
-    <div style="font-size:12px;color:var(--warn)">Under technical and scholarly validation. This legacy result is not available for estate distribution. Verify every result with a qualified Shafi'i fara'id scholar.</div>
+    <div style="font-size:12px;color:var(--warn)">${T[lang].validation_notice}</div>
   </div>`;
 
   const bl = active.filter(h => blocked[h.id]);

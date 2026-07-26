@@ -7,8 +7,8 @@
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
 > **Under technical and scholarly validation. This tool is for education and
-> case preparation only. Verify every result with a qualified Shafi'i fara'id
-> scholar before distributing an estate.**
+> case preparation only. Every result must be verified by a qualified Shafi‘i
+> fara’id scholar before an estate is distributed.**
 
 ## Validation Status
 
@@ -17,24 +17,23 @@ calculation action is temporarily disabled while a testable TypeScript engine is
 being developed.
 
 - No calculation is represented as scholar-approved or legally valid.
-- Internet research may only enter the research corpus as
-  `PROVISIONAL — NOT YET VERIFIED FROM USER-PROVIDED KITAB`.
+- Internet-derived fiqh rules must not enter the verified corpus or calculation
+  path.
 - Verified mode will stop when a required rule has not been verified from the
   user's supplied Shafi'i sources.
 - Research mode will never be the default.
 
 ---
 
-## Legacy Prototype Features
+## Preserved Legacy Prototype
 
-- ✅ **25 heirs** – including emancipators.
-- 🚫 **Hajb demonstrations** – currently under rule-by-rule validation.
-- 📐 **Awl (العول)** – automatic when shares exceed base.
-- 🔄 **Radd (الرد)** – surplus returned when no `Asaba`.
-- 👵 **Umariyyatayn (العمريتان)** – spouse + parents (no siblings) → mother gets ⅓ of remainder.
-- 📊 **Tashih (التصحيح)** – scales shares to remove fractions.
-- 💡 **Interactive Asaba explanation** – click any “عصبة” label for a popup rule (English, Arabic, Malayalam).
-- 📖 **Detailed Asl steps** – shows _Tamathul_, _Tadakhul_, _Tawafuq_, or _Tabayun_.
+The legacy prototype remains in the repository so no earlier implementation is
+lost. Its fiqh logic, blocking behavior, explanations, and worked outputs are
+unverified and are not part of the validated calculation path.
+
+- 🧑‍🤝‍🧑 **25 relationship inputs** – retained as legacy interface data.
+- 🚫 **Legacy rule demonstrations** – retained in source for audit, but the
+  calculation action is disabled.
 - 💰 **Asset inputs** – cash, gold/silver (weight/price or total), property, debts, Zakat, bequest.
 - 🌐 **Live metal prices** – fetch gold/silver price in any currency.
 - 🌍 **Multi‑language** – English, العربية, മലയാളം.
@@ -94,8 +93,8 @@ Technical arithmetic tests do not prove fiqh correctness.
 ## 🔒 Disclaimer
 
 ⚠️ **Under technical and scholarly validation.** This tool is for education and
-case preparation only. Verify every result with a qualified Shafi'i fara'id
-scholar before distributing an estate.
+case preparation only. Every result must be verified by a qualified Shafi‘i
+fara’id scholar before an estate is distributed.
 
 ---
 
