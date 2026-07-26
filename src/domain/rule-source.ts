@@ -1,3 +1,5 @@
+import type { Madhhab } from "./inheritance-case";
+
 export const RULE_STATUSES = [
   "VERIFIED",
   "EXTRACTED_NOT_VERIFIED",
@@ -8,7 +10,7 @@ export const RULE_STATUSES = [
 
 export type RuleStatus = (typeof RULE_STATUSES)[number];
 
-export type SupportedMadhhab = "SHAFII";
+export type SupportedMadhhab = Madhhab;
 
 export type JsonPrimitive = string | number | boolean | null;
 export type JsonValue =
