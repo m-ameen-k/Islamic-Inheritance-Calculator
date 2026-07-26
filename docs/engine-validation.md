@@ -28,6 +28,18 @@ treated as a completed verified calculation.
 Neither mode silently falls back to the legacy JavaScript engine or to an
 online summary.
 
+## Legacy isolation
+
+`js/engine.js` and `js/app.js` are preserved only for audit and behavioral
+comparison. They are not trusted sources of Shafi‘i rules and must not be
+imported by the TypeScript engine.
+
+The visible legacy calculation action remains disabled. It must not be
+re-enabled until the source-driven engine, required verified rule corpus,
+technical invariants, and scholar-reviewed cases are ready. An architecture
+test scans production TypeScript sources for legacy imports and browser-global
+access, and also checks the disabled button in `index.html`.
+
 ## From a kitab passage to an executable rule
 
 1. Transcribe the exact Arabic passage from a user-supplied kitab.

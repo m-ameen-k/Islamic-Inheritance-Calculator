@@ -1,4 +1,12 @@
-//  ONLY the Math: gcd(), lcm(), and the calculate() Fara'id logic
+/**
+ * LEGACY ENGINE — AUDIT AND COMPARISON ONLY.
+ *
+ * This file is preserved so earlier behavior can be inspected. It is not a
+ * trusted source of fiqh rules, must never be imported by the TypeScript
+ * engine, and must remain disabled in the visible calculator until the new
+ * source-verified engine and its scholar-reviewed corpus are ready.
+ */
+//  ONLY the legacy Math: gcd(), lcm(), and calculate() prototype logic
 // --- Legacy arithmetic helpers (preserved for reference; not validated) ---
 function gcd(a, b) { a = Math.abs(Math.round(a)); b = Math.abs(Math.round(b)); while (b) { let t = b; b = a % b; a = t; } return a || 1; }
 function lcm(a, b) { return Math.abs(Math.round(a * b)) / gcd(a, b); }
