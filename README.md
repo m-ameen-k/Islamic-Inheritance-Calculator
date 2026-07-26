@@ -23,6 +23,9 @@ being developed.
   user's supplied Shafi'i sources.
 - Research mode will never be the default.
 
+See [Engine validation and rule governance](docs/engine-validation.md) for the
+rule-review lifecycle and scholar-approved fixture requirements.
+
 ---
 
 ## Preserved Legacy Prototype

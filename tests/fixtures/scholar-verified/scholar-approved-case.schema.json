@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "scholar-approved-case.schema.json",
+  "title": "Scholar-approved Shafi‘i inheritance test case",
+  "description": "Schema only. It does not contain or assert any fiqh result.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "caseId",
+    "title",
+    "fixtureCategory",
+    "madhhab",
+    "heirs",
+    "estateInput",
+    "expectedExactShares",
+    "expectedBlockedHeirs",
+    "expectedAppliedRuleIds",
+    "kitabCitations",
+    "verificationStatus",
+    "reviewer",
+    "reviewDate",
+    "notes"
+  ],
+  "properties": {
+    "caseId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fixtureCategory": {
+      "const": "SCHOLAR_VERIFIED_TEST"
+    },
+    "madhhab": {
+      "const": "SHAFII"
+    },
+    "heirs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["heirId", "type", "count"],
+        "properties": {
+          "heirId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      }
+    },
+    "estateInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["currencyCode", "grossEstateMinorUnits", "obligations", "wasiyyah"],
+      "properties": {
+        "currencyCode": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "grossEstateMinorUnits": {
+          "$ref": "#/$defs/nonNegativeIntegerString"
+        },
+        "obligations": {
+          "type": "array"
+        },
+        "wasiyyah": {
+          "type": ["object", "null"]
+        }
+      }
+    },
+    "expectedExactShares": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["heirId", "numerator", "denominator"],
+        "properties": {
+          "heirId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "numerator": {
+            "$ref": "#/$defs/nonNegativeIntegerString"
+          },
+          "denominator": {
+            "$ref": "#/$defs/positiveIntegerString"
+          }
+        }
+      }
+    },
+    "expectedBlockedHeirs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["heirId", "reason", "ruleId"],
+        "properties": {
+          "heirId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ruleId": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "expectedAppliedRuleIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "kitabCitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/kitabCitation"
+      }
+    },
+    "verificationStatus": {
+      "const": "VERIFIED"
+    },
+    "reviewer": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reviewDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "nonNegativeIntegerString": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)$"
+    },
+    "positiveIntegerString": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*$"
+    },
+    "kitabCitation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ruleId",
+        "kitabTitle",
+        "author",
+        "chapter",
+        "section",
+        "pdfPage",
+        "printedPage",
+        "exactArabicQuotation"
+      ],
+      "properties": {
+        "ruleId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kitabTitle": {
+          "type": "string",
+          "minLength": 1
+        },
+        "author": {
+          "type": "string",
+          "minLength": 1
+        },
+        "chapter": {
+          "type": ["string", "null"]
+        },
+        "section": {
+          "type": ["string", "null"]
+        },
+        "pdfPage": {
+          "type": ["string", "null"]
+        },
+        "printedPage": {
+          "type": ["string", "null"]
+        },
+        "exactArabicQuotation": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "allOf": [
+        {
+          "anyOf": [
+            {
+              "properties": {
+                "chapter": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            {
+              "properties": {
+                "section": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "anyOf": [
+            {
+              "properties": {
+                "pdfPage": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            {
+              "properties": {
+                "printedPage": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

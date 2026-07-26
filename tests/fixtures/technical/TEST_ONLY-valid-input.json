@@ -1,0 +1,24 @@
+{
+  "fixtureCategory": "TECHNICAL_TEST",
+  "purpose": "TEST_ONLY input normalization and validation; contains no fiqh expectation.",
+  "provisional": false,
+  "case": {
+    "caseId": "TEST_ONLY_TECHNICAL_FIXTURE",
+    "madhhab": "SHAFII",
+    "mode": "VERIFIED",
+    "deceasedSex": "MALE",
+    "estate": {
+      "currencyCode": "INR",
+      "grossEstateMinorUnits": "10000",
+      "obligations": [],
+      "wasiyyah": null
+    },
+    "heirs": [
+      {
+        "heirId": "TEST_ONLY_HEIR",
+        "type": "SON",
+        "count": 1
+      }
+    ]
+  }
+}

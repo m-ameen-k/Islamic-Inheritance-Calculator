@@ -1,0 +1,26 @@
+{
+  "fixtureCategory": "EXTRACTED_NOT_VERIFIED_TEST",
+  "purpose": "TEST_ONLY provisional-mode marker; contains no fiqh rule or expected share.",
+  "provisional": true,
+  "unsafe": true,
+  "case": {
+    "caseId": "TEST_ONLY_PROVISIONAL_FIXTURE",
+    "madhhab": "SHAFII",
+    "mode": "RESEARCH",
+    "deceasedSex": "FEMALE",
+    "estate": {
+      "currencyCode": "INR",
+      "grossEstateMinorUnits": "10000",
+      "obligations": [],
+      "wasiyyah": null
+    },
+    "heirs": [
+      {
+        "heirId": "TEST_ONLY_HEIR",
+        "type": "DAUGHTER",
+        "count": 1
+      }
+    ]
+  },
+  "ruleRecords": []
+}
