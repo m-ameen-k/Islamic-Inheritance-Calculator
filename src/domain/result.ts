@@ -7,10 +7,21 @@ export type CalculationCompletionStatus = "COMPLETED" | "INCOMPLETE" | "INVALID"
 export type ResultVerificationStatus = "VERIFIED" | "PROVISIONAL" | "UNVERIFIED";
 
 export type CalculationWarningCode =
-  "RESEARCH_MODE_PROVISIONAL" | "MISSING_VERIFIED_RULE" | "INPUT_NORMALIZED" | "RESULT_INCOMPLETE";
+  | "RESEARCH_MODE_PROVISIONAL"
+  | "MISSING_VERIFIED_RULE"
+  | "INPUT_NORMALIZED"
+  | "RESULT_INCOMPLETE"
+  | "RULE_EXECUTION_NOT_IMPLEMENTED";
 
 export interface CalculationWarning {
   readonly code: CalculationWarningCode;
+  readonly message: string;
+}
+
+export interface InputValidationIssue {
+  readonly path: string;
+  readonly code:
+    "REQUIRED" | "UNSUPPORTED_VALUE" | "INVALID_MINOR_UNITS" | "INVALID_COUNT" | "DUPLICATE_ID";
   readonly message: string;
 }
 
@@ -58,10 +69,12 @@ export interface FractionOperation {
 export interface CalculationEvidence {
   readonly inputSnapshot: InheritanceCase;
   readonly normalizedCase: InheritanceCase;
+  readonly selectedRuleIds: readonly string[];
   readonly appliedRuleIds: readonly string[];
   readonly appliedSourceCitations: readonly RuleSourceCitation[];
   readonly blockedHeirs: readonly BlockingOutcome[];
   readonly fractionOperations: readonly FractionOperation[];
+  readonly validationIssues: readonly InputValidationIssue[];
   readonly warnings: readonly CalculationWarning[];
   readonly missingRules: readonly MissingRule[];
   readonly mode: CalculationMode;
