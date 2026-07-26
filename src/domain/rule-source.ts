@@ -32,6 +32,7 @@ export interface FiqhRuleRecord {
   readonly kitabTitle: string | null;
   readonly author: string | null;
   readonly chapter: string | null;
+  readonly section: string | null;
   readonly pdfPage: string | null;
   readonly printedPage: string | null;
   readonly exactArabicQuotation: string | null;
@@ -45,9 +46,6 @@ export type VerifiedRuleRecord = FiqhRuleRecord & {
   readonly status: "VERIFIED";
   readonly kitabTitle: string;
   readonly author: string;
-  readonly chapter: string;
-  readonly pdfPage: string;
-  readonly printedPage: string;
   readonly exactArabicQuotation: string;
   readonly reviewer: string;
   readonly reviewDate: string;
@@ -82,12 +80,27 @@ export function isVerifiedRuleRecord(rule: FiqhRuleRecord): rule is VerifiedRule
     rule.status === "VERIFIED" &&
     hasText(rule.kitabTitle) &&
     hasText(rule.author) &&
-    hasText(rule.chapter) &&
-    hasText(rule.pdfPage) &&
-    hasText(rule.printedPage) &&
+    (hasText(rule.chapter) || hasText(rule.section)) &&
+    (hasText(rule.pdfPage) || hasText(rule.printedPage)) &&
     hasText(rule.exactArabicQuotation) &&
     hasText(rule.reviewer) &&
     hasText(rule.reviewDate)
+  );
+}
+
+export type SourceBackedRuleRecord = FiqhRuleRecord & {
+  readonly kitabTitle: string;
+  readonly author: string;
+  readonly exactArabicQuotation: string;
+};
+
+export function isSourceBackedRuleRecord(rule: FiqhRuleRecord): rule is SourceBackedRuleRecord {
+  return (
+    hasText(rule.kitabTitle) &&
+    hasText(rule.author) &&
+    (hasText(rule.chapter) || hasText(rule.section)) &&
+    (hasText(rule.pdfPage) || hasText(rule.printedPage)) &&
+    hasText(rule.exactArabicQuotation)
   );
 }
 

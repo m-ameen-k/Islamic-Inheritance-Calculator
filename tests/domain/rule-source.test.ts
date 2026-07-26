@@ -20,6 +20,7 @@ function makeRecord(status: RuleStatus): FiqhRuleRecord {
     kitabTitle: "Synthetic schema test source",
     author: "Synthetic schema test author",
     chapter: "Synthetic schema test chapter",
+    section: null,
     pdfPage: "TEST-PDF-PAGE",
     printedPage: "TEST-PRINTED-PAGE",
     exactArabicQuotation: "نص اصطناعي لاختبار بنية البيانات فقط",
