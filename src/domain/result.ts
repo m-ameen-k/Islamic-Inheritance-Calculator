@@ -11,7 +11,8 @@ export type CalculationWarningCode =
   | "MISSING_VERIFIED_RULE"
   | "INPUT_NORMALIZED"
   | "RESULT_INCOMPLETE"
-  | "RULE_EXECUTION_NOT_IMPLEMENTED";
+  | "RULE_EXECUTION_NOT_IMPLEMENTED"
+  | "RESULT_INVARIANT_FAILED";
 
 export interface CalculationWarning {
   readonly code: CalculationWarningCode;
@@ -22,6 +23,26 @@ export interface InputValidationIssue {
   readonly path: string;
   readonly code:
     "REQUIRED" | "UNSUPPORTED_VALUE" | "INVALID_MINOR_UNITS" | "INVALID_COUNT" | "DUPLICATE_ID";
+  readonly message: string;
+}
+
+export type ResultInvariantCode =
+  | "INVALID_FRACTION"
+  | "NEGATIVE_FRACTION"
+  | "DUPLICATE_HEIR_OUTCOME"
+  | "BLOCKED_HEIR_HAS_SHARE"
+  | "DISTRIBUTED_SHARE_MISMATCH"
+  | "DISTRIBUTION_EXCEEDS_ONE"
+  | "COMPLETED_TOTAL_NOT_ONE"
+  | "COMPLETED_WITH_MISSING_RULE"
+  | "COMPLETED_WITH_PENDING_ADJUSTMENT"
+  | "INCOMPLETE_MARKED_COMPLETED"
+  | "VERIFIED_RESULT_HAS_PROVISIONAL_RULE"
+  | "RESEARCH_RESULT_MARKED_VERIFIED";
+
+export interface ResultInvariantIssue {
+  readonly path: string;
+  readonly code: ResultInvariantCode;
   readonly message: string;
 }
 
@@ -75,6 +96,7 @@ export interface CalculationEvidence {
   readonly blockedHeirs: readonly BlockingOutcome[];
   readonly fractionOperations: readonly FractionOperation[];
   readonly validationIssues: readonly InputValidationIssue[];
+  readonly resultInvariantIssues: readonly ResultInvariantIssue[];
   readonly warnings: readonly CalculationWarning[];
   readonly missingRules: readonly MissingRule[];
   readonly mode: CalculationMode;

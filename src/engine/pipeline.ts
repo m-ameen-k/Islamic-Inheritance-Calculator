@@ -6,6 +6,7 @@ import { calculate } from "./calculate";
 import { loadEligibleRules } from "./load-rules";
 import { normalizeCase, snapshotCase } from "./normalize";
 import { resolveRequiredRuleIds } from "./required-rules";
+import { validateResult } from "./result-invariants";
 import { validateCase } from "./validate";
 
 /**
@@ -24,11 +25,34 @@ export function calculateInheritanceCase(
     ? loadEligibleRules(normalizedCase.mode, normalizedCase.madhhab, registry)
     : [];
 
-  return calculate({
+  const result = calculate({
     inputSnapshot,
     normalizedCase,
     validationIssues: validation.issues,
     requirements,
     eligibleRules,
   });
+  const resultValidation = validateResult(result);
+
+  if (resultValidation.valid) {
+    return result;
+  }
+
+  return {
+    ...result,
+    status: "INVALID",
+    message: "The calculation result failed technical validation.",
+    evidence: {
+      ...result.evidence,
+      verificationStatus: "UNVERIFIED",
+      resultInvariantIssues: resultValidation.issues,
+      warnings: [
+        ...result.evidence.warnings,
+        {
+          code: "RESULT_INVARIANT_FAILED",
+          message: "The calculation result failed technical validation.",
+        },
+      ],
+    },
+  };
 }

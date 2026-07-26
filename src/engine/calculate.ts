@@ -92,6 +92,7 @@ export function calculate(input: CalculateSkeletonInput): CalculationResult {
       blockedHeirs: [],
       fractionOperations: [],
       validationIssues: input.validationIssues,
+      resultInvariantIssues: [],
       warnings,
       missingRules,
       mode: input.normalizedCase.mode,
