@@ -1,0 +1,58 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Research-only blank template. This record is not verified and is not executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-008",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "chapter": "كتاب الفرائض",
+    "printedPages": [137],
+    "localPdfPages": [8],
+    "arabicExcerpt": "والثلثان: فرض بنتين فصاعدا، وبنتي ابن فأكثر، وأختين فأكثر لأبوين أو لأب.",
+    "sourceSummary": "Two thirds is the collective fixed share for the listed plural female categories under their eligibility conditions."
+  },
+  "review": {
+    "reviewId": "MANUAL-20260727-KZ-FR-008",
+    "extractedRuleId": "KZ-FR-008",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "reviewStatus": "MANUALLY_CHECKED",
+    "statusHistory": ["EXTRACTED_NOT_VERIFIED", "MANUAL_SCAN_CHECK_PENDING", "MANUALLY_CHECKED"],
+    "exactArabicChecked": true,
+    "printedPageChecked": true,
+    "localPdfPageChecked": true,
+    "chapterChecked": true,
+    "arabicCorrections": [
+      {
+        "originalText": "",
+        "correctedText": "",
+        "note": "The excerpt matches the principal list. The visible source continues with «يعني: منفردات عن إخوتهن», which is relevant and should be retained during structured encoding."
+      }
+    ],
+    "unresolvedWords": [],
+    "explicitConditions": [
+      "Two or more daughters; two or more son's daughters; two or more full sisters; or two or more paternal sisters, with the source adding that the female categories are منفردات عن إخوتهن."
+    ],
+    "explicitExclusions": [
+      "The line does not contain the full blocking and residuary-conversion rules that appear in later sections."
+    ],
+    "explicitOutcome": [
+      "The eligible listed category collectively receives two thirds."
+    ],
+    "reviewExplanation": "The principal list is confirmed, and the immediately following qualification about brothers is recorded rather than silently omitted.",
+    "inferredDetails": [
+      "None beyond linking the visible continuation to the quoted list."
+    ],
+    "missingInformation": [
+      "Complete blockers, coexistence with daughters, and conversion to residuary status with male counterparts."
+    ],
+    "conflictingSources": [],
+    "reviewerName": "OpenAI GPT-5.6 Thinking",
+    "reviewerRole": "AI visual transcription assistant; manual scan comparison only; not a qualified Shafi'i scholar",
+    "reviewDate": "2026-07-27",
+    "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED",
+    "approvedCaseIds": [],
+    "implementationSpecification": null,
+    "notes": "Visually checked against printed page 137 / local PDF page 8. This record is not VERIFIED and is not executable."
+  }
+}

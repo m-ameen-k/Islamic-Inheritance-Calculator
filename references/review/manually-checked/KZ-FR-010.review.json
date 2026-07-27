@@ -1,0 +1,54 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Research-only blank template. This record is not verified and is not executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-010",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "chapter": "كتاب الفرائض",
+    "printedPages": [138],
+    "localPdfPages": [9],
+    "arabicExcerpt": "والسدس فرض سبعة: أب وجد لميتهما ولد أو ولد ابن، وأم لميتها ولد أو ولد ابن أو اثنان من الإخوة والأخوات، وجدة، ولبنت ابن مع بنت صلب، ولأخت لأب مع أخت لأبوين، ولواحد من ولد الأم.",
+    "sourceSummary": "The text lists the seven one-sixth categories and their main triggering relationships."
+  },
+  "review": {
+    "reviewId": "MANUAL-20260727-KZ-FR-010",
+    "extractedRuleId": "KZ-FR-010",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "reviewStatus": "MANUALLY_CHECKED",
+    "statusHistory": ["EXTRACTED_NOT_VERIFIED", "MANUAL_SCAN_CHECK_PENDING", "MANUALLY_CHECKED"],
+    "exactArabicChecked": true,
+    "printedPageChecked": true,
+    "localPdfPageChecked": true,
+    "chapterChecked": true,
+    "arabicCorrections": [
+      {
+        "originalText": "",
+        "correctedText": "",
+        "note": "No correction required to the visible list."
+      }
+    ],
+    "unresolvedWords": [],
+    "explicitConditions": [
+      "The passage lists: father with a child or son's descendant; grandfather with a child or son's descendant; mother with a child, son's descendant, or two siblings; eligible grandmother; son's daughter with a direct daughter; paternal sister with a full sister; and one uterine sibling."
+    ],
+    "explicitExclusions": [
+      "The compact list does not provide every blocker, generation qualifier, or the special grandfather-with-siblings treatment."
+    ],
+    "explicitOutcome": ["An eligible listed category receives one sixth."],
+    "reviewExplanation": "All seven categories are visibly confirmed on printed page 138. They must later be split into separate rules because their conditions and interactions differ.",
+    "inferredDetails": ["None used for the manual check."],
+    "missingInformation": [
+      "Full hajb rules, grandmother hierarchy, descendant-generation conditions, and grandfather special cases."
+    ],
+    "conflictingSources": [],
+    "reviewerName": "OpenAI GPT-5.6 Thinking",
+    "reviewerRole": "AI visual transcription assistant; manual scan comparison only; not a qualified Shafi'i scholar",
+    "reviewDate": "2026-07-27",
+    "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED",
+    "approvedCaseIds": [],
+    "implementationSpecification": null,
+    "notes": "Visually checked against printed page 138 / local PDF page 9. This record is not VERIFIED and is not executable."
+  }
+}

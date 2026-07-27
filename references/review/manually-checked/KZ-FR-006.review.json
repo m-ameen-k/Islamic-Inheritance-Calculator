@@ -1,0 +1,54 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Research-only blank template. This record is not verified and is not executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-006",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "chapter": "كتاب الفرائض",
+    "printedPages": [137],
+    "localPdfPages": [8],
+    "arabicExcerpt": "والربع: فرض زوج لزوجته ولد أو ولد ابن، وزوجة ليس لزوجها واحد منهما.",
+    "sourceSummary": "One quarter applies to a husband when the deceased wife has a qualifying descendant, and to a wife when the deceased husband has none."
+  },
+  "review": {
+    "reviewId": "MANUAL-20260727-KZ-FR-006",
+    "extractedRuleId": "KZ-FR-006",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "reviewStatus": "MANUALLY_CHECKED",
+    "statusHistory": ["EXTRACTED_NOT_VERIFIED", "MANUAL_SCAN_CHECK_PENDING", "MANUALLY_CHECKED"],
+    "exactArabicChecked": true,
+    "printedPageChecked": true,
+    "localPdfPageChecked": true,
+    "chapterChecked": true,
+    "arabicCorrections": [
+      {
+        "originalText": "",
+        "correctedText": "",
+        "note": "No correction required. The visible text reads: والربع: فرض زوج لزوجته ولد أو ولد ابن، وزوجة ليس لزوجها واحد منهما."
+      }
+    ],
+    "unresolvedWords": [],
+    "explicitConditions": [
+      "Husband: deceased wife has a child or son's descendant. Wife: deceased husband has neither a child nor a son's descendant."
+    ],
+    "explicitExclusions": [
+      "The line does not itself explain collective division where multiple wives exist."
+    ],
+    "explicitOutcome": ["The eligible spouse category receives one quarter."],
+    "reviewExplanation": "Both branches and the descendant contrast are directly visible on printed page 137.",
+    "inferredDetails": ["None used for the manual check."],
+    "missingInformation": [
+      "Collective treatment of multiple wives and the precise descendant-generation data model."
+    ],
+    "conflictingSources": [],
+    "reviewerName": "OpenAI GPT-5.6 Thinking",
+    "reviewerRole": "AI visual transcription assistant; manual scan comparison only; not a qualified Shafi'i scholar",
+    "reviewDate": "2026-07-27",
+    "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED",
+    "approvedCaseIds": [],
+    "implementationSpecification": null,
+    "notes": "Visually checked against printed page 137 / local PDF page 8. This record is not VERIFIED and is not executable."
+  }
+}

@@ -18,6 +18,7 @@ export type RuleWorkflowStatus = ReviewStatus | ImplementationStatus;
 
 export const REVIEWER_ROLES = [
   "MANUAL_SOURCE_REVIEWER",
+  "AI visual transcription assistant; manual scan comparison only; not a qualified Shafi'i scholar",
   "QUALIFIED_SHAFII_FARAID_SCHOLAR",
 ] as const;
 
@@ -25,6 +26,7 @@ export type ReviewerRole = (typeof REVIEWER_ROLES)[number];
 
 export const REVIEWER_DECISIONS = [
   "MANUAL_CHECK_PASSED",
+  "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED",
   "APPROVED",
   "REJECTED",
   "NEEDS_MORE_SOURCE",

@@ -1,0 +1,56 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Research-only blank template. This record is not verified and is not executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-009",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "chapter": "كتاب الفرائض",
+    "printedPages": [137],
+    "localPdfPages": [8],
+    "arabicExcerpt": "والثلث فرض أم ليس لميتها ولد ولا ولد ابن ولا اثنان من الإخوة والأخوات، وفرض اثنين فأكثر من ولد الأم.",
+    "sourceSummary": "One third is assigned to the mother under the stated absence conditions and collectively to two or more uterine siblings."
+  },
+  "review": {
+    "reviewId": "MANUAL-20260727-KZ-FR-009",
+    "extractedRuleId": "KZ-FR-009",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "reviewStatus": "MANUALLY_CHECKED",
+    "statusHistory": ["EXTRACTED_NOT_VERIFIED", "MANUAL_SCAN_CHECK_PENDING", "MANUALLY_CHECKED"],
+    "exactArabicChecked": true,
+    "printedPageChecked": true,
+    "localPdfPageChecked": true,
+    "chapterChecked": true,
+    "arabicCorrections": [
+      {
+        "originalText": "",
+        "correctedText": "",
+        "note": "The excerpt matches the first two clauses, but the visible source continues: «وقد يفرض للجد مع الإخوة». That continuation must be preserved as a separate grandfather-with-siblings matter, not folded into the ordinary one-third rule."
+      }
+    ],
+    "unresolvedWords": [],
+    "explicitConditions": [
+      "Mother: the deceased has no child, no son's descendant, and not two siblings. Uterine siblings: two or more."
+    ],
+    "explicitExclusions": [
+      "The line is not a complete implementation rule for the mother because the Umariyyatayn and sibling-count details occur elsewhere. The grandfather continuation is a special-case reference requiring its dedicated section."
+    ],
+    "explicitOutcome": [
+      "Under the stated ordinary conditions, the mother receives one third; two or more uterine siblings collectively receive one third."
+    ],
+    "reviewExplanation": "The ordinary mother and uterine-sibling clauses are directly visible. The grandfather phrase is flagged rather than treated as part of the same executable rule.",
+    "inferredDetails": ["None used for the ordinary clauses."],
+    "missingInformation": [
+      "Exact sibling-count treatment, Umariyyatayn interaction, Mushtarakah interaction, and complete grandfather-with-siblings conditions."
+    ],
+    "conflictingSources": [],
+    "reviewerName": "OpenAI GPT-5.6 Thinking",
+    "reviewerRole": "AI visual transcription assistant; manual scan comparison only; not a qualified Shafi'i scholar",
+    "reviewDate": "2026-07-27",
+    "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED",
+    "approvedCaseIds": [],
+    "implementationSpecification": null,
+    "notes": "Visually checked against printed page 137 / local PDF page 8. This record is not VERIFIED and is not executable."
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Research-only blank template. This record is not verified and is not executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-001",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "chapter": "كتاب الفرائض",
+    "printedPages": [133],
+    "localPdfPages": [4],
+    "arabicExcerpt": "يبدأ من تركة الميت بمؤنة تجهيزه، ثم تقضى ديونه، ثم وصاياه من ثلث الباقي، ثم يقسم الباقي بين الورثة.",
+    "sourceSummary": "The estate is processed in order: necessary preparation of the deceased, debts, valid bequests from one third of the remainder, then distribution of what remains to heirs."
+  },
+  "review": {
+    "reviewId": "MANUAL-20260727-KZ-FR-001",
+    "extractedRuleId": "KZ-FR-001",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "reviewStatus": "MANUALLY_CHECKED",
+    "statusHistory": ["EXTRACTED_NOT_VERIFIED", "MANUAL_SCAN_CHECK_PENDING", "MANUALLY_CHECKED"],
+    "exactArabicChecked": true,
+    "printedPageChecked": true,
+    "localPdfPageChecked": true,
+    "chapterChecked": true,
+    "arabicCorrections": [
+      {
+        "originalText": "",
+        "correctedText": "",
+        "note": "No correction required. The excerpt matches the visible upper text on printed page 133 / local PDF page 4."
+      }
+    ],
+    "unresolvedWords": [],
+    "explicitConditions": [
+      "A deceased person's estate is being administered. The passage states an ordered sequence; it also notes separately that a right attached to a specific asset may take priority over general تجهيز expenses."
+    ],
+    "explicitExclusions": [
+      "The excerpt alone does not define every expense included in مؤنة التجهيز, every class of debt, or all validity conditions of a وصية."
+    ],
+    "explicitOutcome": [
+      "Order stated by the source: (1) مؤنة التجهيز بالمعروف, (2) debts, (3) bequests from one third of the remainder, then (4) distribution of the remaining estate among heirs."
+    ],
+    "reviewExplanation": "The scan confirms the sequence in the source snapshot. The commentary directly below adds an asset-specific-right qualification, so the short extracted record must not be treated as a complete estate-administration specification.",
+    "inferredDetails": ["None used for the manual check."],
+    "missingInformation": [
+      "Definitions and operational conditions for تجهيز, secured or asset-attached rights, debt priority, and valid bequests must be reviewed from the related passages before implementation."
+    ],
+    "conflictingSources": [],
+    "reviewerName": "OpenAI GPT-5.6 Thinking",
+    "reviewerRole": "AI visual transcription assistant; manual scan comparison only; not a qualified Shafi'i scholar",
+    "reviewDate": "2026-07-27",
+    "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED",
+    "approvedCaseIds": [],
+    "implementationSpecification": null,
+    "notes": "Visually checked against printed page 133. Manual transcription check only. This record is not VERIFIED and is not executable."
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Research-only blank template. This record is not verified and is not executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-005",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "chapter": "كتاب الفرائض",
+    "printedPages": [136],
+    "localPdfPages": [7],
+    "arabicExcerpt": "النصف: فرض خمسة: زوج لم تخلف زوجته ولدا ولا ولد ابن، وبنت أو بنت ابن أو أخت لأبوين أو لأب منفردات.",
+    "sourceSummary": "One half is assigned to the listed five categories under the stated absence/singularity conditions."
+  },
+  "review": {
+    "reviewId": "MANUAL-20260727-KZ-FR-005",
+    "extractedRuleId": "KZ-FR-005",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "reviewStatus": "MANUALLY_CHECKED",
+    "statusHistory": ["EXTRACTED_NOT_VERIFIED", "MANUAL_SCAN_CHECK_PENDING", "MANUALLY_CHECKED"],
+    "exactArabicChecked": true,
+    "printedPageChecked": true,
+    "localPdfPageChecked": true,
+    "chapterChecked": true,
+    "arabicCorrections": [
+      {
+        "originalText": "",
+        "correctedText": "",
+        "note": "No correction required to the quoted wording. The visible text reads: النصف: فرض خمسة: زوج لم تخلف زوجته ولدا ولا ولد ابن، وبنت أو بنت ابن أو أخت لأبوين أو لأب منفردات."
+      }
+    ],
+    "unresolvedWords": [],
+    "explicitConditions": [
+      "The passage lists five one-half categories: husband where the deceased wife left no child or son's descendant; one daughter; one son's daughter; one full sister; one paternal sister. The female categories are described as منفردات."
+    ],
+    "explicitExclusions": [
+      "The compact line does not by itself state the complete blocker and competing-heir conditions for the daughter, son's daughter, full sister, or paternal sister."
+    ],
+    "explicitOutcome": ["An eligible listed category receives one half."],
+    "reviewExplanation": "The list and the husband's descendant condition are visibly confirmed. Full executable conditions must be assembled with the later hajb and descendant/sibling sections.",
+    "inferredDetails": [
+      "The phrase منفردات is retained without expanding it beyond what the source passage and its continuation establish."
+    ],
+    "missingInformation": [
+      "Complete blocking, residuary-conversion, and same-class plurality rules."
+    ],
+    "conflictingSources": [],
+    "reviewerName": "OpenAI GPT-5.6 Thinking",
+    "reviewerRole": "AI visual transcription assistant; manual scan comparison only; not a qualified Shafi'i scholar",
+    "reviewDate": "2026-07-27",
+    "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED",
+    "approvedCaseIds": [],
+    "implementationSpecification": null,
+    "notes": "Visually checked against printed page 136 / local PDF page 7. This record is not VERIFIED and is not executable."
+  }
+}

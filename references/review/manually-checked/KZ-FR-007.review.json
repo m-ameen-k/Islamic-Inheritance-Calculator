@@ -1,0 +1,54 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Research-only blank template. This record is not verified and is not executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-007",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "chapter": "كتاب الفرائض",
+    "printedPages": [137],
+    "localPdfPages": [8],
+    "arabicExcerpt": "والثمن فرضها الزوجة مع أحدهما.",
+    "sourceSummary": "A wife or wives collectively receive one eighth when the deceased husband has a child or son's descendant."
+  },
+  "review": {
+    "reviewId": "MANUAL-20260727-KZ-FR-007",
+    "extractedRuleId": "KZ-FR-007",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "reviewStatus": "MANUALLY_CHECKED",
+    "statusHistory": ["EXTRACTED_NOT_VERIFIED", "MANUAL_SCAN_CHECK_PENDING", "MANUALLY_CHECKED"],
+    "exactArabicChecked": true,
+    "printedPageChecked": true,
+    "localPdfPageChecked": true,
+    "chapterChecked": true,
+    "arabicCorrections": [
+      {
+        "originalText": "فرضها",
+        "correctedText": "فرض",
+        "note": "The source snapshot has a transcription error. It says «والثمن فرضها الزوجة مع أحدهما». The visible source reads: «والثمن فرض الزوجة مع أحدهما»، referring back to الولد وولد الابن."
+      }
+    ],
+    "unresolvedWords": [],
+    "explicitConditions": [
+      "A wife is present and the deceased husband has a child or son's descendant."
+    ],
+    "explicitExclusions": [
+      "The short line does not itself state how multiple wives divide the collective eighth."
+    ],
+    "explicitOutcome": ["The eligible wife category receives one eighth."],
+    "reviewExplanation": "The manual check corrects فرضها to فرض and confirms that أحدهما refers to either a child or son's descendant from the preceding quarter-share sentence.",
+    "inferredDetails": [
+      "The antecedent of أحدهما is identified from the immediately preceding text on the same page."
+    ],
+    "missingInformation": ["Collective division among multiple wives."],
+    "conflictingSources": [],
+    "reviewerName": "OpenAI GPT-5.6 Thinking",
+    "reviewerRole": "AI visual transcription assistant; manual scan comparison only; not a qualified Shafi'i scholar",
+    "reviewDate": "2026-07-27",
+    "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED",
+    "approvedCaseIds": [],
+    "implementationSpecification": null,
+    "notes": "Visually checked against printed page 137 / local PDF page 8. Original extracted artifact should remain immutable; correction belongs only in this review record. This record is not VERIFIED and is not executable."
+  }
+}
