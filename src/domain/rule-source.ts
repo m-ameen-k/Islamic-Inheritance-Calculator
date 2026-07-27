@@ -23,6 +23,7 @@ export interface RuleClause {
 
 export interface FiqhRuleRecord {
   readonly ruleId: string;
+  readonly sourceId: string | null;
   readonly madhhab: SupportedMadhhab;
   readonly status: RuleStatus;
   readonly heirsInvolved: readonly string[];
@@ -33,7 +34,7 @@ export interface FiqhRuleRecord {
   readonly author: string | null;
   readonly chapter: string | null;
   readonly section: string | null;
-  readonly pdfPage: string | null;
+  readonly localPdfPage: string | null;
   readonly printedPage: string | null;
   readonly exactArabicQuotation: string | null;
   readonly explanation: string;
@@ -44,6 +45,7 @@ export interface FiqhRuleRecord {
 
 export type VerifiedRuleRecord = FiqhRuleRecord & {
   readonly status: "VERIFIED";
+  readonly sourceId: string;
   readonly kitabTitle: string;
   readonly author: string;
   readonly exactArabicQuotation: string;
@@ -78,10 +80,11 @@ function hasText(value: string | null): value is string {
 export function isVerifiedRuleRecord(rule: FiqhRuleRecord): rule is VerifiedRuleRecord {
   return (
     rule.status === "VERIFIED" &&
+    hasText(rule.sourceId) &&
     hasText(rule.kitabTitle) &&
     hasText(rule.author) &&
     (hasText(rule.chapter) || hasText(rule.section)) &&
-    (hasText(rule.pdfPage) || hasText(rule.printedPage)) &&
+    (hasText(rule.localPdfPage) || hasText(rule.printedPage)) &&
     hasText(rule.exactArabicQuotation) &&
     hasText(rule.reviewer) &&
     hasText(rule.reviewDate)
@@ -89,6 +92,7 @@ export function isVerifiedRuleRecord(rule: FiqhRuleRecord): rule is VerifiedRule
 }
 
 export type SourceBackedRuleRecord = FiqhRuleRecord & {
+  readonly sourceId: string;
   readonly kitabTitle: string;
   readonly author: string;
   readonly exactArabicQuotation: string;
@@ -97,9 +101,10 @@ export type SourceBackedRuleRecord = FiqhRuleRecord & {
 export function isSourceBackedRuleRecord(rule: FiqhRuleRecord): rule is SourceBackedRuleRecord {
   return (
     hasText(rule.kitabTitle) &&
+    hasText(rule.sourceId) &&
     hasText(rule.author) &&
     (hasText(rule.chapter) || hasText(rule.section)) &&
-    (hasText(rule.pdfPage) || hasText(rule.printedPage)) &&
+    (hasText(rule.localPdfPage) || hasText(rule.printedPage)) &&
     hasText(rule.exactArabicQuotation)
   );
 }

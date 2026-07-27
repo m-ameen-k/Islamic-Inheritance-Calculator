@@ -6,6 +6,7 @@ export function makeTestOnlyRule(
 ): FiqhRuleRecord {
   return {
     ruleId,
+    sourceId: "TEST_ONLY_SOURCE",
     madhhab: "SHAFII",
     status,
     heirsInvolved: ["TEST_ONLY_HEIR"],
@@ -16,7 +17,7 @@ export function makeTestOnlyRule(
     author: "TEST_ONLY author",
     chapter: "TEST_ONLY chapter",
     section: null,
-    pdfPage: "TEST_ONLY PDF page",
+    localPdfPage: "TEST_ONLY PDF page",
     printedPage: null,
     exactArabicQuotation: "نص اختباري اصطناعي فقط",
     explanation: "TEST_ONLY explanation with no fiqh meaning.",

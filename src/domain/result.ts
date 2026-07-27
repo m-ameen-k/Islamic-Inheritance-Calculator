@@ -48,12 +48,13 @@ export interface ResultInvariantIssue {
 
 export interface RuleSourceCitation {
   readonly ruleId: string;
+  readonly sourceId: string;
   readonly madhhab: Madhhab;
   readonly kitabTitle: string;
   readonly author: string;
   readonly chapter: string | null;
   readonly section: string | null;
-  readonly pdfPage: string | null;
+  readonly localPdfPage: string | null;
   readonly printedPage: string | null;
   readonly exactArabicQuotation: string;
   readonly reviewer: string | null;

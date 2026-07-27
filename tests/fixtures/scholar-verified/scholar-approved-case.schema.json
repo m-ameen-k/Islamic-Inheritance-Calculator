@@ -164,16 +164,21 @@
       "additionalProperties": false,
       "required": [
         "ruleId",
+        "sourceId",
         "kitabTitle",
         "author",
         "chapter",
         "section",
-        "pdfPage",
+        "localPdfPage",
         "printedPage",
         "exactArabicQuotation"
       ],
       "properties": {
         "ruleId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceId": {
           "type": "string",
           "minLength": 1
         },
@@ -191,7 +196,7 @@
         "section": {
           "type": ["string", "null"]
         },
-        "pdfPage": {
+        "localPdfPage": {
           "type": ["string", "null"]
         },
         "printedPage": {
@@ -227,7 +232,7 @@
           "anyOf": [
             {
               "properties": {
-                "pdfPage": {
+                "localPdfPage": {
                   "type": "string",
                   "minLength": 1
                 }

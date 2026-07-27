@@ -11,6 +11,7 @@ import {
 function makeRecord(status: RuleStatus): FiqhRuleRecord {
   return {
     ruleId: "TEST-SCHEMA-ONLY",
+    sourceId: "TEST_ONLY_SOURCE",
     madhhab: "SHAFII",
     status,
     heirsInvolved: ["synthetic-heir"],
@@ -21,7 +22,7 @@ function makeRecord(status: RuleStatus): FiqhRuleRecord {
     author: "Synthetic schema test author",
     chapter: "Synthetic schema test chapter",
     section: null,
-    pdfPage: "TEST-PDF-PAGE",
+    localPdfPage: "TEST-PDF-PAGE",
     printedPage: "TEST-PRINTED-PAGE",
     exactArabicQuotation: "نص اصطناعي لاختبار بنية البيانات فقط",
     explanation: "Tests the technical record shape only.",

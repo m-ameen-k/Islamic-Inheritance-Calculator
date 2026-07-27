@@ -56,11 +56,12 @@ function validateNullableTextFields(
   issues: RuleRecordIssue[],
 ): void {
   const fields = [
+    "sourceId",
     "kitabTitle",
     "author",
     "chapter",
     "section",
-    "pdfPage",
+    "localPdfPage",
     "printedPage",
     "exactArabicQuotation",
     "reviewer",

@@ -33,7 +33,7 @@ describe("TECHNICAL_TEST: source-backed rule registry", () => {
       ...makeTestOnlyRule("TEST_ONLY_INCOMPLETE_VERIFIED"),
       chapter: null,
       section: null,
-      pdfPage: null,
+      localPdfPage: null,
       printedPage: null,
       reviewer: null,
     };
