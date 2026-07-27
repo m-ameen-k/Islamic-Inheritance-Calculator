@@ -1,0 +1,714 @@
+{
+  "schema_version": "0.1",
+  "pack_status": "EXTRACTED_NOT_VERIFIED",
+  "safe_for_distribution": false,
+  "created_for": "Islamic-Inheritance-Calculator",
+  "source": {
+    "source_id": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "arabic_title": "كنز الراغبين شرح منهاج الطالبين",
+    "author": "الإمام جلال الدين محمد بن أحمد المحلي",
+    "author_dates_ah": "791-864",
+    "prepared_or_edited_by": "محمود صالح أحمد حسن الحديدي",
+    "publisher": "دار المنهاج للنشر والتوزيع",
+    "publication_place": "جدة، المملكة العربية السعودية",
+    "edition": "الطبعة الثانية",
+    "publication_date": "1434 هـ / 2013 م",
+    "isbn": "978-9953-541-31-0",
+    "physical_volume": "المجلد الثاني",
+    "internal_part": "الجزء الثالث",
+    "chapter": "كتاب الفرائض",
+    "local_file": "faraid-from-kanz-al-raghibin.pdf",
+    "bibliography_evidence_file": "is-it.pdf",
+    "notes": "The inheritance extract is a scan. Arabic excerpts below were manually read from visible pages and must be compared with the scan before verification."
+  },
+  "rules": [
+    {
+      "rule_id": "KZ-FR-001",
+      "topic": "estate_distribution_order",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        133
+      ],
+      "local_pdf_pages": [
+        4
+      ],
+      "arabic_excerpt": "يبدأ من تركة الميت بمؤنة تجهيزه، ثم تقضى ديونه، ثم وصاياه من ثلث الباقي، ثم يقسم الباقي بين الورثة.",
+      "source_summary": "The estate is processed in order: necessary preparation of the deceased, debts, valid bequests from one third of the remainder, then distribution of what remains to heirs.",
+      "conditions": [
+        "A deceased person's estate is being administered."
+      ],
+      "outcome": [
+        "Deduct تجهيز expenses first.",
+        "Settle debts second.",
+        "Apply valid وصايا from one third of the remainder third.",
+        "Distribute the final remainder among heirs."
+      ],
+      "implementation_scope": "Candidate for the estate workflow after manual review.",
+      "review_questions": [
+        "Define what the application includes under مؤنة التجهيز بالمعروف.",
+        "Confirm how secured claims and rights attached to specific assets are represented."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-002",
+      "topic": "causes_of_inheritance",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        133
+      ],
+      "local_pdf_pages": [
+        4
+      ],
+      "arabic_excerpt": "وأسباب الإرث أربعة: قرابة، ونكاح، وولاء، والرابع: الإسلام؛ فتصرف التركة لبيت المال إرثا إذا لم يكن وارث بالأسباب الثلاثة.",
+      "source_summary": "The chapter lists kinship, marriage, wala', and Islam/Bayt al-Mal in the absence of an heir through the first three causes.",
+      "conditions": [],
+      "outcome": [
+        "Classify the legal cause through which each claimant may inherit."
+      ],
+      "implementation_scope": "Catalog/domain modelling only until reviewed.",
+      "review_questions": [
+        "Decide whether wala' and Bayt al-Mal are supported in the first public release."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-003",
+      "topic": "heir_categories",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        134
+      ],
+      "local_pdf_pages": [
+        5
+      ],
+      "arabic_excerpt": "والمجمع على إرثهم من الرجال عشرة: الابن وابنه وإن سفل، والأب وأبوه وإن علا، والأخ وابنه إلا من الأم، والعم إلا من الأم وكذا ابنه، والزوج، والمعتق. ومن النساء سبع: البنت وبنت الابن وإن سفل، والأم والجدة، والأخت والزوجة والمعتقة.",
+      "source_summary": "The text groups the unanimously inheriting male and female heir categories.",
+      "conditions": [],
+      "outcome": [
+        "Use these as source-backed heir category families, not as proof that every selected person inherits in every case."
+      ],
+      "implementation_scope": "Domain catalogue; blocking and eligibility remain separate.",
+      "review_questions": [
+        "Confirm how unlimited valid ascending/descending generations are represented in the UI and data model."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-004",
+      "topic": "radd_bayt_al_mal_policy",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        134,
+        135
+      ],
+      "local_pdf_pages": [
+        5,
+        6
+      ],
+      "arabic_excerpt": "فأصل المذهب: أنه لا يورث ذوو الأرحام، ولا يرد على أهل الفرض، بل المال لبيت المال ... إذا لم ينتظم أمر بيت المال ... يرد على أهل الفرض غير الزوجين ما فضل عن فروضهم بالنسبة، فإن لم يكونوا صرف إلى ذوي الأرحام.",
+      "source_summary": "The text distinguishes the original madhhab rule involving Bayt al-Mal from the later application when Bayt al-Mal is not properly functioning.",
+      "conditions": [
+        "A surplus remains after fixed shares.",
+        "No eligible residuary has taken the surplus."
+      ],
+      "outcome": [
+        "Classical policy: no radd to fixed-share heirs and no inheritance by dhawul arham; surplus goes to Bayt al-Mal.",
+        "No-functioning-Bayt-al-Mal policy stated in the commentary: radd proportionally to fixed-share heirs other than spouses; if none, then dhawul arham."
+      ],
+      "implementation_scope": "Model as explicit policy profiles; do not choose a default without review.",
+      "review_questions": [
+        "Which policy should be available or default in the intended jurisdiction?",
+        "Confirm spouse exclusion and the exact dhawul-arham sequence."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-005",
+      "topic": "fixed_share_one_half",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        136
+      ],
+      "local_pdf_pages": [
+        7
+      ],
+      "arabic_excerpt": "النصف: فرض خمسة: زوج لم تخلف زوجته ولدا ولا ولد ابن، وبنت أو بنت ابن أو أخت لأبوين أو لأب منفردات.",
+      "source_summary": "One half is assigned to the listed five categories under the stated absence/singularity conditions.",
+      "conditions": [
+        "Husband: deceased wife left no child or son's descendant.",
+        "One daughter alone.",
+        "One son's daughter alone under her eligibility conditions.",
+        "One full sister alone under her eligibility conditions.",
+        "One paternal sister alone under her eligibility conditions."
+      ],
+      "outcome": [
+        "Eligible heir receives 1/2."
+      ],
+      "implementation_scope": "Needs blockers and competing-heir conditions before execution.",
+      "review_questions": [
+        "Expand each category into complete eligibility and blocking prerequisites."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-006",
+      "topic": "fixed_share_one_quarter",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        137
+      ],
+      "local_pdf_pages": [
+        8
+      ],
+      "arabic_excerpt": "والربع: فرض زوج لزوجته ولد أو ولد ابن، وزوجة ليس لزوجها واحد منهما.",
+      "source_summary": "One quarter applies to a husband when the deceased wife has a qualifying descendant, and to a wife when the deceased husband has none.",
+      "conditions": [],
+      "outcome": [
+        "Eligible spouse category receives 1/4."
+      ],
+      "implementation_scope": "Executable only after descendant and multi-wife handling is reviewed.",
+      "review_questions": [
+        "Confirm collective treatment where there is more than one wife."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-007",
+      "topic": "fixed_share_one_eighth",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        137
+      ],
+      "local_pdf_pages": [
+        8
+      ],
+      "arabic_excerpt": "والثمن فرضها الزوجة مع أحدهما.",
+      "source_summary": "A wife or wives collectively receive one eighth when the deceased husband has a child or son's descendant.",
+      "conditions": [
+        "The deceased husband has a qualifying descendant."
+      ],
+      "outcome": [
+        "Wife category collectively receives 1/8."
+      ],
+      "implementation_scope": "Needs collective-spouse apportionment.",
+      "review_questions": []
+    },
+    {
+      "rule_id": "KZ-FR-008",
+      "topic": "fixed_share_two_thirds",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        137
+      ],
+      "local_pdf_pages": [
+        8
+      ],
+      "arabic_excerpt": "والثلثان: فرض بنتين فصاعدا، وبنتي ابن فأكثر، وأختين فأكثر لأبوين أو لأب.",
+      "source_summary": "Two thirds is the collective fixed share for the listed plural female categories under their eligibility conditions.",
+      "conditions": [],
+      "outcome": [
+        "Eligible category collectively receives 2/3."
+      ],
+      "implementation_scope": "Needs blocking, residuary conversion, and descendant-level rules.",
+      "review_questions": []
+    },
+    {
+      "rule_id": "KZ-FR-009",
+      "topic": "fixed_share_one_third",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        137
+      ],
+      "local_pdf_pages": [
+        8
+      ],
+      "arabic_excerpt": "والثلث فرض أم ليس لميتها ولد ولا ولد ابن ولا اثنان من الإخوة والأخوات، وفرض اثنين فأكثر من ولد الأم.",
+      "source_summary": "One third is assigned to the mother under the stated absence conditions and collectively to two or more uterine siblings.",
+      "conditions": [],
+      "outcome": [
+        "Eligible mother or eligible uterine-sibling category receives 1/3."
+      ],
+      "implementation_scope": "Must be coordinated with Umariyyatayn and Mushtarakah.",
+      "review_questions": [
+        "Confirm counting rules for siblings who reduce the mother's share even when blocked from inheriting."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-010",
+      "topic": "fixed_share_one_sixth",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        138
+      ],
+      "local_pdf_pages": [
+        9
+      ],
+      "arabic_excerpt": "والسدس فرض سبعة: أب وجد لميتهما ولد أو ولد ابن، وأم لميتها ولد أو ولد ابن أو اثنان من الإخوة والأخوات، وجدة، ولبنت ابن مع بنت صلب، ولأخت لأب مع أخت لأبوين، ولواحد من ولد الأم.",
+      "source_summary": "The text lists the seven one-sixth categories and their main triggering relationships.",
+      "conditions": [],
+      "outcome": [
+        "Eligible category receives 1/6."
+      ],
+      "implementation_scope": "Split into separate executable rules after review.",
+      "review_questions": [
+        "Confirm the grandfather category where siblings coexist and special-case logic applies."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-011",
+      "topic": "primary_blocking_rules",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        138
+      ],
+      "local_pdf_pages": [
+        9
+      ],
+      "arabic_excerpt": "الأب والابن والزوج لا يحجبهم أحد. وابن الابن لا يحجبه إلا الابن أو ابن ابن أقرب منه. والجد لا يحجبه إلا متوسط بينه وبين الميت. والأخ لأبوين يحجبه الأب والابن وابن الابن، والأخ لأب يحجبه الأب والابن وابن الابن والأخ لأبوين، والأخ لأم يحجبه أب وجد وولد وولد ابن.",
+      "source_summary": "The passage gives primary total-exclusion relations for core male heirs and sibling types.",
+      "conditions": [],
+      "outcome": [
+        "Apply only the explicitly stated blocker-target relationships."
+      ],
+      "implementation_scope": "Suitable for a provisional blocking table after manual comparison.",
+      "review_questions": [
+        "Separate total exclusion from share reduction and verify every generation qualifier."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-012",
+      "topic": "children_distribution",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        140
+      ],
+      "local_pdf_pages": [
+        11
+      ],
+      "arabic_excerpt": "الابن يستغرق المال، وكذا البنون، وللبنت النصف، وللبنتين فصاعدا الثلثان، ولو اجتمع بنون وبنات فالمال لهم للذكر مثل حظ الأنثيين.",
+      "source_summary": "Sons are residuaries; one daughter has one half, two or more daughters two thirds, and mixed sons/daughters divide residually at a two-to-one ratio.",
+      "conditions": [
+        "No higher-priority rule changes the stated treatment."
+      ],
+      "outcome": [],
+      "implementation_scope": "Core descendant rule candidate.",
+      "review_questions": [
+        "Coordinate with spouse and parent fixed shares before distributing the remainder."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-013",
+      "topic": "sons_descendants_with_direct_children",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        140,
+        141
+      ],
+      "local_pdf_pages": [
+        11,
+        12
+      ],
+      "arabic_excerpt": "وأولاد الابن إذا انفردوا كأولاد الصلب. فلو اجتمع الصنفان فإن كان من ولد الصلب ذكر حجب أولاد الابن، وإلا فإن كان للصلب بنت فلها النصف والباقي لولد الابن الذكور أو الذكور والإناث، فإن لم يكن إلا أنثى أو إناث فلها أو لهن السدس ... وإن كان للصلب بنتان فصاعدا أخذتا الثلثين، والباقي لولد الابن الذكور أو الذكور والإناث.",
+      "source_summary": "Son's descendants stand like direct children when alone, but are affected by direct sons and daughters as described.",
+      "conditions": [],
+      "outcome": [],
+      "implementation_scope": "Needs generation-aware descendant modelling.",
+      "review_questions": [
+        "Verify lower-generation male 'rescuing' and residuary conversion conditions."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-014",
+      "topic": "father_modes",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        141
+      ],
+      "local_pdf_pages": [
+        12
+      ],
+      "arabic_excerpt": "الأب يرث بفرض إذا كان معه ابن أو ابن ابن، وبتعصيب إذا لم يكن معه ولد ولا ولد ابن، وبهما إذا كان معه بنت أو بنت ابن: له السدس فرضا والباقي بعد فرضهما بالعصوبة.",
+      "source_summary": "The father may inherit by fixed share, residuary status, or both, depending on descendants.",
+      "conditions": [],
+      "outcome": [],
+      "implementation_scope": "Core parent rule candidate.",
+      "review_questions": []
+    },
+    {
+      "rule_id": "KZ-FR-015",
+      "topic": "umariyyatayn",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        142
+      ],
+      "local_pdf_pages": [
+        13
+      ],
+      "arabic_excerpt": "ولها في مسألتي زوج أو زوجة وأبوين ثلث ما بقي بعد فرض الزوج أو الزوجة لا ثلث الجميع؛ ليأخذ الأب مثلي ما تأخذ الأم.",
+      "source_summary": "In the two spouse-plus-parents cases, the mother receives one third of the remainder after the spouse's share, not one third of the whole.",
+      "conditions": [
+        "Heirs are husband + mother + father, or wife + mother + father, subject to the exact source case."
+      ],
+      "outcome": [
+        "Mother takes 1/3 of the remainder; father takes the remaining amount."
+      ],
+      "implementation_scope": "Special-case rule candidate.",
+      "candidate_tests": [
+        {
+          "case": "Husband, mother, father",
+          "expected_shares": {
+            "husband": "1/2",
+            "mother": "1/6",
+            "father": "1/3"
+          }
+        },
+        {
+          "case": "Wife, mother, father",
+          "expected_shares": {
+            "wife": "1/4",
+            "mother": "1/4",
+            "father": "1/2"
+          }
+        }
+      ],
+      "review_questions": [
+        "Confirm no additional heir is present in the named cases."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-016",
+      "topic": "grandfather_general_relation",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        142
+      ],
+      "local_pdf_pages": [
+        13
+      ],
+      "arabic_excerpt": "والجد في الميراث كالأب إلا أن الأب يسقط الإخوة والأخوات للميت، والجد يقاسمهم إن كانوا لأبوين أو لأب، والأب يسقط أم نفسه ولا يسقطها الجد.",
+      "source_summary": "The paternal grandfather generally stands like the father, with stated exceptions involving siblings and the father's mother.",
+      "conditions": [],
+      "outcome": [],
+      "implementation_scope": "Do not turn into a single blanket substitution; use dedicated grandfather rules.",
+      "review_questions": []
+    },
+    {
+      "rule_id": "KZ-FR-017",
+      "topic": "eligible_grandmothers",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        142
+      ],
+      "local_pdf_pages": [
+        13
+      ],
+      "arabic_excerpt": "وللجدة السدس، وكذا الجدات ... وضابطه: كل جدة أدلت بمحض إناث أو ذكور أو إناث إلى ذكور ترث، ومن أدلت بذكر بين أنثيين فلا.",
+      "source_summary": "Eligible grandmother categories collectively receive one sixth, with the lineage criterion stated by the text.",
+      "conditions": [],
+      "outcome": [
+        "Eligible grandmother category collectively receives 1/6."
+      ],
+      "implementation_scope": "Requires lineage-path representation and blocker rules.",
+      "review_questions": [
+        "Verify the full eligible-grandmother list and nearness rules before coding."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-018",
+      "topic": "mushtarakah",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        143,
+        144
+      ],
+      "local_pdf_pages": [
+        14,
+        15
+      ],
+      "arabic_excerpt": "إلا في المشتركة، وهي زوج وأم أو جدة وولدا أم وأخ لأبوين، فيشارك الأخ لأبوين ولدي الأم في الثلث، ولو كان بدل الأخ أخ لأب سقط.",
+      "source_summary": "The named Mushtarakah case contains a husband, mother or grandmother, two uterine siblings, and a full brother; the full brother shares in the one third, while a paternal brother in his place falls.",
+      "conditions": [
+        "Husband present.",
+        "Mother or eligible grandmother present.",
+        "Two uterine siblings present.",
+        "A full brother present in the stated case."
+      ],
+      "outcome": [
+        "The full brother shares with the uterine siblings in the one-third category."
+      ],
+      "implementation_scope": "Special-case rule; division details must be confirmed before execution.",
+      "review_questions": [
+        "Confirm whether multiple full siblings and sisters are included and how the one third is divided among all participants.",
+        "Confirm the exact Arabic count wording against the scan."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-019",
+      "topic": "sisters_as_residuaries_with_daughters",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        144
+      ],
+      "local_pdf_pages": [
+        15
+      ],
+      "arabic_excerpt": "والأخوات لأبوين أو لأب مع البنات وبنات الابن عصبة كالإخوة.",
+      "source_summary": "Full or paternal sisters may become residuaries with daughters or son's daughters.",
+      "conditions": [],
+      "outcome": [
+        "Eligible sister category takes the remainder as residuary."
+      ],
+      "implementation_scope": "Needs precise priority and blocking interactions.",
+      "review_questions": []
+    },
+    {
+      "rule_id": "KZ-FR-020",
+      "topic": "grandfather_with_siblings_comparison",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        146
+      ],
+      "local_pdf_pages": [
+        17
+      ],
+      "arabic_excerpt": "اجتمع جد وإخوة وأخوات لأبوين أو لأب، فإن لم يكن منهم ذو فرض فله الأكثر من ثلث المال ومقاسمتهم كأخ ... وإن كان معهم ذو فرض فله الأكثر من سدس التركة وثلث الباقي والمقاسمة.",
+      "source_summary": "The grandfather compares alternatives: without another fixed-share heir, one third of the whole or muqasamah; with a fixed-share heir, one sixth of the whole, one third of the remainder, or muqasamah.",
+      "conditions": [
+        "Paternal grandfather with full or paternal siblings."
+      ],
+      "outcome": [
+        "Choose the greater permitted alternative for the grandfather under the relevant branch."
+      ],
+      "implementation_scope": "Advanced rule executor required; exact comparisons use rational arithmetic.",
+      "review_questions": [
+        "Confirm all sibling eligibility and exclusion prerequisites before calculating the comparison."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-021",
+      "topic": "grandfather_exhaustion_cases",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        146
+      ],
+      "local_pdf_pages": [
+        17
+      ],
+      "arabic_excerpt": "وقد لا يبقى شيء ... فيفرض له سدس ويزاد في العول. وقد يبقى دون سدس ... فيفرض له سدس وتعول. وقد يبقى سدس ... فيفوز به الجد. وتسقط الإخوة في هذه الأحوال.",
+      "source_summary": "Where fixed shares leave none, less than one sixth, or exactly one sixth, the grandfather receives the stated one-sixth treatment and siblings fall in the listed situations.",
+      "conditions": [],
+      "outcome": [],
+      "implementation_scope": "Special branch of grandfather-with-siblings logic.",
+      "review_questions": [
+        "Convert each example on printed page 146 into independently reviewed fixtures."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-022",
+      "topic": "muaddah",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        147
+      ],
+      "local_pdf_pages": [
+        18
+      ],
+      "arabic_excerpt": "ولو كان مع الجد إخوة وأخوات لأبوين ولأب، فحكم الجد ما سبق، ويعد أولاد الأبوين عليه أولاد الأب في القسمة، فإذا أخذ حصته فإن كان في أولاد الأبوين ذكر فالباقي لهم وسقط أولاد الأب، وإلا فتأخذ الواحدة منهم مع ما خصها بالقسمة إلى النصف، والثنتان فصاعدا إلى الثلثين.",
+      "source_summary": "Full siblings count paternal siblings against the grandfather during the comparison; after the grandfather takes his share, distribution between sibling classes follows the stated rules.",
+      "conditions": [
+        "Grandfather with both full and paternal sibling categories."
+      ],
+      "outcome": [],
+      "implementation_scope": "Advanced special-case rule.",
+      "review_questions": [
+        "Review the continuation concerning surplus beyond one full sister's half and paternal siblings."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-023",
+      "topic": "akdariyyah",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        147
+      ],
+      "local_pdf_pages": [
+        18
+      ],
+      "arabic_excerpt": "والجد مع أخوات كأخ فلا يفرض لهن معه إلا في الأكدرية، وهي زوج وأم وجد وأخت لأبوين أو لأب؛ فللزوج نصف، وللأم ثلث، وللجد سدس، وللأخت نصف، فتعول ثم يقسم الجد والأخت نصيبهما أثلاثا، له الثلثان.",
+      "source_summary": "The Akdariyyah case is husband, mother, grandfather, and one full or paternal sister. Initial fixed shares undergo awl, then the combined grandfather-and-sister portion is divided two-to-one.",
+      "conditions": [
+        "Exactly the named special-case structure, subject to review."
+      ],
+      "outcome": [],
+      "implementation_scope": "Advanced special-case rule with a candidate regression fixture.",
+      "candidate_tests": [
+        {
+          "case": "Husband, mother, paternal grandfather, one full sister",
+          "derived_exact_shares": {
+            "husband": "9/27",
+            "mother": "6/27",
+            "paternal_grandfather": "8/27",
+            "full_sister": "4/27"
+          },
+          "derivation_status": "DERIVED_FROM_EXCERPT_AND_COMMENTARY_NOT_VERIFIED"
+        }
+      ],
+      "review_questions": [
+        "Have a qualified teacher verify the final 27-share derivation and both full/paternal sister variants."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-024",
+      "topic": "impediments_to_inheritance",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        148
+      ],
+      "local_pdf_pages": [
+        19
+      ],
+      "arabic_excerpt": "لا يتوارث مسلم وكافر، ولا يرث مرتد ولا يورث ... ولا يرث من فيه رق ... ولا قاتل ... ولو مات متوارثان بغرق أو هدم أو في غربة معا أو جهل أسبقهما لم يتوارثا ومال كل لباقي ورثته.",
+      "source_summary": "The chapter states impediments involving religion, apostasy, slavery, killing, and uncertainty over order of death.",
+      "conditions": [],
+      "outcome": [],
+      "implementation_scope": "Exclude from early public executor unless separately reviewed for scope and jurisdiction.",
+      "review_questions": [
+        "Decide which classical impediments the software will model and how legal facts are established."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-025",
+      "topic": "missing_person_estate",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        149
+      ],
+      "local_pdf_pages": [
+        20
+      ],
+      "arabic_excerpt": "ومن أسر أو فقد وانقطع خبره ترك ماله حتى تقوم بينة بموته، أو تمضي مدة يغلب الظن أنه لا يعيش فوقها، فيجتهد القاضي ويحكم بموته، ثم يعطى ماله من يرثه وقت الحكم.",
+      "source_summary": "The property of a missing person remains held until death is established or judicially determined under the stated standard.",
+      "conditions": [],
+      "outcome": [],
+      "implementation_scope": "Case-preparation warning only; not automated distribution.",
+      "review_questions": []
+    },
+    {
+      "rule_id": "KZ-FR-026",
+      "topic": "uncertain_pregnancy_and_intersex_cases",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        149,
+        150
+      ],
+      "local_pdf_pages": [
+        20,
+        21
+      ],
+      "arabic_excerpt": "ولو خلف حملا قد يرث ... وقف المال إلى أن ينفصل ... والخنثى المشكل إن لم يختلف إرثه ذكورة وأنوثة فذاك، وإلا فيعمل باليقين في حقه وحق غيره، ويوقف المشكوك فيه حتى يبين.",
+      "source_summary": "The source provides holdback rules for a possible inheriting pregnancy and certainty-based treatment for an intersex heir whose share is uncertain.",
+      "conditions": [],
+      "outcome": [],
+      "implementation_scope": "Advanced manual-review cases; do not automate in the first release.",
+      "review_questions": [
+        "Extract the full pregnancy reservation method separately if this feature is planned."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-027",
+      "topic": "case_origins_and_denominator_relations",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        152,
+        153
+      ],
+      "local_pdf_pages": [
+        23,
+        24
+      ],
+      "arabic_excerpt": "فمخرج النصف اثنان، والثلث ثلاثة، والربع أربعة، والسدس ستة، والثمن ثمانية ... فالأصول سبعة: اثنان وثلاثة وأربعة وستة وثمانية واثنا عشر وأربعة وعشرون.",
+      "source_summary": "The text lists the denominator origins and the seven standard case origins, then applies tamathul, tadakhul, tawafuq, and tabayun.",
+      "conditions": [],
+      "outcome": [
+        "Use exact integer/rational arithmetic.",
+        "Derive the base through the stated denominator relationships."
+      ],
+      "implementation_scope": "Technical calculation infrastructure; terminology should be preserved in evidence.",
+      "review_questions": []
+    },
+    {
+      "rule_id": "KZ-FR-028",
+      "topic": "awl_expansions",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        153
+      ],
+      "local_pdf_pages": [
+        24
+      ],
+      "arabic_excerpt": "والذي يعول منها: الستة إلى سبعة وإلى ثمانية وإلى تسعة وإلى عشرة، والاثنا عشر إلى ثلاثة عشر وإلى خمسة عشر وإلى سبعة عشر، والأربعة والعشرون إلى سبعة وعشرين.",
+      "source_summary": "Only the listed bases undergo awl to the listed adjusted totals.",
+      "conditions": [
+        "The sum of eligible fixed-share numerators exceeds the original base."
+      ],
+      "outcome": [
+        "Replace the denominator/base with the total adjusted sahm while preserving integer numerators."
+      ],
+      "implementation_scope": "Technical awl engine plus source-backed validation.",
+      "review_questions": [
+        "Create a reviewed case fixture for every listed awl endpoint."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-029",
+      "topic": "correction_of_cases",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        154,
+        155,
+        156
+      ],
+      "local_pdf_pages": [
+        25,
+        26,
+        27
+      ],
+      "arabic_excerpt": "إذا عرفت أصلها وانقسمت السهام عليهم فذاك، وإن انكسرت على صنف ... فإن تباينا ضرب عدده في المسألة بعولها إن عالت، وإن توافقا ضرب وفق عدده فيها ... وإن انكسرت على صنفين ...",
+      "source_summary": "The correction method scales a case when class shares do not divide over the number of persons, using coprimality, compatibility, and relationships among multiple residual headcounts.",
+      "conditions": [
+        "A category's sahm does not divide exactly among its members."
+      ],
+      "outcome": [
+        "Compute a correction multiplier and scale the case and all shares exactly."
+      ],
+      "implementation_scope": "Technical algorithm; examples on pages 154-156 should become fixtures.",
+      "review_questions": [
+        "Transcribe and verify the full multi-category correction algorithm before production implementation."
+      ]
+    },
+    {
+      "rule_id": "KZ-FR-030",
+      "topic": "munasakhat",
+      "status": "EXTRACTED_NOT_VERIFIED",
+      "printed_pages": [
+        157,
+        158
+      ],
+      "local_pdf_pages": [
+        28,
+        29
+      ],
+      "arabic_excerpt": "مات عن ورثة فمات أحدهم قبل القسمة ... فإن لم يرث الثاني غير الباقين وكان إرثهم منه كإرثهم من الأول جعل الثاني كأن لم يكن وقسم بين الباقين ... وإلا فصحح مسألة الأول ثم مسألة الثاني، ثم إن انقسم نصيب الثاني من مسألة الأول على مسألته فذاك، وإلا ...",
+      "source_summary": "The chapter describes combining successive estates where an heir dies before the first estate is distributed.",
+      "conditions": [
+        "An heir dies before the earlier estate is divided."
+      ],
+      "outcome": [],
+      "implementation_scope": "Future advanced module, not first-release executor.",
+      "review_questions": [
+        "Use the worked examples on printed pages 157-158 as reviewed fixtures."
+      ]
+    }
+  ],
+  "global_warnings": [
+    "This pack is a manual extraction from scanned pages, not a scholar verification.",
+    "No rule may be used in VERIFIED mode until the Arabic excerpt, conditions, and outcome are reviewed.",
+    "Some summaries intentionally stop short of filling conditions not explicit in the quoted passage.",
+    "The source PDFs must not be committed unless the user has confirmed permission."
+  ]
+}
