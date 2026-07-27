@@ -1,0 +1,42 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Research-only blank template. This record is not verified and is not executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-001",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "chapter": "كتاب الفرائض",
+    "printedPages": [133],
+    "localPdfPages": [4],
+    "arabicExcerpt": "يبدأ من تركة الميت بمؤنة تجهيزه، ثم تقضى ديونه، ثم وصاياه من ثلث الباقي، ثم يقسم الباقي بين الورثة.",
+    "sourceSummary": "The estate is processed in order: necessary preparation of the deceased, debts, valid bequests from one third of the remainder, then distribution of what remains to heirs."
+  },
+  "review": {
+    "reviewId": "TEMPLATE-KZ-FR-001",
+    "extractedRuleId": "KZ-FR-001",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "reviewStatus": "EXTRACTED_NOT_VERIFIED",
+    "statusHistory": ["EXTRACTED_NOT_VERIFIED"],
+    "exactArabicChecked": false,
+    "printedPageChecked": false,
+    "localPdfPageChecked": false,
+    "chapterChecked": false,
+    "arabicCorrections": null,
+    "unresolvedWords": null,
+    "explicitConditions": null,
+    "explicitExclusions": null,
+    "explicitOutcome": null,
+    "reviewExplanation": null,
+    "inferredDetails": null,
+    "missingInformation": null,
+    "conflictingSources": null,
+    "reviewerName": null,
+    "reviewerRole": null,
+    "reviewDate": null,
+    "reviewerDecision": null,
+    "approvedCaseIds": [],
+    "implementationSpecification": null,
+    "notes": ""
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Research-only blank template. This record is not verified and is not executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-005",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "chapter": "كتاب الفرائض",
+    "printedPages": [136],
+    "localPdfPages": [7],
+    "arabicExcerpt": "النصف: فرض خمسة: زوج لم تخلف زوجته ولدا ولا ولد ابن، وبنت أو بنت ابن أو أخت لأبوين أو لأب منفردات.",
+    "sourceSummary": "One half is assigned to the listed five categories under the stated absence/singularity conditions."
+  },
+  "review": {
+    "reviewId": "TEMPLATE-KZ-FR-005",
+    "extractedRuleId": "KZ-FR-005",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "reviewStatus": "EXTRACTED_NOT_VERIFIED",
+    "statusHistory": ["EXTRACTED_NOT_VERIFIED"],
+    "exactArabicChecked": false,
+    "printedPageChecked": false,
+    "localPdfPageChecked": false,
+    "chapterChecked": false,
+    "arabicCorrections": null,
+    "unresolvedWords": null,
+    "explicitConditions": null,
+    "explicitExclusions": null,
+    "explicitOutcome": null,
+    "reviewExplanation": null,
+    "inferredDetails": null,
+    "missingInformation": null,
+    "conflictingSources": null,
+    "reviewerName": null,
+    "reviewerRole": null,
+    "reviewDate": null,
+    "reviewerDecision": null,
+    "approvedCaseIds": [],
+    "implementationSpecification": null,
+    "notes": ""
+  }
+}
