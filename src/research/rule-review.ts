@@ -132,6 +132,27 @@ export interface ReviewTransitionAssessment {
   readonly issues: readonly AdmissionIssue[];
 }
 
+export const REVIEW_RECORD_ISSUE_CODES = [
+  "REVIEW_ID_MISSING",
+  "EXTRACTED_RULE_ID_MISMATCH",
+  "SOURCE_ID_MISMATCH",
+  "STATUS_HISTORY_MISMATCH",
+  "DUPLICATE_APPROVED_CASE_ID",
+] as const;
+
+export type ReviewRecordIssueCode = (typeof REVIEW_RECORD_ISSUE_CODES)[number];
+
+export interface ReviewRecordIssue {
+  readonly path: string;
+  readonly code: ReviewRecordIssueCode | AdmissionIssueCode;
+  readonly message: string;
+}
+
+export interface ReviewRecordValidation {
+  readonly valid: boolean;
+  readonly issues: readonly ReviewRecordIssue[];
+}
+
 const INELIGIBLE_STATUSES = new Set<RuleWorkflowStatus>([
   "REJECTED",
   "NEEDS_MORE_SOURCE",
@@ -462,6 +483,13 @@ export function assessAdmission(
   };
 }
 
+export function whyNotAdmissible(
+  record: RuleReviewRecord,
+  targetStatus: AdmissionTarget,
+): readonly AdmissionIssue[] {
+  return assessAdmission(record, targetStatus).issues;
+}
+
 export function validateReviewTransition(
   currentStatus: RuleWorkflowStatus,
   nextRecord: RuleReviewRecord,
@@ -486,6 +514,66 @@ export function validateReviewTransition(
     currentStatus,
     nextStatus: target,
     allowed: issues.length === 0,
+    issues,
+  };
+}
+
+export function validateCompletedReviewRecord(
+  record: RuleReviewRecord,
+  extractedRecord: {
+    readonly ruleId: string;
+    readonly sourceId: string;
+    readonly status: "EXTRACTED_NOT_VERIFIED";
+  },
+): ReviewRecordValidation {
+  const issues: ReviewRecordIssue[] = [];
+
+  if (record.reviewId.trim().length === 0) {
+    issues.push({
+      path: "reviewId",
+      code: "REVIEW_ID_MISSING",
+      message: "A completed review record requires a review ID.",
+    });
+  }
+  if (record.extractedRuleId !== extractedRecord.ruleId) {
+    issues.push({
+      path: "extractedRuleId",
+      code: "EXTRACTED_RULE_ID_MISMATCH",
+      message: "The review record must reference the extracted rule being reviewed.",
+    });
+  }
+  if (record.sourceId !== extractedRecord.sourceId) {
+    issues.push({
+      path: "sourceId",
+      code: "SOURCE_ID_MISMATCH",
+      message: "The review source ID must match the extracted source ID.",
+    });
+  }
+  if (record.statusHistory.at(-1) !== record.reviewStatus) {
+    issues.push({
+      path: "statusHistory",
+      code: "STATUS_HISTORY_MISMATCH",
+      message: "The final status history entry must match reviewStatus.",
+    });
+  }
+  if (new Set(record.approvedCaseIds).size !== record.approvedCaseIds.length) {
+    issues.push({
+      path: "approvedCaseIds",
+      code: "DUPLICATE_APPROVED_CASE_ID",
+      message: "Approved case IDs must be unique.",
+    });
+  }
+
+  if (
+    record.reviewStatus === "MANUALLY_CHECKED" ||
+    record.reviewStatus === "VERIFIED" ||
+    record.reviewStatus === "IMPLEMENTATION_READY"
+  ) {
+    issues.push(...assessAdmission(record, record.reviewStatus).issues);
+  }
+
+  return {
+    valid: issues.length === 0,
     issues,
   };
 }
