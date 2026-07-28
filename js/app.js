@@ -2,9 +2,10 @@
 // --- UI Logic and Event Listeners ---
 
 // ── Theme: System by default, with optional Light/Dark override ──
-const _themeMode = document.getElementById("themeMode");
+const _themeButtons = document.querySelectorAll("[data-theme-mode]");
 const _systemTheme = matchMedia("(prefers-color-scheme: dark)");
 const _themeStorageKey = "faraid-theme";
+let _selectedThemeMode = "system";
 
 function getThemeOverride(){
   try {
@@ -27,20 +28,25 @@ function saveThemeOverride(mode){
 function applyThemeMode(mode){
   const selectedMode=mode==="light"||mode==="dark"?mode:"system";
   const resolvedTheme=selectedMode==="system"?(_systemTheme.matches?"dark":"light"):selectedMode;
+  _selectedThemeMode=selectedMode;
   document.documentElement.dataset.theme=resolvedTheme;
-  _themeMode.value=selectedMode;
+  _themeButtons.forEach(button=>{
+    button.setAttribute("aria-pressed",button.dataset.themeMode===selectedMode);
+  });
   saveThemeOverride(selectedMode);
 }
 
 applyThemeMode(getThemeOverride()||"system");
 
 _systemTheme.addEventListener("change",event=>{
-  if(_themeMode.value==="system"){
+  if(_selectedThemeMode==="system"){
     document.documentElement.dataset.theme=event.matches?"dark":"light";
   }
 });
 
-_themeMode.addEventListener("change",()=>applyThemeMode(_themeMode.value));
+_themeButtons.forEach(button=>{
+  button.addEventListener("click",()=>applyThemeMode(button.dataset.themeMode));
+});
 
 // ── Language switcher — 3 buttons EN | AR | ML ──
 function applyLang(){
