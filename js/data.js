@@ -53,4 +53,4 @@ const HEIRS=[
 ];
 
 // Global State Variables
-let lang="en", madhab="shafii", gender=null, sel={}, cCode="INR", cSym="";
+let lang="en", madhab="shafii", gender=null, sel={}, cSym="";

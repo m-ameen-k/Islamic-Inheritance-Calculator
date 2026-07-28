@@ -45,7 +45,6 @@ function applyLang(){
   document.querySelectorAll('#langSwitcher .ls-btn').forEach(b=>
     b.classList.toggle('active', b.dataset.l===lang)
   );
-  document.querySelectorAll(".or-div").forEach(el=>el.textContent=T[lang].or_txt);
   renderHeirs();
   if(document.getElementById("learnContent")?.innerHTML) updateLearn();
 }
@@ -68,24 +67,9 @@ function calcMetal(metal){
 }
 
 function updateMetalDisplay(metal){
-  const w=fv(metal+"_w"), p=fv(metal+"_p"), u=document.getElementById(metal+"_u").value;
-  const badge=document.getElementById(metal+"Badge");
-  const badgeVal=document.getElementById(metal+"BadgeVal");
+  const u=document.getElementById(metal+"_u").value;
   const unitLbl=document.getElementById(metal+"UnitLbl");
   if(unitLbl) unitLbl.textContent="/ "+u;
-  if(w&&p){
-    const val=w*p;
-    badgeVal.textContent=formatAmount(val);
-    badge.classList.add("show");
-    badge.style.cursor = "pointer";
-    badge.onclick = () => {
-      document.getElementById(metal+"_tot").value = val.toFixed(2);
-      updateNet();
-    };
-  } else {
-    badge.classList.remove("show");
-    badge.onclick = null;
-  }
   updateNet();
 }
 
@@ -95,33 +79,11 @@ function updateMetalDisplay(metal){
   });
 });
 
-async function fetchPrice(metal){
-  const btn=document.getElementById("fetch"+metal.charAt(0).toUpperCase()+metal.slice(1));
-  const unit=document.getElementById(metal+"_u").value;
-  const orig=btn.textContent;
-  btn.textContent=T[lang].fetching||"Fetching...";
-  btn.classList.add("loading");
-  try{
-    const res=await fetch("https://api.anthropic.com/v1/messages",{
-      method:"POST", headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        model:"claude-sonnet-4-20250514", max_tokens:300, tools:[{type:"web_search_20250305",name:"web_search"}],
-        system:`Search for the current ${metal} price per ${unit} in ${cCode}. Return ONLY a JSON object: {"price": <number>}`,
-        messages:[{role:"user",content:`current ${metal} price per ${unit} in ${cCode} today`}]
-      })
-    });
-    const m=(await res.json()).content?.filter(c=>c.type==="text").map(c=>c.text).join("").match(/\{\s*"price"\s*:\s*([\d.]+)/);
-    if(m&&m[1]){ document.getElementById(metal+"_p").value=parseFloat(m[1]).toFixed(2); updateMetalDisplay(metal); }
-    else window.open("https://www.google.com/search?q="+encodeURIComponent(`${metal} price per ${unit} ${cCode}`),"_blank");
-  }catch(e){ window.open("https://www.google.com/search?q="+encodeURIComponent(`${metal} price per ${unit} ${cCode}`),"_blank"); }
-  btn.textContent=orig; btn.classList.remove("loading");
-}
-
-document.getElementById('fetchGold').onclick = (e) => { e.preventDefault(); fetchPrice('gold'); };
-document.getElementById('fetchSilver').onclick = (e) => { e.preventDefault(); fetchPrice('silver'); };
-
 function calcLand(){ const t=fv("land_tot"); return t?t:(fv("land_a")&&fv("land_rate")?fv("land_a")*fv("land_rate"):0); }
-function getGross(){return fv("cash")+calcMetal("gold")+calcMetal("silver")+calcLand()+fv("other_v");}
+function getGross(){
+  const total=fv("estate_total");
+  return total||fv("cash")+calcMetal("gold")+calcMetal("silver")+calcLand()+fv("other_v");
+}
 function getAfterDebts(){return Math.max(0,getGross()-fv("debts")-fv("zakat"));}
 
 function getWasiyyah(ad){
@@ -135,11 +97,10 @@ function getNet(){const ad=getAfterDebts(); return Math.max(0,ad-getWasiyyah(ad)
 
 function updateNet(){
   const gross=getGross(), net=getNet();
-  document.getElementById("grossTotal").textContent=formatAmount(gross);
   updateCaseSummary(gross,net);
 }
 
-["cash","gold_w","gold_p","gold_tot","silver_w","silver_p","silver_tot","land_a","land_rate","land_tot","other_v","debts","zakat","wasiyyah","was_con"]
+["estate_total","cash","gold_w","gold_p","gold_tot","silver_w","silver_p","silver_tot","land_a","land_rate","land_tot","other_v","debts","zakat","wasiyyah","was_con"]
   .forEach(id=>{document.getElementById(id)?.addEventListener("input",updateNet);});
 
 function setGender(g){
