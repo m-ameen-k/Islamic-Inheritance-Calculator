@@ -66,7 +66,7 @@ function calcMetal(metal){
   return w&&p?w*p:0;
 }
 
-function updateMetalDisplay(metal){
+function updateMetalUnit(metal){
   const u=document.getElementById(metal+"_u").value;
   const unitLbl=document.getElementById(metal+"UnitLbl");
   if(unitLbl) unitLbl.textContent="/ "+u;
@@ -75,7 +75,7 @@ function updateMetalDisplay(metal){
 
 ["gold","silver"].forEach(m=>{
   ["_w","_p","_u","_tot"].forEach(s=>{
-    document.getElementById(m+s)?.addEventListener("input",()=>updateMetalDisplay(m));
+    document.getElementById(m+s)?.addEventListener("input",()=>updateMetalUnit(m));
   });
 });
 
@@ -137,8 +137,9 @@ function updateCaseSummary(gross=getGross(),net=getNet()){
   if(gross<=0) missing.push("estate");
   if(selected.length===0) missing.push("heirs");
 
-  document.getElementById("reviewEstate").textContent=formatAmount(net);
+  document.getElementById("reviewGross").textContent=formatAmount(gross);
   document.getElementById("reviewDeductions").textContent=formatAmount(Math.max(0,gross-net));
+  document.getElementById("reviewEstate").textContent=formatAmount(net);
   document.getElementById("selectedHeirsSummary").textContent=selected.length?selected.join(", "):"None selected";
   document.getElementById("caseCompleteness").textContent=missing.length?`Add ${missing.join(", ")}.`:"Case information entered.";
 }
@@ -268,7 +269,7 @@ document.getElementById("fabBottom")?.addEventListener("click", () => window.scr
 applyLang(); 
 updateNet(); 
 renderHeirs(); 
-["gold","silver"].forEach(m=>updateMetalDisplay(m));
+["gold","silver"].forEach(m=>updateMetalUnit(m));
 
 document.getElementById("amountSymbol")?.addEventListener("input",e=>{
   cSym=e.target.value.trim();

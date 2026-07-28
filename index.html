@@ -104,15 +104,14 @@
       </details>
     </div>
     <div class="field">
-      <div class="flabel"><span data-i="other">Other assets</span> <span class="far">— غيرها</span></div>
-      <input type="text" id="other_d" class="inp" placeholder="Description (optional)" style="margin-bottom:5px" aria-label="Other asset description">
+      <label class="flabel" for="other_v"><span data-i="other">Other assets</span> <span class="far">— غيرها</span></label>
       <input type="number" id="other_v" class="inp" placeholder="Value" min="0" step="any" aria-label="Other asset value">
       </div>
     </div>
   </details>
 
   <details class="form-disclosure">
-    <summary>Funeral, preparation expenses and debts</summary>
+    <summary>Debts and unpaid zakat</summary>
     <div class="deductions-grid">
       <div class="field field-group">
         <label class="flabel" for="debts"><span data-i="debts">Debts</span> <span class="far">— ديون</span></label>
@@ -123,7 +122,7 @@
         <input type="number" id="zakat" class="inp" placeholder="0" min="0" step="any" aria-label="Unpaid Zakat">
       </div>
     </div>
-    <p class="section-help">Only the existing debt and unpaid-zakat fields affect the displayed estate. Funeral and preparation costs require qualified case review.</p>
+    <p class="unsupported-note"><strong>Not yet supported:</strong> Funeral and preparation costs are not entered here because this workflow cannot currently apply them safely.</p>
   </details>
 
   <details class="form-disclosure">
@@ -208,12 +207,16 @@
     </div>
     <dl class="review-list">
       <div>
-        <dt>Estate</dt>
-        <dd id="reviewEstate" aria-live="polite">0</dd>
+        <dt>Gross estate</dt>
+        <dd id="reviewGross" aria-live="polite">0</dd>
       </div>
       <div>
-        <dt>Deductions</dt>
+        <dt>Supported deductions</dt>
         <dd id="reviewDeductions" aria-live="polite">0</dd>
+      </div>
+      <div class="net-amount">
+        <dt>Current net amount</dt>
+        <dd id="reviewEstate" aria-live="polite">0</dd>
       </div>
       <div>
         <dt>Selected heirs</dt>
