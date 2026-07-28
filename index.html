@@ -109,17 +109,17 @@
 
   <details class="form-disclosure">
     <summary>Funeral, preparation expenses and debts</summary>
-    <div class="g2 disclosure-grid">
-      <div class="field">
-      <div class="flabel"><span data-i="debts">Debts</span> <span class="far">— ديون</span></div>
-      <input type="number" id="debts" class="inp" placeholder="0" min="0" step="any" aria-label="Debts">
+    <div class="deductions-grid">
+      <div class="field field-group">
+        <label class="flabel" for="debts"><span data-i="debts">Debts</span> <span class="far">— ديون</span></label>
+        <input type="number" id="debts" class="inp" placeholder="0" min="0" step="any" aria-label="Debts">
       </div>
-      <div class="field">
-      <div class="flabel" style="margin-top:8px"><span data-i="zakat">Unpaid Zakat</span> <span class="far">— زكاة</span></div>
-      <input type="number" id="zakat" class="inp" placeholder="0" min="0" step="any" aria-label="Unpaid Zakat">
+      <div class="field field-group">
+        <label class="flabel" for="zakat"><span data-i="zakat">Unpaid Zakat</span> <span class="far">— زكاة</span></label>
+        <input type="number" id="zakat" class="inp" placeholder="0" min="0" step="any" aria-label="Unpaid Zakat">
       </div>
     </div>
-    <p class="disclosure-note">Only the existing debt and unpaid-zakat fields affect the displayed estate. Funeral and preparation costs require qualified case review.</p>
+    <p class="section-help">Only the existing debt and unpaid-zakat fields affect the displayed estate. Funeral and preparation costs require qualified case review.</p>
   </details>
 
   <details class="form-disclosure">
@@ -134,7 +134,6 @@
     <div id="wasWarn" class="wbox"></div>
     </div>
   </details>
-  <div class="total-bar"><span class="tl" data-i="net_lbl">Net Estate (after debts &amp; wasiyyah)</span><span class="tv" id="netTotal">0</span></div>
 </div>
 
 <div class="card ai">

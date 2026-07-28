@@ -137,7 +137,6 @@ function getNet(){const ad=getAfterDebts(); return Math.max(0,ad-getWasiyyah(ad)
 function updateNet(){
   const gross=getGross(), net=getNet();
   document.getElementById("grossTotal").textContent=gross.toLocaleString(undefined,{maximumFractionDigits:2})+" "+cSym;
-  document.getElementById("netTotal").textContent=net.toLocaleString(undefined,{maximumFractionDigits:2})+" "+cSym;
   updateCaseSummary(gross,net);
 }
 
