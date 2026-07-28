@@ -56,8 +56,13 @@
 
 <div class="card ai">
   <div class="ch"><div class="cn">2</div><div class="ct" data-i="est_t">Estate &amp; Liabilities</div><div class="car">التركة والخصوم</div></div>
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">
-    <span style="font-size:12px;color:var(--txt3);font-weight:600" data-i="curr_lbl">Currency:</span>
+  <div class="estate-overview">
+    <div class="gross-estate">
+      <span>Gross estate entered</span>
+      <strong id="grossTotal">0 ₹</strong>
+    </div>
+    <div class="currency-row">
+    <span class="currency-label" data-i="curr_lbl">Currency:</span>
     <div class="pill-row" id="currGrp">
       <button class="pill on" data-c="INR" data-s="₹">₹ INR</button>
       <button class="pill" data-c="USD" data-s="$">$ USD</button>
@@ -65,13 +70,18 @@
       <button class="pill" data-c="AED" data-s="د.إ">AED</button>
       <button class="pill" data-c="GBP" data-s="£">£ GBP</button>
     </div>
-  </div>
-  <div class="g2">
-    <div class="field">
-      <div class="flabel"><span data-i="cash">Cash</span> <span class="far">— نقد</span></div>
-      <input type="number" id="cash" class="inp" placeholder="0" min="0" step="any">
     </div>
-    <div class="field">
+  </div>
+
+  <div class="field estate-primary-field">
+      <div class="flabel"><span data-i="cash">Cash</span> <span class="far">— نقد</span></div>
+      <input type="number" id="cash" class="inp" placeholder="0" min="0" step="any" inputmode="decimal">
+  </div>
+
+  <details class="form-disclosure">
+    <summary>Secondary estate information</summary>
+    <div class="g2 disclosure-grid">
+      <div class="field">
       <div class="flabel"><span data-i="gold">Gold</span> <span class="far">— ذهب</span><span class="computed-val" id="goldBadge" title="Click to fill total value">⚡ <span id="goldBadgeVal"></span></span></div>
       <div class="metal-row"><input type="number" id="gold_w" class="inp" placeholder="Weight" min="0" step="any"><select id="gold_u" class="inp"><option value="gram">gram</option><option value="tola">tola</option><option value="ounce">oz</option><option value="kg">kg</option></select></div>
       <div class="price-row"><div class="price-inp-wrap"><input type="number" id="gold_p" class="inp" placeholder="Price per unit" min="0" step="any"><span class="price-unit-label" id="goldUnitLbl">/ gram</span></div><button class="fetch-btn" id="fetchGold" data-metal="gold">⚡ Fetch</button></div>
@@ -93,23 +103,37 @@
       <div class="flabel"><span data-i="other">Other assets</span> <span class="far">— غيرها</span></div>
       <input type="text" id="other_d" class="inp" placeholder="Description (optional)" style="margin-bottom:5px">
       <input type="number" id="other_v" class="inp" placeholder="Value" min="0" step="any">
+      </div>
     </div>
-    <div class="field">
+  </details>
+
+  <details class="form-disclosure">
+    <summary>Funeral, preparation expenses and debts</summary>
+    <div class="g2 disclosure-grid">
+      <div class="field">
       <div class="flabel"><span data-i="debts">Debts</span> <span class="far">— ديون</span></div>
       <input type="number" id="debts" class="inp" placeholder="0" min="0" step="any">
+      </div>
+      <div class="field">
       <div class="flabel" style="margin-top:8px"><span data-i="zakat">Unpaid Zakat</span> <span class="far">— زكاة</span></div>
       <input type="number" id="zakat" class="inp" placeholder="0" min="0" step="any">
+      </div>
     </div>
-  </div>
-  <div class="field" style="margin-top:10px">
+    <p class="disclosure-note">Only the existing debt and unpaid-zakat fields affect the displayed estate. Funeral and preparation costs require qualified case review.</p>
+  </details>
+
+  <details class="form-disclosure">
+    <summary>Bequest details</summary>
+    <div class="field disclosure-content">
     <div class="flabel"><span data-i="was_lbl">Wasiyyah (Bequest)</span> <span class="far">— الوصية</span></div>
     <input type="number" id="wasiyyah" class="inp" placeholder="0" min="0" step="any">
-    <div style="display:flex;align-items:center;gap:8px;margin-top:5px">
-      <input type="checkbox" id="was_con" style="width:15px;height:15px;accent-color:var(--pri)">
-      <label for="was_con" style="font-size:12px;color:var(--txt3);cursor:pointer" data-i="was_con">All heirs consent to exceed 1/3?</label>
+    <div class="checkbox-row">
+      <input type="checkbox" id="was_con">
+      <label for="was_con" data-i="was_con">All heirs consent to exceed 1/3?</label>
     </div>
     <div id="wasWarn" class="wbox"></div>
-  </div>
+    </div>
+  </details>
   <div class="total-bar"><span class="tl" data-i="net_lbl">Net Estate (after debts &amp; wasiyyah)</span><span class="tv" id="netTotal">0</span></div>
 </div>
 
@@ -117,17 +141,43 @@
   <div class="ch"><div class="cn">3</div><div class="ct" data-i="mad_t">Madhab </div><div class="car"> المذهب</div></div>
   <div class="mrow">
     <button class="mbtn on" data-m="shafii" style="cursor:default">Shafi'i — شافعي</button>
+  </div>
+  <details class="form-disclosure madhab-disclosure">
+    <summary>Other madhabs (not implemented)</summary>
+    <div class="mrow disclosure-content">
     <button class="mbtn" data-m="hanafi" disabled title="Not implemented">Hanafi — حنفي</button>
     <button class="mbtn" data-m="maliki" disabled title="Not implemented">Maliki — مالكي</button>
     <button class="mbtn" data-m="hanbali" disabled title="Not implemented">Hanbali — حنبلي</button>
-  </div>
+    </div>
+  </details>
   <div class="snote" style="margin-top:10px;margin-bottom:0">Verification in progress.</div>
 </div>
 
 <div class="card ai">
   <div class="ch"><div class="cn">4</div><div class="ct" data-i="heir_t">Select Heirs</div><div class="car">اختر الورثة</div></div>
   <div class="hint" id="heirsHint" data-i="heir_hint">Select deceased gender first, then tap heirs.</div>
-  <div class="hgrid" id="hgrid"></div>
+  <div class="heir-groups" id="hgrid">
+    <section class="heir-group" aria-labelledby="spouseHeirsTitle">
+      <h3 id="spouseHeirsTitle">Spouse</h3>
+      <div class="hgrid" id="hgrid-spouse"></div>
+    </section>
+    <section class="heir-group" aria-labelledby="descendantHeirsTitle">
+      <h3 id="descendantHeirsTitle">Children and descendants</h3>
+      <div class="hgrid" id="hgrid-descendants"></div>
+    </section>
+    <details class="heir-group" open>
+      <summary>Parents and grandparents</summary>
+      <div class="hgrid" id="hgrid-parents"></div>
+    </details>
+    <details class="heir-group">
+      <summary>Siblings</summary>
+      <div class="hgrid" id="hgrid-siblings"></div>
+    </details>
+    <details class="heir-group">
+      <summary>Extended relatives</summary>
+      <div class="hgrid" id="hgrid-extended"></div>
+    </details>
+  </div>
 </div>
 
 <div class="res card ai" id="resSec">
@@ -181,6 +231,10 @@
   <p class="calculation-disabled-reason" id="calculationDisabledReason" data-i="calc_disabled_reason">
     The legacy engine is preserved, but it is not available for estate distribution.
   </p>
+  <details class="summary-disclosure">
+    <summary>Detailed verification explanation</summary>
+    <p>This case-preparation interface remains available for review, but no result may be calculated or used to distribute an estate until the Shafi‘i rule set completes scholarly verification.</p>
+  </details>
   </section>
 </aside>
 </main>

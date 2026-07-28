@@ -132,7 +132,10 @@ function getWasiyyah(ad){
 
 function getNet(){const ad=getAfterDebts(); return Math.max(0,ad-getWasiyyah(ad));}
 
-function updateNet(){ document.getElementById("netTotal").textContent=getNet().toLocaleString(undefined,{maximumFractionDigits:2})+" "+cSym; }
+function updateNet(){
+  document.getElementById("grossTotal").textContent=getGross().toLocaleString(undefined,{maximumFractionDigits:2})+" "+cSym;
+  document.getElementById("netTotal").textContent=getNet().toLocaleString(undefined,{maximumFractionDigits:2})+" "+cSym;
+}
 
 ["cash","gold_w","gold_p","gold_tot","silver_w","silver_p","silver_tot","land_a","land_rate","land_tot","other_v","debts","zakat","wasiyyah","was_con"]
   .forEach(id=>{document.getElementById(id)?.addEventListener("input",updateNet);});
@@ -197,7 +200,14 @@ function updateDynamicUI() {
 }
 
 function renderHeirs(){
-  const g=document.getElementById("hgrid"); g.innerHTML="";
+  const g=document.getElementById("hgrid");
+  const groupIds={
+    zawj:"spouse",zawja:"spouse",
+    ibn:"descendants",bint:"descendants",ibn_ibn:"descendants",bint_ibn:"descendants",
+    ab:"parents",umm:"parents",jadd:"parents",jadda_ab:"parents",jadda_umm:"parents",
+    akh_sh:"siblings",akh_ab:"siblings",akh_um:"siblings",ukht_sh:"siblings",ukht_ab:"siblings",ukht_um:"siblings"
+  };
+  g.querySelectorAll(".hgrid").forEach(group=>{ group.innerHTML=""; });
   HEIRS.forEach(h=>{
     const show=gender&&(h.dec==="b"||h.dec===gender), c=sel[h.id]||0;
     const card=document.createElement("div");
@@ -212,7 +222,8 @@ function renderHeirs(){
         card.classList.toggle("sel",!!sel[h.id]);
         updateDynamicUI();
     });
-    g.appendChild(card);
+    const group=document.getElementById("hgrid-"+(groupIds[h.id]||"extended"));
+    group.appendChild(card);
   });
 
   g.querySelectorAll(".cb").forEach(btn=>btn.addEventListener("click",e=>{
