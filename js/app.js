@@ -1,8 +1,8 @@
 //  ONLY UI logic: button clicks, renderHeirs(), theme switching
 // --- UI Logic and Event Listeners ---
 
-// ── Theme: System by default, with optional Light/Dark override ──
-const _themeButtons = document.querySelectorAll("[data-theme-mode]");
+// ── Theme: Single cycling button (System → Light → Dark → System) ──
+const _themeToggleBtn = document.querySelector(".theme-toggle-btn");
 const _systemTheme = matchMedia("(prefers-color-scheme: dark)");
 const _themeStorageKey = "faraid-theme";
 let _selectedThemeMode = "system";
@@ -25,14 +25,54 @@ function saveThemeOverride(mode){
   }
 }
 
+const _themeIcons = {
+  system: `<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 381 315"
+  aria-hidden="true"
+>
+  <g
+    fill="none"
+    stroke="currentColor"
+    stroke-width="10"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <rect x="85" y="63" width="165" height="45" rx="9" />
+
+    <path
+      d="M250 85
+         H259
+         Q267 85 267 94
+         V119
+         Q267 124 261 126
+         L178 141
+         Q168 143 168 153
+         V161"
+    />
+
+    <rect x="154" y="160" width="28" height="110" rx="10" />
+  </g>
+</svg>`,
+  light: `<span aria-hidden="true">☀</span>`,
+  dark: `<span aria-hidden="true">☽</span>`
+};
+
+const _modeOrder = ["system", "light", "dark"];
+const _modeAccessibility = {
+  system: { label: "Theme: System. Activate for Light.", title: "Follow system theme" },
+  light: { label: "Theme: Light. Activate for Dark.", title: "Use light theme" },
+  dark: { label: "Theme: Dark. Activate for System.", title: "Use dark theme" }
+};
+
 function applyThemeMode(mode){
   const selectedMode=mode==="light"||mode==="dark"?mode:"system";
   const resolvedTheme=selectedMode==="system"?(_systemTheme.matches?"dark":"light"):selectedMode;
   _selectedThemeMode=selectedMode;
   document.documentElement.dataset.theme=resolvedTheme;
-  _themeButtons.forEach(button=>{
-    button.setAttribute("aria-pressed",button.dataset.themeMode===selectedMode);
-  });
+  _themeToggleBtn.innerHTML=_themeIcons[selectedMode];
+  _themeToggleBtn.setAttribute("aria-label",_modeAccessibility[selectedMode].label);
+  _themeToggleBtn.setAttribute("title",_modeAccessibility[selectedMode].title);
   saveThemeOverride(selectedMode);
 }
 
@@ -44,8 +84,9 @@ _systemTheme.addEventListener("change",event=>{
   }
 });
 
-_themeButtons.forEach(button=>{
-  button.addEventListener("click",()=>applyThemeMode(button.dataset.themeMode));
+_themeToggleBtn.addEventListener("click",()=>{
+  const nextIndex=(_modeOrder.indexOf(_selectedThemeMode)+1)%_modeOrder.length;
+  applyThemeMode(_modeOrder[nextIndex]);
 });
 
 // ── Language switcher — 3 buttons EN | AR | ML ──

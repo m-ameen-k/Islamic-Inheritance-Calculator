@@ -235,13 +235,6 @@ body::before {
 }
 
 /* ── Theme preference ── */
-.theme-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
 .theme-toggle-btn {
   width: 44px;
   height: 44px;
@@ -263,18 +256,6 @@ body::before {
   border-color: var(--pri);
   color: var(--pri);
   transform: scale(1.05);
-}
-
-.theme-toggle-btn[aria-pressed="true"] {
-  border-color: var(--pri);
-  background: var(--pribg);
-  color: var(--pri);
-  box-shadow: inset 0 0 0 2px var(--pri);
-  transform: scale(0.94);
-}
-
-.theme-toggle-btn[aria-pressed="true"]:hover {
-  transform: scale(0.98);
 }
 
 .system-theme-icon {
