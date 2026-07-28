@@ -577,6 +577,31 @@ body::before {
   font-weight: 400;
 }
 
+.valuation-disclosure {
+  margin-top: 2px;
+  border-top: 1px dashed var(--border);
+}
+
+.valuation-disclosure > summary {
+  min-height: 44px;
+  padding-block: 9px;
+  color: var(--pri);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.valuation-disclosure > summary::marker {
+  color: var(--pri);
+}
+
+.valuation-fields {
+  display: grid;
+  gap: 8px;
+  padding-block-end: 8px;
+}
+
 .form-disclosure,
 .heir-group[open],
 .summary-disclosure {

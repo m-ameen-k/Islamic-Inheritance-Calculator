@@ -73,20 +73,35 @@
       <div class="field">
       <label class="flabel" for="gold_tot"><span data-i="gold">Gold</span> <span class="far">— ذهب</span></label>
       <input type="number" id="gold_tot" class="inp" placeholder="Total gold value" min="0" step="any" aria-label="Total gold value">
-      <div class="metal-row"><input type="number" id="gold_w" class="inp" placeholder="Weight" min="0" step="any" aria-label="Gold weight"><select id="gold_u" class="inp" aria-label="Gold weight unit"><option value="gram">gram</option><option value="tola">tola</option><option value="ounce">oz</option><option value="kg">kg</option></select></div>
-      <div class="price-inp-wrap"><input type="number" id="gold_p" class="inp" placeholder="Manual rate per unit" min="0" step="any" aria-label="Gold rate per unit"><span class="price-unit-label" id="goldUnitLbl">/ gram</span></div>
+      <details class="valuation-disclosure">
+        <summary>Calculate from weight and rate</summary>
+        <div class="valuation-fields">
+          <div class="metal-row"><input type="number" id="gold_w" class="inp" placeholder="Weight" min="0" step="any" aria-label="Gold weight"><select id="gold_u" class="inp" aria-label="Gold weight unit"><option value="gram">gram</option><option value="tola">tola</option><option value="ounce">oz</option><option value="kg">kg</option></select></div>
+          <div class="price-inp-wrap"><input type="number" id="gold_p" class="inp" placeholder="Manual rate per unit" min="0" step="any" aria-label="Gold rate per unit"><span class="price-unit-label" id="goldUnitLbl">/ gram</span></div>
+        </div>
+      </details>
       </div>
       <div class="field">
       <label class="flabel" for="silver_tot"><span data-i="silver">Silver</span> <span class="far">— فضة</span></label>
       <input type="number" id="silver_tot" class="inp" placeholder="Total silver value" min="0" step="any" aria-label="Total silver value">
-      <div class="metal-row"><input type="number" id="silver_w" class="inp" placeholder="Weight" min="0" step="any" aria-label="Silver weight"><select id="silver_u" class="inp" aria-label="Silver weight unit"><option value="gram">gram</option><option value="tola">tola</option><option value="ounce">oz</option><option value="kg">kg</option></select></div>
-      <div class="price-inp-wrap"><input type="number" id="silver_p" class="inp" placeholder="Manual rate per unit" min="0" step="any" aria-label="Silver rate per unit"><span class="price-unit-label" id="silverUnitLbl">/ gram</span></div>
+      <details class="valuation-disclosure">
+        <summary>Calculate from weight and rate</summary>
+        <div class="valuation-fields">
+          <div class="metal-row"><input type="number" id="silver_w" class="inp" placeholder="Weight" min="0" step="any" aria-label="Silver weight"><select id="silver_u" class="inp" aria-label="Silver weight unit"><option value="gram">gram</option><option value="tola">tola</option><option value="ounce">oz</option><option value="kg">kg</option></select></div>
+          <div class="price-inp-wrap"><input type="number" id="silver_p" class="inp" placeholder="Manual rate per unit" min="0" step="any" aria-label="Silver rate per unit"><span class="price-unit-label" id="silverUnitLbl">/ gram</span></div>
+        </div>
+      </details>
       </div>
       <div class="field">
       <label class="flabel" for="land_tot"><span data-i="land">Land / Property</span> <span class="far">— عقار</span></label>
       <input type="number" id="land_tot" class="inp" placeholder="Total property value" min="0" step="any" aria-label="Total property value">
-      <div class="metal-row"><input type="number" id="land_a" class="inp" placeholder="Area" min="0" step="any" aria-label="Property area"><select id="land_u" class="inp" aria-label="Property area unit"><option value="sqft">sq ft</option><option value="sqm">sq m</option><option value="cent">cent</option><option value="acre">acre</option></select></div>
-      <input type="number" id="land_rate" class="inp" placeholder="Rate per unit" min="0" step="any" style="margin-top:5px" aria-label="Property rate per unit">
+      <details class="valuation-disclosure">
+        <summary>Calculate property value from area</summary>
+        <div class="valuation-fields">
+          <div class="metal-row"><input type="number" id="land_a" class="inp" placeholder="Area" min="0" step="any" aria-label="Property area"><select id="land_u" class="inp" aria-label="Property area unit"><option value="sqft">sq ft</option><option value="sqm">sq m</option><option value="cent">cent</option><option value="acre">acre</option></select></div>
+          <input type="number" id="land_rate" class="inp" placeholder="Manual rate per unit" min="0" step="any" aria-label="Property rate per unit">
+        </div>
+      </details>
     </div>
     <div class="field">
       <div class="flabel"><span data-i="other">Other assets</span> <span class="far">— غيرها</span></div>
