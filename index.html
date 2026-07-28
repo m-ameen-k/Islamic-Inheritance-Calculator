@@ -40,10 +40,12 @@
   <div class="step" id="s5"><div class="sc">5</div><div class="sl" data-i="s_res">Result</div></div>
 </div>
 
-<div class="validation-banner ai" role="status" data-i="validation_notice">
-  Under technical and scholarly validation. This tool is for education and case preparation only. Every result must be verified by a qualified Shafi‘i fara’id scholar before an estate is distributed.
+<div class="validation-banner ai" role="status">
+  Calculation is unavailable while the Shafi‘i rules are undergoing scholarly verification.
 </div>
 
+<main class="workspace-layout">
+<div class="main-workspace">
 <div class="card ai">
   <div class="ch"><div class="cn">1</div><div class="ct" data-i="dec_t">Who passed away?</div><div class="car">من المتوفى؟</div></div>
   <div class="grd">
@@ -119,19 +121,13 @@
     <button class="mbtn" data-m="maliki" disabled title="Not implemented">Maliki — مالكي</button>
     <button class="mbtn" data-m="hanbali" disabled title="Not implemented">Hanbali — حنبلي</button>
   </div>
-  <div class="snote" style="margin-top:10px;margin-bottom:0">⚠ Only the Shafi'i rebuild is in scope. Its rules are still being verified.</div>
+  <div class="snote" style="margin-top:10px;margin-bottom:0">Verification in progress.</div>
 </div>
 
 <div class="card ai">
   <div class="ch"><div class="cn">4</div><div class="ct" data-i="heir_t">Select Heirs</div><div class="car">اختر الورثة</div></div>
   <div class="hint" id="heirsHint" data-i="heir_hint">Select deceased gender first, then tap heirs.</div>
   <div class="hgrid" id="hgrid"></div>
-  <button class="calcbtn" id="calcBtn" disabled aria-describedby="calculationDisabledReason">
-    <span data-i="calc_disabled">Calculation temporarily disabled during validation</span>
-  </button>
-  <p class="calculation-disabled-reason" id="calculationDisabledReason" data-i="calc_disabled_reason">
-    The legacy engine is preserved, but it is not available for estate distribution.
-  </p>
 </div>
 
 <div class="res card ai" id="resSec">
@@ -149,8 +145,45 @@
   <div class="tc" id="tcAssets"><div id="assetsDetail"></div></div>
   <div class="tc" id="tcLearn"><div id="learnContent"></div></div>
 </div>
-
 </div>
+
+<aside class="case-sidebar ai" aria-labelledby="caseSummaryTitle">
+  <section class="card case-summary">
+    <div class="ch">
+      <div class="ct" id="caseSummaryTitle">Review</div>
+      <div class="car">مراجعة</div>
+    </div>
+    <dl class="review-list">
+      <div>
+        <dt>Estate</dt>
+        <dd id="reviewEstate">0 ₹</dd>
+      </div>
+      <div>
+        <dt>Deductions</dt>
+        <dd id="reviewDeductions">0 ₹</dd>
+      </div>
+      <div>
+        <dt>Selected heirs</dt>
+        <dd id="selectedHeirsSummary">None selected</dd>
+      </div>
+      <div>
+        <dt>Incomplete information</dt>
+        <dd id="caseCompleteness">Select who passed away.</dd>
+      </div>
+      <div>
+        <dt>Verification status</dt>
+        <dd><span class="status-label">Under verification</span></dd>
+      </div>
+    </dl>
+  <button class="calcbtn" id="calcBtn" disabled aria-describedby="calculationDisabledReason">
+    <span data-i="calc_disabled">Calculation temporarily disabled during validation</span>
+  </button>
+  <p class="calculation-disabled-reason" id="calculationDisabledReason" data-i="calc_disabled_reason">
+    The legacy engine is preserved, but it is not available for estate distribution.
+  </p>
+  </section>
+</aside>
+</main>
 
 <div class="fab-group">
   <button class="fab" id="fabTop" aria-label="Scroll to top">↑</button>
@@ -202,7 +235,7 @@
     <p class="tip-note">Payment links will be configured soon. <span id="upiPlaceholder" style="display:none;font-weight:600;color:var(--pri)"></span></p>
   </div>
 
-  <p class="footer-copy">Under technical and scholarly validation. This tool is for education and case preparation only. Every result must be verified by a qualified Shafi‘i fara’id scholar before an estate is distributed.</p>
+  <p class="footer-copy"><span class="status-label">Calculator status: unavailable</span></p>
 </footer>
 
 <script src="js/data.js"></script>
