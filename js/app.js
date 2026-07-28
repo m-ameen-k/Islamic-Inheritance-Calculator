@@ -133,8 +133,10 @@ function getWasiyyah(ad){
 function getNet(){const ad=getAfterDebts(); return Math.max(0,ad-getWasiyyah(ad));}
 
 function updateNet(){
-  document.getElementById("grossTotal").textContent=getGross().toLocaleString(undefined,{maximumFractionDigits:2})+" "+cSym;
-  document.getElementById("netTotal").textContent=getNet().toLocaleString(undefined,{maximumFractionDigits:2})+" "+cSym;
+  const gross=getGross(), net=getNet();
+  document.getElementById("grossTotal").textContent=gross.toLocaleString(undefined,{maximumFractionDigits:2})+" "+cSym;
+  document.getElementById("netTotal").textContent=net.toLocaleString(undefined,{maximumFractionDigits:2})+" "+cSym;
+  updateCaseSummary(gross,net);
 }
 
 ["cash","gold_w","gold_p","gold_tot","silver_w","silver_p","silver_tot","land_a","land_rate","land_tot","other_v","debts","zakat","wasiyyah","was_con"]
@@ -161,6 +163,21 @@ function har(h){
   if(lang === "ar") return h.ml;
   if(lang === "ml") return h.ar;
   return h.ar;
+}
+
+function updateCaseSummary(gross=getGross(),net=getNet()){
+  const selected=HEIRS
+    .filter(h=>(sel[h.id]||0)>0)
+    .map(h=>`${hn(h)}${h.max>1?` × ${sel[h.id]}`:""}`);
+  const missing=[];
+  if(!gender) missing.push("who passed away");
+  if(gross<=0) missing.push("estate");
+  if(selected.length===0) missing.push("heirs");
+
+  document.getElementById("reviewEstate").textContent=net.toLocaleString(undefined,{maximumFractionDigits:2})+" "+cSym;
+  document.getElementById("reviewDeductions").textContent=Math.max(0,gross-net).toLocaleString(undefined,{maximumFractionDigits:2})+" "+cSym;
+  document.getElementById("selectedHeirsSummary").textContent=selected.length?selected.join(", "):"None selected";
+  document.getElementById("caseCompleteness").textContent=missing.length?`Add ${missing.join(", ")}.`:"Case information entered.";
 }
 
 function updateDynamicUI() {
@@ -221,6 +238,7 @@ function renderHeirs(){
         sel[h.id]=sel[h.id]?0:1;
         card.classList.toggle("sel",!!sel[h.id]);
         updateDynamicUI();
+        updateCaseSummary();
     });
     const group=document.getElementById("hgrid-"+(groupIds[h.id]||"extended"));
     group.appendChild(card);
@@ -236,8 +254,10 @@ function renderHeirs(){
     card.classList.toggle("sel",sel[id]>0);
     const cn=document.getElementById("cn-"+id); if(cn) cn.textContent=sel[id]||"";
     updateDynamicUI();
+    updateCaseSummary();
   }));
   updateDynamicUI();
+  updateCaseSummary();
 }
 
 function setStep(n){
