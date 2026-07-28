@@ -54,13 +54,12 @@ document.querySelectorAll('#langSwitcher .ls-btn').forEach(b=>
   b.addEventListener('click', ()=>{ lang=b.dataset.l; applyLang(); })
 );
 
-document.querySelectorAll("#currGrp .pill").forEach(b=>b.addEventListener("click",()=>{
-  cCode=b.dataset.c; cSym=b.dataset.s;
-  document.querySelectorAll("#currGrp .pill").forEach(x=>x.classList.toggle("on",x===b));
-  updateNet();
-}));
-
 function fv(id){return parseFloat(document.getElementById(id)?.value)||0;}
+
+function formatAmount(value){
+  const formatted=value.toLocaleString(undefined,{maximumFractionDigits:2});
+  return cSym?`${cSym} ${formatted}`:formatted;
+}
 
 function calcMetal(metal){
   const tot=fv(metal+"_tot"); if(tot) return tot;
@@ -76,7 +75,7 @@ function updateMetalDisplay(metal){
   if(unitLbl) unitLbl.textContent="/ "+u;
   if(w&&p){
     const val=w*p;
-    badgeVal.textContent=cSym+val.toLocaleString(undefined,{maximumFractionDigits:2});
+    badgeVal.textContent=formatAmount(val);
     badge.classList.add("show");
     badge.style.cursor = "pointer";
     badge.onclick = () => {
@@ -128,7 +127,7 @@ function getAfterDebts(){return Math.max(0,getGross()-fv("debts")-fv("zakat"));}
 function getWasiyyah(ad){
   const wi=fv("wasiyyah"); if(!wi) return 0;
   const max=ad/3, consent=document.getElementById("was_con").checked, w=document.getElementById("wasWarn");
-  if(!consent&&wi>max){ w.style.display="block"; w.textContent=(T[lang].was_warn||"").replace("{m}",max.toLocaleString(undefined,{maximumFractionDigits:2})+" "+cSym); return max; }
+  if(!consent&&wi>max){ w.style.display="block"; w.textContent=(T[lang].was_warn||"").replace("{m}",formatAmount(max)); return max; }
   w.style.display="none"; return wi;
 }
 
@@ -136,7 +135,7 @@ function getNet(){const ad=getAfterDebts(); return Math.max(0,ad-getWasiyyah(ad)
 
 function updateNet(){
   const gross=getGross(), net=getNet();
-  document.getElementById("grossTotal").textContent=gross.toLocaleString(undefined,{maximumFractionDigits:2})+" "+cSym;
+  document.getElementById("grossTotal").textContent=formatAmount(gross);
   updateCaseSummary(gross,net);
 }
 
@@ -177,8 +176,8 @@ function updateCaseSummary(gross=getGross(),net=getNet()){
   if(gross<=0) missing.push("estate");
   if(selected.length===0) missing.push("heirs");
 
-  document.getElementById("reviewEstate").textContent=net.toLocaleString(undefined,{maximumFractionDigits:2})+" "+cSym;
-  document.getElementById("reviewDeductions").textContent=Math.max(0,gross-net).toLocaleString(undefined,{maximumFractionDigits:2})+" "+cSym;
+  document.getElementById("reviewEstate").textContent=formatAmount(net);
+  document.getElementById("reviewDeductions").textContent=formatAmount(Math.max(0,gross-net));
   document.getElementById("selectedHeirsSummary").textContent=selected.length?selected.join(", "):"None selected";
   document.getElementById("caseCompleteness").textContent=missing.length?`Add ${missing.join(", ")}.`:"Case information entered.";
 }
@@ -309,6 +308,11 @@ applyLang();
 updateNet(); 
 renderHeirs(); 
 ["gold","silver"].forEach(m=>updateMetalDisplay(m));
+
+document.getElementById("amountSymbol")?.addEventListener("input",e=>{
+  cSym=e.target.value.trim();
+  updateNet();
+});
 
 // Event delegation to handle tooltip taps on mobile devices
 document.body.addEventListener('click', function(e) {

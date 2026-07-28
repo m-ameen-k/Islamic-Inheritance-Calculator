@@ -297,37 +297,6 @@ body::before {
   user-select: none;
 }
 
-/* Pills & Currency */
-.pill-row {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.pill {
-  padding: 4px 12px;
-  border-radius: 50px;
-  border: 1px solid var(--border);
-  background: var(--card2);
-  color: var(--txt2);
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--tr);
-  min-height: 44px;
-}
-
-.pill:hover {
-  background: var(--bg2);
-  color: var(--txt);
-}
-
-.pill.on {
-  background: var(--pri);
-  color: #fff;
-  border-color: var(--pri);
-}
-
 /* ── Footer ── */
 .site-footer {
   margin-top: 2rem;
@@ -601,8 +570,7 @@ body::before {
   min-width: 0;
 }
 
-.gross-estate span,
-.currency-label {
+.gross-estate span {
   color: var(--txt3);
   font-size: 12px;
   font-weight: 600;
@@ -614,15 +582,6 @@ body::before {
   font-size: clamp(1.35rem, 3vw, 1.75rem);
   line-height: 1.25;
   overflow-wrap: anywhere;
-}
-
-.currency-row {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  flex-wrap: wrap;
-  min-width: 0;
 }
 
 .estate-primary-field {
@@ -685,6 +644,15 @@ body::before {
 
 .section-help {
   padding-block-start: 8px;
+}
+
+.amount-symbol-input {
+  max-width: 10rem;
+}
+
+.optional-label {
+  color: var(--txt3);
+  font-weight: 400;
 }
 
 .madhab-disclosure {
@@ -1487,9 +1455,6 @@ body::before {
     flex-direction: column;
   }
 
-  .currency-row {
-    justify-content: flex-start;
-  }
 }
 
 @media(min-width:800px) and (max-width:960px) {

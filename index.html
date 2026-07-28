@@ -59,17 +59,7 @@
   <div class="estate-overview">
     <div class="gross-estate">
       <span>Gross estate entered</span>
-      <strong id="grossTotal">0 ₹</strong>
-    </div>
-    <div class="currency-row">
-    <span class="currency-label" data-i="curr_lbl">Currency:</span>
-    <div class="pill-row" id="currGrp">
-      <button class="pill on" data-c="INR" data-s="₹">₹ INR</button>
-      <button class="pill" data-c="USD" data-s="$">$ USD</button>
-      <button class="pill" data-c="SAR" data-s="ر.س">SAR</button>
-      <button class="pill" data-c="AED" data-s="د.إ">AED</button>
-      <button class="pill" data-c="GBP" data-s="£">£ GBP</button>
-    </div>
+      <strong id="grossTotal">0</strong>
     </div>
   </div>
 
@@ -205,11 +195,11 @@
     <dl class="review-list">
       <div>
         <dt>Estate</dt>
-        <dd id="reviewEstate" aria-live="polite">0 ₹</dd>
+        <dd id="reviewEstate" aria-live="polite">0</dd>
       </div>
       <div>
         <dt>Deductions</dt>
-        <dd id="reviewDeductions" aria-live="polite">0 ₹</dd>
+        <dd id="reviewDeductions" aria-live="polite">0</dd>
       </div>
       <div>
         <dt>Selected heirs</dt>
@@ -227,9 +217,17 @@
   <button class="calcbtn" id="calcBtn" disabled aria-describedby="calculationDisabledReason">
     <span data-i="calc_disabled">Calculation temporarily disabled during validation</span>
   </button>
-  <p class="calculation-disabled-reason" id="calculationDisabledReason" data-i="calc_disabled_reason">
-    The legacy engine is preserved, but it is not available for estate distribution.
-  </p>
+    <p class="calculation-disabled-reason" id="calculationDisabledReason" data-i="calc_disabled_reason">
+      The legacy engine is preserved, but it is not available for estate distribution.
+    </p>
+  <details class="summary-disclosure report-options">
+    <summary>Report options</summary>
+    <div class="field disclosure-content">
+      <label class="flabel" for="amountSymbol">Amount symbol <span class="optional-label">— optional</span></label>
+      <input type="text" id="amountSymbol" class="inp amount-symbol-input" maxlength="8" placeholder="₹, $, ر.س" autocomplete="off">
+      <p class="disclosure-note">Used only to format displayed amounts. It never converts a value.</p>
+    </div>
+  </details>
   <details class="summary-disclosure">
     <summary>Detailed verification explanation</summary>
     <p>This case-preparation interface remains available for review, but no result may be calculated or used to distribute an estate until the Shafi‘i rule set completes scholarly verification.</p>
