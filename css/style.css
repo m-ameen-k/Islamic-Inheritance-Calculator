@@ -234,28 +234,40 @@ body::before {
   flex-shrink: 0;
 }
 
-/* ── Single theme toggle button ── */
-.theme-toggle-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
+/* ── Theme preference ── */
+.theme-control {
+  flex-shrink: 0;
+}
+
+.theme-select {
+  width: 100px;
+  min-height: 44px;
+  padding: 8px 30px 8px 12px;
+  border-radius: 50px;
   border: 1px solid var(--border);
   background: var(--card);
   color: var(--txt);
   cursor: pointer;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font: 600 13px 'DM Sans', sans-serif;
   transition: var(--tr);
-  flex-shrink: 0;
 }
 
-.theme-toggle-btn:hover {
+.theme-select:hover {
   background: var(--pribg);
   border-color: var(--pri);
   color: var(--pri);
-  transform: scale(1.05)
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* ── Language switcher — yazinsai style ── */

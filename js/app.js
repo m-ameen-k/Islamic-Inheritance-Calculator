@@ -1,37 +1,46 @@
 //  ONLY UI logic: button clicks, renderHeirs(), theme switching
 // --- UI Logic and Event Listeners ---
 
-// ── Theme: single toggle button, follows system on first load ──
-const _themeBtn = document.getElementById('themeToggleBtn');
-const _themeIcon = document.getElementById('themeIcon');
+// ── Theme: System by default, with optional Light/Dark override ──
+const _themeMode = document.getElementById("themeMode");
+const _systemTheme = matchMedia("(prefers-color-scheme: dark)");
+const _themeStorageKey = "faraid-theme";
 
-function setTheme(mode){
-  // mode: 'dark' | 'light'
-  const isDark = mode === 'dark';
-  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-  _themeIcon.textContent = isDark ? '☽' : '☀';
-  localStorage.setItem('faraid-theme', mode);
+function getThemeOverride(){
+  try {
+    const savedTheme=localStorage.getItem(_themeStorageKey);
+    return savedTheme==="light"||savedTheme==="dark"?savedTheme:null;
+  } catch {
+    return null;
+  }
 }
 
-// Init: honour saved pref, else follow system
-(function initTheme(){
-  const saved = localStorage.getItem('faraid-theme');
-  if(saved === 'dark' || saved === 'light'){
-    setTheme(saved);
-  } else {
-    setTheme(matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+function saveThemeOverride(mode){
+  try {
+    if(mode==="system") localStorage.removeItem(_themeStorageKey);
+    else localStorage.setItem(_themeStorageKey,mode);
+  } catch {
+    // The selected mode still applies for this page when storage is unavailable.
   }
-})();
+}
 
-// Watch system changes (only if user hasn't manually set a preference)
-matchMedia('(prefers-color-scheme:dark)').addEventListener('change', e => {
-  if(!localStorage.getItem('faraid-theme')) setTheme(e.matches ? 'dark' : 'light');
+function applyThemeMode(mode){
+  const selectedMode=mode==="light"||mode==="dark"?mode:"system";
+  const resolvedTheme=selectedMode==="system"?(_systemTheme.matches?"dark":"light"):selectedMode;
+  document.documentElement.dataset.theme=resolvedTheme;
+  _themeMode.value=selectedMode;
+  saveThemeOverride(selectedMode);
+}
+
+applyThemeMode(getThemeOverride()||"system");
+
+_systemTheme.addEventListener("change",event=>{
+  if(_themeMode.value==="system"){
+    document.documentElement.dataset.theme=event.matches?"dark":"light";
+  }
 });
 
-_themeBtn.addEventListener('click', () => {
-  const current = document.documentElement.getAttribute('data-theme');
-  setTheme(current === 'dark' ? 'light' : 'dark');
-});
+_themeMode.addEventListener("change",()=>applyThemeMode(_themeMode.value));
 
 // ── Language switcher — 3 buttons EN | AR | ML ──
 function applyLang(){

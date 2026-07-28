@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Fara'id — علم الفرائض</title>
+<script>
+  (() => {
+    const systemTheme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    try {
+      const savedTheme = localStorage.getItem("faraid-theme");
+      document.documentElement.dataset.theme = savedTheme === "light" || savedTheme === "dark" ? savedTheme : systemTheme;
+    } catch {
+      document.documentElement.dataset.theme = systemTheme;
+    }
+  })();
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -25,10 +36,14 @@
       <span class="ls-sep">|</span>
       <button class="ls-btn" data-l="ml">ML</button>
     </div>
-    <!-- Single theme toggle button -->
-    <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle theme" aria-label="Toggle dark/light mode">
-      <span id="themeIcon">☀</span>
-    </button>
+    <div class="theme-control">
+      <label class="visually-hidden" for="themeMode">Theme preference</label>
+      <select id="themeMode" class="theme-select">
+        <option value="system">System</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </div>
   </div>
 </div>
 
