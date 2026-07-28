@@ -49,8 +49,8 @@
 <div class="card ai">
   <div class="ch"><div class="cn">1</div><div class="ct" data-i="dec_t">Who passed away?</div><div class="car">من المتوفى؟</div></div>
   <div class="grd">
-    <div class="gbtn" data-g="m" id="gbm"><span class="gi">♂</span><span class="ge" data-i="male">Male — ذكر</span><span class="ga">مورِّث (رجل)</span></div>
-    <div class="gbtn" data-g="f" id="gbf"><span class="gi">♀</span><span class="ge" data-i="female">Female — أنثى</span><span class="ga">مورِّثة (امرأة)</span></div>
+    <button type="button" class="gbtn" data-g="m" id="gbm" aria-pressed="false"><span class="gi">♂</span><span class="ge" data-i="male">Male — ذكر</span><span class="ga">مورِّث (رجل)</span></button>
+    <button type="button" class="gbtn" data-g="f" id="gbf" aria-pressed="false"><span class="gi">♀</span><span class="ge" data-i="female">Female — أنثى</span><span class="ga">مورِّثة (امرأة)</span></button>
   </div>
 </div>
 
@@ -75,7 +75,7 @@
 
   <div class="field estate-primary-field">
       <div class="flabel"><span data-i="cash">Cash</span> <span class="far">— نقد</span></div>
-      <input type="number" id="cash" class="inp" placeholder="0" min="0" step="any" inputmode="decimal">
+      <input type="number" id="cash" class="inp" placeholder="0" min="0" step="any" inputmode="decimal" aria-label="Cash value">
   </div>
 
   <details class="form-disclosure">
@@ -83,26 +83,26 @@
     <div class="g2 disclosure-grid">
       <div class="field">
       <div class="flabel"><span data-i="gold">Gold</span> <span class="far">— ذهب</span><span class="computed-val" id="goldBadge" title="Click to fill total value">⚡ <span id="goldBadgeVal"></span></span></div>
-      <div class="metal-row"><input type="number" id="gold_w" class="inp" placeholder="Weight" min="0" step="any"><select id="gold_u" class="inp"><option value="gram">gram</option><option value="tola">tola</option><option value="ounce">oz</option><option value="kg">kg</option></select></div>
-      <div class="price-row"><div class="price-inp-wrap"><input type="number" id="gold_p" class="inp" placeholder="Price per unit" min="0" step="any"><span class="price-unit-label" id="goldUnitLbl">/ gram</span></div><button class="fetch-btn" id="fetchGold" data-metal="gold">⚡ Fetch</button></div>
-      <div class="or-div" data-i="or_txt">— or enter total value —</div><input type="number" id="gold_tot" class="inp" placeholder="Total gold value" min="0" step="any">
+      <div class="metal-row"><input type="number" id="gold_w" class="inp" placeholder="Weight" min="0" step="any" aria-label="Gold weight"><select id="gold_u" class="inp" aria-label="Gold weight unit"><option value="gram">gram</option><option value="tola">tola</option><option value="ounce">oz</option><option value="kg">kg</option></select></div>
+      <div class="price-row"><div class="price-inp-wrap"><input type="number" id="gold_p" class="inp" placeholder="Price per unit" min="0" step="any" aria-label="Gold price per unit"><span class="price-unit-label" id="goldUnitLbl">/ gram</span></div><button class="fetch-btn" id="fetchGold" data-metal="gold">⚡ Fetch</button></div>
+      <div class="or-div" data-i="or_txt">— or enter total value —</div><input type="number" id="gold_tot" class="inp" placeholder="Total gold value" min="0" step="any" aria-label="Total gold value">
     </div>
     <div class="field">
       <div class="flabel"><span data-i="silver">Silver</span> <span class="far">— فضة</span><span class="computed-val" id="silverBadge" title="Click to fill total value">⚡ <span id="silverBadgeVal"></span></span></div>
-      <div class="metal-row"><input type="number" id="silver_w" class="inp" placeholder="Weight" min="0" step="any"><select id="silver_u" class="inp"><option value="gram">gram</option><option value="tola">tola</option><option value="ounce">oz</option><option value="kg">kg</option></select></div>
-      <div class="price-row"><div class="price-inp-wrap"><input type="number" id="silver_p" class="inp" placeholder="Price per unit" min="0" step="any"><span class="price-unit-label" id="silverUnitLbl">/ gram</span></div><button class="fetch-btn" id="fetchSilver" data-metal="silver">⚡ Fetch</button></div>
-      <div class="or-div" data-i="or_txt">— or enter total value —</div><input type="number" id="silver_tot" class="inp" placeholder="Total silver value" min="0" step="any">
+      <div class="metal-row"><input type="number" id="silver_w" class="inp" placeholder="Weight" min="0" step="any" aria-label="Silver weight"><select id="silver_u" class="inp" aria-label="Silver weight unit"><option value="gram">gram</option><option value="tola">tola</option><option value="ounce">oz</option><option value="kg">kg</option></select></div>
+      <div class="price-row"><div class="price-inp-wrap"><input type="number" id="silver_p" class="inp" placeholder="Price per unit" min="0" step="any" aria-label="Silver price per unit"><span class="price-unit-label" id="silverUnitLbl">/ gram</span></div><button class="fetch-btn" id="fetchSilver" data-metal="silver">⚡ Fetch</button></div>
+      <div class="or-div" data-i="or_txt">— or enter total value —</div><input type="number" id="silver_tot" class="inp" placeholder="Total silver value" min="0" step="any" aria-label="Total silver value">
     </div>
     <div class="field">
       <div class="flabel"><span data-i="land">Land / Property</span> <span class="far">— عقار</span></div>
-      <div class="metal-row"><input type="number" id="land_a" class="inp" placeholder="Area" min="0" step="any"><select id="land_u" class="inp"><option value="sqft">sq ft</option><option value="sqm">sq m</option><option value="cent">cent</option><option value="acre">acre</option></select></div>
-      <input type="number" id="land_rate" class="inp" placeholder="Rate per unit" min="0" step="any" style="margin-top:5px">
-      <div class="or-div" data-i="or_txt">— or enter total value —</div><input type="number" id="land_tot" class="inp" placeholder="Total property value" min="0" step="any">
+      <div class="metal-row"><input type="number" id="land_a" class="inp" placeholder="Area" min="0" step="any" aria-label="Property area"><select id="land_u" class="inp" aria-label="Property area unit"><option value="sqft">sq ft</option><option value="sqm">sq m</option><option value="cent">cent</option><option value="acre">acre</option></select></div>
+      <input type="number" id="land_rate" class="inp" placeholder="Rate per unit" min="0" step="any" style="margin-top:5px" aria-label="Property rate per unit">
+      <div class="or-div" data-i="or_txt">— or enter total value —</div><input type="number" id="land_tot" class="inp" placeholder="Total property value" min="0" step="any" aria-label="Total property value">
     </div>
     <div class="field">
       <div class="flabel"><span data-i="other">Other assets</span> <span class="far">— غيرها</span></div>
-      <input type="text" id="other_d" class="inp" placeholder="Description (optional)" style="margin-bottom:5px">
-      <input type="number" id="other_v" class="inp" placeholder="Value" min="0" step="any">
+      <input type="text" id="other_d" class="inp" placeholder="Description (optional)" style="margin-bottom:5px" aria-label="Other asset description">
+      <input type="number" id="other_v" class="inp" placeholder="Value" min="0" step="any" aria-label="Other asset value">
       </div>
     </div>
   </details>
@@ -112,11 +112,11 @@
     <div class="g2 disclosure-grid">
       <div class="field">
       <div class="flabel"><span data-i="debts">Debts</span> <span class="far">— ديون</span></div>
-      <input type="number" id="debts" class="inp" placeholder="0" min="0" step="any">
+      <input type="number" id="debts" class="inp" placeholder="0" min="0" step="any" aria-label="Debts">
       </div>
       <div class="field">
       <div class="flabel" style="margin-top:8px"><span data-i="zakat">Unpaid Zakat</span> <span class="far">— زكاة</span></div>
-      <input type="number" id="zakat" class="inp" placeholder="0" min="0" step="any">
+      <input type="number" id="zakat" class="inp" placeholder="0" min="0" step="any" aria-label="Unpaid Zakat">
       </div>
     </div>
     <p class="disclosure-note">Only the existing debt and unpaid-zakat fields affect the displayed estate. Funeral and preparation costs require qualified case review.</p>
@@ -126,7 +126,7 @@
     <summary>Bequest details</summary>
     <div class="field disclosure-content">
     <div class="flabel"><span data-i="was_lbl">Wasiyyah (Bequest)</span> <span class="far">— الوصية</span></div>
-    <input type="number" id="wasiyyah" class="inp" placeholder="0" min="0" step="any">
+    <input type="number" id="wasiyyah" class="inp" placeholder="0" min="0" step="any" aria-label="Wasiyyah bequest">
     <div class="checkbox-row">
       <input type="checkbox" id="was_con">
       <label for="was_con" data-i="was_con">All heirs consent to exceed 1/3?</label>

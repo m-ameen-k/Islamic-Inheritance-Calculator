@@ -35,6 +35,8 @@ _themeBtn.addEventListener('click', () => {
 
 // ── Language switcher — 3 buttons EN | AR | ML ──
 function applyLang(){
+  document.documentElement.lang=lang;
+  document.documentElement.dir=lang==="ar"?"rtl":"ltr";
   document.querySelectorAll("[data-i]").forEach(el=>{
     const k=el.getAttribute("data-i");
     if(T[lang] && T[lang][k]!==undefined) el.textContent=T[lang][k];
@@ -146,6 +148,8 @@ function setGender(g){
   gender=g; sel={};
   document.getElementById("gbm").className="gbtn"+(g==="m"?" am":"");
   document.getElementById("gbf").className="gbtn"+(g==="f"?" af":"");
+  document.getElementById("gbm").setAttribute("aria-pressed",g==="m");
+  document.getElementById("gbf").setAttribute("aria-pressed",g==="f");
   document.getElementById("heirsHint").style.display = "none";
   setStep(1); renderHeirs();
 }
@@ -227,16 +231,24 @@ function renderHeirs(){
   g.querySelectorAll(".hgrid").forEach(group=>{ group.innerHTML=""; });
   HEIRS.forEach(h=>{
     const show=gender&&(h.dec==="b"||h.dec===gender), c=sel[h.id]||0;
-    const card=document.createElement("div");
+    const card=document.createElement(h.max===1?"button":"div");
+    if(h.max===1){
+      card.type="button";
+      card.setAttribute("aria-pressed",c>0);
+    }else{
+      card.setAttribute("role","group");
+      card.setAttribute("aria-label",hn(h));
+    }
     card.className="hcard"+(c>0?" sel":"")+(show?"":" hide");
     card.id="hc-"+h.id;
-    card.innerHTML=`<div class="hn">${hn(h)}</div><div class="har" style="${lang==='ar'?'direction:ltr;text-align:left;font-family:\'DM Sans\',sans-serif;':''}">${har(h)}</div>`+
+    card.innerHTML=`<span class="hn">${hn(h)}</span><span class="har" style="${lang==='ar'?'direction:ltr;text-align:left;font-family:\'DM Sans\',sans-serif;':''}">${har(h)}</span>`+
       (h.max>1?`<div class="ctr"><button class="cb" data-id="${h.id}" data-d="-1">−</button><span class="cn2" id="cn-${h.id}">${c||""}</span><button class="cb" data-id="${h.id}" data-d="1">+</button></div>`:"");
     
     if(h.max===1) card.addEventListener("click",()=>{
         if(card.classList.contains("blocked")) return;
         sel[h.id]=sel[h.id]?0:1;
         card.classList.toggle("sel",!!sel[h.id]);
+        card.setAttribute("aria-pressed",!!sel[h.id]);
         updateDynamicUI();
         updateCaseSummary();
     });
