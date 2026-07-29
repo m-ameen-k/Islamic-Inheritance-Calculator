@@ -17,23 +17,6 @@ function calculate() {
   const active = HEIRS.filter(h => (sel[h.id] || 0) > 0 && (h.dec === "b" || h.dec === gender));
 
 
-  // Event delegation to handle tooltip taps on mobile devices
-  document.body.addEventListener('click', function (e) {
-    const tooltipEl = e.target.closest('[data-tooltip]');
-
-    // Clear the 'active' class from any currently open tooltips
-    document.querySelectorAll('[data-tooltip].active').forEach(el => {
-      if (el !== tooltipEl) {
-        el.classList.remove('active');
-      }
-    });
-
-    // Toggle the tooltip the user just tapped
-    if (tooltipEl) {
-      tooltipEl.classList.toggle('active');
-    }
-  });
-
   if (!active.length) {
     document.getElementById("resSec").style.display = "block";
     document.getElementById("metrics").innerHTML = `<div class="mc" style="grid-column:1/-1;background:var(--warnbg);color:var(--warn);border-color:var(--warn);font-weight:600">${T[lang].no_h}</div>`;
@@ -412,7 +395,7 @@ function calculate() {
   const clMap = { tnorm: "Normal — تامة", taul: "العول — Shares exceed base", tradd: "الرد — Surplus returned", tthu: "Special Exception Applied" };
 
   document.getElementById("ctag").innerHTML = `
-  <span class="ctag ${ct}" style="cursor:pointer;" onclick="showAwlExplanation()">
+  <span class="ctag ${ct}">
     ${awlDisplay || (isMushtaraka ? "المشتركة (Al-Mushtaraka)" : clMap[ct])}
   </span>
   ${M_tashih > 1 ? `<span class="ctag" style="background:var(--malebg);color:var(--male);margin-right:6px">التصحيح ×${M_tashih}</span>` : ""}
@@ -538,41 +521,6 @@ function calculate() {
 
   updateLearn();
 }
-
-// New: Floating Awl Explanation Modal (same style as Asaba)
-window.showAwlExplanation = function () {
-  if (!aul) return;
-
-  let originalSharesDesc = "Fixed shares summed to more than the base problem.";
-  if (originalAslForAwl) {
-    originalSharesDesc = `Original base (أصل المسألة) was ${originalAslForAwl}. After assigning fixed shares (Fard), the total required shares exceeded the base.`;
-  }
-
-  const desc = `In this case, the fixed shares (أصحاب الفروض) add up to more than the estate's base denominator (${originalAslForAwl || asl}). 
-
-According to Shafi'i (and general Sunni) rules, **العول (Awl)** is applied: the base is increased proportionally so everyone receives their due share reduced equally (like creditors when assets are insufficient).
-
-${awlName.includes("ميمبرية") ? "This specific case (base becoming 27) is classically known as **الميمبرية (Mimbarriyya)** in Fara'id literature." : ""}
-
-Result: All heirs' shares are reduced by the same ratio. No one is fully blocked — everyone shares the reduction.`;
-
-  // Reuse or create modal (add this HTML if needed, or extend existing asabaModal temporarily)
-  let modal = document.getElementById('awlModal');
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.id = 'awlModal';
-    modal.style = "display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;align-items:center;justify-content:center;padding:1rem;";
-    modal.innerHTML = `
-      <div style="background:var(--card);padding:1.8rem;border-radius:var(--r);max-width:420px;width:100%;box-shadow:var(--sh2);position:relative;">
-        <button onclick="this.closest('#awlModal').style.display='none'" style="position:absolute;top:10px;right:10px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--txt3);">✕</button>
-        <h3 style="color:var(--danger);margin-bottom:12px;font-family:'Amiri',serif;font-size:1.3rem">العول (Awl) — Explanation</h3>
-        <div id="awlModDesc" style="font-size:14px;color:var(--txt2);line-height:1.7"></div>
-      </div>`;
-    document.body.appendChild(modal);
-  }
-  document.getElementById('awlModDesc').innerHTML = desc;
-  modal.style.display = 'flex';
-};
 
 // Bind the calculate function to the button
 document.getElementById("calcBtn").addEventListener("click", calculate);

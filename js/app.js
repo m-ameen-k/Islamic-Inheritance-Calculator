@@ -145,8 +145,8 @@ function getAfterDebts(){return Math.max(0,getGross()-fv("debts")-fv("zakat"));}
 function getWasiyyah(ad){
   const wi=fv("wasiyyah"); if(!wi) return 0;
   const max=ad/3, consent=document.getElementById("was_con").checked, w=document.getElementById("wasWarn");
-  if(!consent&&wi>max){ w.style.display="block"; w.textContent=(T[lang].was_warn||"").replace("{m}",formatAmount(max)); return max; }
-  w.style.display="none"; return wi;
+  if(!consent&&wi>max){ if(w){ w.style.display="block"; w.textContent=(T[lang].was_warn||"").replace("{m}",formatAmount(max)); } return max; }
+  if(w) w.style.display="none"; return wi;
 }
 
 function getNet(){const ad=getAfterDebts(); return Math.max(0,ad-getWasiyyah(ad));}
@@ -330,21 +330,4 @@ renderHeirs();
 document.getElementById("amountSymbol")?.addEventListener("input",e=>{
   cSym=e.target.value.trim();
   updateNet();
-});
-
-// Event delegation to handle tooltip taps on mobile devices
-document.body.addEventListener('click', function(e) {
-    const tooltipEl = e.target.closest('[data-tooltip]');
-    
-    // Clear the 'active' class from any currently open tooltips
-    document.querySelectorAll('[data-tooltip].active').forEach(el => {
-        if (el!== tooltipEl) {
-            el.classList.remove('active');
-        }
-    });
-
-    // Toggle the tooltip the user just tapped
-    if (tooltipEl) {
-        tooltipEl.classList.toggle('active');
-    }
 });

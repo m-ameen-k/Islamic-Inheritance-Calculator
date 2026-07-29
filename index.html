@@ -183,16 +183,16 @@
       <h3 id="descendantHeirsTitle">Children and descendants</h3>
       <div class="hgrid" id="hgrid-descendants"></div>
     </section>
-    <details class="heir-group" open>
-      <summary>Parents and grandparents</summary>
+    <details class="heir-group" open aria-labelledby="parentsHeirsTitle">
+      <summary id="parentsHeirsTitle">Parents and grandparents</summary>
       <div class="hgrid" id="hgrid-parents"></div>
     </details>
-    <details class="heir-group">
-      <summary>Siblings</summary>
+    <details class="heir-group" aria-labelledby="siblingsHeirsTitle">
+      <summary id="siblingsHeirsTitle">Siblings</summary>
       <div class="hgrid" id="hgrid-siblings"></div>
     </details>
-    <details class="heir-group">
-      <summary>Extended relatives</summary>
+    <details class="heir-group" aria-labelledby="extendedHeirsTitle">
+      <summary id="extendedHeirsTitle">Extended relatives</summary>
       <div class="hgrid" id="hgrid-extended"></div>
     </details>
   </div>
@@ -276,7 +276,7 @@
 
 <div id="asabaModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;align-items:center;justify-content:center;padding:1rem;">
   <div style="background:var(--card);padding:1.8rem;border-radius:var(--r);max-width:400px;width:100%;box-shadow:var(--sh2);position:relative;">
-    <button onclick="document.getElementById('asabaModal').style.display='none'" style="position:absolute;top:10px;right:10px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--txt3);transition:color 0.2s;">✕</button>
+    <button aria-label="Close dialog" onclick="document.getElementById('asabaModal').style.display='none'" style="position:absolute;top:10px;right:10px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--txt3);transition:color 0.2s;">✕</button>
     <h3 style="color:var(--warn);margin-bottom:12px;font-family:'Amiri',serif;font-size:1.3rem" id="asabaModTitle"></h3>
     <div id="asabaModDesc" style="font-size:14px;color:var(--txt2);line-height:1.7"></div>
   </div>
@@ -303,7 +303,7 @@
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
        Support This Project
     </div><div class="tip-methods">
-      <a href="upi://pay?pa=ameenkariot-2@okicici&pn=Ameen&am" class="tip-btn" id="tipUpi">
+      <a href="upi://pay?pa=ameenkariot-2@okicici&pn=Ameen" class="tip-btn" id="tipUpi">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
         UPI
       </a>
@@ -316,7 +316,7 @@
         WhatsApp Pay
       </a>
     </div>
-    <p class="tip-note">Payment links will be configured soon. <span id="upiPlaceholder" style="display:none;font-weight:600;color:var(--pri)"></span></p>
+    <p class="tip-note">Payment links will be configured soon.</p>
   </div>
 
   <p class="footer-copy"><span class="status-label">Calculator status: unavailable</span></p>
