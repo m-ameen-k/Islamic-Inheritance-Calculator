@@ -226,6 +226,7 @@ export async function verifyProductionManifest(
   const manifest = parseProductionManifest(JSON.parse(readFileSync(manifestPath, "utf8")));
 
   assertUniqueIds(manifest.rules);
+  for (const entry of manifest.rules) assertProductionPath(projectRoot, entry);
   assertEveryProductionFileIsManifested(projectRoot, manifest.rules);
 
   const verified: VerifiedManifestEntry[] = [];
