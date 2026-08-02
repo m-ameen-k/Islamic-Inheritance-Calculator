@@ -1,0 +1,25 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260803-KZ-FR-008",
+  "ruleId": "KZ-FR-008",
+  "lifecycleStatus": "MANUALLY_CHECKED",
+  "comparisonStatus": "INCOMPLETE_SOURCE_CORROBORATION",
+  "executable": false,
+  "kanzAlMahalliRecord": {
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "evidenceRecordIds": ["KZ-FR-008", "MANUAL-20260727-KZ-FR-008"],
+    "statement": "The reviewed Kanz/al-Mahalli record assigns two thirds collectively to two or more daughters, son's daughters, full sisters, or paternal sisters, retaining the qualification that they are without their brothers."
+  },
+  "khulasaSupport": {
+    "confirmedPropositions": [],
+    "limitation": "No Khulasa research record, exact wording, locator, or bibliographic catalog entry for this rule is present in the repository. No quotation or page reference can be supplied."
+  },
+  "shareAgreement": "UNDETERMINED_WITHOUT_REPOSITORY_KHULASA_EVIDENCE",
+  "allImplementationConditionsAvailable": false,
+  "missingImplementationConditions": [
+    "Complete blockers and descendant-level rules.",
+    "Coexistence with daughters and residuary conversion with male counterparts."
+  ],
+  "unresolvedInteractions": ["Hajb, descendant levels, coexistence, and residuary conversion."],
+  "readyForLaterAdmission": false,
+  "admissionReadinessExplanation": "The share and listed categories are manually checked in Kanz/al-Mahalli, but cross-source agreement and complete interaction rules are not available."
+}

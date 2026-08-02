@@ -1,0 +1,25 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260803-KZ-FR-005",
+  "ruleId": "KZ-FR-005",
+  "lifecycleStatus": "MANUALLY_CHECKED",
+  "comparisonStatus": "INCOMPLETE_SOURCE_CORROBORATION",
+  "executable": false,
+  "kanzAlMahalliRecord": {
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "evidenceRecordIds": ["KZ-FR-005", "MANUAL-20260727-KZ-FR-005"],
+    "statement": "The reviewed Kanz/al-Mahalli record assigns one half to the husband when the deceased wife left no child or son's descendant, and lists a single daughter, son's daughter, full sister, or paternal sister subject to eligibility conditions."
+  },
+  "khulasaSupport": {
+    "confirmedPropositions": [],
+    "limitation": "No Khulasa research record, exact wording, locator, or bibliographic catalog entry for this rule is present in the repository. No quotation or page reference can be supplied."
+  },
+  "shareAgreement": "UNDETERMINED_WITHOUT_REPOSITORY_KHULASA_EVIDENCE",
+  "allImplementationConditionsAvailable": false,
+  "missingImplementationConditions": [
+    "Complete eligibility and blocking conditions for the daughter, son's daughter, full sister, and paternal sister.",
+    "Same-class plurality and residuary-conversion priority."
+  ],
+  "unresolvedInteractions": ["Hajb, competing heirs, plurality, and residuary conversion."],
+  "readyForLaterAdmission": false,
+  "admissionReadinessExplanation": "The share is manually checked in Kanz/al-Mahalli, but cross-source agreement and complete executable conditions are not available."
+}

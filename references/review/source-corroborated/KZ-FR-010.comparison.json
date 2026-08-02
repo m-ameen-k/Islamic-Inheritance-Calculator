@@ -1,0 +1,27 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260803-KZ-FR-010",
+  "ruleId": "KZ-FR-010",
+  "lifecycleStatus": "MANUALLY_CHECKED",
+  "comparisonStatus": "INCOMPLETE_SOURCE_CORROBORATION",
+  "executable": false,
+  "kanzAlMahalliRecord": {
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "evidenceRecordIds": ["KZ-FR-010", "MANUAL-20260727-KZ-FR-010"],
+    "statement": "The reviewed Kanz/al-Mahalli record lists seven one-sixth categories: father, grandfather, mother, eligible grandmother, son's daughter with a direct daughter, paternal sister with a full sister, and one uterine sibling, with the compact triggering relationships stated in the review."
+  },
+  "khulasaSupport": {
+    "confirmedPropositions": [],
+    "limitation": "No Khulasa research record, exact wording, locator, or bibliographic catalog entry for this rule is present in the repository. No quotation or page reference can be supplied."
+  },
+  "shareAgreement": "UNDETERMINED_WITHOUT_REPOSITORY_KHULASA_EVIDENCE",
+  "allImplementationConditionsAvailable": false,
+  "missingImplementationConditions": [
+    "Full hajb rules, grandmother hierarchy, and descendant-generation conditions.",
+    "Category-specific separation and complete grandfather special cases."
+  ],
+  "unresolvedInteractions": [
+    "Grandmother priority, descendant generations, grandfather-with-siblings, and splitting the seven categories into separately admissible rules."
+  ],
+  "readyForLaterAdmission": false,
+  "admissionReadinessExplanation": "The list and share are manually checked in Kanz/al-Mahalli, but cross-source agreement and complete category-specific rules are not available."
+}
