@@ -18,6 +18,9 @@ export const KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3 = {
   physicalVolume: "المجلد الثاني",
   internalPart: "الجزء الثالث",
   relevantChapter: "كتاب الفرائض",
+  metadataCompleteness: "COMPLETE",
+  madhhab: "SHAFII",
+  sourceRole: "Primary detailed Shafi‘i computational source.",
   printedPageMap: [
     { sectionTitle: "كتاب الفرائض", printedPage: "133" },
     {
@@ -39,12 +42,35 @@ export const KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3 = {
   ],
 } as const satisfies BibliographicSourceRecord;
 
+export const KHULASAT_AL_FIQH_AL_ISLAMI = {
+  sourceId: "KHULASAT_AL_FIQH_AL_ISLAMI",
+  title: "خلاصة الفقه الإسلامي على مذهب الإمام الشافعي رحمه الله",
+  author: "الشيخ عبد الرحمن بن محمد المليباري",
+  authorDates: null,
+  preparedOrEditedBy: null,
+  publisher: "جامعة الهند الإسلامية، كاليكوت",
+  publicationPlace: null,
+  edition: "الطبعة الخامسة والعشرون",
+  publicationDateAh: null,
+  publicationDateCe: "July 2019",
+  isbn: null,
+  physicalVolume: null,
+  internalPart: null,
+  relevantChapter: null,
+  metadataCompleteness: "PARTIAL",
+  madhhab: "SHAFII",
+  sourceRole:
+    "Trusted corroborating instructional source for conditions, tables, worked examples and source-derived fixtures.",
+  printedPageMap: [],
+} as const satisfies BibliographicSourceRecord;
+
 /**
  * Bibliographic metadata only. The private PDF is not stored or referenced as
  * a repository file, and this catalog contains no executable fiqh rules.
  */
 export const SHAFII_BIBLIOGRAPHIC_SOURCES: readonly BibliographicSourceRecord[] = Object.freeze([
   KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3,
+  KHULASAT_AL_FIQH_AL_ISLAMI,
 ]);
 
 export function createShafiiSourceCatalog(): BibliographicSourceCatalog {

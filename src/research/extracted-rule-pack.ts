@@ -255,6 +255,19 @@ function decodeSource(
   if (bibliography === undefined) {
     return fail("$.source.source_id", "source ID is absent from the bibliography catalog");
   }
+  if (
+    bibliography.metadataCompleteness !== "COMPLETE" ||
+    bibliography.preparedOrEditedBy === null ||
+    bibliography.isbn === null ||
+    bibliography.physicalVolume === null ||
+    bibliography.internalPart === null ||
+    bibliography.relevantChapter === null
+  ) {
+    return fail(
+      "$.source.source_id",
+      "source does not have the complete bibliography required by an extracted rule pack",
+    );
+  }
 
   const source: ExtractedPackSource = {
     sourceId,

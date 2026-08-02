@@ -7,18 +7,21 @@ export interface BibliographicSourceRecord {
   readonly sourceId: string;
   readonly title: string;
   readonly author: string;
-  readonly authorDates: string;
-  readonly preparedOrEditedBy: string;
+  readonly authorDates: string | null;
+  readonly preparedOrEditedBy: string | null;
   readonly publisher: string;
-  readonly publicationPlace: string;
+  readonly publicationPlace: string | null;
   readonly edition: string;
-  readonly publicationDateAh: string;
+  readonly publicationDateAh: string | null;
   readonly publicationDateCe: string;
-  readonly isbn: string;
-  readonly physicalVolume: string;
-  readonly internalPart: string;
-  readonly relevantChapter: string;
+  readonly isbn: string | null;
+  readonly physicalVolume: string | null;
+  readonly internalPart: string | null;
+  readonly relevantChapter: string | null;
   readonly printedPageMap: readonly PrintedPageMapEntry[];
+  readonly metadataCompleteness: "COMPLETE" | "PARTIAL";
+  readonly madhhab: "SHAFII";
+  readonly sourceRole: string;
 }
 
 export interface BibliographicSourceIssue {
@@ -61,27 +64,63 @@ export function validateBibliographicSource(value: unknown): readonly Bibliograp
     "sourceId",
     "title",
     "author",
-    "authorDates",
-    "preparedOrEditedBy",
     "publisher",
-    "publicationPlace",
     "edition",
-    "publicationDateAh",
     "publicationDateCe",
-    "isbn",
-    "physicalVolume",
-    "internalPart",
-    "relevantChapter",
+    "sourceRole",
   ] as const;
 
   for (const field of requiredTextFields) {
     requireText(value, field, issues);
   }
 
-  if (!Array.isArray(value.printedPageMap) || value.printedPageMap.length === 0) {
+  if (value.metadataCompleteness !== "COMPLETE" && value.metadataCompleteness !== "PARTIAL") {
+    issues.push({
+      path: "metadataCompleteness",
+      message: "metadataCompleteness must be COMPLETE or PARTIAL.",
+    });
+  }
+
+  if (value.madhhab !== "SHAFII") {
+    issues.push({ path: "madhhab", message: "madhhab must be SHAFII." });
+  }
+
+  const completeOnlyTextFields = [
+    "authorDates",
+    "preparedOrEditedBy",
+    "publicationPlace",
+    "publicationDateAh",
+    "isbn",
+    "physicalVolume",
+    "internalPart",
+    "relevantChapter",
+  ] as const;
+
+  if (value.metadataCompleteness === "COMPLETE") {
+    for (const field of completeOnlyTextFields) {
+      requireText(value, field, issues);
+    }
+  } else {
+    for (const field of completeOnlyTextFields) {
+      const fieldValue = value[field];
+      if (
+        fieldValue !== null &&
+        (typeof fieldValue !== "string" || fieldValue.trim().length === 0)
+      ) {
+        issues.push({ path: field, message: `${field} must be a non-empty string or null.` });
+      }
+    }
+  }
+
+  if (!Array.isArray(value.printedPageMap)) {
     issues.push({
       path: "printedPageMap",
-      message: "printedPageMap must contain at least one entry.",
+      message: "printedPageMap must be an array.",
+    });
+  } else if (value.metadataCompleteness === "COMPLETE" && value.printedPageMap.length === 0) {
+    issues.push({
+      path: "printedPageMap",
+      message: "A complete source must contain at least one printed-page entry.",
     });
   } else {
     for (const [index, entry] of value.printedPageMap.entries()) {

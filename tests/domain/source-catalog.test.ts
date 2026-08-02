@@ -8,6 +8,7 @@ import {
 import { PROVISIONAL_SHAFII_RULES } from "../../src/madhahib/shafii/provisional-rules";
 import { VERIFIED_SHAFII_RULES } from "../../src/madhahib/shafii/verified-rules";
 import {
+  KHULASAT_AL_FIQH_AL_ISLAMI,
   KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3,
   createShafiiSourceCatalog,
 } from "../../src/sources/shafii";
@@ -25,6 +26,33 @@ describe("TECHNICAL_TEST: bibliographic source catalog", () => {
       sectionTitle: "كتاب الفرائض",
       printedPage: "133",
     });
+  });
+
+  it("registers Khulasat al-Fiqh as a Shafii corroborating instructional source", () => {
+    const catalog = createShafiiSourceCatalog();
+    const source = catalog.getById("KHULASAT_AL_FIQH_AL_ISLAMI");
+
+    expect(source).toBe(KHULASAT_AL_FIQH_AL_ISLAMI);
+    expect(source).toMatchObject({
+      title: "خلاصة الفقه الإسلامي على مذهب الإمام الشافعي رحمه الله",
+      author: "الشيخ عبد الرحمن بن محمد المليباري",
+      publisher: "جامعة الهند الإسلامية، كاليكوت",
+      edition: "الطبعة الخامسة والعشرون",
+      publicationDateCe: "July 2019",
+      madhhab: "SHAFII",
+      metadataCompleteness: "PARTIAL",
+      sourceRole:
+        "Trusted corroborating instructional source for conditions, tables, worked examples and source-derived fixtures.",
+    });
+    expect(source?.printedPageMap).toEqual([]);
+  });
+
+  it("retains Kanz/al-Mahalli as the primary detailed computational source", () => {
+    expect(KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3.sourceRole).toBe(
+      "Primary detailed Shafi‘i computational source.",
+    );
+    expect(KHULASAT_AL_FIQH_AL_ISLAMI.sourceRole).toMatch(/^Trusted corroborating/);
+    expect(KHULASAT_AL_FIQH_AL_ISLAMI.sourceRole).not.toMatch(/primary/i);
   });
 
   it("rejects duplicate source IDs", () => {
@@ -52,7 +80,7 @@ describe("TECHNICAL_TEST: bibliographic source catalog", () => {
         },
         {
           path: "printedPageMap",
-          message: "printedPageMap must contain at least one entry.",
+          message: "A complete source must contain at least one printed-page entry.",
         },
       ]),
     );
