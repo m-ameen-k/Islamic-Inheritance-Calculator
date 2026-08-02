@@ -11,6 +11,19 @@ export type RuleLifecycleStatus = (typeof RULE_LIFECYCLE_STATUSES)[number];
 
 export type CandidateRuleLifecycleStatus = Exclude<RuleLifecycleStatus, "PRODUCTION">;
 
+export const CANDIDATE_IMPLEMENTATION_READINESS_STATES = [
+  "INCOMPLETE",
+  "READY_FOR_ADMISSION_REVIEW",
+] as const;
+
+export type CandidateImplementationReadinessState =
+  (typeof CANDIDATE_IMPLEMENTATION_READINESS_STATES)[number];
+
+export interface ExactRuleFraction {
+  readonly numerator: string;
+  readonly denominator: string;
+}
+
 export interface RuleSourceReference {
   readonly sourceId: string;
   readonly evidenceRecordId: string;
@@ -39,6 +52,13 @@ export interface RuleFileContents {
 export interface CandidateRuleFile extends RuleFileContents {
   readonly lifecycleStatus: CandidateRuleLifecycleStatus;
   readonly executable: false;
+  readonly fixedShare: ExactRuleFraction;
+  readonly eligibleHeirCategories: readonly string[];
+  readonly positiveConditions: readonly string[];
+  readonly blockingDependencies: readonly string[];
+  readonly interactionDependencies: readonly string[];
+  readonly unresolvedQuestions: readonly string[];
+  readonly implementationReadiness: CandidateImplementationReadinessState;
 }
 
 /** A production file is runtime eligible only when the manifest admits it. */
