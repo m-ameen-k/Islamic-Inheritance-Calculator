@@ -1,0 +1,26 @@
+{
+  "admissionRecordId": "ADMISSION-20260803-KZ-FR-005-HUSBAND-ONE-HALF",
+  "ruleId": "KZ-FR-005-HUSBAND-ONE-HALF",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260803-KZ-FR-005-HUSBAND-ONE-HALF",
+  "reviewRecordIds": [
+    "MANUAL-20260727-KZ-FR-005",
+    "SOURCE-COMPARISON-20260803-KZ-FR-005-HUSBAND-ONE-HALF"
+  ],
+  "fixtureIds": [
+    "KZ-FR-005-HUSBAND-ONE-HALF-POS-NO-QUALIFYING-DESCENDANT",
+    "KZ-FR-005-HUSBAND-ONE-HALF-BOUNDARY-NON-DESCENDANT-HEIR",
+    "KZ-FR-005-HUSBAND-ONE-HALF-NEG-WITH-QUALIFYING-DESCENDANT"
+  ],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "Admitted for the ordinary husband-share condition only. Unknown or unnormalized descendant lineage fails closed and produces no share decision."
+}

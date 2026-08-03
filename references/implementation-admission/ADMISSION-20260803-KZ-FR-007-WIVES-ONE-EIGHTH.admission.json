@@ -1,0 +1,27 @@
+{
+  "admissionRecordId": "ADMISSION-20260803-KZ-FR-007-WIVES-ONE-EIGHTH",
+  "ruleId": "KZ-FR-007-WIVES-ONE-EIGHTH",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260803-KZ-FR-007-WIVES-ONE-EIGHTH",
+  "reviewRecordIds": [
+    "MANUAL-20260727-KZ-FR-007",
+    "SOURCE-COMPARISON-20260803-KZ-FR-007-WIVES-ONE-EIGHTH"
+  ],
+  "fixtureIds": [
+    "KZ-FR-007-WIVES-ONE-EIGHTH-POS-ONE-WIFE-WITH-QUALIFYING-DESCENDANT",
+    "KZ-FR-007-WIVES-ONE-EIGHTH-BOUNDARY-TWO-WIVES-COLLECTIVE",
+    "KZ-FR-007-WIVES-ONE-EIGHTH-BOUNDARY-FOUR-WIVES-COLLECTIVE",
+    "KZ-FR-007-WIVES-ONE-EIGHTH-NEG-NO-QUALIFYING-DESCENDANT"
+  ],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "Admitted for wife counts 1 through 4 with exact equal division of the collective eighth. Invalid counts and unnormalized descendant lineage fail closed."
+}

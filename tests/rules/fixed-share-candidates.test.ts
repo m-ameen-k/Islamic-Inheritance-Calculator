@@ -128,20 +128,20 @@ describe("TECHNICAL_TEST: Stage 4B-1 fixed-share candidates", () => {
     }
   });
 
-  it("does not admit candidates to the production manifest or generated registry", () => {
+  it("does not admit broad fraction candidates to the manifest or registry", () => {
     const manifest = JSON.parse(
       readFileSync(join(PROJECT_ROOT, "src/rules/production-manifest.json"), "utf8"),
-    ) as { readonly rules: readonly unknown[] };
+    ) as { readonly rules: readonly { readonly ruleId: string }[] };
     const registry = readFileSync(
       join(PROJECT_ROOT, "src/rules/generated/production-registry.ts"),
       "utf8",
     );
 
-    expect(manifest.rules).toEqual([]);
-    expect(registry).toContain("PRODUCTION_RULES = []");
     for (const ruleId of RULE_IDS) {
-      expect(registry).not.toContain(ruleId);
+      expect(manifest.rules.some((entry) => entry.ruleId === ruleId)).toBe(false);
+      expect(registry).not.toContain(`../production/${ruleId}"`);
     }
+    expect(registry).not.toContain("../candidates/");
   });
 
   it("preserves the original extracted pack and six manually checked records byte-for-byte", () => {

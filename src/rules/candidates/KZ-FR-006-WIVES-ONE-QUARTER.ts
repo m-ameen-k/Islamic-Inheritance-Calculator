@@ -5,7 +5,7 @@ export const KZ_FR_006_WIVES_ONE_QUARTER = defineAtomicSpouseCandidateRule({
   ruleId: "KZ-FR-006-WIVES-ONE-QUARTER",
   parentResearchRuleId: "KZ-FR-006",
   parentResearchRecordRole: "RESEARCH_UMBRELLA_NOT_DIRECTLY_EXECUTABLE",
-  lifecycleStatus: "SOURCE_CORROBORATED",
+  lifecycleStatus: "CALCULATION_READY",
   executable: false,
   spouseCategory: "WIFE_GROUP",
   qualifyingDescendantCondition: "ABSENT",
@@ -42,6 +42,6 @@ export const KZ_FR_006_WIVES_ONE_QUARTER = defineAtomicSpouseCandidateRule({
     "KZ-FR-006-WIVES-ONE-QUARTER-NEG-WITH-QUALIFYING-DESCENDANT",
   ],
   unresolvedQuestions: [],
-  implementationReadiness: "READY_FOR_ADMISSION_REVIEW",
-  admissionRecordId: null,
+  implementationReadiness: "ADMITTED_CALCULATION_READY",
+  admissionRecordId: "ADMISSION-20260803-KZ-FR-006-WIVES-ONE-QUARTER",
 });

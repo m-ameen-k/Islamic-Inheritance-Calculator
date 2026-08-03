@@ -14,6 +14,7 @@ export type CandidateRuleLifecycleStatus = Exclude<RuleLifecycleStatus, "PRODUCT
 export const CANDIDATE_IMPLEMENTATION_READINESS_STATES = [
   "INCOMPLETE",
   "READY_FOR_ADMISSION_REVIEW",
+  "ADMITTED_CALCULATION_READY",
 ] as const;
 
 export type CandidateImplementationReadinessState =
@@ -22,7 +23,7 @@ export type CandidateImplementationReadinessState =
 export const QUALIFYING_DESCENDANT_DEFINITION_REQUIRED =
   "QUALIFYING_DESCENDANT_DEFINITION_REQUIRED" as const;
 
-export { QUALIFYING_DESCENDANT_MODEL_ID };
+export const QUALIFYING_DESCENDANT_MODEL_ID = "QUALIFYING_DESCENDANT" as const;
 
 export type QualifyingDescendantDependency =
   typeof QUALIFYING_DESCENDANT_DEFINITION_REQUIRED | typeof QUALIFYING_DESCENDANT_MODEL_ID;
@@ -131,4 +132,3 @@ export function defineProductionSpouseRule<const Rule extends ProductionSpouseRu
 ): Rule {
   return rule;
 }
-import { QUALIFYING_DESCENDANT_MODEL_ID } from "../domain/qualifying-descendant";

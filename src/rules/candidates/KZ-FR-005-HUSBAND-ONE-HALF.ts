@@ -5,7 +5,7 @@ export const KZ_FR_005_HUSBAND_ONE_HALF = defineAtomicSpouseCandidateRule({
   ruleId: "KZ-FR-005-HUSBAND-ONE-HALF",
   parentResearchRuleId: "KZ-FR-005",
   parentResearchRecordRole: "RESEARCH_UMBRELLA_NOT_DIRECTLY_EXECUTABLE",
-  lifecycleStatus: "SOURCE_CORROBORATED",
+  lifecycleStatus: "CALCULATION_READY",
   executable: false,
   spouseCategory: "HUSBAND",
   qualifyingDescendantCondition: "ABSENT",
@@ -38,6 +38,6 @@ export const KZ_FR_005_HUSBAND_ONE_HALF = defineAtomicSpouseCandidateRule({
     "KZ-FR-005-HUSBAND-ONE-HALF-NEG-WITH-QUALIFYING-DESCENDANT",
   ],
   unresolvedQuestions: [],
-  implementationReadiness: "READY_FOR_ADMISSION_REVIEW",
-  admissionRecordId: null,
+  implementationReadiness: "ADMITTED_CALCULATION_READY",
+  admissionRecordId: "ADMISSION-20260803-KZ-FR-005-HUSBAND-ONE-HALF",
 });

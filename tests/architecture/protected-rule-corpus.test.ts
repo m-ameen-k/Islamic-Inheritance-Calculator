@@ -28,16 +28,21 @@ function importedSpecifiers(source: string): readonly string[] {
 }
 
 describe("TECHNICAL_TEST: protected rule corpus boundaries", () => {
-  it("starts with an empty production manifest and registry", () => {
+  it("loads only the explicitly admitted atomic spouse production rules", () => {
     const manifest = JSON.parse(
       readFileSync(join(SRC_ROOT, "rules/production-manifest.json"), "utf8"),
-    ) as { readonly rules: readonly unknown[] };
+    ) as { readonly rules: readonly { readonly ruleId: string }[] };
     const registry = readFileSync(join(SRC_ROOT, "rules/generated/production-registry.ts"), "utf8");
 
-    expect(manifest.rules).toEqual([]);
+    expect(manifest.rules.map(({ ruleId }) => ruleId)).toEqual([
+      "KZ-FR-005-HUSBAND-ONE-HALF",
+      "KZ-FR-006-HUSBAND-ONE-QUARTER",
+      "KZ-FR-006-WIVES-ONE-QUARTER",
+      "KZ-FR-007-WIVES-ONE-EIGHTH",
+    ]);
     expect(registry).toContain("Generated file. Do not edit manually.");
-    expect(registry).toContain("PRODUCTION_RULES = []");
-    expect(registry).not.toMatch(/from ["']\.\.\/production\//);
+    expect(registry.match(/from ["']\.\.\/production\//g)).toHaveLength(4);
+    expect(registry).not.toMatch(/from ["']\.\.\/candidates\//);
   });
 
   it("prevents runtime TypeScript from importing candidates or research records", () => {

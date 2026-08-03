@@ -18,6 +18,14 @@ export async function renderProductionRegistry(projectRoot = process.cwd()): Pro
       `import { productionRule as ${importName(index)} } from "../production/${entry.ruleId}";`,
   );
   const names = entries.map((_entry, index) => importName(index));
+  const registryDeclaration =
+    names.length === 0
+      ? "export const PRODUCTION_RULES = [] as const satisfies readonly ProductionRuleFile[];"
+      : [
+          "export const PRODUCTION_RULES = [",
+          ...names.map((name) => `  ${name},`),
+          "] as const satisfies readonly ProductionRuleFile[];",
+        ].join("\n");
 
   return [
     GENERATED_HEADER,
@@ -25,7 +33,7 @@ export async function renderProductionRegistry(projectRoot = process.cwd()): Pro
     'import type { ProductionRuleFile } from "../rule-file";',
     ...(imports.length > 0 ? ["", ...imports] : []),
     "",
-    `export const PRODUCTION_RULES = [${names.join(", ")}] as const satisfies readonly ProductionRuleFile[];`,
+    registryDeclaration,
     "",
   ].join("\n");
 }

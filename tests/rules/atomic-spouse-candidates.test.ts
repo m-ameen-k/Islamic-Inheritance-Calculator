@@ -111,14 +111,15 @@ describe("TECHNICAL_TEST: Stage 4B-2A atomic spouse candidates", () => {
     );
   });
 
-  it("resolves descendant modeling while keeping candidates non-executable before admission", () => {
+  it("records completed admission while keeping candidate modules non-executable", () => {
     for (const candidate of ATOMIC_CANDIDATES) {
       expect(candidate.qualifyingDescendantDependency).toBe(QUALIFYING_DESCENDANT_MODEL_ID);
       expect(candidate.blockingDependencies).toEqual([]);
       expect(candidate.interactionDependencies).toEqual([]);
       expect(candidate.unresolvedQuestions).toEqual([]);
-      expect(candidate.implementationReadiness).toBe("READY_FOR_ADMISSION_REVIEW");
-      expect(candidate.lifecycleStatus).not.toBe("CALCULATION_READY");
+      expect(candidate.implementationReadiness).toBe("ADMITTED_CALCULATION_READY");
+      expect(candidate.lifecycleStatus).toBe("CALCULATION_READY");
+      expect(candidate.admissionRecordId).toMatch(/^ADMISSION-20260803-/);
       expect(candidate.executable).toBe(false);
     }
   });
@@ -172,19 +173,26 @@ describe("TECHNICAL_TEST: Stage 4B-2A atomic spouse candidates", () => {
     }
   });
 
-  it("keeps atomic candidates outside the empty production manifest and registry", () => {
+  it("requires explicit production files for admitted candidates", () => {
     const manifest = JSON.parse(
       readFileSync(join(PROJECT_ROOT, "src/rules/production-manifest.json"), "utf8"),
-    ) as { readonly rules: readonly unknown[] };
+    ) as {
+      readonly rules: readonly { readonly ruleId: string; readonly productionFile: string }[];
+    };
     const registry = readFileSync(
       join(PROJECT_ROOT, "src/rules/generated/production-registry.ts"),
       "utf8",
     );
 
-    expect(manifest.rules).toEqual([]);
-    expect(registry).toContain("PRODUCTION_RULES = []");
+    expect(manifest.rules.map((entry) => entry.ruleId)).toEqual(
+      ATOMIC_CANDIDATES.map((candidate) => candidate.ruleId),
+    );
     for (const candidate of ATOMIC_CANDIDATES) {
-      expect(registry).not.toContain(candidate.ruleId);
+      const entry = manifest.rules.find(({ ruleId }) => ruleId === candidate.ruleId);
+      expect(entry?.productionFile).toBe(`src/rules/production/${candidate.ruleId}.ts`);
+      expect(registry).toContain(`../production/${candidate.ruleId}`);
+      expect(registry).not.toContain(`../candidates/${candidate.ruleId}`);
+      expect(candidate.executable).toBe(false);
     }
   });
 
