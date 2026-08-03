@@ -60,10 +60,16 @@ const _themeIcons = {
 
 const _modeOrder = ["system", "light", "dark"];
 const _modeAccessibility = {
-  system: { label: "Theme: System. Activate for Light.", title: "Follow system theme" },
-  light: { label: "Theme: Light. Activate for Dark.", title: "Use light theme" },
-  dark: { label: "Theme: Dark. Activate for System.", title: "Use dark theme" }
+  system: { labelKey: "theme_system_label", titleKey: "theme_system_title" },
+  light: { labelKey: "theme_light_label", titleKey: "theme_light_title" },
+  dark: { labelKey: "theme_dark_label", titleKey: "theme_dark_title" }
 };
+
+function updateThemeAccessibility(){
+  const accessibility=_modeAccessibility[_selectedThemeMode];
+  _themeToggleBtn.setAttribute("aria-label",getPrimaryText(accessibility.labelKey,lang).text);
+  _themeToggleBtn.setAttribute("title",getPrimaryText(accessibility.titleKey,lang).text);
+}
 
 function applyThemeMode(mode){
   const selectedMode=mode==="light"||mode==="dark"?mode:"system";
@@ -71,8 +77,7 @@ function applyThemeMode(mode){
   _selectedThemeMode=selectedMode;
   document.documentElement.dataset.theme=resolvedTheme;
   _themeToggleBtn.innerHTML=_themeIcons[selectedMode];
-  _themeToggleBtn.setAttribute("aria-label",_modeAccessibility[selectedMode].label);
-  _themeToggleBtn.setAttribute("title",_modeAccessibility[selectedMode].title);
+  updateThemeAccessibility();
   saveThemeOverride(selectedMode);
 }
 
@@ -90,23 +95,103 @@ _themeToggleBtn.addEventListener("click",()=>{
 });
 
 // ── Language switcher — 3 buttons EN | AR | ML ──
+const _missingTranslationKeys=new Set();
+
+function interpolateText(text,replacements={}){
+  return Object.entries(replacements).reduce(
+    (value,[name,replacement])=>value.replaceAll(`{${name}}`,replacement),
+    text
+  );
+}
+
+function applyResolvedText(element,resolved,replacements={}){
+  element.textContent=interpolateText(resolved.text,replacements);
+  element.setAttribute("lang",resolved.resolvedLanguage);
+  element.setAttribute("dir",resolved.direction);
+  if(resolved.fallbackUsed){
+    element.dataset.translationFallback=resolved.requestedLanguage;
+    _missingTranslationKeys.add(`${resolved.requestedLanguage}:${resolved.missingKey}`);
+  }else{
+    delete element.dataset.translationFallback;
+  }
+}
+
+function createLocalizedLine(className,resolved,replacements={},decorative=false){
+  const line=document.createElement("span");
+  line.className=className;
+  if(decorative) line.setAttribute("aria-hidden","true");
+  applyResolvedText(line,resolved,replacements);
+  return line;
+}
+
+function setBilingualResolvedText(element,primary,secondary,replacements={}){
+  element.replaceChildren(
+    createLocalizedLine("bilingual-primary",primary,replacements),
+    createLocalizedLine("bilingual-secondary",secondary,replacements,true)
+  );
+}
+
+function setBilingualText(element,key,replacements={}){
+  const text=getBilingualText(key,lang);
+  setBilingualResolvedText(element,text.primary,text.secondary,replacements);
+}
+
+function applyLocalizedAttribute(element,attribute,key){
+  const resolved=getPrimaryText(key,lang);
+  element.setAttribute(attribute,resolved.text);
+  if(resolved.fallbackUsed){
+    element.dataset.translationFallback=resolved.requestedLanguage;
+    _missingTranslationKeys.add(`${resolved.requestedLanguage}:${resolved.missingKey}`);
+  }
+}
+
 function applyLang(){
-  document.documentElement.lang=lang;
-  document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+  const pair=getLanguagePair(lang);
+  document.documentElement.lang=pair.primaryLanguage;
+  document.documentElement.dir=pair.primaryDirection;
+  document.title=getPrimaryText("page_title",lang).text;
   document.querySelectorAll("[data-i]").forEach(el=>{
     const k=el.getAttribute("data-i");
-    if(T[lang] && T[lang][k]!==undefined) el.textContent=T[lang][k];
+    applyResolvedText(el,getPrimaryText(k,lang));
+  });
+  document.querySelectorAll("[data-i-secondary]").forEach(el=>{
+    const k=el.getAttribute("data-i-secondary");
+    applyResolvedText(el,getSecondaryText(k,lang));
+    el.setAttribute("aria-hidden","true");
+  });
+  document.querySelectorAll("[data-bilingual]").forEach(el=>{
+    setBilingualText(el,el.getAttribute("data-bilingual"));
+  });
+  document.querySelectorAll("[data-i-aria]").forEach(el=>{
+    applyLocalizedAttribute(el,"aria-label",el.getAttribute("data-i-aria"));
+  });
+  document.querySelectorAll("[data-i-placeholder]").forEach(el=>{
+    applyLocalizedAttribute(el,"placeholder",el.getAttribute("data-i-placeholder"));
+  });
+  document.querySelectorAll("[data-i-title]").forEach(el=>{
+    applyLocalizedAttribute(el,"title",el.getAttribute("data-i-title"));
+  });
+  document.querySelectorAll('input[type="number"],.numeric-value,.code-like').forEach(el=>{
+    el.setAttribute("dir","ltr");
   });
   // Update active lang button
-  document.querySelectorAll('#langSwitcher .ls-btn').forEach(b=>
-    b.classList.toggle('active', b.dataset.l===lang)
-  );
+  document.querySelectorAll('#langSwitcher .ls-btn').forEach(b=>{
+    const active=b.dataset.l===lang;
+    b.classList.toggle('active',active);
+    b.setAttribute("aria-pressed",String(active));
+  });
+  updateThemeAccessibility();
   renderHeirs();
   if(document.getElementById("learnContent")?.innerHTML) updateLearn();
+  updateNet();
 }
 
 document.querySelectorAll('#langSwitcher .ls-btn').forEach(b=>
-  b.addEventListener('click', ()=>{ lang=b.dataset.l; applyLang(); })
+  b.addEventListener('click', ()=>{
+    lang=b.dataset.l;
+    saveMainLanguage(localStorage,lang);
+    applyLang();
+  })
 );
 
 function fv(id){return parseFloat(document.getElementById(id)?.value)||0;}
@@ -145,7 +230,7 @@ function getAfterDebts(){return Math.max(0,getGross()-fv("debts")-fv("zakat"));}
 function getWasiyyah(ad){
   const wi=fv("wasiyyah"); if(!wi) return 0;
   const max=ad/3, consent=document.getElementById("was_con").checked, w=document.getElementById("wasWarn");
-  if(!consent&&wi>max){ if(w){ w.style.display="block"; w.textContent=(T[lang].was_warn||"").replace("{m}",formatAmount(max)); } return max; }
+  if(!consent&&wi>max){ if(w){ w.style.display="block"; setBilingualText(w,"was_warn",{m:formatAmount(max)}); } return max; }
   if(w) w.style.display="none"; return wi;
 }
 
@@ -170,34 +255,66 @@ function setGender(g){
 }
 document.querySelectorAll(".gbtn").forEach(b=>b.addEventListener("click",()=>setGender(b.dataset.g)));
 
-function hn(h){
-  if(lang === "en") return h.en;
-  if(lang === "ar") return h.ar;
-  if(lang === "ml") return h.ml;
-  return h.en;
+function resolveHeirText(h,requestedLanguage){
+  const value=h[requestedLanguage];
+  if(value!==undefined&&value!==null&&String(value).trim()!==""){
+    return {text:String(value),requestedLanguage,resolvedLanguage:requestedLanguage,direction:requestedLanguage==="ar"?"rtl":"ltr",fallbackUsed:false,missingKey:null};
+  }
+  return {text:h.en,requestedLanguage,resolvedLanguage:"en",direction:"ltr",fallbackUsed:true,missingKey:`heir.${h.id}`};
 }
 
-function har(h){
-  if(lang === "en") return h.ar;
-  if(lang === "ar") return h.ml;
-  if(lang === "ml") return h.ar;
-  return h.ar;
+function getBilingualHeirText(h,mainLanguage=lang){
+  const pair=getLanguagePair(mainLanguage);
+  return {
+    primary:resolveHeirText(h,pair.primaryLanguage),
+    secondary:resolveHeirText(h,pair.secondaryLanguage)
+  };
+}
+
+function hn(h){
+  return getBilingualHeirText(h).primary.text;
 }
 
 function updateCaseSummary(gross=getGross(),net=getNet()){
-  const selected=HEIRS
+  const pair=getLanguagePair(lang);
+  const selectedHeirs=HEIRS
     .filter(h=>(sel[h.id]||0)>0)
-    .map(h=>`${hn(h)}${h.max>1?` × ${sel[h.id]}`:""}`);
-  const missing=[];
-  if(!gender) missing.push("who passed away");
-  if(gross<=0) missing.push("estate");
-  if(selected.length===0) missing.push("heirs");
+  const selectedPrimary=selectedHeirs.map(h=>`${resolveHeirText(h,pair.primaryLanguage).text}${h.max>1?` × ${sel[h.id]}`:""}`);
+  const selectedSecondary=selectedHeirs.map(h=>`${resolveHeirText(h,pair.secondaryLanguage).text}${h.max>1?` × ${sel[h.id]}`:""}`);
+  const missingKeys=[];
+  if(!gender) missingKeys.push("missing_gender");
+  if(gross<=0) missingKeys.push("missing_estate");
+  if(selectedHeirs.length===0) missingKeys.push("missing_heirs");
 
   document.getElementById("reviewGross").textContent=formatAmount(gross);
   document.getElementById("reviewDeductions").textContent=formatAmount(Math.max(0,gross-net));
   document.getElementById("reviewEstate").textContent=formatAmount(net);
-  document.getElementById("selectedHeirsSummary").textContent=selected.length?selected.join(", "):"None selected";
-  document.getElementById("caseCompleteness").textContent=missing.length?`Add ${missing.join(", ")}.`:"Case information entered.";
+  const selectedPrimaryText=selectedPrimary.length
+    ? {text:selectedPrimary.join(", "),requestedLanguage:pair.primaryLanguage,resolvedLanguage:pair.primaryLanguage,direction:pair.primaryDirection,fallbackUsed:false,missingKey:null}
+    : getPrimaryText("none_selected",lang);
+  const selectedSecondaryText=selectedSecondary.length
+    ? {text:selectedSecondary.join(", "),requestedLanguage:pair.secondaryLanguage,resolvedLanguage:pair.secondaryLanguage,direction:pair.secondaryDirection,fallbackUsed:false,missingKey:null}
+    : getSecondaryText("none_selected",lang);
+  setBilingualResolvedText(
+    document.getElementById("selectedHeirsSummary"),
+    selectedPrimaryText,
+    selectedSecondaryText
+  );
+  if(missingKeys.length){
+    const primaryItems=missingKeys.map(key=>resolveText(key,pair.primaryLanguage).text).join(", ");
+    const secondaryItems=missingKeys.map(key=>resolveText(key,pair.secondaryLanguage).text).join(", ");
+    setBilingualResolvedText(
+      document.getElementById("caseCompleteness"),
+      getPrimaryText("add_missing",lang),
+      getSecondaryText("add_missing",lang),
+      {items:primaryItems}
+    );
+    const secondaryLine=document.getElementById("caseCompleteness").querySelector(".bilingual-secondary");
+    applyResolvedText(secondaryLine,getSecondaryText("add_missing",lang),{items:secondaryItems});
+    secondaryLine.setAttribute("aria-hidden","true");
+  }else{
+    setBilingualText(document.getElementById("caseCompleteness"),"case_entered");
+  }
 }
 
 function updateDynamicUI() {
@@ -257,7 +374,8 @@ function renderHeirs(){
     }
     card.className="hcard"+(c>0?" sel":"")+(show?"":" hide");
     card.id="hc-"+h.id;
-    card.innerHTML=`<span class="hn">${hn(h)}</span><span class="har" style="${lang==='ar'?'direction:ltr;text-align:left;font-family:\'DM Sans\',sans-serif;':''}">${har(h)}</span>`+
+    const heirText=getBilingualHeirText(h);
+    card.innerHTML=`<span class="hn" lang="${heirText.primary.resolvedLanguage}" dir="${heirText.primary.direction}">${heirText.primary.text}</span><span class="har" aria-hidden="true" lang="${heirText.secondary.resolvedLanguage}" dir="${heirText.secondary.direction}">${heirText.secondary.text}</span>`+
       (h.max>1?`<div class="ctr"><button class="cb" data-id="${h.id}" data-d="-1">−</button><span class="cn2" id="cn-${h.id}">${c||""}</span><button class="cb" data-id="${h.id}" data-d="1">+</button></div>`:"");
     
     if(h.max===1) card.addEventListener("click",()=>{
@@ -296,14 +414,21 @@ function setStep(n){
 }
 
 window.showAsaba = function(titleEnc, descEnc) {
+    const pair=getLanguagePair(lang);
     document.getElementById('asabaModTitle').textContent = decodeURIComponent(titleEnc);
     document.getElementById('asabaModDesc').textContent = decodeURIComponent(descEnc);
+    document.getElementById('asabaModTitle').setAttribute("lang",pair.primaryLanguage);
+    document.getElementById('asabaModTitle').setAttribute("dir",pair.primaryDirection);
+    document.getElementById('asabaModDesc').setAttribute("lang",pair.primaryLanguage);
+    document.getElementById('asabaModDesc').setAttribute("dir",pair.primaryDirection);
     document.getElementById('asabaModal').style.display = 'flex';
 };
 
 function updateLearn(){
   const lc=document.getElementById("learnContent");
-  lc.innerHTML=`<div class="learn-card">${madhab==="hanafi" && T[lang].learn_ha ? T[lang].learn_ha : T[lang].learn_sh}</div>`;
+  const key=madhab==="hanafi"?"learn_ha":"learn_sh";
+  const text=getBilingualText(key,lang);
+  lc.innerHTML=`<div class="learn-card"><div class="bilingual-primary" lang="${text.primary.resolvedLanguage}" dir="${text.primary.direction}">${text.primary.text}</div><div class="bilingual-secondary" aria-hidden="true" lang="${text.secondary.resolvedLanguage}" dir="${text.secondary.direction}">${text.secondary.text}</div></div>`;
 }
 
 document.querySelectorAll(".tab").forEach(tab=>tab.addEventListener("click",()=>{
@@ -322,6 +447,7 @@ document.getElementById("fabTop")?.addEventListener("click", () => window.scroll
 document.getElementById("fabBottom")?.addEventListener("click", () => window.scrollTo({top:document.body.scrollHeight, behavior:'smooth'}));
 
 // Initialize UI
+lang=loadMainLanguage(localStorage);
 applyLang(); 
 updateNet(); 
 renderHeirs(); 

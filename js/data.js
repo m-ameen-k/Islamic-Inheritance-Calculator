@@ -23,6 +23,171 @@ const T = {
   }
 };
 
+// Canonical UI strings that were previously embedded in page templates.
+// Missing Arabic or Malayalam values intentionally fall back to English in
+// the resolver below; no uncertain translation is fabricated here.
+Object.assign(T.en, {
+  page_title:"Islamic Inheritance Calculator",
+  page_intro:"Calculation is unavailable while the Shafi‘i rules are undergoing scholarly verification.",
+  total_estate:"Total estate amount",
+  estate_help:"Enter the full amount if known. Leave this empty to build the total from assets.",
+  build_assets:"Build total from assets",
+  optional:"optional",
+  build_assets_help:"Use this breakdown only when you do not enter a total estate amount above.",
+  calculate_weight_rate:"Calculate from weight and rate",
+  calculate_property_area:"Calculate property value from area",
+  debts_zakat:"Debts and unpaid zakat",
+  unsupported_title:"Not yet supported:",
+  unsupported_funeral:"Funeral and preparation costs are not entered here because this workflow cannot currently apply them safely.",
+  bequest_details:"Bequest details",
+  shafii_name:"Shafi‘i",
+  other_madhabs:"Other madhabs (not implemented)",
+  hanafi_name:"Hanafi",
+  maliki_name:"Maliki",
+  hanbali_name:"Hanbali",
+  not_implemented:"Not implemented",
+  verification_progress:"Verification in progress.",
+  group_spouse:"Spouse",
+  group_descendants:"Children and descendants",
+  group_parents:"Parents and grandparents",
+  group_siblings:"Siblings",
+  group_extended:"Extended relatives",
+  review:"Review",
+  gross_estate:"Gross estate",
+  supported_deductions:"Supported deductions",
+  current_net:"Current net amount",
+  selected_heirs:"Selected heirs",
+  incomplete_information:"Incomplete information",
+  verification_status:"Verification status",
+  under_verification:"Under verification",
+  report_options:"Report options",
+  amount_symbol:"Amount symbol",
+  amount_symbol_help:"Used only to format displayed amounts. It never converts a value.",
+  detailed_verification:"Detailed verification explanation",
+  detailed_verification_text:"This case-preparation interface remains available for review, but no result may be calculated or used to distribute an estate until the Shafi‘i rule set completes scholarly verification.",
+  support_project:"Support This Project",
+  payment_soon:"Payment links will be configured soon.",
+  calculator_status:"Calculator status: unavailable",
+  none_selected:"None selected",
+  case_entered:"Case information entered.",
+  add_missing:"Add {items}.",
+  missing_gender:"who passed away",
+  missing_estate:"estate",
+  missing_heirs:"heirs",
+  total_gold_value:"Total gold value",
+  total_silver_value:"Total silver value",
+  total_property_value:"Total property value",
+  weight:"Weight",
+  manual_rate:"Manual rate per unit",
+  area:"Area",
+  value:"Value",
+  other_asset_value:"Other asset value",
+  gold_weight:"Gold weight",
+  silver_weight:"Silver weight",
+  gold_weight_unit:"Gold weight unit",
+  silver_weight_unit:"Silver weight unit",
+  gold_rate_unit:"Gold rate per unit",
+  silver_rate_unit:"Silver rate per unit",
+  property_area:"Property area",
+  property_area_unit:"Property area unit",
+  property_rate_unit:"Property rate per unit",
+  wasiyyah_bequest:"Wasiyyah bequest",
+  scroll_top:"Scroll to top",
+  scroll_bottom:"Scroll to bottom",
+  close_dialog:"Close dialog",
+  theme_system_label:"Theme: System. Activate for Light.",
+  theme_light_label:"Theme: Light. Activate for Dark.",
+  theme_dark_label:"Theme: Dark. Activate for System.",
+  theme_system_title:"Follow system theme",
+  theme_light_title:"Use light theme",
+  theme_dark_title:"Use dark theme"
+});
+
+Object.assign(T.ar, {
+  page_title:"علم الفرائض",
+  page_intro:T.ar.calc_disabled,
+  total_estate:"إجمالي التركة",
+  review:"مراجعة",
+  shafii_name:"شافعي",
+  hanafi_name:"حنفي",
+  maliki_name:"مالكي",
+  hanbali_name:"حنبلي"
+});
+
+Object.assign(T.ml, {
+  page_intro:T.ml.calc_disabled
+});
+
+// Remove bilingual text embedded inside a single translation value. Visible
+// secondary lines are resolved independently through getBilingualText().
+Object.assign(T.en, {
+  male:"Male",female:"Female",res_t:"Results",tab_sh:"Shares",tab_hj:"Hajb",
+  tab_asl:"Case origin",tab_ass:"Assets",tab_learn:"📘 Learn",blk_title:"Blocked Heirs",no_blk:"No heirs blocked"
+});
+
+const LANGUAGE_PAIRS = Object.freeze({
+  en:Object.freeze({primaryLanguage:"en",secondaryLanguage:"ar",primaryDirection:"ltr",secondaryDirection:"rtl"}),
+  ar:Object.freeze({primaryLanguage:"ar",secondaryLanguage:"en",primaryDirection:"rtl",secondaryDirection:"ltr"}),
+  ml:Object.freeze({primaryLanguage:"ml",secondaryLanguage:"ar",primaryDirection:"ltr",secondaryDirection:"rtl"})
+});
+
+const MAIN_LANGUAGE_STORAGE_KEY="faraid-language";
+
+function getLanguagePair(mainLanguage){
+  return LANGUAGE_PAIRS[mainLanguage]||LANGUAGE_PAIRS.en;
+}
+
+function resolveText(key,requestedLanguage){
+  const requested=T[requestedLanguage]?.[key];
+  if(requested!==undefined&&requested!==null&&String(requested).trim()!==""){
+    return {text:String(requested),requestedLanguage,resolvedLanguage:requestedLanguage,direction:requestedLanguage==="ar"?"rtl":"ltr",fallbackUsed:false,missingKey:null};
+  }
+  const fallback=T.en?.[key];
+  return {
+    text:fallback===undefined?key:String(fallback),
+    requestedLanguage,
+    resolvedLanguage:"en",
+    direction:"ltr",
+    fallbackUsed:true,
+    missingKey:key
+  };
+}
+
+function getPrimaryText(key,mainLanguage){
+  return resolveText(key,getLanguagePair(mainLanguage).primaryLanguage);
+}
+
+function getSecondaryText(key,mainLanguage){
+  return resolveText(key,getLanguagePair(mainLanguage).secondaryLanguage);
+}
+
+function getBilingualText(key,mainLanguage){
+  const pair=getLanguagePair(mainLanguage);
+  return {
+    ...pair,
+    primary:getPrimaryText(key,mainLanguage),
+    secondary:getSecondaryText(key,mainLanguage)
+  };
+}
+
+function loadMainLanguage(storage){
+  try {
+    const saved=storage.getItem(MAIN_LANGUAGE_STORAGE_KEY);
+    return LANGUAGE_PAIRS[saved]?saved:"en";
+  } catch {
+    return "en";
+  }
+}
+
+function saveMainLanguage(storage,mainLanguage){
+  if(!LANGUAGE_PAIRS[mainLanguage]) return;
+  try {
+    storage.setItem(MAIN_LANGUAGE_STORAGE_KEY,mainLanguage);
+  } catch {
+    // The selected language still applies for this page when storage is unavailable.
+  }
+}
+
 // FULL 25 HEIRS LIST
 const HEIRS=[
   {id:"zawj",   en:"Husband",                    ar:"الزوج",            ml:"ഭർത്താവ്",             max:1, dec:"f"},

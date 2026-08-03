@@ -23,18 +23,18 @@
 
 <div class="header ai">
   <div>
-    <div class="logo-main">علم الفرائض <span>Islamic Inheritance Calculator</span></div>
-    <div class="logo-ar">حاسبة المواريث الإسلامية</div>
+    <div class="logo-main" data-i="page_title">Islamic Inheritance Calculator</div>
+    <div class="logo-ar" data-i-secondary="page_title">علم الفرائض</div>
   </div>
   <div class="hd-right">
     
     <!-- 3-language selector styled like yazinsai -->
     <div class="lang-switcher" id="langSwitcher">
-      <button class="ls-btn active" data-l="en">EN</button>
+      <button class="ls-btn active" data-l="en" lang="en" aria-label="English" aria-pressed="true">EN</button>
       <span class="ls-sep">|</span>
-      <button class="ls-btn" data-l="ar">AR</button>
+      <button class="ls-btn" data-l="ar" lang="ar" dir="rtl" aria-label="العربية" aria-pressed="false">AR</button>
       <span class="ls-sep">|</span>
-      <button class="ls-btn" data-l="ml">ML</button>
+      <button class="ls-btn" data-l="ml" lang="ml" aria-label="മലയാളം" aria-pressed="false">ML</button>
     </div>
     <button type="button" class="theme-toggle-btn" aria-label="Theme: System. Activate for Light." title="Follow system theme">
       <svg class="system-theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -49,106 +49,106 @@
 </div>
 
 <div class="steps ai">
-  <div class="step" id="s1"><div class="sc">1</div><div class="sl" data-i="s_dec">Deceased</div></div>
-  <div class="step" id="s2"><div class="sc">2</div><div class="sl" data-i="s_est">Estate</div></div>
-  <div class="step" id="s3"><div class="sc">3</div><div class="sl" data-i="s_mad">Madhab</div></div>
-  <div class="step" id="s4"><div class="sc">4</div><div class="sl" data-i="s_heir">Heirs</div></div>
-  <div class="step" id="s5"><div class="sc">5</div><div class="sl" data-i="s_res">Result</div></div>
+  <div class="step" id="s1"><div class="sc numeric-value">1</div><div class="sl" data-bilingual="s_dec">Deceased</div></div>
+  <div class="step" id="s2"><div class="sc numeric-value">2</div><div class="sl" data-bilingual="s_est">Estate</div></div>
+  <div class="step" id="s3"><div class="sc numeric-value">3</div><div class="sl" data-bilingual="s_mad">Madhab</div></div>
+  <div class="step" id="s4"><div class="sc numeric-value">4</div><div class="sl" data-bilingual="s_heir">Heirs</div></div>
+  <div class="step" id="s5"><div class="sc numeric-value">5</div><div class="sl" data-bilingual="s_res">Result</div></div>
 </div>
 
-<div class="validation-banner ai" role="status">
+<div class="validation-banner ai" role="status" data-bilingual="page_intro">
   Calculation is unavailable while the Shafi‘i rules are undergoing scholarly verification.
 </div>
 
 <main class="workspace-layout">
 <div class="main-workspace">
 <div class="card ai">
-  <div class="ch"><div class="cn">1</div><div class="ct" data-i="dec_t">Who passed away?</div><div class="car">من المتوفى؟</div></div>
+  <div class="ch"><div class="cn numeric-value">1</div><div class="ct" data-i="dec_t">Who passed away?</div><div class="car" data-i-secondary="dec_t">من المتوفى؟</div></div>
   <div class="grd">
-    <button type="button" class="gbtn" data-g="m" id="gbm" aria-pressed="false"><span class="gi">♂</span><span class="ge" data-i="male">Male — ذكر</span><span class="ga">مورِّث (رجل)</span></button>
-    <button type="button" class="gbtn" data-g="f" id="gbf" aria-pressed="false"><span class="gi">♀</span><span class="ge" data-i="female">Female — أنثى</span><span class="ga">مورِّثة (امرأة)</span></button>
+    <button type="button" class="gbtn" data-g="m" id="gbm" aria-pressed="false"><span class="gi">♂</span><span class="ge" data-i="male">Male</span><span class="ga" data-i-secondary="male">ذكر</span></button>
+    <button type="button" class="gbtn" data-g="f" id="gbf" aria-pressed="false"><span class="gi">♀</span><span class="ge" data-i="female">Female</span><span class="ga" data-i-secondary="female">أنثى</span></button>
   </div>
 </div>
 
 <div class="card ai">
-  <div class="ch"><div class="cn">2</div><div class="ct" data-i="est_t">Estate &amp; Liabilities</div><div class="car">التركة والخصوم</div></div>
+  <div class="ch"><div class="cn numeric-value">2</div><div class="ct" data-i="est_t">Estate &amp; Liabilities</div><div class="car" data-i-secondary="est_t">التركة والخصوم</div></div>
   <div class="field estate-primary-field">
-    <label class="flabel" for="estate_total"><span>Total estate amount</span> <span class="far">— إجمالي التركة</span></label>
+    <label class="flabel" for="estate_total"><span data-i="total_estate">Total estate amount</span> <span class="far" data-i-secondary="total_estate">إجمالي التركة</span></label>
     <input type="number" id="estate_total" class="inp estate-total-input" placeholder="0" min="0" step="any" inputmode="decimal" aria-describedby="estateTotalHelp">
-    <p class="field-help" id="estateTotalHelp">Enter the full amount if known. Leave this empty to build the total from assets.</p>
+    <p class="field-help" id="estateTotalHelp" data-bilingual="estate_help">Enter the full amount if known. Leave this empty to build the total from assets.</p>
   </div>
 
   <details class="form-disclosure">
-    <summary>Build total from assets <span class="summary-optional">— optional</span></summary>
-    <p class="disclosure-note">Use this breakdown only when you do not enter a total estate amount above.</p>
+    <summary data-bilingual="build_assets">Build total from assets</summary>
+    <p class="disclosure-note" data-bilingual="build_assets_help">Use this breakdown only when you do not enter a total estate amount above.</p>
     <div class="g2 disclosure-grid">
       <div class="field">
-        <label class="flabel" for="cash"><span data-i="cash">Cash</span> <span class="far">— نقد</span></label>
+        <label class="flabel" for="cash"><span data-i="cash">Cash</span> <span class="far" data-i-secondary="cash">نقد</span></label>
         <input type="number" id="cash" class="inp" placeholder="0" min="0" step="any" inputmode="decimal">
       </div>
       <div class="field">
-      <label class="flabel" for="gold_tot"><span data-i="gold">Gold</span> <span class="far">— ذهب</span></label>
-      <input type="number" id="gold_tot" class="inp" placeholder="Total gold value" min="0" step="any" aria-label="Total gold value">
+      <label class="flabel" for="gold_tot"><span data-i="gold">Gold</span> <span class="far" data-i-secondary="gold">ذهب</span></label>
+      <input type="number" id="gold_tot" class="inp" placeholder="Total gold value" min="0" step="any" data-i-placeholder="total_gold_value" data-i-aria="total_gold_value">
       <details class="valuation-disclosure">
-        <summary>Calculate from weight and rate</summary>
+        <summary data-bilingual="calculate_weight_rate">Calculate from weight and rate</summary>
         <div class="valuation-fields">
-          <div class="metal-row"><input type="number" id="gold_w" class="inp" placeholder="Weight" min="0" step="any" aria-label="Gold weight"><select id="gold_u" class="inp" aria-label="Gold weight unit"><option value="gram">gram</option><option value="tola">tola</option><option value="ounce">oz</option><option value="kg">kg</option></select></div>
-          <div class="price-inp-wrap"><input type="number" id="gold_p" class="inp" placeholder="Manual rate per unit" min="0" step="any" aria-label="Gold rate per unit"><span class="price-unit-label" id="goldUnitLbl">/ gram</span></div>
+          <div class="metal-row"><input type="number" id="gold_w" class="inp" placeholder="Weight" min="0" step="any" data-i-placeholder="weight" data-i-aria="gold_weight"><select id="gold_u" class="inp code-like" data-i-aria="gold_weight_unit"><option value="gram">gram</option><option value="tola">tola</option><option value="ounce">oz</option><option value="kg">kg</option></select></div>
+          <div class="price-inp-wrap"><input type="number" id="gold_p" class="inp" placeholder="Manual rate per unit" min="0" step="any" data-i-placeholder="manual_rate" data-i-aria="gold_rate_unit"><span class="price-unit-label code-like" id="goldUnitLbl">/ gram</span></div>
         </div>
       </details>
       </div>
       <div class="field">
-      <label class="flabel" for="silver_tot"><span data-i="silver">Silver</span> <span class="far">— فضة</span></label>
-      <input type="number" id="silver_tot" class="inp" placeholder="Total silver value" min="0" step="any" aria-label="Total silver value">
+      <label class="flabel" for="silver_tot"><span data-i="silver">Silver</span> <span class="far" data-i-secondary="silver">فضة</span></label>
+      <input type="number" id="silver_tot" class="inp" placeholder="Total silver value" min="0" step="any" data-i-placeholder="total_silver_value" data-i-aria="total_silver_value">
       <details class="valuation-disclosure">
-        <summary>Calculate from weight and rate</summary>
+        <summary data-bilingual="calculate_weight_rate">Calculate from weight and rate</summary>
         <div class="valuation-fields">
-          <div class="metal-row"><input type="number" id="silver_w" class="inp" placeholder="Weight" min="0" step="any" aria-label="Silver weight"><select id="silver_u" class="inp" aria-label="Silver weight unit"><option value="gram">gram</option><option value="tola">tola</option><option value="ounce">oz</option><option value="kg">kg</option></select></div>
-          <div class="price-inp-wrap"><input type="number" id="silver_p" class="inp" placeholder="Manual rate per unit" min="0" step="any" aria-label="Silver rate per unit"><span class="price-unit-label" id="silverUnitLbl">/ gram</span></div>
+          <div class="metal-row"><input type="number" id="silver_w" class="inp" placeholder="Weight" min="0" step="any" data-i-placeholder="weight" data-i-aria="silver_weight"><select id="silver_u" class="inp code-like" data-i-aria="silver_weight_unit"><option value="gram">gram</option><option value="tola">tola</option><option value="ounce">oz</option><option value="kg">kg</option></select></div>
+          <div class="price-inp-wrap"><input type="number" id="silver_p" class="inp" placeholder="Manual rate per unit" min="0" step="any" data-i-placeholder="manual_rate" data-i-aria="silver_rate_unit"><span class="price-unit-label code-like" id="silverUnitLbl">/ gram</span></div>
         </div>
       </details>
       </div>
       <div class="field">
-      <label class="flabel" for="land_tot"><span data-i="land">Land / Property</span> <span class="far">— عقار</span></label>
-      <input type="number" id="land_tot" class="inp" placeholder="Total property value" min="0" step="any" aria-label="Total property value">
+      <label class="flabel" for="land_tot"><span data-i="land">Land / Property</span> <span class="far" data-i-secondary="land">عقار</span></label>
+      <input type="number" id="land_tot" class="inp" placeholder="Total property value" min="0" step="any" data-i-placeholder="total_property_value" data-i-aria="total_property_value">
       <details class="valuation-disclosure">
-        <summary>Calculate property value from area</summary>
+        <summary data-bilingual="calculate_property_area">Calculate property value from area</summary>
         <div class="valuation-fields">
-          <div class="metal-row"><input type="number" id="land_a" class="inp" placeholder="Area" min="0" step="any" aria-label="Property area"><select id="land_u" class="inp" aria-label="Property area unit"><option value="sqft">sq ft</option><option value="sqm">sq m</option><option value="cent">cent</option><option value="acre">acre</option></select></div>
-          <input type="number" id="land_rate" class="inp" placeholder="Manual rate per unit" min="0" step="any" aria-label="Property rate per unit">
+          <div class="metal-row"><input type="number" id="land_a" class="inp" placeholder="Area" min="0" step="any" data-i-placeholder="area" data-i-aria="property_area"><select id="land_u" class="inp code-like" data-i-aria="property_area_unit"><option value="sqft">sq ft</option><option value="sqm">sq m</option><option value="cent">cent</option><option value="acre">acre</option></select></div>
+          <input type="number" id="land_rate" class="inp" placeholder="Manual rate per unit" min="0" step="any" data-i-placeholder="manual_rate" data-i-aria="property_rate_unit">
         </div>
       </details>
     </div>
     <div class="field">
-      <label class="flabel" for="other_v"><span data-i="other">Other assets</span> <span class="far">— غيرها</span></label>
-      <input type="number" id="other_v" class="inp" placeholder="Value" min="0" step="any" aria-label="Other asset value">
+      <label class="flabel" for="other_v"><span data-i="other">Other assets</span> <span class="far" data-i-secondary="other">أصول أخرى</span></label>
+      <input type="number" id="other_v" class="inp" placeholder="Value" min="0" step="any" data-i-placeholder="value" data-i-aria="other_asset_value">
       </div>
     </div>
   </details>
 
   <details class="form-disclosure">
-    <summary>Debts and unpaid zakat</summary>
+    <summary data-bilingual="debts_zakat">Debts and unpaid zakat</summary>
     <div class="deductions-grid">
       <div class="field field-group">
-        <label class="flabel" for="debts"><span data-i="debts">Debts</span> <span class="far">— ديون</span></label>
-        <input type="number" id="debts" class="inp" placeholder="0" min="0" step="any" aria-label="Debts">
+        <label class="flabel" for="debts"><span data-i="debts">Debts</span> <span class="far" data-i-secondary="debts">ديون</span></label>
+        <input type="number" id="debts" class="inp" placeholder="0" min="0" step="any" data-i-aria="debts">
       </div>
       <div class="field field-group">
-        <label class="flabel" for="zakat"><span data-i="zakat">Unpaid Zakat</span> <span class="far">— زكاة</span></label>
-        <input type="number" id="zakat" class="inp" placeholder="0" min="0" step="any" aria-label="Unpaid Zakat">
+        <label class="flabel" for="zakat"><span data-i="zakat">Unpaid Zakat</span> <span class="far" data-i-secondary="zakat">زكاة غير مدفوعة</span></label>
+        <input type="number" id="zakat" class="inp" placeholder="0" min="0" step="any" data-i-aria="zakat">
       </div>
     </div>
-    <p class="unsupported-note"><strong>Not yet supported:</strong> Funeral and preparation costs are not entered here because this workflow cannot currently apply them safely.</p>
+    <p class="unsupported-note" data-bilingual="unsupported_funeral">Funeral and preparation costs are not entered here because this workflow cannot currently apply them safely.</p>
   </details>
 
   <details class="form-disclosure">
-    <summary>Bequest details</summary>
+    <summary data-bilingual="bequest_details">Bequest details</summary>
     <div class="field disclosure-content">
-    <div class="flabel"><span data-i="was_lbl">Wasiyyah (Bequest)</span> <span class="far">— الوصية</span></div>
-    <input type="number" id="wasiyyah" class="inp" placeholder="0" min="0" step="any" aria-label="Wasiyyah bequest">
+    <div class="flabel"><span data-i="was_lbl">Wasiyyah (Bequest)</span> <span class="far" data-i-secondary="was_lbl">الوصية</span></div>
+    <input type="number" id="wasiyyah" class="inp" placeholder="0" min="0" step="any" data-i-aria="wasiyyah_bequest">
     <div class="checkbox-row">
       <input type="checkbox" id="was_con">
-      <label for="was_con" data-i="was_con">All heirs consent to exceed 1/3?</label>
+      <label for="was_con" data-bilingual="was_con">All heirs consent to exceed 1/3?</label>
     </div>
     <div id="wasWarn" class="wbox"></div>
     </div>
@@ -156,56 +156,56 @@
 </div>
 
 <div class="card ai">
-  <div class="ch"><div class="cn">3</div><div class="ct" data-i="mad_t">Madhab </div><div class="car"> المذهب</div></div>
+  <div class="ch"><div class="cn numeric-value">3</div><div class="ct" data-i="mad_t">Madhab</div><div class="car" data-i-secondary="mad_t">المذهب</div></div>
   <div class="mrow">
-    <button class="mbtn on" data-m="shafii" style="cursor:default">Shafi'i — شافعي</button>
+    <button class="mbtn on" data-m="shafii" style="cursor:default" data-bilingual="shafii_name">Shafi‘i</button>
   </div>
   <details class="form-disclosure madhab-disclosure">
-    <summary>Other madhabs (not implemented)</summary>
+    <summary data-bilingual="other_madhabs">Other madhabs (not implemented)</summary>
     <div class="mrow disclosure-content">
-    <button class="mbtn" data-m="hanafi" disabled title="Not implemented">Hanafi — حنفي</button>
-    <button class="mbtn" data-m="maliki" disabled title="Not implemented">Maliki — مالكي</button>
-    <button class="mbtn" data-m="hanbali" disabled title="Not implemented">Hanbali — حنبلي</button>
+    <button class="mbtn" data-m="hanafi" disabled data-i-title="not_implemented" data-bilingual="hanafi_name">Hanafi</button>
+    <button class="mbtn" data-m="maliki" disabled data-i-title="not_implemented" data-bilingual="maliki_name">Maliki</button>
+    <button class="mbtn" data-m="hanbali" disabled data-i-title="not_implemented" data-bilingual="hanbali_name">Hanbali</button>
     </div>
   </details>
-  <div class="snote" style="margin-top:10px;margin-bottom:0">Verification in progress.</div>
+  <div class="snote" style="margin-top:10px;margin-bottom:0" data-bilingual="verification_progress">Verification in progress.</div>
 </div>
 
 <div class="card ai">
-  <div class="ch"><div class="cn">4</div><div class="ct" data-i="heir_t">Select Heirs</div><div class="car">اختر الورثة</div></div>
-  <div class="hint" id="heirsHint" data-i="heir_hint">Select deceased gender first, then tap heirs.</div>
+  <div class="ch"><div class="cn numeric-value">4</div><div class="ct" data-i="heir_t">Select Heirs</div><div class="car" data-i-secondary="heir_t">اختر الورثة</div></div>
+  <div class="hint" id="heirsHint" data-bilingual="heir_hint">Select deceased gender first, then tap heirs.</div>
   <div class="heir-groups" id="hgrid">
     <section class="heir-group" aria-labelledby="spouseHeirsTitle">
-      <h3 id="spouseHeirsTitle">Spouse</h3>
+      <h3 id="spouseHeirsTitle" data-bilingual="group_spouse">Spouse</h3>
       <div class="hgrid" id="hgrid-spouse"></div>
     </section>
     <section class="heir-group" aria-labelledby="descendantHeirsTitle">
-      <h3 id="descendantHeirsTitle">Children and descendants</h3>
+      <h3 id="descendantHeirsTitle" data-bilingual="group_descendants">Children and descendants</h3>
       <div class="hgrid" id="hgrid-descendants"></div>
     </section>
     <details class="heir-group" open aria-labelledby="parentsHeirsTitle">
-      <summary id="parentsHeirsTitle">Parents and grandparents</summary>
+      <summary id="parentsHeirsTitle" data-bilingual="group_parents">Parents and grandparents</summary>
       <div class="hgrid" id="hgrid-parents"></div>
     </details>
     <details class="heir-group" aria-labelledby="siblingsHeirsTitle">
-      <summary id="siblingsHeirsTitle">Siblings</summary>
+      <summary id="siblingsHeirsTitle" data-bilingual="group_siblings">Siblings</summary>
       <div class="hgrid" id="hgrid-siblings"></div>
     </details>
     <details class="heir-group" aria-labelledby="extendedHeirsTitle">
-      <summary id="extendedHeirsTitle">Extended relatives</summary>
+      <summary id="extendedHeirsTitle" data-bilingual="group_extended">Extended relatives</summary>
       <div class="hgrid" id="hgrid-extended"></div>
     </details>
   </div>
 </div>
 
 <div class="res card ai" id="resSec">
-  <div class="ch"><div class="cn">5</div><div class="ct" data-i="res_t">Results — النتائج</div><div id="ctag"></div></div>
+  <div class="ch"><div class="cn numeric-value">5</div><div class="ct" data-i="res_t">Results</div><div class="car" data-i-secondary="res_t">النتائج</div><div id="ctag"></div></div>
   <div class="tabs">
-      <div class="tab on" data-tab="Shares" data-i="tab_sh">Shares</div>
-      <div class="tab" data-tab="Hajb" data-i="tab_hj">Hajb — الحجب</div>
-      <div class="tab" data-tab="Asl" data-i="tab_asl">أصل المسألة</div>
-      <div class="tab" data-tab="Assets" data-i="tab_ass">Assets</div>
-      <div class="tab" data-tab="Learn" data-i="tab_learn">📘 Learn</div>
+      <div class="tab on" data-tab="Shares" data-bilingual="tab_sh">Shares</div>
+      <div class="tab" data-tab="Hajb" data-bilingual="tab_hj">Hajb</div>
+      <div class="tab" data-tab="Asl" data-bilingual="tab_asl">Case origin</div>
+      <div class="tab" data-tab="Assets" data-bilingual="tab_ass">Assets</div>
+      <div class="tab" data-tab="Learn" data-bilingual="tab_learn">📘 Learn</div>
   </div>
   <div class="tc on" id="tcShares"><div class="metrics" id="metrics"></div><div id="sharesList"></div></div>
   <div class="tc" id="tcHajb"><div id="hajbList"></div></div>
@@ -218,65 +218,65 @@
 <aside class="case-sidebar ai" aria-labelledby="caseSummaryTitle">
   <section class="card case-summary">
     <div class="ch">
-      <div class="ct" id="caseSummaryTitle">Review</div>
-      <div class="car">مراجعة</div>
+      <div class="ct" id="caseSummaryTitle" data-i="review">Review</div>
+      <div class="car" data-i-secondary="review">مراجعة</div>
     </div>
     <dl class="review-list">
       <div>
-        <dt>Gross estate</dt>
-        <dd id="reviewGross" aria-live="polite">0</dd>
+        <dt data-bilingual="gross_estate">Gross estate</dt>
+        <dd id="reviewGross" class="numeric-value" aria-live="polite">0</dd>
       </div>
       <div>
-        <dt>Supported deductions</dt>
-        <dd id="reviewDeductions" aria-live="polite">0</dd>
+        <dt data-bilingual="supported_deductions">Supported deductions</dt>
+        <dd id="reviewDeductions" class="numeric-value" aria-live="polite">0</dd>
       </div>
       <div class="net-amount">
-        <dt>Current net amount</dt>
-        <dd id="reviewEstate" aria-live="polite">0</dd>
+        <dt data-bilingual="current_net">Current net amount</dt>
+        <dd id="reviewEstate" class="numeric-value" aria-live="polite">0</dd>
       </div>
       <div>
-        <dt>Selected heirs</dt>
+        <dt data-bilingual="selected_heirs">Selected heirs</dt>
         <dd id="selectedHeirsSummary" aria-live="polite">None selected</dd>
       </div>
       <div>
-        <dt>Incomplete information</dt>
+        <dt data-bilingual="incomplete_information">Incomplete information</dt>
         <dd id="caseCompleteness" aria-live="polite">Select who passed away.</dd>
       </div>
       <div>
-        <dt>Verification status</dt>
-        <dd><span class="status-label">Under verification</span></dd>
+        <dt data-bilingual="verification_status">Verification status</dt>
+        <dd><span class="status-label" data-bilingual="under_verification">Under verification</span></dd>
       </div>
     </dl>
   <button class="calcbtn" id="calcBtn" disabled aria-describedby="calculationDisabledReason">
-    <span data-i="calc_disabled">Calculation temporarily disabled during validation</span>
+    <span data-bilingual="calc_disabled">Calculation temporarily disabled during validation</span>
   </button>
-    <p class="calculation-disabled-reason" id="calculationDisabledReason" data-i="calc_disabled_reason">
+    <p class="calculation-disabled-reason" id="calculationDisabledReason" data-bilingual="calc_disabled_reason">
       The legacy engine is preserved, but it is not available for estate distribution.
     </p>
   <details class="summary-disclosure report-options">
-    <summary>Report options</summary>
+    <summary data-bilingual="report_options">Report options</summary>
     <div class="field disclosure-content">
-      <label class="flabel" for="amountSymbol">Amount symbol <span class="optional-label">— optional</span></label>
-      <input type="text" id="amountSymbol" class="inp amount-symbol-input" maxlength="8" placeholder="₹, $, ر.س" autocomplete="off">
-      <p class="disclosure-note">Used only to format displayed amounts. It never converts a value.</p>
+      <label class="flabel" for="amountSymbol" data-bilingual="amount_symbol">Amount symbol</label>
+      <input type="text" id="amountSymbol" class="inp amount-symbol-input code-like" maxlength="8" placeholder="₹, $, ر.س" autocomplete="off">
+      <p class="disclosure-note" data-bilingual="amount_symbol_help">Used only to format displayed amounts. It never converts a value.</p>
     </div>
   </details>
   <details class="summary-disclosure">
-    <summary>Detailed verification explanation</summary>
-    <p>This case-preparation interface remains available for review, but no result may be calculated or used to distribute an estate until the Shafi‘i rule set completes scholarly verification.</p>
+    <summary data-bilingual="detailed_verification">Detailed verification explanation</summary>
+    <p data-bilingual="detailed_verification_text">This case-preparation interface remains available for review, but no result may be calculated or used to distribute an estate until the Shafi‘i rule set completes scholarly verification.</p>
   </details>
   </section>
 </aside>
 </main>
 
 <div class="fab-group">
-  <button class="fab" id="fabTop" aria-label="Scroll to top">↑</button>
-  <button class="fab fab-down" id="fabBottom" aria-label="Scroll to bottom">↓</button>
+  <button class="fab" id="fabTop" data-i-aria="scroll_top">↑</button>
+  <button class="fab fab-down" id="fabBottom" data-i-aria="scroll_bottom">↓</button>
 </div>
 
 <div id="asabaModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;align-items:center;justify-content:center;padding:1rem;">
   <div style="background:var(--card);padding:1.8rem;border-radius:var(--r);max-width:400px;width:100%;box-shadow:var(--sh2);position:relative;">
-    <button aria-label="Close dialog" onclick="document.getElementById('asabaModal').style.display='none'" style="position:absolute;top:10px;right:10px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--txt3);transition:color 0.2s;">✕</button>
+    <button data-i-aria="close_dialog" onclick="document.getElementById('asabaModal').style.display='none'" style="position:absolute;top:10px;right:10px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--txt3);transition:color 0.2s;">✕</button>
     <h3 style="color:var(--warn);margin-bottom:12px;font-family:'Amiri',serif;font-size:1.3rem" id="asabaModTitle"></h3>
     <div id="asabaModDesc" style="font-size:14px;color:var(--txt2);line-height:1.7"></div>
   </div>
@@ -301,7 +301,7 @@
   <div class="tip-box">
     <div class="tip-title">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
-       Support This Project
+       <span data-bilingual="support_project">Support This Project</span>
     </div><div class="tip-methods">
       <a href="upi://pay?pa=ameenkariot-2@okicici&pn=Ameen" class="tip-btn" id="tipUpi">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
@@ -316,10 +316,10 @@
         WhatsApp Pay
       </a>
     </div>
-    <p class="tip-note">Payment links will be configured soon.</p>
+    <p class="tip-note" data-bilingual="payment_soon">Payment links will be configured soon.</p>
   </div>
 
-  <p class="footer-copy"><span class="status-label">Calculator status: unavailable</span></p>
+  <p class="footer-copy"><span class="status-label" data-bilingual="calculator_status">Calculator status: unavailable</span></p>
 </footer>
 
 <script src="js/data.js"></script>
