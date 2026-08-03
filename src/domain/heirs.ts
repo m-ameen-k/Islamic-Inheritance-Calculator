@@ -6,32 +6,35 @@ export type PersonSex = "MALE" | "FEMALE";
  * Relationship identifiers only. This list does not imply eligibility, a
  * share, blocking, or any other fiqh outcome.
  */
-export type HeirType =
-  | "HUSBAND"
-  | "WIFE"
-  | "FATHER"
-  | "MOTHER"
-  | "SON"
-  | "DAUGHTER"
-  | "SONS_SON"
-  | "SONS_DAUGHTER"
-  | "PATERNAL_GRANDFATHER"
-  | "PATERNAL_GRANDMOTHER"
-  | "MATERNAL_GRANDMOTHER"
-  | "FULL_BROTHER"
-  | "PATERNAL_BROTHER"
-  | "MATERNAL_BROTHER"
-  | "FULL_SISTER"
-  | "PATERNAL_SISTER"
-  | "MATERNAL_SISTER"
-  | "FULL_BROTHERS_SON"
-  | "PATERNAL_BROTHERS_SON"
-  | "FULL_PATERNAL_UNCLE"
-  | "PATERNAL_UNCLE"
-  | "FULL_PATERNAL_UNCLES_SON"
-  | "PATERNAL_UNCLES_SON"
-  | "MALE_EMANCIPATOR"
-  | "FEMALE_EMANCIPATOR";
+export const HEIR_TYPES = [
+  "HUSBAND",
+  "WIFE",
+  "FATHER",
+  "MOTHER",
+  "SON",
+  "DAUGHTER",
+  "SONS_SON",
+  "SONS_DAUGHTER",
+  "PATERNAL_GRANDFATHER",
+  "PATERNAL_GRANDMOTHER",
+  "MATERNAL_GRANDMOTHER",
+  "FULL_BROTHER",
+  "PATERNAL_BROTHER",
+  "MATERNAL_BROTHER",
+  "FULL_SISTER",
+  "PATERNAL_SISTER",
+  "MATERNAL_SISTER",
+  "FULL_BROTHERS_SON",
+  "PATERNAL_BROTHERS_SON",
+  "FULL_PATERNAL_UNCLE",
+  "PATERNAL_UNCLE",
+  "FULL_PATERNAL_UNCLES_SON",
+  "PATERNAL_UNCLES_SON",
+  "MALE_EMANCIPATOR",
+  "FEMALE_EMANCIPATOR",
+] as const;
+
+export type HeirType = (typeof HEIR_TYPES)[number];
 
 export interface HeirInput {
   readonly heirId: string;
