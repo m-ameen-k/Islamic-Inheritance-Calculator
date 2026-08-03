@@ -23,6 +23,10 @@ import { KZ_FR_010_FIXTURES } from "../fixtures/candidates/KZ-FR-010.fixtures";
 const PROJECT_ROOT = fileURLToPath(new URL("../../", import.meta.url));
 const CANDIDATE_DIRECTORY = join(PROJECT_ROOT, "src/rules/candidates");
 const REVIEW_DIRECTORY = join(PROJECT_ROOT, "references/review/manually-checked");
+const EXTRACTED_PACK_PATH = join(
+  PROJECT_ROOT,
+  "references/extracted/kanz-faraid-extracted-rules-v0.1.json",
+);
 const RULE_IDS = [
   "KZ-FR-005",
   "KZ-FR-006",
@@ -55,6 +59,7 @@ const MANUAL_REVIEW_SHA256: Readonly<Record<(typeof RULE_IDS)[number], string>> 
   "KZ-FR-009": "70a4d65c2387b9347ee3acc75a6353d323bbe9867892c1259cc70720b922f659",
   "KZ-FR-010": "96e9c903302b44b7ba084be86ce5419ded650ae634724ce453d6918b40069914",
 };
+const EXTRACTED_PACK_SHA256 = "dbf1d0885a88094dc0664fdcc6c96c17c95401bdd23ba6e8766b6c9dfa3f8ed6";
 
 describe("TECHNICAL_TEST: Stage 4B-1 fixed-share candidates", () => {
   it("contains exactly one candidate file for each named rule ID", () => {
@@ -71,6 +76,12 @@ describe("TECHNICAL_TEST: Stage 4B-1 fixed-share candidates", () => {
     "$ruleId remains a sourced, structurally incomplete candidate",
     (candidate) => {
       expect(candidate.sourceReferences.length).toBeGreaterThan(0);
+      expect(candidate.sourceReferences).toContainEqual(
+        expect.objectContaining({
+          sourceId: "KHULASAT_AL_FIQH_AL_ISLAMI",
+          locator: expect.stringMatching(/fixed-share-locators\.md; printed pages 271–27[234]/),
+        }),
+      );
       expect(candidate.fixedShare).toEqual({
         numerator: expect.stringMatching(/^\d+$/),
         denominator: expect.stringMatching(/^[1-9]\d*$/),
@@ -83,6 +94,7 @@ describe("TECHNICAL_TEST: Stage 4B-1 fixed-share candidates", () => {
       expect(candidate.interactionDependencies.length).toBeGreaterThan(0);
       expect(candidate.unresolvedQuestions.length).toBeGreaterThan(0);
       expect(candidate.implementationReadiness).toBe("INCOMPLETE");
+      expect(candidate.lifecycleStatus).toBe("SOURCE_CORROBORATED");
       expect(candidate.lifecycleStatus).not.toBe("CALCULATION_READY");
       expect(candidate.lifecycleStatus).not.toBe("PRODUCTION");
       expect(candidate.executable).toBe(false);
@@ -132,7 +144,12 @@ describe("TECHNICAL_TEST: Stage 4B-1 fixed-share candidates", () => {
     }
   });
 
-  it("preserves the six original manually checked records byte-for-byte", () => {
+  it("preserves the original extracted pack and six manually checked records byte-for-byte", () => {
+    const extractedDigest = createHash("sha256")
+      .update(readFileSync(EXTRACTED_PACK_PATH))
+      .digest("hex");
+    expect(extractedDigest).toBe(EXTRACTED_PACK_SHA256);
+
     for (const ruleId of RULE_IDS) {
       const path = join(REVIEW_DIRECTORY, `${ruleId}.review.json`);
       const digest = createHash("sha256").update(readFileSync(path)).digest("hex");

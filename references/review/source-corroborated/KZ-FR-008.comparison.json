@@ -1,25 +1,54 @@
 {
   "comparisonId": "SOURCE-COMPARISON-20260803-KZ-FR-008",
   "ruleId": "KZ-FR-008",
-  "lifecycleStatus": "MANUALLY_CHECKED",
-  "comparisonStatus": "INCOMPLETE_SOURCE_CORROBORATION",
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_WITH_IMPLEMENTATION_GAPS",
   "executable": false,
   "kanzAlMahalliRecord": {
     "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
     "evidenceRecordIds": ["KZ-FR-008", "MANUAL-20260727-KZ-FR-008"],
-    "statement": "The reviewed Kanz/al-Mahalli record assigns two thirds collectively to two or more daughters, son's daughters, full sisters, or paternal sisters, retaining the qualification that they are without their brothers."
+    "locator": "Printed page 137; local PDF page 8.",
+    "statement": "The reviewed record assigns two thirds collectively to two or more daughters, son's daughters, full sisters, or paternal sisters without their brothers."
   },
-  "khulasaSupport": {
-    "confirmedPropositions": [],
-    "limitation": "No Khulasa research record, exact wording, locator, or bibliographic catalog entry for this rule is present in the repository. No quotation or page reference can be supplied."
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locatorNotes": "references/source-notes/khulasa/fixed-share-locators.md",
+    "printedPages": [271, 272, 273],
+    "visuallyConfirmed": true,
+    "statement": "The table assigns two thirds collectively to the same four plural female categories and states category-specific absence conditions."
   },
-  "shareAgreement": "UNDETERMINED_WITHOUT_REPOSITORY_KHULASA_EVIDENCE",
+  "fixedShareAgreement": {
+    "kanzAlMahalliShare": { "numerator": "2", "denominator": "3" },
+    "khulasaShare": { "numerator": "2", "denominator": "3" },
+    "agrees": true,
+    "detail": "Both Shafi‘i sources assign the exact collective fixed share 2/3."
+  },
+  "eligibleHeirCategoriesAgreement": {
+    "agrees": true,
+    "detail": "Both list two or more daughters, son's daughters, full sisters, and paternal sisters."
+  },
+  "positiveConditionsAgreement": {
+    "agrees": true,
+    "detail": "Both require plurality and absence of the corresponding male counterpart; no conflicting condition appears."
+  },
+  "exclusionsAgreement": {
+    "agrees": true,
+    "detail": "Khulasa's table and decrement section agree with the reviewed need for descendant-level, nearer-heir, and residuary-conversion exclusions."
+  },
+  "extraClarificationsFromKhulasa": [
+    "The table separates the absence conditions for daughters, son's daughters, full sisters, and paternal sisters.",
+    "The decrement section confirms that a direct daughter can reduce a son's daughter from one half to one sixth, and a full sister can similarly reduce a paternal sister."
+  ],
   "allImplementationConditionsAvailable": false,
   "missingImplementationConditions": [
-    "Complete blockers and descendant-level rules.",
-    "Coexistence with daughters and residuary conversion with male counterparts."
+    "Complete hajb priority and descendant-level handling for all four branches.",
+    "Executable coexistence and residuary-conversion rules."
   ],
-  "unresolvedInteractions": ["Hajb, descendant levels, coexistence, and residuary conversion."],
+  "unresolvedInteractions": [
+    "Hajb priority, descendant levels, coexistence, plurality, and residuary conversion."
+  ],
+  "sourceCorroborationComplete": true,
+  "implementationAdmissionBlocked": true,
   "readyForLaterAdmission": false,
-  "admissionReadinessExplanation": "The share and listed categories are manually checked in Kanz/al-Mahalli, but cross-source agreement and complete interaction rules are not available."
+  "admissionReadinessExplanation": "The share, categories, and stated conditions are corroborated, but the broad record still combines branches with distinct blockers and residuary interactions."
 }

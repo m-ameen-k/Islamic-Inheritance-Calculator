@@ -1,25 +1,51 @@
 {
   "comparisonId": "SOURCE-COMPARISON-20260803-KZ-FR-006",
   "ruleId": "KZ-FR-006",
-  "lifecycleStatus": "MANUALLY_CHECKED",
-  "comparisonStatus": "INCOMPLETE_SOURCE_CORROBORATION",
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_WITH_IMPLEMENTATION_GAPS",
   "executable": false,
   "kanzAlMahalliRecord": {
     "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
     "evidenceRecordIds": ["KZ-FR-006", "MANUAL-20260727-KZ-FR-006"],
-    "statement": "The reviewed Kanz/al-Mahalli record assigns one quarter to the husband when the deceased wife has a child or son's descendant, and to the wife category when the deceased husband has neither."
+    "locator": "Printed page 137; local PDF page 8.",
+    "statement": "The reviewed record assigns one quarter to the husband with a qualifying descendant and to the wife category without one."
   },
-  "khulasaSupport": {
-    "confirmedPropositions": [],
-    "limitation": "No Khulasa research record, exact wording, locator, or bibliographic catalog entry for this rule is present in the repository. No quotation or page reference can be supplied."
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locatorNotes": "references/source-notes/khulasa/fixed-share-locators.md",
+    "printedPages": [271, 272],
+    "visuallyConfirmed": true,
+    "statement": "The table assigns one quarter to the husband when a descendant exists and to the wife category when none exists."
   },
-  "shareAgreement": "UNDETERMINED_WITHOUT_REPOSITORY_KHULASA_EVIDENCE",
+  "fixedShareAgreement": {
+    "kanzAlMahalliShare": { "numerator": "1", "denominator": "4" },
+    "khulasaShare": { "numerator": "1", "denominator": "4" },
+    "agrees": true,
+    "detail": "Both Shafi‘i sources assign the exact fixed share 1/4."
+  },
+  "eligibleHeirCategoriesAgreement": {
+    "agrees": true,
+    "detail": "Both identify the husband and wife category."
+  },
+  "positiveConditionsAgreement": {
+    "agrees": true,
+    "detail": "Both distinguish the husband's descendant-present branch from the wife category's descendant-absent branch."
+  },
+  "exclusionsAgreement": {
+    "agrees": true,
+    "detail": "Each source excludes the opposite descendant condition for the corresponding spouse branch."
+  },
+  "extraClarificationsFromKhulasa": [
+    "The table presents the two spouse branches side by side and uses the descendant category as the controlling contrast."
+  ],
   "allImplementationConditionsAvailable": false,
   "missingImplementationConditions": [
-    "Collective division among multiple wives.",
-    "The precise descendant-generation input model."
+    "Collective apportionment among multiple wives.",
+    "The precise descendant-definition and generation mapping for executable inputs."
   ],
-  "unresolvedInteractions": ["Multiple-wife apportionment and descendant-generation handling."],
+  "unresolvedInteractions": ["Multiple-wife apportionment and descendant-definition handling."],
+  "sourceCorroborationComplete": true,
+  "implementationAdmissionBlocked": true,
   "readyForLaterAdmission": false,
-  "admissionReadinessExplanation": "The share branches are manually checked in Kanz/al-Mahalli, but cross-source agreement and complete implementation details are not available."
+  "admissionReadinessExplanation": "The share and spouse branches are corroborated, but collective wife apportionment and executable descendant modeling remain unresolved."
 }

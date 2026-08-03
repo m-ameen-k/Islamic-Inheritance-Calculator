@@ -1,25 +1,53 @@
 {
   "comparisonId": "SOURCE-COMPARISON-20260803-KZ-FR-009",
   "ruleId": "KZ-FR-009",
-  "lifecycleStatus": "MANUALLY_CHECKED",
-  "comparisonStatus": "INCOMPLETE_SOURCE_CORROBORATION",
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_WITH_IMPLEMENTATION_GAPS",
   "executable": false,
   "kanzAlMahalliRecord": {
     "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
     "evidenceRecordIds": ["KZ-FR-009", "MANUAL-20260727-KZ-FR-009"],
-    "statement": "The reviewed Kanz/al-Mahalli record assigns one third to the mother when there is no child, son's descendant, or two siblings, and collectively to two or more uterine siblings; it separates the grandfather continuation from the ordinary rule."
+    "locator": "Printed page 137; local PDF page 8.",
+    "statement": "The reviewed record assigns one third to the mother under the ordinary absence conditions and collectively to two or more uterine siblings."
   },
-  "khulasaSupport": {
-    "confirmedPropositions": [],
-    "limitation": "No Khulasa research record, exact wording, locator, or bibliographic catalog entry for this rule is present in the repository. No quotation or page reference can be supplied."
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locatorNotes": "references/source-notes/khulasa/fixed-share-locators.md",
+    "printedPages": [271, 272, 273],
+    "visuallyConfirmed": true,
+    "statement": "The table assigns one third to the mother without a descendant or plurality of siblings, and collectively to two or more uterine siblings."
   },
-  "shareAgreement": "UNDETERMINED_WITHOUT_REPOSITORY_KHULASA_EVIDENCE",
+  "fixedShareAgreement": {
+    "kanzAlMahalliShare": { "numerator": "1", "denominator": "3" },
+    "khulasaShare": { "numerator": "1", "denominator": "3" },
+    "agrees": true,
+    "detail": "Both Shafi‘i sources assign the exact fixed share 1/3 to the stated ordinary categories."
+  },
+  "eligibleHeirCategoriesAgreement": {
+    "agrees": true,
+    "detail": "Both identify the mother and two or more uterine siblings."
+  },
+  "positiveConditionsAgreement": {
+    "agrees": true,
+    "detail": "Both require no qualifying descendant and no plurality of siblings for the mother's ordinary branch, and plurality for uterine siblings."
+  },
+  "exclusionsAgreement": {
+    "agrees": true,
+    "detail": "Khulasa confirms descendant and sibling plurality as reductions for the mother and separately identifies remainder-third spouse-parent cases."
+  },
+  "extraClarificationsFromKhulasa": [
+    "The table separately identifies the mother's remainder-third cases with one spouse and the parents, preserving the Umariyyatayn boundary."
+  ],
   "allImplementationConditionsAvailable": false,
   "missingImplementationConditions": [
     "Exact sibling-count treatment, including siblings blocked from inheriting.",
-    "Complete conditions and priority for Umariyyatayn, Mushtarakah, and grandfather-with-siblings cases."
+    "Complete priority and execution rules for Umariyyatayn, Mushtarakah, and grandfather-with-siblings cases."
   ],
-  "unresolvedInteractions": ["Umariyyatayn, Mushtarakah, and grandfather-with-siblings."],
+  "unresolvedInteractions": [
+    "Umariyyatayn, Mushtarakah, sibling counting, and grandfather-with-siblings."
+  ],
+  "sourceCorroborationComplete": true,
+  "implementationAdmissionBlocked": true,
   "readyForLaterAdmission": false,
-  "admissionReadinessExplanation": "The ordinary clauses are manually checked in Kanz/al-Mahalli, but cross-source agreement and named special-case interactions are unresolved."
+  "admissionReadinessExplanation": "The ordinary one-third branches are corroborated, but Umariyyatayn and the other named interactions still block admission."
 }

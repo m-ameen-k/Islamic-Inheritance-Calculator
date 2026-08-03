@@ -2,7 +2,7 @@ import { defineCandidateRule } from "../rule-file";
 
 export const KZ_FR_009 = defineCandidateRule({
   ruleId: "KZ-FR-009",
-  lifecycleStatus: "MANUALLY_CHECKED",
+  lifecycleStatus: "SOURCE_CORROBORATED",
   executable: false,
   sourceReferences: [
     {
@@ -15,6 +15,11 @@ export const KZ_FR_009 = defineCandidateRule({
       sourceId: "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
       evidenceRecordId: "MANUAL-20260727-KZ-FR-009",
       locator: "references/review/manually-checked/KZ-FR-009.review.json",
+    },
+    {
+      sourceId: "KHULASAT_AL_FIQH_AL_ISLAMI",
+      evidenceRecordId: "KHULASA-FIXED-SHARE-LOCATORS",
+      locator: "references/source-notes/khulasa/fixed-share-locators.md; printed pages 271–273",
     },
   ],
   fixedShare: { numerator: "1", denominator: "3" },
