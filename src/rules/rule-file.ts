@@ -19,6 +19,11 @@ export const CANDIDATE_IMPLEMENTATION_READINESS_STATES = [
 export type CandidateImplementationReadinessState =
   (typeof CANDIDATE_IMPLEMENTATION_READINESS_STATES)[number];
 
+export const QUALIFYING_DESCENDANT_DEFINITION_REQUIRED =
+  "QUALIFYING_DESCENDANT_DEFINITION_REQUIRED" as const;
+
+export type QualifyingDescendantDependency = typeof QUALIFYING_DESCENDANT_DEFINITION_REQUIRED;
+
 export interface ExactRuleFraction {
   readonly numerator: string;
   readonly denominator: string;
@@ -61,6 +66,26 @@ export interface CandidateRuleFile extends RuleFileContents {
   readonly implementationReadiness: CandidateImplementationReadinessState;
 }
 
+export interface AtomicSpouseCandidateRuleFile extends CandidateRuleFile {
+  readonly parentResearchRuleId: string;
+  readonly parentResearchRecordRole: "RESEARCH_UMBRELLA_NOT_DIRECTLY_EXECUTABLE";
+  readonly spouseCategory: "HUSBAND" | "WIFE_GROUP";
+  readonly negativeConditions: readonly string[];
+  readonly qualifyingDescendantDependency: QualifyingDescendantDependency;
+  readonly collectiveShareBehavior:
+    | {
+        readonly scope: "INDIVIDUAL_HUSBAND";
+        readonly multipleWivesShareSameEstateFraction: false;
+      }
+    | {
+        readonly scope: "ALL_ELIGIBLE_WIVES_COLLECTIVELY";
+        readonly multipleWivesShareSameEstateFraction: true;
+        readonly equalDivisionRequired: true;
+      };
+  readonly perPersonApportionmentDependency:
+    "NOT_APPLICABLE_TO_SINGLE_HUSBAND" | "EQUAL_DIVISION_BY_ELIGIBLE_WIFE_COUNT_REQUIRED";
+}
+
 /** A production file is runtime eligible only when the manifest admits it. */
 export interface ProductionRuleFile extends RuleFileContents {
   readonly lifecycleStatus: "PRODUCTION";
@@ -69,6 +94,12 @@ export interface ProductionRuleFile extends RuleFileContents {
 }
 
 export function defineCandidateRule<const Rule extends CandidateRuleFile>(rule: Rule): Rule {
+  return rule;
+}
+
+export function defineAtomicSpouseCandidateRule<const Rule extends AtomicSpouseCandidateRuleFile>(
+  rule: Rule,
+): Rule {
   return rule;
 }
 
