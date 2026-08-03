@@ -7,7 +7,7 @@ export const KZ_FR_006_WIVES_ONE_QUARTER_FIXTURES = defineAtomicSpouseFixtures([
     relevantRuleId: "KZ-FR-006-WIVES-ONE-QUARTER",
     heirInputs: [{ category: "wife", count: 1 }],
     requiredConditions: ["No qualifying descendant is present."],
-    qualifyingDescendantState: "ABSENT",
+    descendantInputs: [],
     expectedExactFraction: { numerator: "1", denominator: "4" },
     wifeGroupApportionment: {
       collectiveExactFraction: { numerator: "1", denominator: "4" },
@@ -25,7 +25,7 @@ export const KZ_FR_006_WIVES_ONE_QUARTER_FIXTURES = defineAtomicSpouseFixtures([
       "No qualifying descendant is present.",
       "Two eligible wives divide the collective share equally.",
     ],
-    qualifyingDescendantState: "ABSENT",
+    descendantInputs: [],
     expectedExactFraction: { numerator: "1", denominator: "4" },
     wifeGroupApportionment: {
       collectiveExactFraction: { numerator: "1", denominator: "4" },
@@ -36,11 +36,29 @@ export const KZ_FR_006_WIVES_ONE_QUARTER_FIXTURES = defineAtomicSpouseFixtures([
     focus: "BOUNDARY_FOCUSED",
   },
   {
+    fixtureId: "KZ-FR-006-WIVES-ONE-QUARTER-BOUNDARY-FOUR-WIVES-COLLECTIVE",
+    relevantRuleId: "KZ-FR-006-WIVES-ONE-QUARTER",
+    heirInputs: [{ category: "wife", count: 4 }],
+    requiredConditions: [
+      "No qualifying descendant is present.",
+      "Four eligible wives divide the collective share equally.",
+    ],
+    descendantInputs: [],
+    expectedExactFraction: { numerator: "1", denominator: "4" },
+    wifeGroupApportionment: {
+      collectiveExactFraction: { numerator: "1", denominator: "4" },
+      numberOfWives: 4,
+      expectedEqualPerWifeFraction: { numerator: "1", denominator: "16" },
+    },
+    sourceReferences: KZ_FR_006_WIVES_ONE_QUARTER.sourceReferences,
+    focus: "BOUNDARY_FOCUSED",
+  },
+  {
     fixtureId: "KZ-FR-006-WIVES-ONE-QUARTER-NEG-WITH-QUALIFYING-DESCENDANT",
     relevantRuleId: "KZ-FR-006-WIVES-ONE-QUARTER",
     heirInputs: [{ category: "wife", count: 1 }],
     requiredConditions: ["A qualifying descendant is present, so the one-quarter condition fails."],
-    qualifyingDescendantState: "PRESENT",
+    descendantInputs: [{ heirId: "DESCENDANT-SONS-SON", type: "SONS_SON", count: 1 }],
     expectedExactFraction: { numerator: "0", denominator: "1" },
     wifeGroupApportionment: {
       collectiveExactFraction: { numerator: "0", denominator: "1" },

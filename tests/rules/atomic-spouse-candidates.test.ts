@@ -11,7 +11,7 @@ import { KZ_FR_006_HUSBAND_ONE_QUARTER } from "../../src/rules/candidates/KZ-FR-
 import { KZ_FR_006_WIVES_ONE_QUARTER } from "../../src/rules/candidates/KZ-FR-006-WIVES-ONE-QUARTER";
 import { KZ_FR_007_WIVES_ONE_EIGHTH } from "../../src/rules/candidates/KZ-FR-007-WIVES-ONE-EIGHTH";
 import {
-  QUALIFYING_DESCENDANT_DEFINITION_REQUIRED,
+  QUALIFYING_DESCENDANT_MODEL_ID,
   type AtomicSpouseCandidateRuleFile,
 } from "../../src/rules/rule-file";
 import { KZ_FR_005_HUSBAND_ONE_HALF_FIXTURES } from "../fixtures/candidates/KZ-FR-005-HUSBAND-ONE-HALF.fixtures";
@@ -111,13 +111,13 @@ describe("TECHNICAL_TEST: Stage 4B-2A atomic spouse candidates", () => {
     );
   });
 
-  it("keeps unresolved descendant modeling as a calculation-readiness blocker", () => {
+  it("resolves descendant modeling while keeping candidates non-executable before admission", () => {
     for (const candidate of ATOMIC_CANDIDATES) {
-      expect(candidate.qualifyingDescendantDependency).toBe(
-        QUALIFYING_DESCENDANT_DEFINITION_REQUIRED,
-      );
-      expect(candidate.blockingDependencies).toContain(QUALIFYING_DESCENDANT_DEFINITION_REQUIRED);
-      expect(candidate.implementationReadiness).toBe("INCOMPLETE");
+      expect(candidate.qualifyingDescendantDependency).toBe(QUALIFYING_DESCENDANT_MODEL_ID);
+      expect(candidate.blockingDependencies).toEqual([]);
+      expect(candidate.interactionDependencies).toEqual([]);
+      expect(candidate.unresolvedQuestions).toEqual([]);
+      expect(candidate.implementationReadiness).toBe("READY_FOR_ADMISSION_REVIEW");
       expect(candidate.lifecycleStatus).not.toBe("CALCULATION_READY");
       expect(candidate.executable).toBe(false);
     }
@@ -130,6 +130,7 @@ describe("TECHNICAL_TEST: Stage 4B-2A atomic spouse candidates", () => {
       expect(fixtures?.map((fixture) => fixture.fixtureId)).toEqual(candidate.fixtureIds);
       expect(fixtures?.some((fixture) => fixture.focus === "POSITIVE")).toBe(true);
       expect(fixtures?.some((fixture) => fixture.focus === "NEGATIVE")).toBe(true);
+      expect(fixtures?.some((fixture) => fixture.focus === "BOUNDARY_FOCUSED")).toBe(true);
       for (const fixture of fixtures ?? []) {
         expect(fixture.relevantRuleId).toBe(candidate.ruleId);
         expect(fraction(fixture.expectedExactFraction).toJSON()).toEqual(

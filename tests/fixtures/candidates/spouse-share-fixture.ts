@@ -1,4 +1,5 @@
 import type { SerializedFraction } from "../../../src/domain/fractions";
+import type { HeirInput } from "../../../src/domain/heirs";
 import type { CandidateRuleFixture } from "./candidate-fixture";
 
 export interface WifeGroupApportionmentExpectation {
@@ -8,7 +9,7 @@ export interface WifeGroupApportionmentExpectation {
 }
 
 export interface AtomicSpouseCandidateFixture extends CandidateRuleFixture {
-  readonly qualifyingDescendantState: "PRESENT" | "ABSENT";
+  readonly descendantInputs: readonly HeirInput[];
   readonly wifeGroupApportionment: WifeGroupApportionmentExpectation | null;
 }
 

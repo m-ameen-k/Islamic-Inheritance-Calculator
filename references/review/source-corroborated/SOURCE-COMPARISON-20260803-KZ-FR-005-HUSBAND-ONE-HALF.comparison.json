@@ -1,0 +1,13 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260803-KZ-FR-005-HUSBAND-ONE-HALF",
+  "ruleId": "KZ-FR-005-HUSBAND-ONE-HALF",
+  "parentComparisonId": "SOURCE-COMPARISON-20260803-KZ-FR-005",
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "sourceCorroborationComplete": true,
+  "sourceRecordIds": ["MANUAL-20260727-KZ-FR-005", "SOURCE-COMPARISON-20260803-KZ-FR-005"],
+  "shareAgreement": "Kanz/al-Mahalli and Khulasa agree on the husband's exact 1/2 share.",
+  "conditionAgreement": "The husband branch requires absence of a child or son's descendant.",
+  "executableConditionModel": "QUALIFYING_DESCENDANT",
+  "unresolvedInteractions": [],
+  "readyForAdmissionReview": true
+}

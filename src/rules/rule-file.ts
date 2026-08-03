@@ -22,7 +22,10 @@ export type CandidateImplementationReadinessState =
 export const QUALIFYING_DESCENDANT_DEFINITION_REQUIRED =
   "QUALIFYING_DESCENDANT_DEFINITION_REQUIRED" as const;
 
-export type QualifyingDescendantDependency = typeof QUALIFYING_DESCENDANT_DEFINITION_REQUIRED;
+export { QUALIFYING_DESCENDANT_MODEL_ID };
+
+export type QualifyingDescendantDependency =
+  typeof QUALIFYING_DESCENDANT_DEFINITION_REQUIRED | typeof QUALIFYING_DESCENDANT_MODEL_ID;
 
 export interface ExactRuleFraction {
   readonly numerator: string;
@@ -70,6 +73,7 @@ export interface AtomicSpouseCandidateRuleFile extends CandidateRuleFile {
   readonly parentResearchRuleId: string;
   readonly parentResearchRecordRole: "RESEARCH_UMBRELLA_NOT_DIRECTLY_EXECUTABLE";
   readonly spouseCategory: "HUSBAND" | "WIFE_GROUP";
+  readonly qualifyingDescendantCondition: "PRESENT" | "ABSENT";
   readonly negativeConditions: readonly string[];
   readonly qualifyingDescendantDependency: QualifyingDescendantDependency;
   readonly collectiveShareBehavior:
@@ -83,7 +87,22 @@ export interface AtomicSpouseCandidateRuleFile extends CandidateRuleFile {
         readonly equalDivisionRequired: true;
       };
   readonly perPersonApportionmentDependency:
-    "NOT_APPLICABLE_TO_SINGLE_HUSBAND" | "EQUAL_DIVISION_BY_ELIGIBLE_WIFE_COUNT_REQUIRED";
+    "NOT_APPLICABLE_TO_SINGLE_HUSBAND" | "EQUAL_DIVISION_BY_VALIDATED_ELIGIBLE_WIFE_COUNT";
+}
+
+export interface SpouseRuleEvaluationSpecification {
+  readonly ruleId: string;
+  readonly spouseCategory: "HUSBAND" | "WIFE_GROUP";
+  readonly qualifyingDescendantCondition: "PRESENT" | "ABSENT";
+  readonly fixedShare: ExactRuleFraction;
+  readonly sourceReferences: readonly RuleSourceReference[];
+}
+
+export interface ProductionSpouseRuleFile
+  extends ProductionRuleFile, SpouseRuleEvaluationSpecification {
+  readonly parentResearchRuleId: string;
+  readonly wifeGroupBehavior:
+    "NOT_APPLICABLE" | "VALIDATE_COUNT_AND_DIVIDE_COLLECTIVE_SHARE_EQUALLY";
 }
 
 /** A production file is runtime eligible only when the manifest admits it. */
@@ -106,3 +125,10 @@ export function defineAtomicSpouseCandidateRule<const Rule extends AtomicSpouseC
 export function defineProductionRule<const Rule extends ProductionRuleFile>(rule: Rule): Rule {
   return rule;
 }
+
+export function defineProductionSpouseRule<const Rule extends ProductionSpouseRuleFile>(
+  rule: Rule,
+): Rule {
+  return rule;
+}
+import { QUALIFYING_DESCENDANT_MODEL_ID } from "../domain/qualifying-descendant";
