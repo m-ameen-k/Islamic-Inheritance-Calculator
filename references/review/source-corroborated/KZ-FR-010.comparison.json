@@ -1,0 +1,56 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260803-KZ-FR-010",
+  "ruleId": "KZ-FR-010",
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_WITH_IMPLEMENTATION_GAPS",
+  "executable": false,
+  "kanzAlMahalliRecord": {
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "evidenceRecordIds": ["KZ-FR-010", "MANUAL-20260727-KZ-FR-010"],
+    "locator": "Printed page 138; local PDF page 9.",
+    "statement": "The reviewed record lists seven one-sixth categories with their compact triggering relationships."
+  },
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locatorNotes": "references/source-notes/khulasa/fixed-share-locators.md",
+    "printedPages": [271, 272, 273, 274],
+    "visuallyConfirmed": true,
+    "statement": "The table assigns one sixth to the same seven categories and supplies category-specific conditions, followed by decrement and blocking context."
+  },
+  "fixedShareAgreement": {
+    "kanzAlMahalliShare": { "numerator": "1", "denominator": "6" },
+    "khulasaShare": { "numerator": "1", "denominator": "6" },
+    "agrees": true,
+    "detail": "Both Shafi‘i sources assign the exact fixed share 1/6."
+  },
+  "eligibleHeirCategoriesAgreement": {
+    "agrees": true,
+    "detail": "Both list father, grandfather, mother, grandmother, son's daughter, paternal sister, and one uterine sibling."
+  },
+  "positiveConditionsAgreement": {
+    "agrees": true,
+    "detail": "The category-specific descendant, parent, sibling, and complement conditions agree without a detected conflict."
+  },
+  "exclusionsAgreement": {
+    "agrees": true,
+    "detail": "Khulasa confirms several blockers and decrement relationships, but does not turn the seven-category fraction record into one executable rule."
+  },
+  "extraClarificationsFromKhulasa": [
+    "The grandfather branch expressly requires the relevant descendant condition and absence of the father.",
+    "The table distinguishes the mother's descendant-or-sibling reduction, the son's-daughter complement with a direct daughter, the paternal-sister complement with a full sister, and the single uterine-sibling branch.",
+    "The following pages add decrement and general blocking context while leaving a full grandmother hierarchy outside this record."
+  ],
+  "allImplementationConditionsAvailable": false,
+  "missingImplementationConditions": [
+    "A complete executable grandmother hierarchy and category-specific hajb priority.",
+    "Complete descendant-generation and grandfather-with-siblings handling.",
+    "Separation of the seven categories into independently executable rules."
+  ],
+  "unresolvedInteractions": [
+    "Grandmother hierarchy, descendant generations, grandfather-with-siblings, and splitting the seven categories into separate candidate rules."
+  ],
+  "sourceCorroborationComplete": true,
+  "implementationAdmissionBlocked": true,
+  "readyForLaterAdmission": false,
+  "admissionReadinessExplanation": "The share, categories, and stated table conditions are corroborated, but this broad seven-category record must be split and completed before admission."
+}

@@ -1,0 +1,42 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Research-only blank template. This record is not verified and is not executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-009",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "chapter": "كتاب الفرائض",
+    "printedPages": [137],
+    "localPdfPages": [8],
+    "arabicExcerpt": "والثلث فرض أم ليس لميتها ولد ولا ولد ابن ولا اثنان من الإخوة والأخوات، وفرض اثنين فأكثر من ولد الأم.",
+    "sourceSummary": "One third is assigned to the mother under the stated absence conditions and collectively to two or more uterine siblings."
+  },
+  "review": {
+    "reviewId": "TEMPLATE-KZ-FR-009",
+    "extractedRuleId": "KZ-FR-009",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "reviewStatus": "EXTRACTED_NOT_VERIFIED",
+    "statusHistory": ["EXTRACTED_NOT_VERIFIED"],
+    "exactArabicChecked": false,
+    "printedPageChecked": false,
+    "localPdfPageChecked": false,
+    "chapterChecked": false,
+    "arabicCorrections": null,
+    "unresolvedWords": null,
+    "explicitConditions": null,
+    "explicitExclusions": null,
+    "explicitOutcome": null,
+    "reviewExplanation": null,
+    "inferredDetails": null,
+    "missingInformation": null,
+    "conflictingSources": null,
+    "reviewerName": null,
+    "reviewerRole": null,
+    "reviewDate": null,
+    "reviewerDecision": null,
+    "approvedCaseIds": [],
+    "implementationSpecification": null,
+    "notes": ""
+  }
+}

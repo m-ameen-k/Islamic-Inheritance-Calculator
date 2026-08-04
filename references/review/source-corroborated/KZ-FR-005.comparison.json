@@ -1,0 +1,53 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260803-KZ-FR-005",
+  "ruleId": "KZ-FR-005",
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_WITH_IMPLEMENTATION_GAPS",
+  "executable": false,
+  "kanzAlMahalliRecord": {
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "evidenceRecordIds": ["KZ-FR-005", "MANUAL-20260727-KZ-FR-005"],
+    "locator": "Printed page 136; local PDF page 7.",
+    "statement": "The reviewed record assigns one half to an eligible husband, single daughter, son's daughter, full sister, or paternal sister."
+  },
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locatorNotes": "references/source-notes/khulasa/fixed-share-locators.md",
+    "printedPages": [271, 272],
+    "visuallyConfirmed": true,
+    "statement": "The table assigns one half to the same five categories and supplies category-specific absence conditions."
+  },
+  "fixedShareAgreement": {
+    "kanzAlMahalliShare": { "numerator": "1", "denominator": "2" },
+    "khulasaShare": { "numerator": "1", "denominator": "2" },
+    "agrees": true,
+    "detail": "Both Shafi‘i sources assign the exact fixed share 1/2."
+  },
+  "eligibleHeirCategoriesAgreement": {
+    "agrees": true,
+    "detail": "Both list the husband, one daughter, one son's daughter, one full sister, and one paternal sister."
+  },
+  "positiveConditionsAgreement": {
+    "agrees": true,
+    "detail": "The husband's no-descendant condition and the singular female-category conditions agree."
+  },
+  "exclusionsAgreement": {
+    "agrees": true,
+    "detail": "No conflict appears; Khulasa makes several male-counterpart, descendant, sibling, and nearer-heir exclusions more explicit."
+  },
+  "extraClarificationsFromKhulasa": [
+    "The table distinguishes the absence conditions for each of the four female categories instead of treating singularity alone as sufficient."
+  ],
+  "allImplementationConditionsAvailable": false,
+  "missingImplementationConditions": [
+    "Complete hajb priority across the daughter, son's-daughter, full-sister, and paternal-sister branches.",
+    "Same-class plurality and residuary-conversion execution rules."
+  ],
+  "unresolvedInteractions": [
+    "Hajb priority, competing heirs, plurality, and residuary conversion."
+  ],
+  "sourceCorroborationComplete": true,
+  "implementationAdmissionBlocked": true,
+  "readyForLaterAdmission": false,
+  "admissionReadinessExplanation": "The share, categories, and stated conditions are corroborated, but the broad fraction record is not independently executable for every category."
+}

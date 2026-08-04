@@ -1,0 +1,58 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Research-only blank template. This record is not verified and is not executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-028",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "chapter": "كتاب الفرائض",
+    "printedPages": [153],
+    "localPdfPages": [24],
+    "arabicExcerpt": "والذي يعول منها: الستة إلى سبعة وإلى ثمانية وإلى تسعة وإلى عشرة، والاثنا عشر إلى ثلاثة عشر وإلى خمسة عشر وإلى سبعة عشر، والأربعة والعشرون إلى سبعة وعشرين.",
+    "sourceSummary": "Only the listed bases undergo awl to the listed adjusted totals."
+  },
+  "review": {
+    "reviewId": "MANUAL-20260727-KZ-FR-028",
+    "extractedRuleId": "KZ-FR-028",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "reviewStatus": "MANUALLY_CHECKED",
+    "statusHistory": ["EXTRACTED_NOT_VERIFIED", "MANUAL_SCAN_CHECK_PENDING", "MANUALLY_CHECKED"],
+    "exactArabicChecked": true,
+    "printedPageChecked": true,
+    "localPdfPageChecked": true,
+    "chapterChecked": true,
+    "arabicCorrections": [
+      {
+        "originalText": "",
+        "correctedText": "",
+        "note": "The source snapshot is a condensed statement, not one contiguous exact quotation: the visible printed page 153 intersperses worked examples between the listed awl endpoints. The confirmed endpoint sequence is: six to 7, 8, 9, or 10; twelve to 13, 15, or 17; and twenty-four to 27."
+      }
+    ],
+    "unresolvedWords": [],
+    "explicitConditions": [
+      "A fixed-share problem has an original case base whose allocated numerators exceed that base, and the base is one of the three listed origins that undergo awl."
+    ],
+    "explicitExclusions": [
+      "This review confirms only the listed awl-capable origins and endpoints. It does not approve any fiqh eligibility decision that produces the numerators."
+    ],
+    "explicitOutcome": [
+      "Confirmed awl expansions: 6 → 7/8/9/10; 12 → 13/15/17; 24 → 27."
+    ],
+    "reviewExplanation": "The page visibly states the three awl-capable origins and provides examples for the endpoints. The technical denominator adjustment remains separate from deciding which heirs and shares apply.",
+    "inferredDetails": [
+      "The arrow notation is a structured representation of the explicitly stated Arabic sequence, not a quotation."
+    ],
+    "missingInformation": [
+      "Scholar-approved inheritance fixtures for every endpoint and confirmation of all example heirs before fiqh execution."
+    ],
+    "conflictingSources": [],
+    "reviewerName": "OpenAI GPT-5.6 Thinking",
+    "reviewerRole": "AI visual transcription assistant; manual scan comparison only; not a qualified Shafi'i scholar",
+    "reviewDate": "2026-07-27",
+    "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED",
+    "approvedCaseIds": [],
+    "implementationSpecification": null,
+    "notes": "Visually checked against printed page 153 / local PDF page 24. This record is not VERIFIED and is not executable."
+  }
+}

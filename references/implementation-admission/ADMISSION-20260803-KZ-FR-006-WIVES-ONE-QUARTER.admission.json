@@ -1,0 +1,27 @@
+{
+  "admissionRecordId": "ADMISSION-20260803-KZ-FR-006-WIVES-ONE-QUARTER",
+  "ruleId": "KZ-FR-006-WIVES-ONE-QUARTER",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260803-KZ-FR-006-WIVES-ONE-QUARTER",
+  "reviewRecordIds": [
+    "MANUAL-20260727-KZ-FR-006",
+    "SOURCE-COMPARISON-20260803-KZ-FR-006-WIVES-ONE-QUARTER"
+  ],
+  "fixtureIds": [
+    "KZ-FR-006-WIVES-ONE-QUARTER-POS-ONE-WIFE-NO-QUALIFYING-DESCENDANT",
+    "KZ-FR-006-WIVES-ONE-QUARTER-BOUNDARY-TWO-WIVES-COLLECTIVE",
+    "KZ-FR-006-WIVES-ONE-QUARTER-BOUNDARY-FOUR-WIVES-COLLECTIVE",
+    "KZ-FR-006-WIVES-ONE-QUARTER-NEG-WITH-QUALIFYING-DESCENDANT"
+  ],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "Admitted for wife counts 1 through 4 with exact equal division of the collective quarter. Invalid counts and unnormalized descendant lineage fail closed."
+}

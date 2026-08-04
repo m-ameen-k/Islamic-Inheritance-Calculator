@@ -1,0 +1,58 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Research-only blank template. This record is not verified and is not executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-027",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "chapter": "كتاب الفرائض",
+    "printedPages": [152, 153],
+    "localPdfPages": [23, 24],
+    "arabicExcerpt": "فمخرج النصف اثنان، والثلث ثلاثة، والربع أربعة، والسدس ستة، والثمن ثمانية ... فالأصول سبعة: اثنان وثلاثة وأربعة وستة وثمانية واثنا عشر وأربعة وعشرون.",
+    "sourceSummary": "The text lists the denominator origins and the seven standard case origins, then applies tamathul, tadakhul, tawafuq, and tabayun."
+  },
+  "review": {
+    "reviewId": "MANUAL-20260727-KZ-FR-027",
+    "extractedRuleId": "KZ-FR-027",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "reviewStatus": "MANUALLY_CHECKED",
+    "statusHistory": ["EXTRACTED_NOT_VERIFIED", "MANUAL_SCAN_CHECK_PENDING", "MANUALLY_CHECKED"],
+    "exactArabicChecked": true,
+    "printedPageChecked": true,
+    "localPdfPageChecked": true,
+    "chapterChecked": true,
+    "arabicCorrections": [
+      {
+        "originalText": "",
+        "correctedText": "",
+        "note": "The source snapshot is a stitched summary containing an ellipsis, not one contiguous exact quotation. Exact visible segments are: «فمخرج النصف: اثنان، والثلث: ثلاثة، والربع: أربعة، والسدس: ستة، والثمن: ثمانية» (printed page 152), and «فالأصول سبعة: اثنان وثلاثة وأربعة وستة وثمانية واثنا عشر وأربعة وعشرون» (printed page 153)."
+      }
+    ],
+    "unresolvedWords": [],
+    "explicitConditions": [
+      "Applied when deriving a problem's أصل from one or more fixed-share denominators. The surrounding text distinguishes تماثل، تداخل، توافق، and تباين."
+    ],
+    "explicitExclusions": [
+      "The extracted record does not transcribe the complete algorithms and examples for all denominator relationships."
+    ],
+    "explicitOutcome": [
+      "The visible denominators are 2, 3, 4, 6, and 8, and the seven listed case origins are 2, 3, 4, 6, 8, 12, and 24."
+    ],
+    "reviewExplanation": "The numerical claims are visually confirmed, but the original excerpt must be treated as two cited segments rather than a single verbatim quotation.",
+    "inferredDetails": [
+      "No mathematical rule beyond the explicitly listed origins is admitted by this review."
+    ],
+    "missingInformation": [
+      "A complete exact transcription and structured specification of تماثل، تداخل، توافق، and تباين with their worked examples."
+    ],
+    "conflictingSources": [],
+    "reviewerName": "OpenAI GPT-5.6 Thinking",
+    "reviewerRole": "AI visual transcription assistant; manual scan comparison only; not a qualified Shafi'i scholar",
+    "reviewDate": "2026-07-27",
+    "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED",
+    "approvedCaseIds": [],
+    "implementationSpecification": null,
+    "notes": "Visually checked against printed pages 152–153 / local PDF pages 23–24. This record is not VERIFIED and is not executable."
+  }
+}

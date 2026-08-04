@@ -1,99 +1,123 @@
-# ⚖️ Fara'id — علم الفرائض
+# علم الفرائض
+# Islamic Inheritance Calculator
 
-### Islamic Inheritance Calculator (Shafi'i School)
+## Purpose
 
-![Version](https://img.shields.io/badge/version-2.0-brightgreen)
-![JavaScript](https://img.shields.io/badge/JS-ES6%2B-yellow)
-![License](https://img.shields.io/badge/license-MIT-blue)
+This project is a source-corroborated Shafi‘i inheritance-calculator system under active technical development. It focuses on translating classical Shafi‘i jurisprudence into verifiable, exact computational rules backed by formal source comparison and automated regression tests.
 
-> **Accurate, educational, and feature‑rich web app for calculating inheritance shares according to Shafi'i Fara'id rules.**
+This project is an educational and research-oriented software implementation. It is not complete, legally authoritative, scholar-certified, or ready for final estate distribution.
 
----
+## Current Status
 
-## ✨ Upgraded Features
+- **Protected rule-corpus architecture:** Implemented with strict boundaries separating evidence, candidates, and production code.
+- **Evidence separation:** Research evidence, source extractions, and comparison records are isolated from executable production rules.
+- **Admitted production rules:** Four atomic spouse-share rules are currently admitted to the production manifest and registry.
+- **Exact rational arithmetic:** Built using BigInt rational arithmetic to prevent floating-point rounding errors.
+- **Domain models:** Qualifying-descendant and wife-group domain models are fully implemented.
+- **Coverage evaluation:** Spouse-scope coverage evaluation is implemented to gate engine execution safely.
+- **Public calculator UI:** Remains disabled while supported-case execution is being completed.
+- **Isolated legacy engine:** The legacy JavaScript engine (`js/engine.js`) is isolated and must not be used as the trusted calculator.
 
-- ✅ **25 heirs** – including emancipators.
-- 🚫 **Complete Hajb (blocking)** – son blocks grandson, father blocks siblings, etc.
-- 📐 **Awl (العول)** – automatic when shares exceed base.
-- 🔄 **Radd (الرد)** – surplus returned when no `Asaba`.
-- 👵 **Umariyyatayn (العمريتان)** – spouse + parents (no siblings) → mother gets ⅓ of remainder.
-- 📊 **Tashih (التصحيح)** – scales shares to remove fractions.
-- 💡 **Interactive Asaba explanation** – click any “عصبة” label for a popup rule (English, Arabic, Malayalam).
-- 📖 **Detailed Asl steps** – shows _Tamathul_, _Tadakhul_, _Tawafuq_, or _Tabayun_.
-- 💰 **Asset inputs** – cash, gold/silver (weight/price or total), property, debts, Zakat, bequest.
-- 🌐 **Live metal prices** – fetch gold/silver price in any currency.
-- 🌍 **Multi‑language** – English, العربية, മലയാളം.
-- 🌓 **Dark / Light mode** + auto system preference.
-- 💱 **Currency selector** – INR, USD, SAR, AED, GBP.
-- 📘 **Educational tab** – explains Hajb, Awl, Radd, etc.
-- 📱 **Fully responsive** – mobile, tablet, desktop.
-- 🧮 **Strict integer math** – no floating‑point errors.
+## Currently Admitted Spouse Rules
 
----
+The production registry currently admits exactly four atomic spouse-share rules derived from *Kanz al-Raghibin*:
 
-## 🚀 Live Demo
+- **Husband (1/2):** Husband receives a 1/2 share when there is no qualifying descendant.
+- **Husband (1/4):** Husband receives a 1/4 share when there is a qualifying descendant.
+- **Wife Group (1/4):** Wife group collectively receives a 1/4 share when there is no qualifying descendant.
+- **Wife Group (1/8):** Wife group collectively receives a 1/8 share when there is a qualifying descendant.
 
-GitHub Pages:  
-https://m-ameen-k.github.io/Islamic-Inheritance-Calculator/
+Eligible wives (1–4) share their collective fraction (1/4 or 1/8) equally.
 
----
+Non-spouse rules (including descendants, parents, grandparents, siblings, residuary/‘asabah shares, *‘awl*, *radd*, and *Bayt al-Mal*) are not yet admitted to production.
 
-## 📂 Project Structure
+## Source Policy
+
+Source roles within the repository:
+
+- **Kanz al-Raghibin / al-Mahalli:** Primary detailed Shafi‘i computational source.
+- **Khulasat al-Fiqh al-Islami:** Trusted Shafi‘i corroborating instructional source.
+- **Fath al-Mu‘in:** Supporting Shafi‘i source.
+- **Singapore MUIS / Syariah Court brochure:** Educational and jurisdictional context only.
+
+Trusted books may be authoritative, while extraction, domain structuring, software implementation, and engine behavior still require checking.
+
+## Safety Architecture
+
+The safety architecture enforces strict governance:
+
+- **One rule per file:** Each candidate and production rule exists in its own isolated file.
+- **Candidate and production separation:** Non-production candidate rules in `src/rules/candidates/` cannot be executed by the production engine.
+- **Explicit production manifest:** `src/rules/production-manifest.json` defines the sole allow-list of admitted production rules.
+- **Generated production registry:** `src/rules/generated/production-registry.ts` is mechanically generated from the manifest.
+- **Integrity hashes:** Production rule files are validated via SHA-256 byte hashes in the manifest.
+- **Exact fixtures:** Each admitted rule must pass source-derived positive, negative, and boundary test fixtures.
+- **Coverage gating:** Engine execution fails safely if a case requires rules outside the admitted production set.
+- **No implicit candidate execution:** Candidate rules are never executed implicitly.
+
+## Languages
+
+The interface supports three main languages with bilingual primary/secondary pairings:
+
+- **English main → Arabic secondary** on major bilingual headings.
+- **Arabic main → English secondary** on major bilingual headings.
+- **Malayalam main → Arabic secondary** on major bilingual headings.
+- **Permanent branding:** `علم الفرائض — Islamic Inheritance Calculator` remains fixed across all languages.
+
+Normal helper text and controls remain single-language.
+
+## Development Commands
+
+All development commands correspond directly to `package.json` scripts:
+
+```bash
+# Install dependencies
+npm install
+
+# Run complete verification suite
+npm run check
+
+# Run tests via Vitest
+npm run test
+
+# Type-check TypeScript files
+npm run typecheck
+
+# Lint source files
+npm run lint
+
+# Verify production manifest integrity and file hashes
+npm run verify:production-manifest
+
+# Generate production registry from manifest
+npm run generate:production-registry
+```
+
+## Repository Structure
 
 ```text
 Islamic-Inheritance-Calculator/
-|
-├── index.html       # ONLY the HTML structure
-├── README.md        # Your excellent documentation
-|
-├── css/
-|   └── style.css    # ONLY the CSS
-|
-└── js/
-    ├── data.js      # ONLY the HEIRS list
-    ├── engine.js    # ONLY the Math logic
-    └── app.js       # ONLY UI logic
+├── docs/                 # Architectural governance, admission policy, and roadmap docs
+├── references/           # Immutable source extractions, manual reviews, and comparison records
+├── scripts/              # Manifest verification and registry generation scripts
+├── src/
+│   ├── rules/
+│   │   ├── candidates/   # Candidate rules under development
+│   │   ├── production/   # Admitted production rules (one rule per file)
+│   │   └── generated/    # Mechanically generated production registry
+│   ├── domain/           # Core domain models (fractions, heirs, case coverage)
+│   └── engine/           # Execution engine pipeline and verification
+├── tests/                # Unit tests, rule fixtures, and architecture safety tests
+├── index.html            # Calculator web interface structure
+├── css/                  # Interface styles
+└── js/                   # Frontend UI logic and isolated legacy engine
 ```
----
 
-## 🧪 Example Cases
+## Limitations
 
-| Case                                   | Heirs                                                                                     | Shares                        |
-| -------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------- |
-| Husband, 1 daughter, father            | Husband ¼, daughter ½, father ¼ (asaba)                                                   | Asl = 4                       |
-| Wife, mother, 2 full sisters           | Wife ¼, mother ⅙, sisters ⅔                                                               | Awl from 12 → 13              |
-| Only husband and mother                | Husband ½, mother ⅓, remainder to mother (Radd)                                           | Asl = 6 → husband 3, mother 4 |
-| Spouse + father + mother (no siblings) | Umariyyatayn: husband ½ → remainder ½ → mother gets ⅓ of remainder (1/6), father the rest | Asl = 6                       |
+- The public calculator UI is intentionally disabled while supported-case execution is being completed.
+- Unsupported or disputed cases must not produce guessed results.
 
----
+## Disclaimer
 
-## 🔧 How to Use
-
-1. Select **deceased gender**.
-2. Enter **estate details**.
-3. Choose **Madhab** (Shafi'i only for now).
-4. Tap **heirs** to add them.
-5. Click **Calculate** – view shares, blocked heirs, base problem steps, and monetary values.
-6. Click on **عصبة** labels to learn why a heir becomes a residuary.
-
----
-
-## 🔒 Disclaimer
-
-⚠️ **Educational only.** Always consult a qualified scholar before dividing real inheritance.
-
----
-
-## 🤝 Contributing
-
-Contributions welcome – open an issue or pull request.
-
----
-
-## 📜 License
-
-MIT – free to use, modify, and share with attribution.
-
----
-
-**🌟 Star this repo if you find it useful!**
+This project is an educational and research-oriented implementation of Shafi‘i inheritance rules. It is not a replacement for qualified scholarly or legal review in actual estate administration.

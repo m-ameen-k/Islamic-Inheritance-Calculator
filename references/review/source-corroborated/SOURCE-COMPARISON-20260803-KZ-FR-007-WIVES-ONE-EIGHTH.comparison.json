@@ -1,0 +1,14 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260803-KZ-FR-007-WIVES-ONE-EIGHTH",
+  "ruleId": "KZ-FR-007-WIVES-ONE-EIGHTH",
+  "parentComparisonId": "SOURCE-COMPARISON-20260803-KZ-FR-007",
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "sourceCorroborationComplete": true,
+  "sourceRecordIds": ["MANUAL-20260727-KZ-FR-007", "SOURCE-COMPARISON-20260803-KZ-FR-007"],
+  "shareAgreement": "Kanz/al-Mahalli and Khulasa agree on the wife group's collective exact 1/8 share.",
+  "conditionAgreement": "The wife-group branch requires presence of a child or son's descendant.",
+  "executableConditionModel": "QUALIFYING_DESCENDANT",
+  "wifeGroupModel": "Counts 1 through 4 are validated and the collective share is divided equally with exact rational arithmetic.",
+  "unresolvedInteractions": [],
+  "readyForAdmissionReview": true
+}

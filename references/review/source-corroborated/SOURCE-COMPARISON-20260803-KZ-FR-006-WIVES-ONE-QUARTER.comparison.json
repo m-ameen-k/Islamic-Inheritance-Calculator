@@ -1,0 +1,14 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260803-KZ-FR-006-WIVES-ONE-QUARTER",
+  "ruleId": "KZ-FR-006-WIVES-ONE-QUARTER",
+  "parentComparisonId": "SOURCE-COMPARISON-20260803-KZ-FR-006",
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "sourceCorroborationComplete": true,
+  "sourceRecordIds": ["MANUAL-20260727-KZ-FR-006", "SOURCE-COMPARISON-20260803-KZ-FR-006"],
+  "shareAgreement": "Kanz/al-Mahalli and Khulasa agree on the wife group's collective exact 1/4 share.",
+  "conditionAgreement": "The wife-group branch requires absence of a child or son's descendant.",
+  "executableConditionModel": "QUALIFYING_DESCENDANT",
+  "wifeGroupModel": "Counts 1 through 4 are validated and the collective share is divided equally with exact rational arithmetic.",
+  "unresolvedInteractions": [],
+  "readyForAdmissionReview": true
+}
