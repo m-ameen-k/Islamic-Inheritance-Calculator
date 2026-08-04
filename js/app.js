@@ -149,7 +149,7 @@ function applyLang(){
   const pair=getLanguagePair(lang);
   document.documentElement.lang=pair.primaryLanguage;
   document.documentElement.dir=pair.primaryDirection;
-  document.title=getPrimaryText("page_title",lang).text;
+  document.title="Islamic Inheritance Calculator";
   document.querySelectorAll("[data-i]").forEach(el=>{
     const k=el.getAttribute("data-i");
     applyResolvedText(el,getPrimaryText(k,lang));
@@ -230,7 +230,7 @@ function getAfterDebts(){return Math.max(0,getGross()-fv("debts")-fv("zakat"));}
 function getWasiyyah(ad){
   const wi=fv("wasiyyah"); if(!wi) return 0;
   const max=ad/3, consent=document.getElementById("was_con").checked, w=document.getElementById("wasWarn");
-  if(!consent&&wi>max){ if(w){ w.style.display="block"; setBilingualText(w,"was_warn",{m:formatAmount(max)}); } return max; }
+  if(!consent&&wi>max){ if(w){ w.style.display="block"; applyResolvedText(w,getPrimaryText("was_warn",lang),{m:formatAmount(max)}); } return max; }
   if(w) w.style.display="none"; return wi;
 }
 
@@ -263,24 +263,14 @@ function resolveHeirText(h,requestedLanguage){
   return {text:h.en,requestedLanguage,resolvedLanguage:"en",direction:"ltr",fallbackUsed:true,missingKey:`heir.${h.id}`};
 }
 
-function getBilingualHeirText(h,mainLanguage=lang){
-  const pair=getLanguagePair(mainLanguage);
-  return {
-    primary:resolveHeirText(h,pair.primaryLanguage),
-    secondary:resolveHeirText(h,pair.secondaryLanguage)
-  };
-}
-
 function hn(h){
-  return getBilingualHeirText(h).primary.text;
+  return resolveHeirText(h,lang).text;
 }
 
 function updateCaseSummary(gross=getGross(),net=getNet()){
-  const pair=getLanguagePair(lang);
   const selectedHeirs=HEIRS
     .filter(h=>(sel[h.id]||0)>0)
-  const selectedPrimary=selectedHeirs.map(h=>`${resolveHeirText(h,pair.primaryLanguage).text}${h.max>1?` × ${sel[h.id]}`:""}`);
-  const selectedSecondary=selectedHeirs.map(h=>`${resolveHeirText(h,pair.secondaryLanguage).text}${h.max>1?` × ${sel[h.id]}`:""}`);
+  const selected=selectedHeirs.map(h=>`${resolveHeirText(h,lang).text}${h.max>1?` × ${sel[h.id]}`:""}`);
   const missingKeys=[];
   if(!gender) missingKeys.push("missing_gender");
   if(gross<=0) missingKeys.push("missing_estate");
@@ -289,31 +279,15 @@ function updateCaseSummary(gross=getGross(),net=getNet()){
   document.getElementById("reviewGross").textContent=formatAmount(gross);
   document.getElementById("reviewDeductions").textContent=formatAmount(Math.max(0,gross-net));
   document.getElementById("reviewEstate").textContent=formatAmount(net);
-  const selectedPrimaryText=selectedPrimary.length
-    ? {text:selectedPrimary.join(", "),requestedLanguage:pair.primaryLanguage,resolvedLanguage:pair.primaryLanguage,direction:pair.primaryDirection,fallbackUsed:false,missingKey:null}
+  const selectedText=selected.length
+    ? {text:selected.join(", "),requestedLanguage:lang,resolvedLanguage:lang,direction:lang==="ar"?"rtl":"ltr",fallbackUsed:false,missingKey:null}
     : getPrimaryText("none_selected",lang);
-  const selectedSecondaryText=selectedSecondary.length
-    ? {text:selectedSecondary.join(", "),requestedLanguage:pair.secondaryLanguage,resolvedLanguage:pair.secondaryLanguage,direction:pair.secondaryDirection,fallbackUsed:false,missingKey:null}
-    : getSecondaryText("none_selected",lang);
-  setBilingualResolvedText(
-    document.getElementById("selectedHeirsSummary"),
-    selectedPrimaryText,
-    selectedSecondaryText
-  );
+  applyResolvedText(document.getElementById("selectedHeirsSummary"),selectedText);
   if(missingKeys.length){
-    const primaryItems=missingKeys.map(key=>resolveText(key,pair.primaryLanguage).text).join(", ");
-    const secondaryItems=missingKeys.map(key=>resolveText(key,pair.secondaryLanguage).text).join(", ");
-    setBilingualResolvedText(
-      document.getElementById("caseCompleteness"),
-      getPrimaryText("add_missing",lang),
-      getSecondaryText("add_missing",lang),
-      {items:primaryItems}
-    );
-    const secondaryLine=document.getElementById("caseCompleteness").querySelector(".bilingual-secondary");
-    applyResolvedText(secondaryLine,getSecondaryText("add_missing",lang),{items:secondaryItems});
-    secondaryLine.setAttribute("aria-hidden","true");
+    const items=missingKeys.map(key=>resolveText(key,lang).text).join(", ");
+    applyResolvedText(document.getElementById("caseCompleteness"),getPrimaryText("add_missing",lang),{items});
   }else{
-    setBilingualText(document.getElementById("caseCompleteness"),"case_entered");
+    applyResolvedText(document.getElementById("caseCompleteness"),getPrimaryText("case_entered",lang));
   }
 }
 
@@ -374,8 +348,8 @@ function renderHeirs(){
     }
     card.className="hcard"+(c>0?" sel":"")+(show?"":" hide");
     card.id="hc-"+h.id;
-    const heirText=getBilingualHeirText(h);
-    card.innerHTML=`<span class="hn" lang="${heirText.primary.resolvedLanguage}" dir="${heirText.primary.direction}">${heirText.primary.text}</span><span class="har" aria-hidden="true" lang="${heirText.secondary.resolvedLanguage}" dir="${heirText.secondary.direction}">${heirText.secondary.text}</span>`+
+    const heirText=resolveHeirText(h,lang);
+    card.innerHTML=`<span class="hn" lang="${heirText.resolvedLanguage}" dir="${heirText.direction}">${heirText.text}</span>`+
       (h.max>1?`<div class="ctr"><button class="cb" data-id="${h.id}" data-d="-1">−</button><span class="cn2" id="cn-${h.id}">${c||""}</span><button class="cb" data-id="${h.id}" data-d="1">+</button></div>`:"");
     
     if(h.max===1) card.addEventListener("click",()=>{
@@ -427,8 +401,8 @@ window.showAsaba = function(titleEnc, descEnc) {
 function updateLearn(){
   const lc=document.getElementById("learnContent");
   const key=madhab==="hanafi"?"learn_ha":"learn_sh";
-  const text=getBilingualText(key,lang);
-  lc.innerHTML=`<div class="learn-card"><div class="bilingual-primary" lang="${text.primary.resolvedLanguage}" dir="${text.primary.direction}">${text.primary.text}</div><div class="bilingual-secondary" aria-hidden="true" lang="${text.secondary.resolvedLanguage}" dir="${text.secondary.direction}">${text.secondary.text}</div></div>`;
+  const text=getPrimaryText(key,lang);
+  lc.innerHTML=`<div class="learn-card" lang="${text.resolvedLanguage}" dir="${text.direction}">${text.text}</div>`;
 }
 
 document.querySelectorAll(".tab").forEach(tab=>tab.addEventListener("click",()=>{

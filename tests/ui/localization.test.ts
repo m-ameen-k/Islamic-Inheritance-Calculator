@@ -32,6 +32,7 @@ interface BilingualText {
 interface LocalizationApi {
   readonly getLanguagePair: (language: string) => Omit<BilingualText, "primary" | "secondary">;
   readonly getBilingualText: (key: string, language: string) => BilingualText;
+  readonly getPrimaryText: (key: string, language: string) => ResolvedText;
   readonly loadMainLanguage: (storage: StorageLike) => string;
   readonly saveMainLanguage: (storage: StorageLike, language: string) => void;
   readonly storageKey: string;
@@ -44,7 +45,7 @@ interface StorageLike {
 
 function loadLocalizationApi(): LocalizationApi {
   return runInNewContext(
-    `${DATA_SOURCE}\n({ getLanguagePair, getBilingualText, loadMainLanguage, saveMainLanguage, storageKey: MAIN_LANGUAGE_STORAGE_KEY })`,
+    `${DATA_SOURCE}\n({ getLanguagePair, getBilingualText, getPrimaryText, loadMainLanguage, saveMainLanguage, storageKey: MAIN_LANGUAGE_STORAGE_KEY })`,
     {},
   ) as LocalizationApi;
 }
@@ -115,13 +116,10 @@ describe("TECHNICAL_TEST: deterministic bilingual UI localization", () => {
     expect(malayalam.secondary.resolvedLanguage).toBe("ar");
   });
 
-  it("updates dynamic resolver output immediately when the main language changes", () => {
-    const sequence = ["en", "ar", "ml"].map((language) =>
-      localization.getBilingualText("cash", language),
-    );
-
-    expect(sequence.map((value) => value.primary.text)).toEqual(["Cash", "نقد", "പണം"]);
-    expect(sequence.map((value) => value.secondary.text)).toEqual(["نقد", "Cash", "نقد"]);
+  it("uses the selected language only for ordinary UI text", () => {
+    expect(localization.getPrimaryText("cash", "en").text).toBe("Cash");
+    expect(localization.getPrimaryText("cash", "ar").text).toBe("نقد");
+    expect(localization.getPrimaryText("cash", "ml").text).toBe("പണം");
   });
 
   it("persists only the selected main language and always derives the secondary language", () => {
@@ -138,29 +136,26 @@ describe("TECHNICAL_TEST: deterministic bilingual UI localization", () => {
     expect([...storage.values.keys()]).toEqual(["faraid-language"]);
   });
 
-  it("uses explicit English fallback metadata instead of fabricating missing translations", () => {
-    const english = localization.getBilingualText("gross_estate", "en");
-    const arabic = localization.getBilingualText("gross_estate", "ar");
-
-    expect(english.secondary).toMatchObject({
-      text: "Gross estate",
-      requestedLanguage: "ar",
-      resolvedLanguage: "en",
-      direction: "ltr",
-      fallbackUsed: true,
-      missingKey: "gross_estate",
-    });
-    expect(arabic.primary).toMatchObject({
-      text: "Gross estate",
-      requestedLanguage: "ar",
-      resolvedLanguage: "en",
-      fallbackUsed: true,
-    });
-    expect(arabic.secondary).toMatchObject({
-      text: "Gross estate",
-      requestedLanguage: "en",
-      fallbackUsed: false,
-    });
+  it("keeps bilingual rendering limited to explicitly marked structural headings", () => {
+    const bilingualKeys = [...HTML_SOURCE.matchAll(/data-bilingual="([^"]+)"/g)].map(
+      (match) => match[1],
+    );
+    expect(bilingualKeys).toEqual([
+      "s_dec",
+      "s_est",
+      "s_mad",
+      "s_heir",
+      "s_res",
+      "group_spouse",
+      "group_descendants",
+      "group_parents",
+      "group_siblings",
+      "group_extended",
+    ]);
+    expect(HTML_SOURCE).not.toMatch(
+      /data-bilingual="(?:gross_estate|calc_disabled|payment_soon|support_project)"/,
+    );
+    expect(APP_SOURCE).not.toContain("getBilingualHeirText");
   });
 
   it("applies document and per-line language metadata through the centralized renderer", () => {
@@ -182,7 +177,15 @@ describe("TECHNICAL_TEST: deterministic bilingual UI localization", () => {
 
   it("keeps the calculation action disabled while localizing its visible status", () => {
     expect(HTML_SOURCE).toMatch(/<button[^>]*id="calcBtn"[^>]*\bdisabled\b/);
-    expect(HTML_SOURCE).toContain('data-bilingual="calc_disabled"');
-    expect(HTML_SOURCE).toContain('data-bilingual="calc_disabled_reason"');
+    expect(HTML_SOURCE).toContain('data-i="calc_disabled"');
+    expect(HTML_SOURCE).toContain('data-i="calc_disabled_reason"');
+  });
+
+  it("preserves the permanent brand lockup without localization markers", () => {
+    expect(HTML_SOURCE).toContain(
+      '<div class="logo-main">علم الفرائض <span>Islamic Inheritance Calculator</span></div>',
+    );
+    expect(HTML_SOURCE).not.toContain('class="logo-ar"');
+    expect(HTML_SOURCE).not.toMatch(/class="logo-main"[^>]*data-i/);
   });
 });

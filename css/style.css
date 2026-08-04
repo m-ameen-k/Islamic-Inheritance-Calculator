@@ -128,15 +128,8 @@ body {
   text-align: left;
 }
 
-.sl :where(.bilingual-primary, .bilingual-secondary),
-.tab :where(.bilingual-primary, .bilingual-secondary),
-.gbtn :where(.bilingual-primary, .bilingual-secondary),
-.mbtn :where(.bilingual-primary, .bilingual-secondary) {
+.sl :where(.bilingual-primary, .bilingual-secondary) {
   text-align: center;
-}
-
-.status-label[data-bilingual] {
-  flex-direction: column;
 }
 
 input[type="number"],

@@ -104,10 +104,22 @@ Object.assign(T.en, {
 });
 
 Object.assign(T.ar, {
-  page_title:"علم الفرائض",
   page_intro:T.ar.calc_disabled,
   total_estate:"إجمالي التركة",
+  estate_help:"أدخل المبلغ الكامل إن كان معروفًا، أو اتركه فارغًا لإجمالي الأصول أدناه.",
+  build_assets:"إنشاء الإجمالي من الأصول", optional:"اختياري",
+  build_assets_help:"استخدم هذا التفصيل فقط إذا لم تدخل إجمالي التركة أعلاه.",
+  calculate_weight_rate:"الحساب من الوزن والسعر", calculate_property_area:"حساب قيمة العقار من المساحة",
+  debts_zakat:"الديون والزكاة غير المدفوعة", unsupported_funeral:"لا تُدخل تكاليف التجهيز والدفن هنا لأن سير العمل لا يمكنه تطبيقها بأمان حاليًا.",
+  bequest_details:"تفاصيل الوصية", other_madhabs:"مذاهب أخرى (غير مطبقة)", not_implemented:"غير مطبق", verification_progress:"التحقق جارٍ.",
+  group_spouse:"الزوج أو الزوجة", group_descendants:"الأبناء والأحفاد", group_parents:"الوالدان والأجداد", group_siblings:"الإخوة والأخوات", group_extended:"الأقارب البعيدون",
   review:"مراجعة",
+  gross_estate:"إجمالي التركة", supported_deductions:"الخصومات المدعومة", current_net:"الصافي الحالي", selected_heirs:"الورثة المختارون", incomplete_information:"معلومات غير مكتملة", verification_status:"حالة التحقق", under_verification:"قيد التحقق",
+  report_options:"خيارات التقرير", amount_symbol:"رمز المبلغ", amount_symbol_help:"يُستخدم لتنسيق المبالغ المعروضة فقط ولا يغيّر القيمة.",
+  detailed_verification:"شرح التحقق التفصيلي", detailed_verification_text:"واجهة إعداد الحالة متاحة للمراجعة، لكن لا يجوز حساب نتيجة أو استخدامها لتوزيع تركة حتى يكتمل التحقق العلمي من قواعد المذهب الشافعي.",
+  support_project:"ادعم هذا المشروع", payment_soon:"سيتم إعداد روابط الدفع قريبًا.", calculator_status:"حالة الحاسبة: غير متاحة", none_selected:"لم يُختر شيء", case_entered:"تم إدخال معلومات الحالة.", add_missing:"أضف {items}.", missing_gender:"المتوفى", missing_estate:"التركة", missing_heirs:"الورثة",
+  total_gold_value:"إجمالي قيمة الذهب", total_silver_value:"إجمالي قيمة الفضة", total_property_value:"إجمالي قيمة العقار", weight:"الوزن", manual_rate:"السعر اليدوي للوحدة", area:"المساحة", value:"القيمة", other_asset_value:"قيمة الأصول الأخرى", gold_weight:"وزن الذهب", silver_weight:"وزن الفضة", gold_weight_unit:"وحدة وزن الذهب", silver_weight_unit:"وحدة وزن الفضة", gold_rate_unit:"سعر الذهب للوحدة", silver_rate_unit:"سعر الفضة للوحدة", property_area:"مساحة العقار", property_area_unit:"وحدة مساحة العقار", property_rate_unit:"سعر العقار للوحدة", wasiyyah_bequest:"مبلغ الوصية", scroll_top:"التمرير إلى الأعلى", scroll_bottom:"التمرير إلى الأسفل", close_dialog:"إغلاق النافذة",
+  theme_system_label:"المظهر: النظام. فعّل للوضع الفاتح.", theme_light_label:"المظهر: فاتح. فعّل للوضع الداكن.", theme_dark_label:"المظهر: داكن. فعّل لوضع النظام.", theme_system_title:"اتباع مظهر النظام", theme_light_title:"استخدام المظهر الفاتح", theme_dark_title:"استخدام المظهر الداكن",
   shafii_name:"شافعي",
   hanafi_name:"حنفي",
   maliki_name:"مالكي",
@@ -115,7 +127,8 @@ Object.assign(T.ar, {
 });
 
 Object.assign(T.ml, {
-  page_intro:T.ml.calc_disabled
+  page_intro:T.ml.calc_disabled,
+  total_estate:"ആകെ സ്വത്ത് തുക", estate_help:"അറിയാമെങ്കിൽ മുഴുവൻ തുകയും നൽകുക; ആസ്തികളിൽ നിന്ന് ആകെ കണക്കാക്കാൻ ഇത് ഒഴിച്ചിടുക.", build_assets:"ആസ്തികളിൽ നിന്ന് ആകെ തുക കണക്കാക്കുക", optional:"ഐച്ഛികം", build_assets_help:"മുകളിൽ ആകെ സ്വത്ത് തുക നൽകുന്നില്ലെങ്കിൽ മാത്രം ഈ വിശദാംശങ്ങൾ ഉപയോഗിക്കുക.", calculate_weight_rate:"ഭാരവും നിരക്കും ഉപയോഗിച്ച് കണക്കാക്കുക", calculate_property_area:"വിസ്തീർണ്ണത്തിൽ നിന്ന് വസ്തുവില കണക്കാക്കുക", debts_zakat:"കടങ്ങളും നൽകാത്ത സകാത്തും", unsupported_funeral:"ശവസംസ്കാര, ഒരുക്കച്ചെലവുകൾ ഇവിടെ നൽകുന്നില്ല; നിലവിലെ പ്രവർത്തനക്രമത്തിൽ അവ സുരക്ഷിതമായി പ്രയോഗിക്കാൻ കഴിയില്ല.", bequest_details:"വസിയ്യത്ത് വിശദാംശങ്ങൾ", shafii_name:"ശാഫിഈ", hanafi_name:"ഹനഫി", maliki_name:"മാലികി", hanbali_name:"ഹൻബലി", other_madhabs:"മറ്റ് മദ്ഹബുകൾ (നടപ്പിലാക്കിയിട്ടില്ല)", not_implemented:"നടപ്പിലാക്കിയിട്ടില്ല", verification_progress:"പരിശോധന പുരോഗമിക്കുന്നു.", group_spouse:"ഭാര്യ / ഭർത്താവ്", group_descendants:"മക്കളും പൗത്രന്മാരും", group_parents:"മാതാപിതാക്കളും മുത്തശ്ശന്മാരും", group_siblings:"സഹോദരങ്ങൾ", group_extended:"മറ്റു ബന്ധുക്കൾ", review:"അവലോകനം", gross_estate:"ആകെ സ്വത്ത്", supported_deductions:"പിന്തുണയ്ക്കുന്ന കിഴിവുകൾ", current_net:"നിലവിലെ അറ്റ തുക", selected_heirs:"തിരഞ്ഞെടുത്ത അവകാശികൾ", incomplete_information:"അപൂർണ്ണമായ വിവരങ്ങൾ", verification_status:"പരിശോധനാ നില", under_verification:"പരിശോധനയിലാണ്", report_options:"റിപ്പോർട്ട് ഓപ്ഷനുകൾ", amount_symbol:"തുകയുടെ ചിഹ്നം", amount_symbol_help:"പ്രദർശിപ്പിക്കുന്ന തുകകൾ രൂപപ്പെടുത്താൻ മാത്രം; മൂല്യം മാറ്റില്ല.", detailed_verification:"വിശദ പരിശോധനാ വിശദീകരണം", detailed_verification_text:"കേസ് തയ്യാറാക്കൽ ഇന്റർഫേസ് അവലോകനത്തിനായി ലഭ്യമാണ്, എന്നാൽ ശാഫിഈ നിയമസമുച്ചയത്തിന്റെ പണ്ഡിതപരിശോധന പൂർത്തിയാകുന്നതുവരെ ഫലം കണക്കാക്കാനോ സ്വത്ത് വിതരണം ചെയ്യാൻ ഉപയോഗിക്കാനോ പാടില്ല.", support_project:"ഈ പദ്ധതിയെ പിന്തുണയ്ക്കുക", payment_soon:"പേയ്മെന്റ് ലിങ്കുകൾ ഉടൻ ക്രമീകരിക്കും.", calculator_status:"കാൽക്കുലേറ്റർ നില: ലഭ്യമല്ല", none_selected:"ഒന്നും തിരഞ്ഞെടുത്തിട്ടില്ല", case_entered:"കേസ് വിവരങ്ങൾ നൽകി.", add_missing:"{items} ചേർക്കുക.", missing_gender:"മരിച്ചയാൾ", missing_estate:"സ്വത്ത്", missing_heirs:"അവകാശികൾ", total_gold_value:"ആകെ സ്വർണ വില", total_silver_value:"ആകെ വെള്ളി വില", total_property_value:"ആകെ വസ്തു വില", weight:"ഭാരം", manual_rate:"യൂണിറ്റിന് മാനുവൽ നിരക്ക്", area:"വിസ്തീർണ്ണം", value:"മൂല്യം", other_asset_value:"മറ്റ് ആസ്തികളുടെ മൂല്യം", gold_weight:"സ്വർണ ഭാരം", silver_weight:"വെള്ളി ഭാരം", gold_weight_unit:"സ്വർണ ഭാര യൂണിറ്റ്", silver_weight_unit:"വെള്ളി ഭാര യൂണിറ്റ്", gold_rate_unit:"യൂണിറ്റിന് സ്വർണ നിരക്ക്", silver_rate_unit:"യൂണിറ്റിന് വെള്ളി നിരക്ക്", property_area:"വസ്തു വിസ്തീർണ്ണം", property_area_unit:"വിസ്തീർണ്ണ യൂണിറ്റ്", property_rate_unit:"യൂണിറ്റിന് വസ്തു നിരക്ക്", wasiyyah_bequest:"വസിയ്യത്ത് തുക", scroll_top:"മുകളിലേക്ക് സ്ക്രോൾ ചെയ്യുക", scroll_bottom:"താഴേക്ക് സ്ക്രോൾ ചെയ്യുക", close_dialog:"ഡയലോഗ് അടയ്ക്കുക", theme_system_label:"തീം: സിസ്റ്റം. ലൈറ്റ് തീമിന് സജീവമാക്കുക.", theme_light_label:"തീം: ലൈറ്റ്. ഡാർക്ക് തീമിന് സജീവമാക്കുക.", theme_dark_label:"തീം: ഡാർക്ക്. സിസ്റ്റം തീമിന് സജീവമാക്കുക.", theme_system_title:"സിസ്റ്റം തീം പിന്തുടരുക", theme_light_title:"ലൈറ്റ് തീം ഉപയോഗിക്കുക", theme_dark_title:"ഡാർക്ക് തീം ഉപയോഗിക്കുക"
 });
 
 // Remove bilingual text embedded inside a single translation value. Visible
