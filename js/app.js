@@ -149,7 +149,7 @@ function applyLang(){
   const pair=getLanguagePair(lang);
   document.documentElement.lang=pair.primaryLanguage;
   document.documentElement.dir=pair.primaryDirection;
-  document.title="Islamic Inheritance Calculator";
+  document.title="Fara'id — علم الفرائض";
   document.querySelectorAll("[data-i]").forEach(el=>{
     const k=el.getAttribute("data-i");
     applyResolvedText(el,getPrimaryText(k,lang));
