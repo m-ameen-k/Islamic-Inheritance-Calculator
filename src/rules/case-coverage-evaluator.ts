@@ -9,6 +9,14 @@ import {
 import { HEIR_TYPES, type HeirInput, type HeirType } from "../domain/heirs";
 import { Fraction, sumFractions } from "../domain/fractions";
 import {
+  AWL_RULE_ID,
+  deriveAwlDenominator,
+  deriveOriginalAsl,
+  isAwlEndpointAdmitted,
+  isOriginalAslAdmitted,
+  ORIGINAL_ASL_RULE_ID,
+} from "../engine/exact-case-bases";
+import {
   QUALIFYING_DESCENDANT_CATEGORIES,
   evaluateQualifyingDescendant,
 } from "../domain/qualifying-descendant";
@@ -413,13 +421,8 @@ export function evaluateWholeCaseCoverage(
   const exactly = (...types: readonly HeirType[]): boolean =>
     activeTypes.length === types.length && types.every((type) => activeTypes.includes(type));
   const husbandUmari = exactly("HUSBAND", "MOTHER", "FATHER");
-  const wifeUmari = exactly("WIFE", "MOTHER", "FATHER") && count("WIFE") === 1;
-  if (exactly("WIFE", "MOTHER", "FATHER") && count("WIFE") > 1) {
-    return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
-      ...base,
-      reasons: ["UMARIYYATAYN_MULTIPLE_WIVES_NOT_ADMITTED"],
-    });
-  }
+  const wifeUmari = exactly("WIFE", "MOTHER", "FATHER");
+  const multipleWifeUmari = wifeUmari && count("WIFE") > 1;
 
   const requiredRuleIds: string[] = [];
   const fixedShares: Fraction[] = [];
@@ -438,7 +441,11 @@ export function evaluateWholeCaseCoverage(
   }
   if (husbandUmari || wifeUmari) {
     requiredRuleIds.push(
-      husbandUmari ? "KZ-FR-015-HUSBAND-MOTHER-FATHER" : "KZ-FR-015-WIFE-MOTHER-FATHER",
+      husbandUmari
+        ? "KZ-FR-015-HUSBAND-MOTHER-FATHER"
+        : multipleWifeUmari
+          ? "KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER"
+          : "KZ-FR-015-WIFE-MOTHER-FATHER",
     );
     fixedShares.push(husbandUmari ? new Fraction(1n, 6n) : new Fraction(1n, 4n));
     fixedShares.push(husbandUmari ? new Fraction(1n, 3n) : new Fraction(1n, 2n));
@@ -477,14 +484,40 @@ export function evaluateWholeCaseCoverage(
     }
   }
 
-  const fixedTotal = sumFractions(fixedShares);
-  if (fixedTotal.compare(Fraction.ONE) > 0) {
+  requiredRuleIds.push(ORIGINAL_ASL_RULE_ID);
+  const productionIds = new Set(corpus.rules.map((rule) => rule.ruleId));
+  const originalAsl = deriveOriginalAsl(fixedShares);
+  if (
+    !productionIds.has(ORIGINAL_ASL_RULE_ID) ||
+    !isOriginalAslAdmitted(originalAsl, corpus.rules)
+  ) {
     return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
       ...base,
-      requiredRuleIds,
-      reasons: ["AWL_RULE_NOT_ADMITTED"],
-      requiresAwl: true,
+      requiredRuleIds: [...new Set(requiredRuleIds)],
+      reasons: [`RULE_NOT_ADMITTED:${ORIGINAL_ASL_RULE_ID}`],
     });
+  }
+
+  const fixedTotal = sumFractions(fixedShares);
+  if (fixedTotal.compare(Fraction.ONE) > 0) {
+    requiredRuleIds.push(AWL_RULE_ID);
+    const awlDenominator = deriveAwlDenominator(fixedShares, originalAsl);
+    if (
+      awlDenominator === null ||
+      !productionIds.has(AWL_RULE_ID) ||
+      !isAwlEndpointAdmitted(originalAsl, awlDenominator, corpus.rules)
+    ) {
+      return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
+        ...base,
+        requiredRuleIds: [...new Set(requiredRuleIds)],
+        reasons: [
+          awlDenominator === null
+            ? "AWL_ENDPOINT_INVALID"
+            : `AWL_ENDPOINT_NOT_ADMITTED:${originalAsl}->${awlDenominator}`,
+        ],
+        requiresAwl: true,
+      });
+    }
   }
   if (!hasResiduary && fixedTotal.compare(Fraction.ONE) < 0) {
     if (input.remainderPolicy === null) {
@@ -520,7 +553,6 @@ export function evaluateWholeCaseCoverage(
     );
   }
 
-  const productionIds = new Set(corpus.rules.map((rule) => rule.ruleId));
   const missingRuleIds = [...new Set(requiredRuleIds)].filter((id) => !productionIds.has(id));
   if (missingRuleIds.length > 0) {
     return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
@@ -533,5 +565,6 @@ export function evaluateWholeCaseCoverage(
     ...base,
     requiredRuleIds: [...new Set(requiredRuleIds)],
     supportedRuleIds: [...new Set(requiredRuleIds)],
+    requiresAwl: fixedTotal.compare(Fraction.ONE) > 0,
   });
 }

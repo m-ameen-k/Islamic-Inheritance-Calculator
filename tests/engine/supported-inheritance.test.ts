@@ -173,7 +173,7 @@ describe("SOURCE_DERIVED_TEST: exact supported direct-family executor", () => {
     expect(result.allocations[0]?.exactAmountMinorUnits).toBe("6000");
   });
 
-  it("rejects unsupported heirs, unresolved facts, and awl before calculating", () => {
+  it("rejects unsupported heirs and unresolved facts before calculating", () => {
     const unsupported = evaluateWholeCaseCoverage({
       deceasedSex: "MALE",
       heirs: heirs([
@@ -202,15 +202,75 @@ describe("SOURCE_DERIVED_TEST: exact supported direct-family executor", () => {
         input([["SON", 1]], { unresolvedFacts: ["pregnancyUncertainty"] }),
       ),
     ).toThrow(UnsupportedInheritanceCaseError);
-    expect(() =>
-      calculateSupportedInheritance(
-        input([
-          ["HUSBAND", 1],
-          ["MOTHER", 1],
-          ["DAUGHTER", 2],
+  });
+
+  it.each([
+    [
+      "12 to 13",
+      [
+        ["HUSBAND", 1],
+        ["MOTHER", 1],
+        ["DAUGHTER", 2],
+      ],
+      "12",
+      "13",
+      { HUSBAND: "3/13", MOTHER: "2/13", DAUGHTER: "8/13" },
+    ],
+    [
+      "12 to 15",
+      [
+        ["HUSBAND", 1],
+        ["MOTHER", 1],
+        ["FATHER", 1],
+        ["DAUGHTER", 2],
+      ],
+      "12",
+      "15",
+      { HUSBAND: "1/5", MOTHER: "2/15", FATHER: "2/15", DAUGHTER: "8/15" },
+    ],
+    [
+      "24 to 27",
+      [
+        ["WIFE", 1],
+        ["MOTHER", 1],
+        ["FATHER", 1],
+        ["DAUGHTER", 2],
+      ],
+      "24",
+      "27",
+      { WIFE: "1/9", MOTHER: "4/27", FATHER: "4/27", DAUGHTER: "16/27" },
+    ],
+  ] as const)(
+    "applies direct-family awl %s exactly",
+    (_name, caseHeirs, original, adjusted, expected) => {
+      const result = calculateSupportedInheritance(input(caseHeirs));
+      expect(result.originalAsl).toBe(original);
+      expect(result.awlDetails?.adjustedDenominator).toBe(adjusted);
+      expect(shares(result)).toEqual(expected);
+      expect(result.appliedProductionRuleIds).toContain("KZ-FR-027-ORIGINAL-ASL");
+      expect(result.appliedProductionRuleIds).toContain("KZ-FR-028-AWL-ADJUSTMENT");
+      expect(result.explanationSteps).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ kind: "ASL", ruleIds: ["KZ-FR-027-ORIGINAL-ASL"] }),
+          expect.objectContaining({ kind: "AWL", ruleIds: ["KZ-FR-028-AWL-ADJUSTMENT"] }),
         ]),
-      ),
-    ).toThrowError(expect.objectContaining({ message: "AWL_RULE_NOT_ADMITTED" }));
+      );
+    },
+  );
+
+  it.each([2, 4])("supports the Umariyyatayn with %i wives as an exact wife group", (wifeCount) => {
+    const result = calculateSupportedInheritance(
+      input([
+        ["WIFE", wifeCount],
+        ["MOTHER", 1],
+        ["FATHER", 1],
+      ]),
+    );
+    expect(shares(result)).toEqual({ WIFE: "1/4", MOTHER: "1/4", FATHER: "1/2" });
+    expect(
+      result.allocations.find((allocation) => allocation.heirType === "WIFE")?.perPersonFraction,
+    ).toEqual({ numerator: "1", denominator: String(4 * wifeCount) });
+    expect(result.appliedProductionRuleIds).toContain("KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER");
   });
 
   it("derives educational steps, fractions, rule IDs, and sources from the result", () => {

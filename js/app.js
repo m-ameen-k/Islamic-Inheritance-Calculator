@@ -566,11 +566,14 @@ function renderCalculationResult(result){
   document.getElementById("ctag").replaceChildren(uiElement("span","ctag tnorm",result.calculationType));
   const metrics=document.getElementById("metrics");
   metrics.replaceChildren();
-  for(const [value,label] of [
+  const resultMetrics=[
     [formatMinorUnits(result.netDistributableEstateMinorUnits),getPrimaryText("current_net",lang).text],
     [result.calculationType,getPrimaryText("calculation_type",lang).text],
+    [result.originalAsl,"أصل المسألة"],
     [result.correctedDenominator,getPrimaryText("corrected_denominator",lang).text]
-  ]){
+  ];
+  if(result.awlDetails) resultMetrics.splice(3,0,[result.awlDetails.adjustedDenominator,"عول denominator"]);
+  for(const [value,label] of resultMetrics){
     const card=uiElement("div","mc");card.append(uiElement("div","mv",value),uiElement("div","ml",label));metrics.appendChild(card);
   }
   const sharesList=document.getElementById("sharesList");sharesList.replaceChildren();
@@ -591,7 +594,9 @@ function renderCalculationResult(result){
   hajb.replaceChildren(uiElement("p","learn-card",getPrimaryText("no_blk",lang).text));
   const asl=document.getElementById("aslDetail");asl.replaceChildren();
   const aslBox=uiElement("div","learn-card");
-  aslBox.append(uiElement("p","",getPrimaryText("asl_unavailable",lang).text),uiElement("p","code-like",`${getPrimaryText("working_denominator",lang).text}: ${result.workingDenominator}`),uiElement("p","code-like",`${getPrimaryText("corrected_denominator",lang).text}: ${result.correctedDenominator}`));
+  aslBox.append(uiElement("p","code-like",`أصل المسألة: ${result.originalAsl}`));
+  if(result.awlDetails) aslBox.appendChild(uiElement("p","code-like",`العول: ${result.awlDetails.originalAsl} → ${result.awlDetails.adjustedDenominator}`));
+  aslBox.append(uiElement("p","code-like",`${getPrimaryText("working_denominator",lang).text}: ${result.workingDenominator}`),uiElement("p","code-like",`${getPrimaryText("corrected_denominator",lang).text}: ${result.correctedDenominator}`));
   asl.appendChild(aslBox);
   const assets=document.getElementById("assetsDetail");assets.replaceChildren();
   const assetCard=uiElement("div","learn-card");

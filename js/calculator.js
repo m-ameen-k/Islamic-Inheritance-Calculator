@@ -143,6 +143,45 @@
 		}));
 	}
 	//#endregion
+	//#region src/engine/exact-case-bases.ts
+	var ORIGINAL_ASL_RULE_ID = "KZ-FR-027-ORIGINAL-ASL";
+	var AWL_RULE_ID = "KZ-FR-028-AWL-ADJUSTMENT";
+	function productionRule$30(rules, ruleId) {
+		return rules.find((rule) => rule.ruleId === ruleId && rule.lifecycleStatus === "PRODUCTION" && rule.executable);
+	}
+	function stringArray(value) {
+		return Array.isArray(value) && value.every((item) => typeof item === "string") ? value : [];
+	}
+	function executionSpecification(rule) {
+		const value = rule.executionSpecification;
+		return value !== null && typeof value === "object" && !Array.isArray(value) ? value : {};
+	}
+	function deriveOriginalAsl(fixedShares) {
+		return fixedShares.reduce((origin, share) => leastCommonMultiple(origin, share.denominator), 1n);
+	}
+	function isOriginalAslAdmitted(originalAsl, rules) {
+		const rule = productionRule$30(rules, ORIGINAL_ASL_RULE_ID);
+		if (rule === void 0) return false;
+		const specification = executionSpecification(rule);
+		if (originalAsl === 1n) return specification.noFixedShareIdentity === "1";
+		return stringArray(specification.allowedFixedShareOrigins).includes(originalAsl.toString());
+	}
+	function originalSaham(share, originalAsl) {
+		if (originalAsl % share.denominator !== 0n) throw new RangeError("A fixed-share denominator does not divide the original asl.");
+		return share.numerator * (originalAsl / share.denominator);
+	}
+	function deriveAwlDenominator(fixedShares, originalAsl) {
+		const sum = fixedShares.reduce((total, share) => total + originalSaham(share, originalAsl), 0n);
+		return sum > originalAsl ? sum : null;
+	}
+	function isAwlEndpointAdmitted(originalAsl, awlDenominator, rules) {
+		const rule = productionRule$30(rules, AWL_RULE_ID);
+		if (rule === void 0) return false;
+		const endpoints = executionSpecification(rule).allowedEndpoints;
+		if (endpoints === null || typeof endpoints !== "object" || Array.isArray(endpoints)) return false;
+		return stringArray(endpoints[originalAsl.toString()]).includes(awlDenominator.toString());
+	}
+	//#endregion
 	//#region src/domain/heirs.ts
 	/**
 	* Relationship identifiers only. This list does not imply eligibility, a
@@ -225,6 +264,14 @@
 			kanz: "Printed page 142; local PDF page 13.",
 			khulasa: "Printed page 270, including footnote 10."
 		},
+		"KZ-FR-027": {
+			kanz: "Printed pages 152–153; local PDF pages 23–24.",
+			khulasa: "Printed page 279; fixed-share denominator/origin table."
+		},
+		"KZ-FR-028": {
+			kanz: "Printed page 153; local PDF page 24.",
+			khulasa: "Printed pages 281–283; awl statement and eight worked tables."
+		},
 		"KZ-FR-029": {
 			kanz: "Printed pages 154–156; local PDF pages 25–27.",
 			khulasa: "Printed pages 284–288; exact case correction."
@@ -234,21 +281,26 @@
 		return parentRuleId === "KZ-FR-009" || parentRuleId === "KZ-FR-010" ? parentRuleId : `SOURCE-COMPARISON-20260809-${parentRuleId}`;
 	}
 	function defineDirectFamilyProductionRule(rule) {
-		const comparisonId = sourceComparisonId(rule.parentResearchRuleId);
+		const comparisonId = rule.sourceComparisonId ?? sourceComparisonId(rule.parentResearchRuleId);
 		const locators = LOCATORS[rule.parentResearchRuleId];
+		const { additionalSourceReferences = [], ...definition } = rule;
 		return defineProductionRule({
-			...rule,
+			...definition,
 			lifecycleStatus: "PRODUCTION",
 			executable: true,
-			sourceReferences: [{
-				sourceId: "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
-				evidenceRecordId: rule.parentResearchRuleId,
-				locator: locators.kanz
-			}, {
-				sourceId: "KHULASAT_AL_FIQH_AL_ISLAMI",
-				evidenceRecordId: comparisonId,
-				locator: locators.khulasa
-			}],
+			sourceReferences: [
+				{
+					sourceId: "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+					evidenceRecordId: rule.parentResearchRuleId,
+					locator: locators.kanz
+				},
+				{
+					sourceId: "KHULASAT_AL_FIQH_AL_ISLAMI",
+					evidenceRecordId: comparisonId,
+					locator: locators.khulasa
+				},
+				...additionalSourceReferences
+			],
 			admissionRecordId: `ADMISSION-20260809-${rule.ruleId}`
 		});
 	}
@@ -831,6 +883,48 @@
 			fixtureIds: ["KZ-FR-015-HUSBAND-MOTHER-FATHER-POS", "KZ-FR-015-HUSBAND-MOTHER-FATHER-NEG"]
 		}),
 		defineDirectFamilyProductionRule({
+			ruleId: "KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER",
+			parentResearchRuleId: "KZ-FR-015",
+			sourceComparisonId: "SOURCE-COMPARISON-20260809-KZ-FR-015-MULTIPLE-WIVES-UMARIYYATAYN",
+			additionalSourceReferences: [{
+				sourceId: "KHULASAT_AL_FIQH_AL_ISLAMI",
+				evidenceRecordId: "SOURCE-COMPARISON-20260803-KZ-FR-006-WIVES-ONE-QUARTER",
+				locator: "Printed pages 271–272; admitted collective wife-group quarter for counts 1 through 4."
+			}],
+			atomicRuleKind: "UMARIYYATAYN",
+			conditions: ["The complete supported heir set is two, three, or four eligible wives, mother, and father.", "No descendant or other heir is present."],
+			exclusions: ["One wife uses the singular-wife atom.", "Invalid wife counts are excluded."],
+			priority: {
+				value: 20,
+				rationale: "The named case precedes ordinary parent rules."
+			},
+			interactionsOrBlockers: ["Apply the admitted collective wives' quarter, then give the mother one third of the remainder."],
+			outcomeSpecification: "Wives collectively receive 1/4, mother receives 1/4, and father receives 1/2.",
+			executionSpecification: {
+				originalAsl: "4",
+				wifeCountMinimum: "2",
+				wifeCountMaximum: "4",
+				wives: {
+					numerator: "1",
+					denominator: "4"
+				},
+				mother: {
+					numerator: "1",
+					denominator: "4"
+				},
+				father: {
+					numerator: "1",
+					denominator: "2"
+				}
+			},
+			fixtureIds: [
+				"KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER-POS-TWO-WIVES",
+				"KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER-POS-FOUR-WIVES",
+				"KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER-NEG-ONE-WIFE",
+				"KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER-NEG-ADDITIONAL-HEIR"
+			]
+		}),
+		defineDirectFamilyProductionRule({
 			ruleId: "KZ-FR-015-WIFE-MOTHER-FATHER",
 			parentResearchRuleId: "KZ-FR-015",
 			atomicRuleKind: "UMARIYYATAYN",
@@ -858,6 +952,90 @@
 				}
 			},
 			fixtureIds: ["KZ-FR-015-WIFE-MOTHER-FATHER-POS", "KZ-FR-015-WIFE-MOTHER-FATHER-NEG"]
+		}),
+		defineDirectFamilyProductionRule({
+			ruleId: "KZ-FR-027-ORIGINAL-ASL",
+			parentResearchRuleId: "KZ-FR-027",
+			atomicRuleKind: "CASE_ORIGIN",
+			conditions: ["All admitted fixed shares for the case have already been assigned.", "Their denominators produce one of the seven source-listed origins."],
+			exclusions: ["This atom does not decide heir eligibility or shares.", "Floating-point and rounded-decimal arithmetic are excluded."],
+			priority: {
+				value: 150,
+				rationale: "Derive أصل المسألة before awl or tashih."
+			},
+			interactionsOrBlockers: ["Use exact least-common-multiple arithmetic over fixed-share denominators."],
+			outcomeSpecification: "Return the exact original case denominator.",
+			executionSpecification: {
+				arithmetic: "BIGINT_ONLY",
+				operation: "LCM_OF_FIXED_SHARE_DENOMINATORS",
+				allowedFixedShareOrigins: [
+					"2",
+					"3",
+					"4",
+					"6",
+					"8",
+					"12",
+					"24"
+				],
+				noFixedShareIdentity: "1"
+			},
+			fixtureIds: [
+				"KZ-FR-027-ORIGINAL-ASL-SOURCE-SEVEN-ORIGINS",
+				"KZ-FR-027-ORIGINAL-ASL-POS-LCM-SIX",
+				"KZ-FR-027-ORIGINAL-ASL-POS-LCM-TWENTY-FOUR",
+				"KZ-FR-027-ORIGINAL-ASL-NEG-UNLISTED-FIVE"
+			]
+		}),
+		defineDirectFamilyProductionRule({
+			ruleId: "KZ-FR-028-AWL-ADJUSTMENT",
+			parentResearchRuleId: "KZ-FR-028",
+			atomicRuleKind: "AWL_ADJUSTMENT",
+			conditions: [
+				"The exact original asl is 6, 12, or 24.",
+				"The admitted fixed-share saham exceed the original asl.",
+				"The resulting endpoint is one of the eight source-corroborated pairs."
+			],
+			exclusions: [
+				"This atom does not decide eligibility or fixed shares.",
+				"Unlisted origins and endpoints are rejected.",
+				"Floating-point and rounded-decimal arithmetic are excluded."
+			],
+			priority: {
+				value: 160,
+				rationale: "Apply after original-asl derivation and before tashih."
+			},
+			interactionsOrBlockers: ["Preserve every original integer saham and replace the denominator by their exact sum.", "No positive residue remains after awl."],
+			outcomeSpecification: "Adjust every fixed share exactly by the source-enumerated awl denominator.",
+			executionSpecification: {
+				arithmetic: "BIGINT_ONLY",
+				operation: "PRESERVE_SAHAM_REPLACE_DENOMINATOR_WITH_SAHAM_SUM",
+				allowedEndpoints: {
+					"6": [
+						"7",
+						"8",
+						"9",
+						"10"
+					],
+					"12": [
+						"13",
+						"15",
+						"17"
+					],
+					"24": ["27"]
+				}
+			},
+			fixtureIds: [
+				"KZ-FR-028-AWL-ADJUSTMENT-SOURCE-6-TO-7",
+				"KZ-FR-028-AWL-ADJUSTMENT-SOURCE-6-TO-8",
+				"KZ-FR-028-AWL-ADJUSTMENT-SOURCE-6-TO-9",
+				"KZ-FR-028-AWL-ADJUSTMENT-SOURCE-6-TO-10",
+				"KZ-FR-028-AWL-ADJUSTMENT-SOURCE-12-TO-13",
+				"KZ-FR-028-AWL-ADJUSTMENT-SOURCE-12-TO-15",
+				"KZ-FR-028-AWL-ADJUSTMENT-SOURCE-12-TO-17",
+				"KZ-FR-028-AWL-ADJUSTMENT-SOURCE-24-TO-27",
+				"KZ-FR-028-AWL-ADJUSTMENT-NEG-NO-EXCESS",
+				"KZ-FR-028-AWL-ADJUSTMENT-NEG-UNLISTED-ENDPOINT"
+			]
 		}),
 		defineDirectFamilyProductionRule({
 			ruleId: "KZ-FR-029-MULTIPLE-CLASS-CORRECTION",
@@ -1031,11 +1209,8 @@
 		const activeTypes = normalizedHeirs.map((heir) => heir.type);
 		const exactly = (...types) => activeTypes.length === types.length && types.every((type) => activeTypes.includes(type));
 		const husbandUmari = exactly("HUSBAND", "MOTHER", "FATHER");
-		const wifeUmari = exactly("WIFE", "MOTHER", "FATHER") && count("WIFE") === 1;
-		if (exactly("WIFE", "MOTHER", "FATHER") && count("WIFE") > 1) return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
-			...base,
-			reasons: ["UMARIYYATAYN_MULTIPLE_WIVES_NOT_ADMITTED"]
-		});
+		const wifeUmari = exactly("WIFE", "MOTHER", "FATHER");
+		const multipleWifeUmari = wifeUmari && count("WIFE") > 1;
 		const requiredRuleIds = [];
 		const fixedShares = [];
 		let hasResiduary = false;
@@ -1048,7 +1223,7 @@
 			fixedShares.push(hasDescendant ? new Fraction(1n, 8n) : new Fraction(1n, 4n));
 		}
 		if (husbandUmari || wifeUmari) {
-			requiredRuleIds.push(husbandUmari ? "KZ-FR-015-HUSBAND-MOTHER-FATHER" : "KZ-FR-015-WIFE-MOTHER-FATHER");
+			requiredRuleIds.push(husbandUmari ? "KZ-FR-015-HUSBAND-MOTHER-FATHER" : multipleWifeUmari ? "KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER" : "KZ-FR-015-WIFE-MOTHER-FATHER");
 			fixedShares.push(husbandUmari ? new Fraction(1n, 6n) : new Fraction(1n, 4n));
 			fixedShares.push(husbandUmari ? new Fraction(1n, 3n) : new Fraction(1n, 2n));
 		} else {
@@ -1081,13 +1256,25 @@
 				fixedShares.push(new Fraction(2n, 3n));
 			}
 		}
-		const fixedTotal = sumFractions(fixedShares);
-		if (fixedTotal.compare(Fraction.ONE) > 0) return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
+		requiredRuleIds.push(ORIGINAL_ASL_RULE_ID);
+		const productionIds = new Set(corpus.rules.map((rule) => rule.ruleId));
+		const originalAsl = deriveOriginalAsl(fixedShares);
+		if (!productionIds.has("KZ-FR-027-ORIGINAL-ASL") || !isOriginalAslAdmitted(originalAsl, corpus.rules)) return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
 			...base,
-			requiredRuleIds,
-			reasons: ["AWL_RULE_NOT_ADMITTED"],
-			requiresAwl: true
+			requiredRuleIds: [...new Set(requiredRuleIds)],
+			reasons: [`RULE_NOT_ADMITTED:${ORIGINAL_ASL_RULE_ID}`]
 		});
+		const fixedTotal = sumFractions(fixedShares);
+		if (fixedTotal.compare(Fraction.ONE) > 0) {
+			requiredRuleIds.push(AWL_RULE_ID);
+			const awlDenominator = deriveAwlDenominator(fixedShares, originalAsl);
+			if (awlDenominator === null || !productionIds.has("KZ-FR-028-AWL-ADJUSTMENT") || !isAwlEndpointAdmitted(originalAsl, awlDenominator, corpus.rules)) return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
+				...base,
+				requiredRuleIds: [...new Set(requiredRuleIds)],
+				reasons: [awlDenominator === null ? "AWL_ENDPOINT_INVALID" : `AWL_ENDPOINT_NOT_ADMITTED:${originalAsl}->${awlDenominator}`],
+				requiresAwl: true
+			});
+		}
 		if (!hasResiduary && fixedTotal.compare(Fraction.ONE) < 0) {
 			if (input.remainderPolicy === null) return wholeCaseResult("MISSING_INFORMATION", normalizedHeirs, {
 				...base,
@@ -1107,7 +1294,6 @@
 			});
 			requiredRuleIds.push(input.remainderPolicy === "FUNCTIONING_BAYT_AL_MAL" ? "KZ-FR-004-FUNCTIONING-BAYT-AL-MAL-RESIDUE" : "KZ-FR-004-NO-FUNCTIONING-BAYT-AL-MAL-RADD");
 		}
-		const productionIds = new Set(corpus.rules.map((rule) => rule.ruleId));
 		const missingRuleIds = [...new Set(requiredRuleIds)].filter((id) => !productionIds.has(id));
 		if (missingRuleIds.length > 0) return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
 			...base,
@@ -1117,7 +1303,8 @@
 		return wholeCaseResult("SUPPORTED", normalizedHeirs, {
 			...base,
 			requiredRuleIds: [...new Set(requiredRuleIds)],
-			supportedRuleIds: [...new Set(requiredRuleIds)]
+			supportedRuleIds: [...new Set(requiredRuleIds)],
+			requiresAwl: fixedTotal.compare(Fraction.ONE) > 0
 		});
 	}
 	//#endregion
@@ -1239,15 +1426,16 @@
 			});
 		};
 		const husbandUmari = required.has("KZ-FR-015-HUSBAND-MOTHER-FATHER");
-		const wifeUmari = required.has("KZ-FR-015-WIFE-MOTHER-FATHER");
+		const wifeUmariRuleId = required.has("KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER") ? "KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER" : required.has("KZ-FR-015-WIFE-MOTHER-FATHER") ? "KZ-FR-015-WIFE-MOTHER-FATHER" : null;
+		const wifeUmari = wifeUmariRuleId !== null;
 		if (husbandUmari) {
 			addFixed("HUSBAND", new Fraction(1n, 2n), "KZ-FR-005-HUSBAND-ONE-HALF");
 			addFixed("MOTHER", new Fraction(1n, 6n), "KZ-FR-015-HUSBAND-MOTHER-FATHER");
 			addFixed("FATHER", new Fraction(1n, 3n), "KZ-FR-015-HUSBAND-MOTHER-FATHER");
 		} else if (wifeUmari) {
 			addFixed("WIFE", new Fraction(1n, 4n), "KZ-FR-006-WIVES-ONE-QUARTER");
-			addFixed("MOTHER", new Fraction(1n, 4n), "KZ-FR-015-WIFE-MOTHER-FATHER");
-			addFixed("FATHER", new Fraction(1n, 2n), "KZ-FR-015-WIFE-MOTHER-FATHER");
+			addFixed("MOTHER", new Fraction(1n, 4n), wifeUmariRuleId);
+			addFixed("FATHER", new Fraction(1n, 2n), wifeUmariRuleId);
 		} else {
 			for (const [type, rules] of [["HUSBAND", ["KZ-FR-005-HUSBAND-ONE-HALF", "KZ-FR-006-HUSBAND-ONE-QUARTER"]], ["WIFE", ["KZ-FR-006-WIVES-ONE-QUARTER", "KZ-FR-007-WIVES-ONE-EIGHTH"]]]) {
 				const ruleId = rules.find((id) => required.has(id));
@@ -1260,8 +1448,38 @@
 			if (required.has("KZ-FR-014-FATHER-ONE-SIXTH")) addFixed("FATHER", new Fraction(1n, 6n), "KZ-FR-014-FATHER-ONE-SIXTH");
 			if (required.has("KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE")) addFixed("FATHER", new Fraction(1n, 6n), "KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE");
 		}
-		const fixedTotal = sumFractions([...assignments.values()].map((assignment) => assignment.fraction));
-		const residue = Fraction.ONE.subtract(fixedTotal);
+		const originalFixedTotal = sumFractions([...assignments.values()].map((assignment) => assignment.fraction));
+		const originalFixedAssignments = [...assignments.values()].map((assignment) => ({
+			assignment,
+			originalFraction: assignment.fraction
+		}));
+		const originalAsl = deriveOriginalAsl(originalFixedAssignments.map(({ originalFraction }) => originalFraction));
+		if (!isOriginalAslAdmitted(originalAsl, PRODUCTION_RULES)) throw new UnsupportedInheritanceCaseError(coverage, [`RULE_NOT_ADMITTED:${ORIGINAL_ASL_RULE_ID}`]);
+		let awlDetails = null;
+		const awlDenominator = deriveAwlDenominator(originalFixedAssignments.map(({ originalFraction }) => originalFraction), originalAsl);
+		if (awlDenominator !== null) {
+			if (!isAwlEndpointAdmitted(originalAsl, awlDenominator, PRODUCTION_RULES)) throw new UnsupportedInheritanceCaseError(coverage, [`AWL_ENDPOINT_NOT_ADMITTED:${originalAsl}->${awlDenominator}`]);
+			const adjustments = originalFixedAssignments.map(({ assignment, originalFraction }) => {
+				const saham = originalSaham(originalFraction, originalAsl);
+				const adjustedFraction = new Fraction(saham, awlDenominator);
+				assignment.fraction = adjustedFraction;
+				return {
+					heirType: assignment.heirType,
+					originalFraction: originalFraction.toJSON(),
+					originalSaham: saham.toString(),
+					adjustedFraction: adjustedFraction.toJSON()
+				};
+			});
+			awlDetails = {
+				originalAsl: originalAsl.toString(),
+				adjustedDenominator: awlDenominator.toString(),
+				originalFixedShareTotal: originalFixedTotal.toJSON(),
+				adjustments,
+				ruleId: AWL_RULE_ID
+			};
+		}
+		const adjustedFixedTotal = sumFractions([...assignments.values()].map((assignment) => assignment.fraction));
+		const residue = Fraction.ONE.subtract(adjustedFixedTotal);
 		const addResidue = (type, ruleId) => {
 			addAssignment(assignments, type, count(type), residue, "RESIDUARY", ruleId);
 			residuaryAssignments.push({
@@ -1271,8 +1489,8 @@
 				reason: "This class receives the residue after fixed shares."
 			});
 		};
-		if (required.has("KZ-FR-012-SON-GROUP-RESIDUARY")) addResidue("SON", "KZ-FR-012-SON-GROUP-RESIDUARY");
-		if (required.has("KZ-FR-012-SONS-AND-DAUGHTERS-TWO-TO-ONE")) {
+		if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-012-SON-GROUP-RESIDUARY")) addResidue("SON", "KZ-FR-012-SON-GROUP-RESIDUARY");
+		if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-012-SONS-AND-DAUGHTERS-TWO-TO-ONE")) {
 			const units = BigInt(2 * count("SON") + count("DAUGHTER"));
 			const sonShare = residue.multiply(new Fraction(BigInt(2 * count("SON")), units));
 			const daughterShare = residue.subtract(sonShare);
@@ -1290,8 +1508,8 @@
 				reason: "Each daughter receives one weight unit."
 			});
 		}
-		if (required.has("KZ-FR-014-FATHER-RESIDUARY")) addResidue("FATHER", "KZ-FR-014-FATHER-RESIDUARY");
-		if (required.has("KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE")) addResidue("FATHER", "KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE");
+		if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-014-FATHER-RESIDUARY")) addResidue("FATHER", "KZ-FR-014-FATHER-RESIDUARY");
+		if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE")) addResidue("FATHER", "KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE");
 		let raddDetails = null;
 		let baytFraction = Fraction.ZERO;
 		if (residue.compare(Fraction.ZERO) > 0 && residuaryAssignments.length === 0) if (input.remainderPolicy === "FUNCTIONING_BAYT_AL_MAL") baytFraction = residue;
@@ -1375,6 +1593,13 @@
 				ruleIds: [share.ruleId],
 				sourceReferences: ruleSources([share.ruleId])
 			})),
+			{
+				kind: "ASL",
+				title: `أصل المسألة — ${originalAsl}`,
+				summary: `The exact common case base is ${originalAsl}.`,
+				ruleIds: [ORIGINAL_ASL_RULE_ID],
+				sourceReferences: ruleSources([ORIGINAL_ASL_RULE_ID])
+			},
 			...residuaryAssignments.map((share) => ({
 				kind: "RESIDUARY",
 				title: `${share.heirType} residuary share`,
@@ -1385,6 +1610,13 @@
 				sourceReferences: ruleSources([share.ruleId])
 			}))
 		];
+		if (awlDetails !== null) explanationSteps.push({
+			kind: "AWL",
+			title: `العول — ${awlDetails.originalAsl} → ${awlDetails.adjustedDenominator}`,
+			summary: `The original saham total ${awlDetails.adjustedDenominator}, so the denominator changes from ${awlDetails.originalAsl} to ${awlDetails.adjustedDenominator}: ${awlDetails.adjustments.map((adjustment) => `${adjustment.heirType} ${adjustment.originalFraction.numerator}/${adjustment.originalFraction.denominator} → ${adjustment.adjustedFraction.numerator}/${adjustment.adjustedFraction.denominator}`).join("; ")}.`,
+			ruleIds: [awlDetails.ruleId],
+			sourceReferences: ruleSources([awlDetails.ruleId])
+		});
 		if (raddDetails !== null) explanationSteps.push({
 			kind: "REMAINDER",
 			title: "Radd",
@@ -1440,11 +1672,11 @@
 			blockedHeirs: coverage.blockedHeirs,
 			fixedShareAssignments,
 			residuaryAssignments,
-			originalAsl: null,
-			aslStatus: "ASL_RULE_NOT_ADMITTED",
+			originalAsl: originalAsl.toString(),
+			aslStatus: "ADMITTED",
 			workingDenominator: correction.workingDenominator.toString(),
 			correctedDenominator: correction.correctedDenominator.toString(),
-			awlDetails: null,
+			awlDetails,
 			raddDetails,
 			baytAlMalResidue: baytFraction.isZero() ? null : {
 				fraction: baytFraction.toJSON(),

@@ -7,6 +7,15 @@ import {
 } from "../domain/fractions";
 import type { HeirInput, HeirType } from "../domain/heirs";
 import { apportionMoney } from "../domain/money";
+import {
+  AWL_RULE_ID,
+  deriveAwlDenominator,
+  deriveOriginalAsl,
+  isAwlEndpointAdmitted,
+  isOriginalAslAdmitted,
+  originalSaham,
+  ORIGINAL_ASL_RULE_ID,
+} from "./exact-case-bases";
 import type { ProductionRuleFile, RuleSourceReference } from "../rules/rule-file";
 import {
   evaluateWholeCaseCoverage,
@@ -40,6 +49,8 @@ export interface ExplanationStep {
     | "HEIRS"
     | "BLOCKING"
     | "FIXED_SHARE"
+    | "ASL"
+    | "AWL"
     | "RESIDUARY"
     | "REMAINDER"
     | "CORRECTION"
@@ -85,11 +96,22 @@ export interface InheritanceResult {
   readonly blockedHeirs: WholeCaseCoverageResult["blockedHeirs"];
   readonly fixedShareAssignments: readonly ShareAssignment[];
   readonly residuaryAssignments: readonly ShareAssignment[];
-  readonly originalAsl: null;
-  readonly aslStatus: "ASL_RULE_NOT_ADMITTED";
+  readonly originalAsl: string;
+  readonly aslStatus: "ADMITTED";
   readonly workingDenominator: string;
   readonly correctedDenominator: string;
-  readonly awlDetails: null;
+  readonly awlDetails: null | {
+    readonly originalAsl: string;
+    readonly adjustedDenominator: string;
+    readonly originalFixedShareTotal: SerializedFraction;
+    readonly adjustments: readonly {
+      readonly heirType: HeirType;
+      readonly originalFraction: SerializedFraction;
+      readonly originalSaham: string;
+      readonly adjustedFraction: SerializedFraction;
+    }[];
+    readonly ruleId: typeof AWL_RULE_ID;
+  };
   readonly raddDetails: null | {
     readonly originalResidue: SerializedFraction;
     readonly recipientFractions: readonly {
@@ -285,15 +307,20 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
   };
 
   const husbandUmari = required.has("KZ-FR-015-HUSBAND-MOTHER-FATHER");
-  const wifeUmari = required.has("KZ-FR-015-WIFE-MOTHER-FATHER");
+  const wifeUmariRuleId = required.has("KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER")
+    ? "KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER"
+    : required.has("KZ-FR-015-WIFE-MOTHER-FATHER")
+      ? "KZ-FR-015-WIFE-MOTHER-FATHER"
+      : null;
+  const wifeUmari = wifeUmariRuleId !== null;
   if (husbandUmari) {
     addFixed("HUSBAND", new Fraction(1n, 2n), "KZ-FR-005-HUSBAND-ONE-HALF");
     addFixed("MOTHER", new Fraction(1n, 6n), "KZ-FR-015-HUSBAND-MOTHER-FATHER");
     addFixed("FATHER", new Fraction(1n, 3n), "KZ-FR-015-HUSBAND-MOTHER-FATHER");
   } else if (wifeUmari) {
     addFixed("WIFE", new Fraction(1n, 4n), "KZ-FR-006-WIVES-ONE-QUARTER");
-    addFixed("MOTHER", new Fraction(1n, 4n), "KZ-FR-015-WIFE-MOTHER-FATHER");
-    addFixed("FATHER", new Fraction(1n, 2n), "KZ-FR-015-WIFE-MOTHER-FATHER");
+    addFixed("MOTHER", new Fraction(1n, 4n), wifeUmariRuleId);
+    addFixed("FATHER", new Fraction(1n, 2n), wifeUmariRuleId);
   } else {
     for (const [type, rules] of [
       ["HUSBAND", ["KZ-FR-005-HUSBAND-ONE-HALF", "KZ-FR-006-HUSBAND-ONE-QUARTER"]],
@@ -326,10 +353,55 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
       addFixed("FATHER", new Fraction(1n, 6n), "KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE");
   }
 
-  const fixedTotal = sumFractions(
+  const originalFixedTotal = sumFractions(
     [...assignments.values()].map((assignment) => assignment.fraction),
   );
-  const residue = Fraction.ONE.subtract(fixedTotal);
+  const originalFixedAssignments = [...assignments.values()].map((assignment) => ({
+    assignment,
+    originalFraction: assignment.fraction,
+  }));
+  const originalAsl = deriveOriginalAsl(
+    originalFixedAssignments.map(({ originalFraction }) => originalFraction),
+  );
+  if (!isOriginalAslAdmitted(originalAsl, PRODUCTION_RULES)) {
+    throw new UnsupportedInheritanceCaseError(coverage, [
+      `RULE_NOT_ADMITTED:${ORIGINAL_ASL_RULE_ID}`,
+    ]);
+  }
+  let awlDetails: InheritanceResult["awlDetails"] = null;
+  const awlDenominator = deriveAwlDenominator(
+    originalFixedAssignments.map(({ originalFraction }) => originalFraction),
+    originalAsl,
+  );
+  if (awlDenominator !== null) {
+    if (!isAwlEndpointAdmitted(originalAsl, awlDenominator, PRODUCTION_RULES)) {
+      throw new UnsupportedInheritanceCaseError(coverage, [
+        `AWL_ENDPOINT_NOT_ADMITTED:${originalAsl}->${awlDenominator}`,
+      ]);
+    }
+    const adjustments = originalFixedAssignments.map(({ assignment, originalFraction }) => {
+      const saham = originalSaham(originalFraction, originalAsl);
+      const adjustedFraction = new Fraction(saham, awlDenominator);
+      assignment.fraction = adjustedFraction;
+      return {
+        heirType: assignment.heirType,
+        originalFraction: originalFraction.toJSON(),
+        originalSaham: saham.toString(),
+        adjustedFraction: adjustedFraction.toJSON(),
+      };
+    });
+    awlDetails = {
+      originalAsl: originalAsl.toString(),
+      adjustedDenominator: awlDenominator.toString(),
+      originalFixedShareTotal: originalFixedTotal.toJSON(),
+      adjustments,
+      ruleId: AWL_RULE_ID,
+    };
+  }
+  const adjustedFixedTotal = sumFractions(
+    [...assignments.values()].map((assignment) => assignment.fraction),
+  );
+  const residue = Fraction.ONE.subtract(adjustedFixedTotal);
   const addResidue = (type: HeirType, ruleId: string): void => {
     addAssignment(assignments, type, count(type), residue, "RESIDUARY", ruleId);
     residuaryAssignments.push({
@@ -339,9 +411,12 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
       reason: "This class receives the residue after fixed shares.",
     });
   };
-  if (required.has("KZ-FR-012-SON-GROUP-RESIDUARY"))
+  if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-012-SON-GROUP-RESIDUARY"))
     addResidue("SON", "KZ-FR-012-SON-GROUP-RESIDUARY");
-  if (required.has("KZ-FR-012-SONS-AND-DAUGHTERS-TWO-TO-ONE")) {
+  if (
+    residue.compare(Fraction.ZERO) > 0 &&
+    required.has("KZ-FR-012-SONS-AND-DAUGHTERS-TWO-TO-ONE")
+  ) {
     const units = BigInt(2 * count("SON") + count("DAUGHTER"));
     const sonShare = residue.multiply(new Fraction(BigInt(2 * count("SON")), units));
     const daughterShare = residue.subtract(sonShare);
@@ -376,9 +451,9 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
       },
     );
   }
-  if (required.has("KZ-FR-014-FATHER-RESIDUARY"))
+  if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-014-FATHER-RESIDUARY"))
     addResidue("FATHER", "KZ-FR-014-FATHER-RESIDUARY");
-  if (required.has("KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE"))
+  if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE"))
     addResidue("FATHER", "KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE");
 
   let raddDetails: InheritanceResult["raddDetails"] = null;
@@ -492,6 +567,13 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
       ruleIds: [share.ruleId],
       sourceReferences: ruleSources([share.ruleId]),
     })),
+    {
+      kind: "ASL",
+      title: `أصل المسألة — ${originalAsl}`,
+      summary: `The exact common case base is ${originalAsl}.`,
+      ruleIds: [ORIGINAL_ASL_RULE_ID],
+      sourceReferences: ruleSources([ORIGINAL_ASL_RULE_ID]),
+    },
     ...residuaryAssignments.map((share): ExplanationStep => ({
       kind: "RESIDUARY",
       title: `${share.heirType} residuary share`,
@@ -502,6 +584,19 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
       sourceReferences: ruleSources([share.ruleId]),
     })),
   ];
+  if (awlDetails !== null)
+    explanationSteps.push({
+      kind: "AWL",
+      title: `العول — ${awlDetails.originalAsl} → ${awlDetails.adjustedDenominator}`,
+      summary: `The original saham total ${awlDetails.adjustedDenominator}, so the denominator changes from ${awlDetails.originalAsl} to ${awlDetails.adjustedDenominator}: ${awlDetails.adjustments
+        .map(
+          (adjustment) =>
+            `${adjustment.heirType} ${adjustment.originalFraction.numerator}/${adjustment.originalFraction.denominator} → ${adjustment.adjustedFraction.numerator}/${adjustment.adjustedFraction.denominator}`,
+        )
+        .join("; ")}.`,
+      ruleIds: [awlDetails.ruleId],
+      sourceReferences: ruleSources([awlDetails.ruleId]),
+    });
   if (raddDetails !== null)
     explanationSteps.push({
       kind: "REMAINDER",
@@ -568,11 +663,11 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
     blockedHeirs: coverage.blockedHeirs,
     fixedShareAssignments,
     residuaryAssignments,
-    originalAsl: null,
-    aslStatus: "ASL_RULE_NOT_ADMITTED",
+    originalAsl: originalAsl.toString(),
+    aslStatus: "ADMITTED",
     workingDenominator: correction.workingDenominator.toString(),
     correctedDenominator: correction.correctedDenominator.toString(),
-    awlDetails: null,
+    awlDetails,
     raddDetails,
     baytAlMalResidue: baytFraction.isZero()
       ? null
