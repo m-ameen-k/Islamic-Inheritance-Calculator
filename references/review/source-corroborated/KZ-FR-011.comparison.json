@@ -1,0 +1,64 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-011",
+  "ruleId": "KZ-FR-011",
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_ATOMIC_SPLIT_REQUIRED",
+  "executable": false,
+  "kanzAlMahalliRecord": {
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "evidenceRecordIds": ["KZ-FR-011"],
+    "locator": "Printed page 138; local PDF page 9.",
+    "statement": "The record names exact total-exclusion relationships for the paternal grandfather, son's son, and three male sibling classes."
+  },
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locator": "references/source-notes/khulasa/khulasa-full.pdf; printed pages 274–276; total-exclusion definition and blocker tables.",
+    "printedPages": [274, 275, 276],
+    "visuallyConfirmed": true,
+    "statement": "The total-exclusion definition and tables state the same father/son blocker relationships and separately list additional relationships outside this parent record."
+  },
+  "supportingSourceStatus": "No project-local Fath al-Mu‘in locator was available, so none is asserted.",
+  "ruleSummary": "Represent total exclusion as exact blocker-to-blockee pairs rather than a generic blocking switch.",
+  "conditions": [
+    "The named blocker is present and eligible.",
+    "The named blockee is present.",
+    "Only the exact pair admitted by an atomic rule may produce total exclusion."
+  ],
+  "exclusions": [
+    "Share reduction is not total exclusion.",
+    "Parents, spouses, and direct children are not made blockees by this record.",
+    "Female-sibling and extended-agnate relationships shown by Khulasa but absent from the captured KZ-FR-011 passage require their own parent evidence before admission."
+  ],
+  "blockingAndPriorityInteractions": [
+    "Total exclusion is resolved before assigning a share to the named blockee.",
+    "A nearer son's-line descendant may also block a more remote son's son, but generation-depth execution is outside the MVP.",
+    "The functional direct-family MVP uses these atoms only to keep unsupported distant heirs from being treated as eligible."
+  ],
+  "sourceAgreement": {
+    "agrees": true,
+    "detail": "The exact father and son pairs selected for atomic candidates appear without conflict in both sources."
+  },
+  "unresolvedQuestions": [
+    "Generation-depth handling among multiple son's sons is outside the current heir model.",
+    "Additional female and extended-agnate blocker pairs are not part of this fast MVP pass."
+  ],
+  "atomicCandidateAssessment": {
+    "ready": true,
+    "candidateRuleIds": [
+      "KZ-FR-011-FATHER-BLOCKS-PATERNAL-GRANDFATHER",
+      "KZ-FR-011-FATHER-BLOCKS-FULL-BROTHER",
+      "KZ-FR-011-FATHER-BLOCKS-PATERNAL-BROTHER",
+      "KZ-FR-011-FATHER-BLOCKS-MATERNAL-BROTHER",
+      "KZ-FR-011-SON-BLOCKS-SONS-SON",
+      "KZ-FR-011-SON-BLOCKS-FULL-BROTHER",
+      "KZ-FR-011-SON-BLOCKS-PATERNAL-BROTHER",
+      "KZ-FR-011-SON-BLOCKS-MATERNAL-BROTHER"
+    ],
+    "rationale": "Each candidate names one blocker and one blockee, preventing a vague aggregate blocking rule."
+  },
+  "sourceCorroborationComplete": true,
+  "implementationAdmissionBlocked": true,
+  "admissionBlockers": [
+    "Exact positive, negative, and coexistence fixtures plus a separate admission review remain required."
+  ]
+}

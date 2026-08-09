@@ -1,0 +1,52 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-015",
+  "ruleId": "KZ-FR-015",
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_ATOMIC_SPLIT_REQUIRED",
+  "executable": false,
+  "kanzAlMahalliRecord": {
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "evidenceRecordIds": ["KZ-FR-015"],
+    "locator": "Printed page 142; local PDF page 13.",
+    "statement": "In each spouse-plus-parents case, the mother receives one third of the remainder after the spouse, leaving the father twice the mother's amount."
+  },
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locator": "references/source-notes/khulasa/khulasa-full.pdf; printed page 270; mother with one spouse and both parents, including footnote 10.",
+    "printedPages": [270],
+    "visuallyConfirmed": true,
+    "statement": "The text and footnote give both exact cases: husband with both parents from six, and wife with both parents from four."
+  },
+  "supportingSourceStatus": "No project-local Fath al-Mu‘in locator was available, so none is asserted.",
+  "ruleSummary": "In the two Umariyyatayn, the mother takes one third of the post-spouse remainder rather than one third of the whole estate.",
+  "conditions": [
+    "Case one contains exactly husband, mother, and father among the supported heir categories.",
+    "Case two contains a wife group, mother, and father among the supported heir categories.",
+    "No descendant or other heir changes the named spouse-plus-parents configuration."
+  ],
+  "exclusions": [
+    "Do not apply the mother's ordinary one-third-of-the-whole atom in either named case.",
+    "Additional heirs take the case outside these atomic Umariyyatayn rules.",
+    "The wife's one-quarter is collective if more than one eligible wife is represented by the wife group."
+  ],
+  "blockingAndPriorityInteractions": [
+    "Assign the spouse fixed share first.",
+    "Assign the mother one third of the exact remainder.",
+    "Assign the father the balance, which is twice the mother's amount."
+  ],
+  "sourceAgreement": {
+    "agrees": true,
+    "detail": "Both sources give the same remainder-third treatment and the same exact shares in both cases."
+  },
+  "unresolvedQuestions": [],
+  "atomicCandidateAssessment": {
+    "ready": true,
+    "candidateRuleIds": ["KZ-FR-015-HUSBAND-MOTHER-FATHER", "KZ-FR-015-WIFE-MOTHER-FATHER"],
+    "rationale": "The spouse share and resulting original case denominator differ, so each Umariyyatayn case is a separate atom."
+  },
+  "sourceCorroborationComplete": true,
+  "implementationAdmissionBlocked": true,
+  "admissionBlockers": [
+    "Exact fixtures and a separate calculation-readiness admission remain required."
+  ]
+}

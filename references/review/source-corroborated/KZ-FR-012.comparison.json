@@ -1,0 +1,58 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-012",
+  "ruleId": "KZ-FR-012",
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_ATOMIC_SPLIT_REQUIRED",
+  "executable": false,
+  "kanzAlMahalliRecord": {
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "evidenceRecordIds": ["KZ-FR-012"],
+    "locator": "Printed page 140; local PDF page 11.",
+    "statement": "The record assigns the residue to sons, fixed shares to daughters without sons, and a two-to-one male:female division when sons and daughters coexist."
+  },
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locator": "references/source-notes/khulasa/khulasa-full.pdf; printed pages 270 and 277–278; fixed-share summary, residuary order, and worked combinations.",
+    "printedPages": [270, 277, 278],
+    "visuallyConfirmed": true,
+    "statement": "The fixed-share summary and distribution section confirm the daughter fractions, sons as residuaries, and two-to-one weighting for mixed direct children."
+  },
+  "supportingSourceStatus": "No project-local Fath al-Mu‘in locator was available, so none is asserted.",
+  "ruleSummary": "Direct children use daughter fixed shares only without a son; otherwise sons take the residue, with mixed sons and daughters weighted two-to-one.",
+  "conditions": [
+    "A single daughter receives one half only when no son is present.",
+    "Two or more daughters collectively receive two thirds only when no son is present.",
+    "One or more sons without daughters receive the residue after prior fixed shares.",
+    "When sons and daughters coexist, the residue is divided by weights of two for each son and one for each daughter."
+  ],
+  "exclusions": [
+    "The daughter fixed-share atoms do not apply when a son is present.",
+    "The two-to-one rule applies to the residual pool, not independently to the gross estate when other fixed-share heirs coexist.",
+    "Son's descendants and deeper generations are outside these direct-child atoms."
+  ],
+  "blockingAndPriorityInteractions": [
+    "Apply eligible spouse and parent fixed shares before the direct-child residual pool.",
+    "Presence of a son converts direct daughters from fixed-share status to residuary participation.",
+    "A son has priority over remoter residuaries."
+  ],
+  "sourceAgreement": {
+    "agrees": true,
+    "detail": "Both sources agree on all four direct-child branches and on the male:female weight of two-to-one."
+  },
+  "unresolvedQuestions": [],
+  "atomicCandidateAssessment": {
+    "ready": true,
+    "candidateRuleIds": [
+      "KZ-FR-012-ONE-DAUGHTER-ONE-HALF",
+      "KZ-FR-012-DAUGHTER-GROUP-TWO-THIRDS",
+      "KZ-FR-012-SON-GROUP-RESIDUARY",
+      "KZ-FR-012-SONS-AND-DAUGHTERS-TWO-TO-ONE"
+    ],
+    "rationale": "The fixed-share and residuary branches are mutually exclusive and require four separate candidate atoms."
+  },
+  "sourceCorroborationComplete": true,
+  "implementationAdmissionBlocked": true,
+  "admissionBlockers": [
+    "Exact source-derived fixtures and a separate calculation-readiness admission remain required."
+  ]
+}
