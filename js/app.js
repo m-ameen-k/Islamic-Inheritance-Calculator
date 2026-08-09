@@ -182,7 +182,7 @@ function applyLang(){
   });
   updateThemeAccessibility();
   renderHeirs();
-  if(document.getElementById("learnContent")?.innerHTML) updateLearn();
+  if(_lastCalculationResult) renderCalculationResult(_lastCalculationResult);
   updateNet();
 }
 
@@ -211,7 +211,7 @@ function updateMetalUnit(metal){
   const u=document.getElementById(metal+"_u").value;
   const unitLbl=document.getElementById(metal+"UnitLbl");
   if(unitLbl) unitLbl.textContent="/ "+u;
-  updateNet();
+  invalidateCalculation(); updateNet();
 }
 
 ["gold","silver"].forEach(m=>{
@@ -230,7 +230,7 @@ function getAfterDebts(){return Math.max(0,getGross()-fv("debts")-fv("zakat"));}
 function getWasiyyah(ad){
   const wi=fv("wasiyyah"); if(!wi) return 0;
   const max=ad/3, consent=document.getElementById("was_con").checked, w=document.getElementById("wasWarn");
-  if(!consent&&wi>max){ if(w){ w.style.display="block"; applyResolvedText(w,getPrimaryText("was_warn",lang),{m:formatAmount(max)}); } return max; }
+  if(!consent&&wi>max){ if(w){ w.style.display="block"; applyResolvedText(w,getPrimaryText("bequest_unresolved",lang)); } return wi; }
   if(w) w.style.display="none"; return wi;
 }
 
@@ -239,12 +239,14 @@ function getNet(){const ad=getAfterDebts(); return Math.max(0,ad-getWasiyyah(ad)
 function updateNet(){
   const gross=getGross(), net=getNet();
   updateCaseSummary(gross,net);
+  updateCalculatorState();
 }
 
 ["estate_total","cash","gold_w","gold_p","gold_tot","silver_w","silver_p","silver_tot","land_a","land_rate","land_tot","other_v","debts","zakat","wasiyyah","was_con"]
-  .forEach(id=>{document.getElementById(id)?.addEventListener("input",updateNet);});
+  .forEach(id=>{document.getElementById(id)?.addEventListener("input",()=>{invalidateCalculation();updateNet();});});
 
 function setGender(g){
+  invalidateCalculation();
   gender=g; sel={};
   document.getElementById("gbm").className="gbtn"+(g==="m"?" am":"");
   document.getElementById("gbf").className="gbtn"+(g==="f"?" af":"");
@@ -289,42 +291,12 @@ function updateCaseSummary(gross=getGross(),net=getNet()){
   }else{
     applyResolvedText(document.getElementById("caseCompleteness"),getPrimaryText("case_entered",lang));
   }
+  updateCalculatorState();
 }
 
 function updateDynamicUI() {
-    const has = id => (sel[id] || 0) > 0;
-    const fw = has("ibn") || has("bint") || has("ibn_ibn") || has("bint_ibn");
-
-    let dynBlocked = {};
-    const blk = (id) => dynBlocked[id] = true;
-
-    if(has("ab")){["jadd","akh_sh","akh_ab","akh_um","ukht_sh","ukht_ab","ukht_um","ibn_akh_sh","ibn_akh_ab","amm_sh","amm_ab","ibn_amm_sh","ibn_amm_ab"].forEach(blk);}
-    if(has("umm")){blk("jadda_ab");blk("jadda_umm");}
-    if(has("ibn")){["ibn_ibn","bint_ibn","akh_sh","akh_ab","akh_um","ukht_sh","ukht_ab","ukht_um","ibn_akh_sh","ibn_akh_ab","amm_sh","amm_ab","ibn_amm_sh","ibn_amm_ab"].forEach(blk);}
-    if(!has("ibn")&&has("ibn_ibn")){["akh_sh","akh_ab","akh_um","ukht_sh","ukht_ab","ukht_um","ibn_akh_sh","ibn_akh_ab","amm_sh","amm_ab","ibn_amm_sh","ibn_amm_ab"].forEach(blk);}
-    if(has("akh_sh")){["akh_ab","ukht_ab","ibn_akh_sh","ibn_akh_ab","amm_sh","amm_ab","ibn_amm_sh","ibn_amm_ab","akh_um","ukht_um"].forEach(blk);}
-    if(!has("akh_sh")&&has("akh_ab")){["ibn_akh_sh","ibn_akh_ab","amm_sh","amm_ab","ibn_amm_sh","ibn_amm_ab"].forEach(blk);}
-    if(fw){blk("akh_um");blk("ukht_um");}
-    if((sel["bint"]||0)>=2&&!has("ibn")&&!has("ibn_ibn")&&has("bint_ibn")) blk("bint_ibn");
-    if((sel["ukht_sh"]||0)>=2&&!has("akh_sh")&&!has("akh_ab")&&!fw) blk("ukht_ab");
-
-    const primaryMales=["zawj","ab","umm","ibn","bint","ibn_ibn","bint_ibn","jadd","jadda_ab","jadda_umm","akh_sh","akh_ab","akh_um","ukht_sh","ukht_ab","ukht_um","ibn_akh_sh","ibn_akh_ab","amm_sh","amm_ab","ibn_amm_sh","ibn_amm_ab"];
-    const hasPrimaryAsaba=primaryMales.some(id=>has(id)&&!dynBlocked[id]&&!["zawj","umm","jadda_ab","jadda_umm","akh_um","ukht_um"].includes(id));
-    if(hasPrimaryAsaba){blk("mutiq");blk("mutiqah");}
-
-    HEIRS.forEach(h => {
-        const card = document.getElementById("hc-" + h.id);
-        if (card) {
-            if (dynBlocked[h.id] && !has(h.id)) {
-                card.classList.add("blocked");
-                sel[h.id] = 0;
-                const cn = document.getElementById("cn-" + h.id);
-                if(cn) cn.textContent = "";
-            } else {
-                card.classList.remove("blocked");
-            }
-        }
-    });
+  // The TypeScript production executor is the only source of eligibility and blocking decisions.
+  document.querySelectorAll(".hcard.blocked").forEach(card=>card.classList.remove("blocked"));
 }
 
 function renderHeirs(){
@@ -355,6 +327,7 @@ function renderHeirs(){
     if(h.max===1) card.addEventListener("click",()=>{
         if(card.classList.contains("blocked")) return;
         sel[h.id]=sel[h.id]?0:1;
+        invalidateCalculation();
         card.classList.toggle("sel",!!sel[h.id]);
         card.setAttribute("aria-pressed",!!sel[h.id]);
         updateDynamicUI();
@@ -371,6 +344,7 @@ function renderHeirs(){
     if(card.classList.contains("blocked")) return;
     const d=parseInt(btn.dataset.d), h=HEIRS.find(x=>x.id===id);
     sel[id]=Math.max(0,Math.min(h.max,(sel[id]||0)+d));
+    invalidateCalculation();
     card.classList.toggle("sel",sel[id]>0);
     const cn=document.getElementById("cn-"+id); if(cn) cn.textContent=sel[id]||"";
     updateDynamicUI();
@@ -398,12 +372,254 @@ window.showAsaba = function(titleEnc, descEnc) {
     document.getElementById('asabaModal').style.display = 'flex';
 };
 
-function updateLearn(){
-  const lc=document.getElementById("learnContent");
-  const key=madhab==="hanafi"?"learn_ha":"learn_sh";
-  const text=getPrimaryText(key,lang);
-  lc.innerHTML=`<div class="learn-card" lang="${text.resolvedLanguage}" dir="${text.direction}">${text.text}</div>`;
+const UI_HEIR_TYPES={
+  zawj:"HUSBAND",zawja:"WIFE",ab:"FATHER",umm:"MOTHER",ibn:"SON",bint:"DAUGHTER",
+  ibn_ibn:"SONS_SON",bint_ibn:"SONS_DAUGHTER",jadd:"PATERNAL_GRANDFATHER",
+  jadda_ab:"PATERNAL_GRANDMOTHER",jadda_umm:"MATERNAL_GRANDMOTHER",
+  akh_sh:"FULL_BROTHER",akh_ab:"PATERNAL_BROTHER",akh_um:"MATERNAL_BROTHER",
+  ukht_sh:"FULL_SISTER",ukht_ab:"PATERNAL_SISTER",ukht_um:"MATERNAL_SISTER",
+  ibn_akh_sh:"FULL_BROTHERS_SON",ibn_akh_ab:"PATERNAL_BROTHERS_SON",
+  amm_sh:"FULL_PATERNAL_UNCLE",amm_ab:"PATERNAL_UNCLE",
+  ibn_amm_sh:"FULL_PATERNAL_UNCLES_SON",ibn_amm_ab:"PATERNAL_UNCLES_SON",
+  mutiq:"MALE_EMANCIPATOR",mutiqah:"FEMALE_EMANCIPATOR"
+};
+const TYPE_TO_HEIR_ID=Object.fromEntries(Object.entries(UI_HEIR_TYPES).map(([id,type])=>[type,id]));
+let _lastCalculationResult=null;
+
+function uiElement(tag,className,text){
+  const element=document.createElement(tag);
+  if(className) element.className=className;
+  if(text!==undefined) element.textContent=text;
+  return element;
 }
+
+function decimalParts(value){
+  const normalized=String(value??"").trim();
+  if(normalized==="") return {numerator:0n,scale:1n};
+  const match=/^(\d+)(?:\.(\d*))?$/.exec(normalized);
+  if(!match) return null;
+  const decimals=match[2]||"";
+  return {numerator:BigInt(match[1]+decimals),scale:10n**BigInt(decimals.length)};
+}
+
+function moneyMinorFromValue(value,field,issues){
+  const parts=decimalParts(value);
+  if(!parts){issues.push(`${field}: INVALID_AMOUNT`);return 0n;}
+  const scaled=parts.numerator*100n;
+  if(scaled%parts.scale!==0n){issues.push(`${field}: MORE_THAN_TWO_DECIMAL_PLACES`);return 0n;}
+  return scaled/parts.scale;
+}
+
+function productMinor(left,right,field,issues){
+  const a=decimalParts(left),b=decimalParts(right);
+  if(!a||!b){issues.push(`${field}: INVALID_AMOUNT`);return 0n;}
+  const numerator=a.numerator*b.numerator*100n;
+  const denominator=a.scale*b.scale;
+  if(numerator%denominator!==0n){issues.push(`${field}: NOT_AN_EXACT_MINOR_UNIT`);return 0n;}
+  return numerator/denominator;
+}
+
+function exactAssetValue(totalId,leftId,rightId,issues){
+  const total=document.getElementById(totalId)?.value.trim();
+  if(total) return moneyMinorFromValue(total,totalId,issues);
+  const left=document.getElementById(leftId)?.value.trim();
+  const right=document.getElementById(rightId)?.value.trim();
+  return left&&right?productMinor(left,right,totalId,issues):0n;
+}
+
+function exactEstateInput(){
+  const issues=[];
+  const enteredTotal=document.getElementById("estate_total")?.value.trim();
+  const gross=enteredTotal
+    ?moneyMinorFromValue(enteredTotal,"estate_total",issues)
+    :moneyMinorFromValue(document.getElementById("cash")?.value,"cash",issues)+
+      exactAssetValue("gold_tot","gold_w","gold_p",issues)+
+      exactAssetValue("silver_tot","silver_w","silver_p",issues)+
+      exactAssetValue("land_tot","land_a","land_rate",issues)+
+      moneyMinorFromValue(document.getElementById("other_v")?.value,"other_v",issues);
+  const debts=moneyMinorFromValue(document.getElementById("debts")?.value,"debts",issues);
+  const zakat=moneyMinorFromValue(document.getElementById("zakat")?.value,"zakat",issues);
+  const bequest=moneyMinorFromValue(document.getElementById("wasiyyah")?.value,"wasiyyah",issues);
+  if(debts+zakat>gross) issues.push("DEDUCTIONS_EXCEED_GROSS_ESTATE");
+  const afterDeductions=gross>debts+zakat?gross-debts-zakat:0n;
+  if(bequest>afterDeductions) issues.push("BEQUEST_EXCEEDS_REMAINING_ESTATE");
+  if(bequest*3n>afterDeductions&&!document.getElementById("was_con")?.checked){
+    issues.push("BEQUEST_EXCEEDS_ONE_THIRD_UNRESOLVED");
+  }
+  return {gross,debts,zakat,bequest,issues};
+}
+
+function selectedCaseHeirs(){
+  return HEIRS.filter(heir=>(sel[heir.id]||0)>0).map(heir=>({
+    heirId:heir.id,type:UI_HEIR_TYPES[heir.id],count:sel[heir.id]
+  }));
+}
+
+function coverageInput(){
+  return {
+    deceasedSex:gender==="m"?"MALE":"FEMALE",
+    heirs:selectedCaseHeirs(),
+    remainderPolicy:document.getElementById("remainderPolicy")?.value||"UNSURE",
+    unresolvedFacts:[]
+  };
+}
+
+function setCalculationStatus(kind,lines){
+  const button=document.getElementById("calcBtn");
+  const status=document.getElementById("calculationDisabledReason");
+  button.disabled=kind!=="ready";
+  status.className=`calculation-disabled-reason calculation-status-${kind}`;
+  status.replaceChildren(...lines.map((line,index)=>{
+    const item=uiElement("span","calculation-status-line",line);
+    if(index<lines.length-1) item.appendChild(document.createElement("br"));
+    return item;
+  }));
+}
+
+function updateCalculatorState(){
+  if(!window.FaraidCalculator) return;
+  const estate=exactEstateInput();
+  const missing=[];
+  if(!gender) missing.push(resolveText("missing_gender",lang).text);
+  if(estate.gross<=0n) missing.push(resolveText("missing_estate",lang).text);
+  if(selectedCaseHeirs().length===0) missing.push(resolveText("missing_heirs",lang).text);
+  if(missing.length){
+    setCalculationStatus("missing",[
+      getPrimaryText("missing_information",lang).text,
+      ...missing
+    ]);
+    return;
+  }
+  if(estate.issues.length){
+    setCalculationStatus("missing",[getPrimaryText("missing_information",lang).text,...estate.issues]);
+    return;
+  }
+  const coverage=window.FaraidCalculator.evaluateWholeCaseCoverage(coverageInput());
+  if(coverage.status==="SUPPORTED"){
+    setCalculationStatus("ready",[getPrimaryText("ready_calculate",lang).text]);
+    return;
+  }
+  const heading=coverage.status==="MISSING_INFORMATION"
+    ?getPrimaryText("missing_information",lang).text
+    :getPrimaryText("case_not_supported",lang).text;
+  setCalculationStatus(coverage.status==="MISSING_INFORMATION"?"missing":"unsupported",[
+    heading,...coverage.missingFields,...coverage.reasons
+  ]);
+}
+
+function calculationInput(){
+  const estate=exactEstateInput();
+  return {
+    ...coverageInput(),currencyCode:"XXX",grossEstateMinorUnits:estate.gross.toString(),
+    deductions:[
+      ...(estate.debts? [{id:"debts",label:getPrimaryText("debts",lang).text,amountMinorUnits:estate.debts.toString()}]:[]),
+      ...(estate.zakat? [{id:"zakat",label:getPrimaryText("zakat",lang).text,amountMinorUnits:estate.zakat.toString()}]:[])
+    ],
+    validBequestMinorUnits:estate.bequest.toString(),
+    excessBequestConsentConfirmed:document.getElementById("was_con")?.checked===true
+  };
+}
+
+function formatMinorUnits(value){
+  const minor=BigInt(value),major=minor/100n,cents=(minor%100n).toString().padStart(2,"0");
+  const locale=lang==="ar"?"ar":lang==="ml"?"ml-IN":"en";
+  const amount=`${major.toLocaleString(locale)}.${cents}`;
+  return cSym?`${cSym} ${amount}`:amount;
+}
+
+function fractionText(fraction){return `${fraction.numerator}/${fraction.denominator}`;}
+function percentageText(fraction){return `${(Number(fraction.numerator)*100/Number(fraction.denominator)).toFixed(2)}%`;}
+function heirLabel(type){
+  const heir=HEIRS.find(candidate=>candidate.id===TYPE_TO_HEIR_ID[type]);
+  return heir?resolveHeirText(heir,lang).text:type;
+}
+
+function renderExplanationInto(container,result){
+  container.replaceChildren();
+  for(const step of result.explanationSteps){
+    const card=uiElement("section","learn-card");
+    card.appendChild(uiElement("h3","",step.title));
+    if(step.fraction) card.appendChild(uiElement("div","rsh",fractionText(step.fraction)));
+    card.appendChild(uiElement("p","",step.summary));
+    if(step.ruleIds.length) card.appendChild(uiElement("p","code-like",`${getPrimaryText("rules_used",lang).text}: ${step.ruleIds.join(", ")}`));
+    if(step.sourceReferences.length){
+      const list=uiElement("ul","source-list");
+      for(const source of step.sourceReferences) list.appendChild(uiElement("li","",`${source.sourceId} — ${source.locator}`));
+      card.appendChild(list);
+    }
+    container.appendChild(card);
+  }
+}
+
+function updateLearn(){
+  const containers=[document.getElementById("learnContent"),document.getElementById("verificationContent")].filter(Boolean);
+  for(const container of containers){
+    if(_lastCalculationResult) renderExplanationInto(container,_lastCalculationResult);
+    else applyResolvedText(container,getPrimaryText("calculate_first",lang));
+  }
+}
+
+function renderCalculationResult(result){
+  _lastCalculationResult=result;
+  document.getElementById("resSec").style.display="block";
+  setStep(5);
+  document.getElementById("ctag").replaceChildren(uiElement("span","ctag tnorm",result.calculationType));
+  const metrics=document.getElementById("metrics");
+  metrics.replaceChildren();
+  for(const [value,label] of [
+    [formatMinorUnits(result.netDistributableEstateMinorUnits),getPrimaryText("current_net",lang).text],
+    [result.calculationType,getPrimaryText("calculation_type",lang).text],
+    [result.correctedDenominator,getPrimaryText("corrected_denominator",lang).text]
+  ]){
+    const card=uiElement("div","mc");card.append(uiElement("div","mv",value),uiElement("div","ml",label));metrics.appendChild(card);
+  }
+  const sharesList=document.getElementById("sharesList");sharesList.replaceChildren();
+  for(const allocation of result.allocations){
+    const row=uiElement("div","rrow");
+    const name=uiElement("div","rname",`${heirLabel(allocation.heirType)} × ${allocation.count}`);
+    const share=uiElement("div","rsh",fractionText(allocation.collectiveFraction));
+    share.appendChild(uiElement("div","ramt",`${getPrimaryText("per_person_share",lang).text}: ${fractionText(allocation.perPersonFraction)} · ${percentageText(allocation.collectiveFraction)}`));
+    const amount=uiElement("div","ramtv",formatMinorUnits(allocation.exactAmountMinorUnits));
+    row.append(name,share,amount);sharesList.appendChild(row);
+  }
+  if(result.baytAlMalResidue){
+    const row=uiElement("div","rrow");
+    row.append(uiElement("div","rname",getPrimaryText("bayt_residue",lang).text),uiElement("div","rsh",fractionText(result.baytAlMalResidue.fraction)),uiElement("div","ramtv",formatMinorUnits(result.baytAlMalResidue.exactAmountMinorUnits)));
+    sharesList.appendChild(row);
+  }
+  const hajb=document.getElementById("hajbList");
+  hajb.replaceChildren(uiElement("p","learn-card",getPrimaryText("no_blk",lang).text));
+  const asl=document.getElementById("aslDetail");asl.replaceChildren();
+  const aslBox=uiElement("div","learn-card");
+  aslBox.append(uiElement("p","",getPrimaryText("asl_unavailable",lang).text),uiElement("p","code-like",`${getPrimaryText("working_denominator",lang).text}: ${result.workingDenominator}`),uiElement("p","code-like",`${getPrimaryText("corrected_denominator",lang).text}: ${result.correctedDenominator}`));
+  asl.appendChild(aslBox);
+  const assets=document.getElementById("assetsDetail");assets.replaceChildren();
+  const assetCard=uiElement("div","learn-card");
+  assetCard.append(uiElement("p","",`${getPrimaryText("gross_estate",lang).text}: ${formatMinorUnits(result.grossEstateMinorUnits)}`),uiElement("p","",`${getPrimaryText("supported_deductions",lang).text}: ${formatMinorUnits(result.totalDeductionsMinorUnits)}`),uiElement("p","",`${getPrimaryText("current_net",lang).text}: ${formatMinorUnits(result.netDistributableEstateMinorUnits)}`));
+  assets.appendChild(assetCard);
+  updateLearn();
+}
+
+function invalidateCalculation(){
+  _lastCalculationResult=null;
+  const result=document.getElementById("resSec");
+  if(result) result.style.display="none";
+  updateLearn();
+}
+
+document.getElementById("remainderPolicy")?.addEventListener("change",()=>{invalidateCalculation();updateCalculatorState();});
+document.getElementById("calcBtn")?.addEventListener("click",()=>{
+  try{
+    const result=window.FaraidCalculator.calculateSupportedInheritance(calculationInput());
+    renderCalculationResult(result);
+    document.getElementById("resSec").scrollIntoView({behavior:"smooth",block:"start"});
+  }catch(error){
+    const coverage=error?.coverage;
+    const lines=[getPrimaryText("case_not_supported",lang).text,...(error?.issues||[]),...(coverage?.reasons||[])];
+    setCalculationStatus("unsupported",[...new Set(lines)]);
+    invalidateCalculation();
+  }
+});
 
 document.querySelectorAll(".tab").forEach(tab=>tab.addEventListener("click",()=>{
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("on"));
@@ -430,4 +646,5 @@ renderHeirs();
 document.getElementById("amountSymbol")?.addEventListener("input",e=>{
   cSym=e.target.value.trim();
   updateNet();
+  if(_lastCalculationResult) renderCalculationResult(_lastCalculationResult);
 });

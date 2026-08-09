@@ -1145,6 +1145,27 @@ body::before {
   text-align: center;
 }
 
+.remainder-policy-field {
+  margin: 14px 0;
+}
+
+.calculation-status-ready {
+  color: var(--pri);
+}
+
+.calculation-status-missing,
+.calculation-status-unsupported {
+  color: var(--danger);
+}
+
+.calculation-status-line {
+  overflow-wrap: anywhere;
+}
+
+.source-list {
+  overflow-wrap: anywhere;
+}
+
 /* ==========================================================================
    Results Section
    ========================================================================== */

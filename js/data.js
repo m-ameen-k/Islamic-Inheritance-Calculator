@@ -138,6 +138,55 @@ Object.assign(T.en, {
   tab_asl:"Case origin",tab_ass:"Assets",tab_learn:"📘 Learn",blk_title:"Blocked Heirs",no_blk:"No heirs blocked"
 });
 
+Object.assign(T.en, {
+  page_intro:"Ordinary direct-family Shafi‘i cases are available. Unsupported cases stop before calculation.",
+  ready_calculate:"Ready to calculate", case_not_supported:"This case is not supported yet.",
+  missing_information:"Missing information", remainder_policy:"Remainder policy",
+  remainder_unsure:"Unsure", remainder_bayt:"Functioning Bayt al-Mal",
+  remainder_radd:"No functioning Bayt al-Mal — apply radd",
+  remainder_help:"An ordinary charity is not automatically Bayt al-Mal.",
+  how_calculated:"How was this calculated?", calculate_first:"Calculate a supported case to see its rule-derived explanation.",
+  collective_share:"Collective share", per_person_share:"Per-person share", exact_amount:"Exact amount",
+  calculation_type:"Calculation type", working_denominator:"Working denominator",
+  corrected_denominator:"Corrected denominator", asl_unavailable:"أصل المسألة is not shown because its source rule is not admitted.",
+  rules_used:"Rules used", bayt_residue:"Bayt al-Mal residue", source_references:"Source references",
+  limited_status:"Calculator status: limited direct-family scope"
+  ,bequest_unresolved:"A bequest above one third needs explicit valid consent before calculation."
+  ,limited_scope_note:"Limited direct-family production scope.",source_supported_scope:"Source-corroborated supported scope"
+});
+Object.assign(T.ar, {
+  page_intro:"تتوفر الآن مسائل الأسرة المباشرة العادية على المذهب الشافعي، وتتوقف المسائل غير المدعومة قبل الحساب.",
+  ready_calculate:"جاهز للحساب", case_not_supported:"هذه المسألة غير مدعومة بعد.",
+  missing_information:"معلومات ناقصة", remainder_policy:"سياسة الباقي",
+  remainder_unsure:"غير متأكد", remainder_bayt:"بيت مال قائم بوظيفته",
+  remainder_radd:"لا يوجد بيت مال قائم — تطبيق الرد",
+  remainder_help:"لا تُعدّ الجمعية الخيرية العادية بيت مال تلقائيًا.",
+  how_calculated:"كيف تم هذا الحساب؟", calculate_first:"احسب مسألة مدعومة لعرض الشرح المستند إلى القواعد.",
+  collective_share:"النصيب الجماعي", per_person_share:"نصيب الفرد", exact_amount:"المبلغ الدقيق",
+  calculation_type:"نوع المسألة", working_denominator:"المقام العامل",
+  corrected_denominator:"المقام المصحح", asl_unavailable:"لا يُعرض أصل المسألة لأن قاعدته المصدرية لم تُعتمد بعد.",
+  rules_used:"القواعد المستخدمة", bayt_residue:"باقي بيت المال", source_references:"المراجع",
+  limited_status:"حالة الحاسبة: نطاق أسرة مباشرة محدود"
+  ,bequest_unresolved:"تحتاج الوصية التي تتجاوز الثلث إلى موافقة صحيحة وصريحة قبل الحساب."
+  ,limited_scope_note:"نطاق إنتاج محدود للأسرة المباشرة.",source_supported_scope:"نطاق مدعوم بأدلة مصدرية متوافقة"
+});
+Object.assign(T.ml, {
+  page_intro:"സാധാരണ നേരിട്ടുള്ള കുടുംബ ശാഫിഈ കേസുകൾ ഇപ്പോൾ ലഭ്യമാണ്. പിന്തുണയില്ലാത്ത കേസുകൾ കണക്കിന് മുമ്പ് നിർത്തും.",
+  ready_calculate:"കണക്കാക്കാൻ തയ്യാറാണ്", case_not_supported:"ഈ കേസ് ഇതുവരെ പിന്തുണയ്ക്കുന്നില്ല.",
+  missing_information:"വിവരങ്ങൾ അപൂർണ്ണമാണ്", remainder_policy:"ബാക്കി വിതരണ നയം",
+  remainder_unsure:"ഉറപ്പില്ല", remainder_bayt:"പ്രവർത്തിക്കുന്ന ബൈത്തുൽ മാൽ",
+  remainder_radd:"പ്രവർത്തിക്കുന്ന ബൈത്തുൽ മാൽ ഇല്ല — റദ്ദ് പ്രയോഗിക്കുക",
+  remainder_help:"ഒരു സാധാരണ ചാരിറ്റിയെ സ്വയമേവ ബൈത്തുൽ മാൽ ആയി കണക്കാക്കില്ല.",
+  how_calculated:"ഇത് എങ്ങനെ കണക്കാക്കി?", calculate_first:"നിയമാധിഷ്ഠിത വിശദീകരണം കാണാൻ പിന്തുണയ്ക്കുന്ന കേസ് കണക്കാക്കുക.",
+  collective_share:"കൂട്ടായ ഓഹരി", per_person_share:"വ്യക്തിഗത ഓഹരി", exact_amount:"കൃത്യമായ തുക",
+  calculation_type:"കണക്കിന്റെ തരം", working_denominator:"പ്രവർത്തന ഹരം",
+  corrected_denominator:"തിരുത്തിയ ഹരം", asl_unavailable:"സ്രോതസ്സ് നിയമം അംഗീകരിക്കാത്തതിനാൽ أصل المسألة കാണിക്കുന്നില്ല.",
+  rules_used:"ഉപയോഗിച്ച നിയമങ്ങൾ", bayt_residue:"ബൈത്തുൽ മാൽ ബാക്കി", source_references:"സ്രോതസ്സുകൾ",
+  limited_status:"കാൽക്കുലേറ്റർ നില: പരിമിത നേരിട്ടുള്ള കുടുംബ പരിധി"
+  ,bequest_unresolved:"മൂന്നിലൊന്നിൽ കൂടുതലുള്ള വസിയ്യത്തിന് കണക്കിന് മുമ്പ് വ്യക്തമായ സാധുവായ സമ്മതം വേണം."
+  ,limited_scope_note:"പരിമിത നേരിട്ടുള്ള കുടുംബ പ്രൊഡക്ഷൻ പരിധി.",source_supported_scope:"സ്രോതസ്സുകളാൽ സ്ഥിരീകരിച്ച പിന്തുണാ പരിധി"
+});
+
 const LANGUAGE_PAIRS = Object.freeze({
   en:Object.freeze({primaryLanguage:"en",secondaryLanguage:"ar",primaryDirection:"ltr",secondaryDirection:"rtl"}),
   ar:Object.freeze({primaryLanguage:"ar",secondaryLanguage:"en",primaryDirection:"rtl",secondaryDirection:"ltr"}),

@@ -175,10 +175,12 @@ describe("TECHNICAL_TEST: deterministic bilingual UI localization", () => {
     expect(APP_SOURCE).toContain('input[type="number"],.numeric-value,.code-like');
   });
 
-  it("keeps the calculation action disabled while localizing its visible status", () => {
+  it("starts disabled and exposes localized dynamic coverage status", () => {
     expect(HTML_SOURCE).toMatch(/<button[^>]*id="calcBtn"[^>]*\bdisabled\b/);
-    expect(HTML_SOURCE).toContain('data-i="calc_disabled"');
-    expect(HTML_SOURCE).toContain('data-i="calc_disabled_reason"');
+    expect(HTML_SOURCE).toContain('data-i="calc_btn"');
+    expect(HTML_SOURCE).toContain('id="calculationDisabledReason"');
+    expect(APP_SOURCE).toContain('getPrimaryText("ready_calculate",lang)');
+    expect(APP_SOURCE).toContain('getPrimaryText("case_not_supported",lang)');
   });
 
   it("preserves the permanent brand lockup without localization markers", () => {

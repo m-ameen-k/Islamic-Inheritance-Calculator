@@ -41,11 +41,13 @@ describe("TECHNICAL_TEST: legacy and browser isolation", () => {
     }
   });
 
-  it("keeps production TypeScript free of browser DOM modules and globals", () => {
+  it("keeps the pure engine and rule corpus free of browser DOM modules and globals", () => {
     const forbiddenDomModule = /^(?:jsdom|happy-dom|react-dom(?:\/|$)|@testing-library\/dom$)/;
     const browserGlobal = /\b(?:document|window|localStorage)\b/;
 
-    for (const file of listTypeScriptFiles(SOURCE_ROOT)) {
+    for (const file of listTypeScriptFiles(SOURCE_ROOT).filter(
+      (path) => !path.includes("/browser/"),
+    )) {
       const source = readFileSync(file, "utf8");
       const imports = importedSpecifiers(source);
 
@@ -54,9 +56,11 @@ describe("TECHNICAL_TEST: legacy and browser isolation", () => {
     }
   });
 
-  it("keeps the visible legacy calculation action disabled", () => {
+  it("loads the production browser adapter and does not load the legacy engine", () => {
     const html = readFileSync(join(PROJECT_ROOT, "index.html"), "utf8");
 
     expect(html).toMatch(/<button[^>]*id="calcBtn"[^>]*\bdisabled\b[^>]*>/);
+    expect(html).toContain('<script src="js/calculator.js"></script>');
+    expect(html).not.toContain('<script src="js/engine.js"></script>');
   });
 });

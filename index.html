@@ -1,328 +1,782 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Fara'id — علم الفرائض</title>
-<script>
-  (() => {
-    const systemTheme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    try {
-      const savedTheme = localStorage.getItem("faraid-theme");
-      document.documentElement.dataset.theme = savedTheme === "light" || savedTheme === "dark" ? savedTheme : systemTheme;
-    } catch {
-      document.documentElement.dataset.theme = systemTheme;
-    }
-  })();
-</script>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-<div class="app">
-
-<div class="header ai">
-  <div>
-    <div class="logo-main">علم الفرائض <span>Islamic Inheritance Calculator</span></div>
-  </div>
-  <div class="hd-right">
-    
-    <!-- 3-language selector styled like yazinsai -->
-    <div class="lang-switcher" id="langSwitcher">
-      <button class="ls-btn active" data-l="en" lang="en" aria-label="English" aria-pressed="true">EN</button>
-      <span class="ls-sep">|</span>
-      <button class="ls-btn" data-l="ar" lang="ar" dir="rtl" aria-label="العربية" aria-pressed="false">AR</button>
-      <span class="ls-sep">|</span>
-      <button class="ls-btn" data-l="ml" lang="ml" aria-label="മലയാളം" aria-pressed="false">ML</button>
-    </div>
-    <button type="button" class="theme-toggle-btn" aria-label="Theme: System. Activate for Light." title="Follow system theme">
-      <svg class="system-theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <rect x="2.5" y="3.5" width="19" height="13" rx="2"/>
-        <path d="M8 20.5h8M12 16.5v4"/>
-        <circle cx="7.5" cy="9.5" r="1.5"/>
-        <path d="M7.5 6.5v-1M7.5 13.5v-1M4.5 9.5h-1M11.5 9.5h-1"/>
-        <path d="M17.5 7a2.8 2.8 0 1 0 0 5 3.2 3.2 0 0 1 0-5Z"/>
-      </svg>
-    </button>
-  </div>
-</div>
-
-<div class="steps ai">
-  <div class="step" id="s1"><div class="sc numeric-value">1</div><div class="sl" data-bilingual="s_dec">Deceased</div></div>
-  <div class="step" id="s2"><div class="sc numeric-value">2</div><div class="sl" data-bilingual="s_est">Estate</div></div>
-  <div class="step" id="s3"><div class="sc numeric-value">3</div><div class="sl" data-bilingual="s_mad">Madhab</div></div>
-  <div class="step" id="s4"><div class="sc numeric-value">4</div><div class="sl" data-bilingual="s_heir">Heirs</div></div>
-  <div class="step" id="s5"><div class="sc numeric-value">5</div><div class="sl" data-bilingual="s_res">Result</div></div>
-</div>
-
-<div class="validation-banner ai" role="status" data-i="page_intro">
-  Calculation is unavailable while the Shafi‘i rules are undergoing scholarly verification.
-</div>
-
-<main class="workspace-layout">
-<div class="main-workspace">
-<div class="card ai">
-  <div class="ch"><div class="cn numeric-value">1</div><div class="ct" data-i="dec_t">Who passed away?</div><div class="car" data-i-secondary="dec_t">من المتوفى؟</div></div>
-  <div class="grd">
-    <button type="button" class="gbtn" data-g="m" id="gbm" aria-pressed="false"><span class="gi">♂</span><span class="ge" data-i="male">Male</span></button>
-    <button type="button" class="gbtn" data-g="f" id="gbf" aria-pressed="false"><span class="gi">♀</span><span class="ge" data-i="female">Female</span></button>
-  </div>
-</div>
-
-<div class="card ai">
-  <div class="ch"><div class="cn numeric-value">2</div><div class="ct" data-i="est_t">Estate &amp; Liabilities</div><div class="car" data-i-secondary="est_t">التركة والخصوم</div></div>
-  <div class="field estate-primary-field">
-    <label class="flabel" for="estate_total"><span data-i="total_estate">Total estate amount</span></label>
-    <input type="number" id="estate_total" class="inp estate-total-input" placeholder="0" min="0" step="any" inputmode="decimal" aria-describedby="estateTotalHelp">
-    <p class="field-help" id="estateTotalHelp" data-i="estate_help">Enter the full amount if known. Leave this empty to build the total from assets.</p>
-  </div>
-
-  <details class="form-disclosure">
-    <summary data-i="build_assets">Build total from assets</summary>
-    <p class="disclosure-note" data-i="build_assets_help">Use this breakdown only when you do not enter a total estate amount above.</p>
-    <div class="g2 disclosure-grid">
-      <div class="field">
-        <label class="flabel" for="cash"><span data-i="cash">Cash</span></label>
-        <input type="number" id="cash" class="inp" placeholder="0" min="0" step="any" inputmode="decimal">
-      </div>
-      <div class="field">
-      <label class="flabel" for="gold_tot"><span data-i="gold">Gold</span></label>
-      <input type="number" id="gold_tot" class="inp" placeholder="Total gold value" min="0" step="any" data-i-placeholder="total_gold_value" data-i-aria="total_gold_value">
-      <details class="valuation-disclosure">
-        <summary data-i="calculate_weight_rate">Calculate from weight and rate</summary>
-        <div class="valuation-fields">
-          <div class="metal-row"><input type="number" id="gold_w" class="inp" placeholder="Weight" min="0" step="any" data-i-placeholder="weight" data-i-aria="gold_weight"><select id="gold_u" class="inp code-like" data-i-aria="gold_weight_unit"><option value="gram">gram</option><option value="tola">tola</option><option value="ounce">oz</option><option value="kg">kg</option></select></div>
-          <div class="price-inp-wrap"><input type="number" id="gold_p" class="inp" placeholder="Manual rate per unit" min="0" step="any" data-i-placeholder="manual_rate" data-i-aria="gold_rate_unit"><span class="price-unit-label code-like" id="goldUnitLbl">/ gram</span></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <title>Fara'id — علم الفرائض</title>
+    <script>
+      (() => {
+        const systemTheme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        try {
+          const savedTheme = localStorage.getItem("faraid-theme");
+          document.documentElement.dataset.theme =
+            savedTheme === "light" || savedTheme === "dark" ? savedTheme : systemTheme;
+        } catch {
+          document.documentElement.dataset.theme = systemTheme;
+        }
+      })();
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <div class="header ai">
+        <div>
+          <div class="logo-main">علم الفرائض <span>Islamic Inheritance Calculator</span></div>
         </div>
-      </details>
-      </div>
-      <div class="field">
-      <label class="flabel" for="silver_tot"><span data-i="silver">Silver</span></label>
-      <input type="number" id="silver_tot" class="inp" placeholder="Total silver value" min="0" step="any" data-i-placeholder="total_silver_value" data-i-aria="total_silver_value">
-      <details class="valuation-disclosure">
-        <summary data-i="calculate_weight_rate">Calculate from weight and rate</summary>
-        <div class="valuation-fields">
-          <div class="metal-row"><input type="number" id="silver_w" class="inp" placeholder="Weight" min="0" step="any" data-i-placeholder="weight" data-i-aria="silver_weight"><select id="silver_u" class="inp code-like" data-i-aria="silver_weight_unit"><option value="gram">gram</option><option value="tola">tola</option><option value="ounce">oz</option><option value="kg">kg</option></select></div>
-          <div class="price-inp-wrap"><input type="number" id="silver_p" class="inp" placeholder="Manual rate per unit" min="0" step="any" data-i-placeholder="manual_rate" data-i-aria="silver_rate_unit"><span class="price-unit-label code-like" id="silverUnitLbl">/ gram</span></div>
+        <div class="hd-right">
+          <!-- 3-language selector styled like yazinsai -->
+          <div class="lang-switcher" id="langSwitcher">
+            <button
+              class="ls-btn active"
+              data-l="en"
+              lang="en"
+              aria-label="English"
+              aria-pressed="true"
+            >
+              EN
+            </button>
+            <span class="ls-sep">|</span>
+            <button
+              class="ls-btn"
+              data-l="ar"
+              lang="ar"
+              dir="rtl"
+              aria-label="العربية"
+              aria-pressed="false"
+            >
+              AR
+            </button>
+            <span class="ls-sep">|</span>
+            <button class="ls-btn" data-l="ml" lang="ml" aria-label="മലയാളം" aria-pressed="false">
+              ML
+            </button>
+          </div>
+          <button
+            type="button"
+            class="theme-toggle-btn"
+            aria-label="Theme: System. Activate for Light."
+            title="Follow system theme"
+          >
+            <svg
+              class="system-theme-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="2.5" y="3.5" width="19" height="13" rx="2" />
+              <path d="M8 20.5h8M12 16.5v4" />
+              <circle cx="7.5" cy="9.5" r="1.5" />
+              <path d="M7.5 6.5v-1M7.5 13.5v-1M4.5 9.5h-1M11.5 9.5h-1" />
+              <path d="M17.5 7a2.8 2.8 0 1 0 0 5 3.2 3.2 0 0 1 0-5Z" />
+            </svg>
+          </button>
         </div>
-      </details>
       </div>
-      <div class="field">
-      <label class="flabel" for="land_tot"><span data-i="land">Land / Property</span></label>
-      <input type="number" id="land_tot" class="inp" placeholder="Total property value" min="0" step="any" data-i-placeholder="total_property_value" data-i-aria="total_property_value">
-      <details class="valuation-disclosure">
-        <summary data-i="calculate_property_area">Calculate property value from area</summary>
-        <div class="valuation-fields">
-          <div class="metal-row"><input type="number" id="land_a" class="inp" placeholder="Area" min="0" step="any" data-i-placeholder="area" data-i-aria="property_area"><select id="land_u" class="inp code-like" data-i-aria="property_area_unit"><option value="sqft">sq ft</option><option value="sqm">sq m</option><option value="cent">cent</option><option value="acre">acre</option></select></div>
-          <input type="number" id="land_rate" class="inp" placeholder="Manual rate per unit" min="0" step="any" data-i-placeholder="manual_rate" data-i-aria="property_rate_unit">
+
+      <div class="steps ai">
+        <div class="step" id="s1">
+          <div class="sc numeric-value">1</div>
+          <div class="sl" data-bilingual="s_dec">Deceased</div>
         </div>
-      </details>
-    </div>
-    <div class="field">
-      <label class="flabel" for="other_v"><span data-i="other">Other assets</span></label>
-      <input type="number" id="other_v" class="inp" placeholder="Value" min="0" step="any" data-i-placeholder="value" data-i-aria="other_asset_value">
+        <div class="step" id="s2">
+          <div class="sc numeric-value">2</div>
+          <div class="sl" data-bilingual="s_est">Estate</div>
+        </div>
+        <div class="step" id="s3">
+          <div class="sc numeric-value">3</div>
+          <div class="sl" data-bilingual="s_mad">Madhab</div>
+        </div>
+        <div class="step" id="s4">
+          <div class="sc numeric-value">4</div>
+          <div class="sl" data-bilingual="s_heir">Heirs</div>
+        </div>
+        <div class="step" id="s5">
+          <div class="sc numeric-value">5</div>
+          <div class="sl" data-bilingual="s_res">Result</div>
+        </div>
       </div>
-    </div>
-  </details>
 
-  <details class="form-disclosure">
-    <summary data-i="debts_zakat">Debts and unpaid zakat</summary>
-    <div class="deductions-grid">
-      <div class="field field-group">
-        <label class="flabel" for="debts"><span data-i="debts">Debts</span></label>
-        <input type="number" id="debts" class="inp" placeholder="0" min="0" step="any" data-i-aria="debts">
+      <div class="validation-banner ai" role="status" data-i="page_intro">
+        Ordinary direct-family Shafi‘i cases are available. Unsupported cases stop before
+        calculation.
       </div>
-      <div class="field field-group">
-        <label class="flabel" for="zakat"><span data-i="zakat">Unpaid Zakat</span></label>
-        <input type="number" id="zakat" class="inp" placeholder="0" min="0" step="any" data-i-aria="zakat">
+
+      <main class="workspace-layout">
+        <div class="main-workspace">
+          <div class="card ai">
+            <div class="ch">
+              <div class="cn numeric-value">1</div>
+              <div class="ct" data-i="dec_t">Who passed away?</div>
+              <div class="car" data-i-secondary="dec_t">من المتوفى؟</div>
+            </div>
+            <div class="grd">
+              <button type="button" class="gbtn" data-g="m" id="gbm" aria-pressed="false">
+                <span class="gi">♂</span><span class="ge" data-i="male">Male</span>
+              </button>
+              <button type="button" class="gbtn" data-g="f" id="gbf" aria-pressed="false">
+                <span class="gi">♀</span><span class="ge" data-i="female">Female</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="card ai">
+            <div class="ch">
+              <div class="cn numeric-value">2</div>
+              <div class="ct" data-i="est_t">Estate &amp; Liabilities</div>
+              <div class="car" data-i-secondary="est_t">التركة والخصوم</div>
+            </div>
+            <div class="field estate-primary-field">
+              <label class="flabel" for="estate_total"
+                ><span data-i="total_estate">Total estate amount</span></label
+              >
+              <input
+                type="number"
+                id="estate_total"
+                class="inp estate-total-input"
+                placeholder="0"
+                min="0"
+                step="any"
+                inputmode="decimal"
+                aria-describedby="estateTotalHelp"
+              />
+              <p class="field-help" id="estateTotalHelp" data-i="estate_help">
+                Enter the full amount if known. Leave this empty to build the total from assets.
+              </p>
+            </div>
+
+            <details class="form-disclosure">
+              <summary data-i="build_assets">Build total from assets</summary>
+              <p class="disclosure-note" data-i="build_assets_help">
+                Use this breakdown only when you do not enter a total estate amount above.
+              </p>
+              <div class="g2 disclosure-grid">
+                <div class="field">
+                  <label class="flabel" for="cash"><span data-i="cash">Cash</span></label>
+                  <input
+                    type="number"
+                    id="cash"
+                    class="inp"
+                    placeholder="0"
+                    min="0"
+                    step="any"
+                    inputmode="decimal"
+                  />
+                </div>
+                <div class="field">
+                  <label class="flabel" for="gold_tot"><span data-i="gold">Gold</span></label>
+                  <input
+                    type="number"
+                    id="gold_tot"
+                    class="inp"
+                    placeholder="Total gold value"
+                    min="0"
+                    step="any"
+                    data-i-placeholder="total_gold_value"
+                    data-i-aria="total_gold_value"
+                  />
+                  <details class="valuation-disclosure">
+                    <summary data-i="calculate_weight_rate">Calculate from weight and rate</summary>
+                    <div class="valuation-fields">
+                      <div class="metal-row">
+                        <input
+                          type="number"
+                          id="gold_w"
+                          class="inp"
+                          placeholder="Weight"
+                          min="0"
+                          step="any"
+                          data-i-placeholder="weight"
+                          data-i-aria="gold_weight"
+                        /><select id="gold_u" class="inp code-like" data-i-aria="gold_weight_unit">
+                          <option value="gram">gram</option>
+                          <option value="tola">tola</option>
+                          <option value="ounce">oz</option>
+                          <option value="kg">kg</option>
+                        </select>
+                      </div>
+                      <div class="price-inp-wrap">
+                        <input
+                          type="number"
+                          id="gold_p"
+                          class="inp"
+                          placeholder="Manual rate per unit"
+                          min="0"
+                          step="any"
+                          data-i-placeholder="manual_rate"
+                          data-i-aria="gold_rate_unit"
+                        /><span class="price-unit-label code-like" id="goldUnitLbl">/ gram</span>
+                      </div>
+                    </div>
+                  </details>
+                </div>
+                <div class="field">
+                  <label class="flabel" for="silver_tot"><span data-i="silver">Silver</span></label>
+                  <input
+                    type="number"
+                    id="silver_tot"
+                    class="inp"
+                    placeholder="Total silver value"
+                    min="0"
+                    step="any"
+                    data-i-placeholder="total_silver_value"
+                    data-i-aria="total_silver_value"
+                  />
+                  <details class="valuation-disclosure">
+                    <summary data-i="calculate_weight_rate">Calculate from weight and rate</summary>
+                    <div class="valuation-fields">
+                      <div class="metal-row">
+                        <input
+                          type="number"
+                          id="silver_w"
+                          class="inp"
+                          placeholder="Weight"
+                          min="0"
+                          step="any"
+                          data-i-placeholder="weight"
+                          data-i-aria="silver_weight"
+                        /><select
+                          id="silver_u"
+                          class="inp code-like"
+                          data-i-aria="silver_weight_unit"
+                        >
+                          <option value="gram">gram</option>
+                          <option value="tola">tola</option>
+                          <option value="ounce">oz</option>
+                          <option value="kg">kg</option>
+                        </select>
+                      </div>
+                      <div class="price-inp-wrap">
+                        <input
+                          type="number"
+                          id="silver_p"
+                          class="inp"
+                          placeholder="Manual rate per unit"
+                          min="0"
+                          step="any"
+                          data-i-placeholder="manual_rate"
+                          data-i-aria="silver_rate_unit"
+                        /><span class="price-unit-label code-like" id="silverUnitLbl">/ gram</span>
+                      </div>
+                    </div>
+                  </details>
+                </div>
+                <div class="field">
+                  <label class="flabel" for="land_tot"
+                    ><span data-i="land">Land / Property</span></label
+                  >
+                  <input
+                    type="number"
+                    id="land_tot"
+                    class="inp"
+                    placeholder="Total property value"
+                    min="0"
+                    step="any"
+                    data-i-placeholder="total_property_value"
+                    data-i-aria="total_property_value"
+                  />
+                  <details class="valuation-disclosure">
+                    <summary data-i="calculate_property_area">
+                      Calculate property value from area
+                    </summary>
+                    <div class="valuation-fields">
+                      <div class="metal-row">
+                        <input
+                          type="number"
+                          id="land_a"
+                          class="inp"
+                          placeholder="Area"
+                          min="0"
+                          step="any"
+                          data-i-placeholder="area"
+                          data-i-aria="property_area"
+                        /><select
+                          id="land_u"
+                          class="inp code-like"
+                          data-i-aria="property_area_unit"
+                        >
+                          <option value="sqft">sq ft</option>
+                          <option value="sqm">sq m</option>
+                          <option value="cent">cent</option>
+                          <option value="acre">acre</option>
+                        </select>
+                      </div>
+                      <input
+                        type="number"
+                        id="land_rate"
+                        class="inp"
+                        placeholder="Manual rate per unit"
+                        min="0"
+                        step="any"
+                        data-i-placeholder="manual_rate"
+                        data-i-aria="property_rate_unit"
+                      />
+                    </div>
+                  </details>
+                </div>
+                <div class="field">
+                  <label class="flabel" for="other_v"
+                    ><span data-i="other">Other assets</span></label
+                  >
+                  <input
+                    type="number"
+                    id="other_v"
+                    class="inp"
+                    placeholder="Value"
+                    min="0"
+                    step="any"
+                    data-i-placeholder="value"
+                    data-i-aria="other_asset_value"
+                  />
+                </div>
+              </div>
+            </details>
+
+            <details class="form-disclosure">
+              <summary data-i="debts_zakat">Debts and unpaid zakat</summary>
+              <div class="deductions-grid">
+                <div class="field field-group">
+                  <label class="flabel" for="debts"><span data-i="debts">Debts</span></label>
+                  <input
+                    type="number"
+                    id="debts"
+                    class="inp"
+                    placeholder="0"
+                    min="0"
+                    step="any"
+                    data-i-aria="debts"
+                  />
+                </div>
+                <div class="field field-group">
+                  <label class="flabel" for="zakat"><span data-i="zakat">Unpaid Zakat</span></label>
+                  <input
+                    type="number"
+                    id="zakat"
+                    class="inp"
+                    placeholder="0"
+                    min="0"
+                    step="any"
+                    data-i-aria="zakat"
+                  />
+                </div>
+              </div>
+              <p class="unsupported-note" data-i="unsupported_funeral">
+                Funeral and preparation costs are not entered here because this workflow cannot
+                currently apply them safely.
+              </p>
+            </details>
+
+            <details class="form-disclosure">
+              <summary data-i="bequest_details">Bequest details</summary>
+              <div class="field disclosure-content">
+                <div class="flabel"><span data-i="was_lbl">Wasiyyah (Bequest)</span></div>
+                <input
+                  type="number"
+                  id="wasiyyah"
+                  class="inp"
+                  placeholder="0"
+                  min="0"
+                  step="any"
+                  data-i-aria="wasiyyah_bequest"
+                />
+                <div class="checkbox-row">
+                  <input type="checkbox" id="was_con" />
+                  <label for="was_con" data-i="was_con">All heirs consent to exceed 1/3?</label>
+                </div>
+                <div id="wasWarn" class="wbox"></div>
+              </div>
+            </details>
+          </div>
+
+          <div class="card ai">
+            <div class="ch">
+              <div class="cn numeric-value">3</div>
+              <div class="ct" data-i="mad_t">Madhab</div>
+              <div class="car" data-i-secondary="mad_t">المذهب</div>
+            </div>
+            <div class="mrow">
+              <button class="mbtn on" data-m="shafii" style="cursor: default" data-i="shafii_name">
+                Shafi‘i
+              </button>
+            </div>
+            <details class="form-disclosure madhab-disclosure">
+              <summary data-i="other_madhabs">Other madhabs (not implemented)</summary>
+              <div class="mrow disclosure-content">
+                <button
+                  class="mbtn"
+                  data-m="hanafi"
+                  disabled
+                  data-i-title="not_implemented"
+                  data-i="hanafi_name"
+                >
+                  Hanafi
+                </button>
+                <button
+                  class="mbtn"
+                  data-m="maliki"
+                  disabled
+                  data-i-title="not_implemented"
+                  data-i="maliki_name"
+                >
+                  Maliki
+                </button>
+                <button
+                  class="mbtn"
+                  data-m="hanbali"
+                  disabled
+                  data-i-title="not_implemented"
+                  data-i="hanbali_name"
+                >
+                  Hanbali
+                </button>
+              </div>
+            </details>
+            <div
+              class="snote"
+              style="margin-top: 10px; margin-bottom: 0"
+              data-i="limited_scope_note"
+            >
+              Limited direct-family production scope.
+            </div>
+          </div>
+
+          <div class="card ai">
+            <div class="ch">
+              <div class="cn numeric-value">4</div>
+              <div class="ct" data-i="heir_t">Select Heirs</div>
+              <div class="car" data-i-secondary="heir_t">اختر الورثة</div>
+            </div>
+            <div class="hint" id="heirsHint" data-i="heir_hint">
+              Select deceased gender first, then tap heirs.
+            </div>
+            <div class="heir-groups" id="hgrid">
+              <section class="heir-group" aria-labelledby="spouseHeirsTitle">
+                <h3 id="spouseHeirsTitle" data-bilingual="group_spouse">Spouse</h3>
+                <div class="hgrid" id="hgrid-spouse"></div>
+              </section>
+              <section class="heir-group" aria-labelledby="descendantHeirsTitle">
+                <h3 id="descendantHeirsTitle" data-bilingual="group_descendants">
+                  Children and descendants
+                </h3>
+                <div class="hgrid" id="hgrid-descendants"></div>
+              </section>
+              <details class="heir-group" open aria-labelledby="parentsHeirsTitle">
+                <summary id="parentsHeirsTitle" data-bilingual="group_parents">
+                  Parents and grandparents
+                </summary>
+                <div class="hgrid" id="hgrid-parents"></div>
+              </details>
+              <details class="heir-group" aria-labelledby="siblingsHeirsTitle">
+                <summary id="siblingsHeirsTitle" data-bilingual="group_siblings">Siblings</summary>
+                <div class="hgrid" id="hgrid-siblings"></div>
+              </details>
+              <details class="heir-group" aria-labelledby="extendedHeirsTitle">
+                <summary id="extendedHeirsTitle" data-bilingual="group_extended">
+                  Extended relatives
+                </summary>
+                <div class="hgrid" id="hgrid-extended"></div>
+              </details>
+            </div>
+          </div>
+
+          <div class="res card ai" id="resSec">
+            <div class="ch">
+              <div class="cn numeric-value">5</div>
+              <div class="ct" data-i="res_t">Results</div>
+              <div class="car" data-i-secondary="res_t">النتائج</div>
+              <div id="ctag"></div>
+            </div>
+            <div class="tabs">
+              <div class="tab on" data-tab="Shares" data-i="tab_sh">Shares</div>
+              <div class="tab" data-tab="Hajb" data-i="tab_hj">Hajb</div>
+              <div class="tab" data-tab="Asl" data-i="tab_asl">Case origin</div>
+              <div class="tab" data-tab="Assets" data-i="tab_ass">Assets</div>
+              <div class="tab" data-tab="Learn" data-i="tab_learn">📘 Learn</div>
+            </div>
+            <div class="tc on" id="tcShares">
+              <div class="metrics" id="metrics"></div>
+              <div id="sharesList"></div>
+            </div>
+            <div class="tc" id="tcHajb"><div id="hajbList"></div></div>
+            <div class="tc" id="tcAsl"><div id="aslDetail"></div></div>
+            <div class="tc" id="tcAssets"><div id="assetsDetail"></div></div>
+            <div class="tc" id="tcLearn"><div id="learnContent"></div></div>
+          </div>
+        </div>
+
+        <aside class="case-sidebar ai" aria-labelledby="caseSummaryTitle">
+          <section class="card case-summary">
+            <div class="ch">
+              <div class="ct" id="caseSummaryTitle" data-i="review">Review</div>
+              <div class="car" data-i-secondary="review">مراجعة</div>
+            </div>
+            <dl class="review-list">
+              <div>
+                <dt data-i="gross_estate">Gross estate</dt>
+                <dd id="reviewGross" class="numeric-value" aria-live="polite">0</dd>
+              </div>
+              <div>
+                <dt data-i="supported_deductions">Supported deductions</dt>
+                <dd id="reviewDeductions" class="numeric-value" aria-live="polite">0</dd>
+              </div>
+              <div class="net-amount">
+                <dt data-i="current_net">Current net amount</dt>
+                <dd id="reviewEstate" class="numeric-value" aria-live="polite">0</dd>
+              </div>
+              <div>
+                <dt data-i="selected_heirs">Selected heirs</dt>
+                <dd id="selectedHeirsSummary" aria-live="polite">None selected</dd>
+              </div>
+              <div>
+                <dt data-i="incomplete_information">Incomplete information</dt>
+                <dd id="caseCompleteness" aria-live="polite">Select who passed away.</dd>
+              </div>
+              <div>
+                <dt data-i="verification_status">Verification status</dt>
+                <dd>
+                  <span class="status-label" data-i="source_supported_scope"
+                    >Source-corroborated supported scope</span
+                  >
+                </dd>
+              </div>
+            </dl>
+            <div class="field remainder-policy-field">
+              <label class="flabel" for="remainderPolicy" data-i="remainder_policy"
+                >Remainder policy</label
+              >
+              <select id="remainderPolicy" class="inp">
+                <option value="UNSURE" data-i="remainder_unsure">Unsure</option>
+                <option value="FUNCTIONING_BAYT_AL_MAL" data-i="remainder_bayt">
+                  Functioning Bayt al-Mal
+                </option>
+                <option value="NO_FUNCTIONING_BAYT_AL_MAL_RADD" data-i="remainder_radd">
+                  No functioning Bayt al-Mal — apply radd
+                </option>
+              </select>
+              <p class="disclosure-note" data-i="remainder_help">
+                An ordinary charity is not automatically Bayt al-Mal.
+              </p>
+            </div>
+            <button
+              class="calcbtn"
+              id="calcBtn"
+              disabled
+              aria-describedby="calculationDisabledReason"
+            >
+              <span data-i="calc_btn">Calculate shares</span>
+            </button>
+            <p
+              class="calculation-disabled-reason"
+              id="calculationDisabledReason"
+              aria-live="polite"
+            >
+              Add the missing case information.
+            </p>
+            <details class="summary-disclosure report-options">
+              <summary data-i="report_options">Report options</summary>
+              <div class="field disclosure-content">
+                <label class="flabel" for="amountSymbol" data-i="amount_symbol"
+                  >Amount symbol</label
+                >
+                <input
+                  type="text"
+                  id="amountSymbol"
+                  class="inp amount-symbol-input code-like"
+                  maxlength="8"
+                  placeholder="₹, $, ر.س"
+                  autocomplete="off"
+                />
+                <p class="disclosure-note" data-i="amount_symbol_help">
+                  Used only to format displayed amounts. It never converts a value.
+                </p>
+              </div>
+            </details>
+            <details class="summary-disclosure" id="calculationExplanation">
+              <summary data-i="how_calculated">How was this calculated?</summary>
+              <div id="verificationContent" class="disclosure-content" data-i="calculate_first">
+                Calculate a supported case to see its rule-derived explanation.
+              </div>
+            </details>
+          </section>
+        </aside>
+      </main>
+
+      <div class="fab-group">
+        <button class="fab" id="fabTop" data-i-aria="scroll_top">↑</button>
+        <button class="fab fab-down" id="fabBottom" data-i-aria="scroll_bottom">↓</button>
       </div>
-    </div>
-    <p class="unsupported-note" data-i="unsupported_funeral">Funeral and preparation costs are not entered here because this workflow cannot currently apply them safely.</p>
-  </details>
 
-  <details class="form-disclosure">
-    <summary data-i="bequest_details">Bequest details</summary>
-    <div class="field disclosure-content">
-    <div class="flabel"><span data-i="was_lbl">Wasiyyah (Bequest)</span></div>
-    <input type="number" id="wasiyyah" class="inp" placeholder="0" min="0" step="any" data-i-aria="wasiyyah_bequest">
-    <div class="checkbox-row">
-      <input type="checkbox" id="was_con">
-      <label for="was_con" data-i="was_con">All heirs consent to exceed 1/3?</label>
-    </div>
-    <div id="wasWarn" class="wbox"></div>
-    </div>
-  </details>
-</div>
-
-<div class="card ai">
-  <div class="ch"><div class="cn numeric-value">3</div><div class="ct" data-i="mad_t">Madhab</div><div class="car" data-i-secondary="mad_t">المذهب</div></div>
-  <div class="mrow">
-    <button class="mbtn on" data-m="shafii" style="cursor:default" data-i="shafii_name">Shafi‘i</button>
-  </div>
-  <details class="form-disclosure madhab-disclosure">
-    <summary data-i="other_madhabs">Other madhabs (not implemented)</summary>
-    <div class="mrow disclosure-content">
-    <button class="mbtn" data-m="hanafi" disabled data-i-title="not_implemented" data-i="hanafi_name">Hanafi</button>
-    <button class="mbtn" data-m="maliki" disabled data-i-title="not_implemented" data-i="maliki_name">Maliki</button>
-    <button class="mbtn" data-m="hanbali" disabled data-i-title="not_implemented" data-i="hanbali_name">Hanbali</button>
-    </div>
-  </details>
-  <div class="snote" style="margin-top:10px;margin-bottom:0" data-i="verification_progress">Verification in progress.</div>
-</div>
-
-<div class="card ai">
-  <div class="ch"><div class="cn numeric-value">4</div><div class="ct" data-i="heir_t">Select Heirs</div><div class="car" data-i-secondary="heir_t">اختر الورثة</div></div>
-  <div class="hint" id="heirsHint" data-i="heir_hint">Select deceased gender first, then tap heirs.</div>
-  <div class="heir-groups" id="hgrid">
-    <section class="heir-group" aria-labelledby="spouseHeirsTitle">
-      <h3 id="spouseHeirsTitle" data-bilingual="group_spouse">Spouse</h3>
-      <div class="hgrid" id="hgrid-spouse"></div>
-    </section>
-    <section class="heir-group" aria-labelledby="descendantHeirsTitle">
-      <h3 id="descendantHeirsTitle" data-bilingual="group_descendants">Children and descendants</h3>
-      <div class="hgrid" id="hgrid-descendants"></div>
-    </section>
-    <details class="heir-group" open aria-labelledby="parentsHeirsTitle">
-      <summary id="parentsHeirsTitle" data-bilingual="group_parents">Parents and grandparents</summary>
-      <div class="hgrid" id="hgrid-parents"></div>
-    </details>
-    <details class="heir-group" aria-labelledby="siblingsHeirsTitle">
-      <summary id="siblingsHeirsTitle" data-bilingual="group_siblings">Siblings</summary>
-      <div class="hgrid" id="hgrid-siblings"></div>
-    </details>
-    <details class="heir-group" aria-labelledby="extendedHeirsTitle">
-      <summary id="extendedHeirsTitle" data-bilingual="group_extended">Extended relatives</summary>
-      <div class="hgrid" id="hgrid-extended"></div>
-    </details>
-  </div>
-</div>
-
-<div class="res card ai" id="resSec">
-  <div class="ch"><div class="cn numeric-value">5</div><div class="ct" data-i="res_t">Results</div><div class="car" data-i-secondary="res_t">النتائج</div><div id="ctag"></div></div>
-  <div class="tabs">
-      <div class="tab on" data-tab="Shares" data-i="tab_sh">Shares</div>
-      <div class="tab" data-tab="Hajb" data-i="tab_hj">Hajb</div>
-      <div class="tab" data-tab="Asl" data-i="tab_asl">Case origin</div>
-      <div class="tab" data-tab="Assets" data-i="tab_ass">Assets</div>
-      <div class="tab" data-tab="Learn" data-i="tab_learn">📘 Learn</div>
-  </div>
-  <div class="tc on" id="tcShares"><div class="metrics" id="metrics"></div><div id="sharesList"></div></div>
-  <div class="tc" id="tcHajb"><div id="hajbList"></div></div>
-  <div class="tc" id="tcAsl"><div id="aslDetail"></div></div>
-  <div class="tc" id="tcAssets"><div id="assetsDetail"></div></div>
-  <div class="tc" id="tcLearn"><div id="learnContent"></div></div>
-</div>
-</div>
-
-<aside class="case-sidebar ai" aria-labelledby="caseSummaryTitle">
-  <section class="card case-summary">
-    <div class="ch">
-      <div class="ct" id="caseSummaryTitle" data-i="review">Review</div>
-      <div class="car" data-i-secondary="review">مراجعة</div>
-    </div>
-    <dl class="review-list">
-      <div>
-        <dt data-i="gross_estate">Gross estate</dt>
-        <dd id="reviewGross" class="numeric-value" aria-live="polite">0</dd>
+      <div
+        id="asabaModal"
+        style="
+          display: none;
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.5);
+          z-index: 999;
+          align-items: center;
+          justify-content: center;
+          padding: 1rem;
+        "
+      >
+        <div
+          style="
+            background: var(--card);
+            padding: 1.8rem;
+            border-radius: var(--r);
+            max-width: 400px;
+            width: 100%;
+            box-shadow: var(--sh2);
+            position: relative;
+          "
+        >
+          <button
+            data-i-aria="close_dialog"
+            onclick="document.getElementById('asabaModal').style.display = 'none'"
+            style="
+              position: absolute;
+              top: 10px;
+              right: 10px;
+              background: none;
+              border: none;
+              font-size: 1.4rem;
+              cursor: pointer;
+              color: var(--txt3);
+              transition: color 0.2s;
+            "
+          >
+            ✕
+          </button>
+          <h3
+            style="
+              color: var(--warn);
+              margin-bottom: 12px;
+              font-family: &quot;Amiri&quot;, serif;
+              font-size: 1.3rem;
+            "
+            id="asabaModTitle"
+          ></h3>
+          <div
+            id="asabaModDesc"
+            style="font-size: 14px; color: var(--txt2); line-height: 1.7"
+          ></div>
+        </div>
       </div>
-      <div>
-        <dt data-i="supported_deductions">Supported deductions</dt>
-        <dd id="reviewDeductions" class="numeric-value" aria-live="polite">0</dd>
-      </div>
-      <div class="net-amount">
-        <dt data-i="current_net">Current net amount</dt>
-        <dd id="reviewEstate" class="numeric-value" aria-live="polite">0</dd>
-      </div>
-      <div>
-        <dt data-i="selected_heirs">Selected heirs</dt>
-        <dd id="selectedHeirsSummary" aria-live="polite">None selected</dd>
-      </div>
-      <div>
-        <dt data-i="incomplete_information">Incomplete information</dt>
-        <dd id="caseCompleteness" aria-live="polite">Select who passed away.</dd>
-      </div>
-      <div>
-        <dt data-i="verification_status">Verification status</dt>
-        <dd><span class="status-label" data-i="under_verification">Under verification</span></dd>
-      </div>
-    </dl>
-  <button class="calcbtn" id="calcBtn" disabled aria-describedby="calculationDisabledReason">
-    <span data-i="calc_disabled">Calculation temporarily disabled during validation</span>
-  </button>
-    <p class="calculation-disabled-reason" id="calculationDisabledReason" data-i="calc_disabled_reason">
-      The legacy engine is preserved, but it is not available for estate distribution.
-    </p>
-  <details class="summary-disclosure report-options">
-    <summary data-i="report_options">Report options</summary>
-    <div class="field disclosure-content">
-      <label class="flabel" for="amountSymbol" data-i="amount_symbol">Amount symbol</label>
-      <input type="text" id="amountSymbol" class="inp amount-symbol-input code-like" maxlength="8" placeholder="₹, $, ر.س" autocomplete="off">
-      <p class="disclosure-note" data-i="amount_symbol_help">Used only to format displayed amounts. It never converts a value.</p>
+
+      <footer class="site-footer card ai">
+        <div class="footer-links">
+          <a href="mailto:ameenkariot@gmail.com" class="footer-link">
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="2" y="4" width="20" height="16" rx="2" />
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+            </svg>
+            Gmail
+          </a>
+          <a href="https://wa.me/917510313630" target="_blank" rel="noopener" class="footer-link">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"
+              />
+            </svg>
+            WhatsApp
+          </a>
+          <a href="https://github.com/m-ameen-k" target="_blank" rel="noopener" class="footer-link">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+              />
+            </svg>
+            Github
+          </a>
+        </div>
+
+        <div class="tip-box">
+          <div class="tip-title">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+              <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+              <line x1="6" y1="1" x2="6" y2="4"></line>
+              <line x1="10" y1="1" x2="10" y2="4"></line>
+              <line x1="14" y1="1" x2="14" y2="4"></line>
+            </svg>
+            <span data-i="support_project">Support This Project</span>
+          </div>
+          <div class="tip-methods">
+            <a href="upi://pay?pa=ameenkariot-2@okicici&pn=Ameen" class="tip-btn" id="tipUpi">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="2" y="5" width="20" height="14" rx="2" />
+                <line x1="2" y1="10" x2="22" y2="10" />
+              </svg>
+              UPI
+            </a>
+            <a href="https://paypal.me/mhdameenk" class="tip-btn" id="tipPaypal">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 6.082-8.558 6.082H9.825l-1.353 8.56h3.285l.835-5.284h2.19c4.943 0 7.935-2.394 8.94-7.153.47-2.22.068-3.8-1.5-4.918z"
+                />
+              </svg>
+              PayPal
+            </a>
+            <a
+              href="https://wa.me/917510313630?text=Hi!%20I%20used%20your%20Fara'id%20calculator%20and%20want%20to%20send%20a%20tip!"
+              target="_blank"
+              rel="noopener"
+              class="tip-btn"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"
+                />
+              </svg>
+              WhatsApp Pay
+            </a>
+          </div>
+          <p class="tip-note" data-i="payment_soon">Payment links will be configured soon.</p>
+        </div>
+
+        <p class="footer-copy">
+          <span class="status-label" data-i="limited_status"
+            >Calculator status: limited direct-family scope</span
+          >
+        </p>
+      </footer>
     </div>
-  </details>
-  <details class="summary-disclosure">
-    <summary data-i="detailed_verification">Detailed verification explanation</summary>
-    <p data-i="detailed_verification_text">This case-preparation interface remains available for review, but no result may be calculated or used to distribute an estate until the Shafi‘i rule set completes scholarly verification.</p>
-  </details>
-  </section>
-</aside>
-</main>
 
-<div class="fab-group">
-  <button class="fab" id="fabTop" data-i-aria="scroll_top">↑</button>
-  <button class="fab fab-down" id="fabBottom" data-i-aria="scroll_bottom">↓</button>
-</div>
-
-<div id="asabaModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;align-items:center;justify-content:center;padding:1rem;">
-  <div style="background:var(--card);padding:1.8rem;border-radius:var(--r);max-width:400px;width:100%;box-shadow:var(--sh2);position:relative;">
-    <button data-i-aria="close_dialog" onclick="document.getElementById('asabaModal').style.display='none'" style="position:absolute;top:10px;right:10px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--txt3);transition:color 0.2s;">✕</button>
-    <h3 style="color:var(--warn);margin-bottom:12px;font-family:'Amiri',serif;font-size:1.3rem" id="asabaModTitle"></h3>
-    <div id="asabaModDesc" style="font-size:14px;color:var(--txt2);line-height:1.7"></div>
-  </div>
-</div>
-
-<footer class="site-footer card ai">
-  <div class="footer-links">
-    <a href="mailto:ameenkariot@gmail.com" class="footer-link">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-      Gmail
-    </a>
-    <a href="https://wa.me/917510313630" target="_blank" rel="noopener" class="footer-link">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-      WhatsApp
-    </a>
-    <a href="https://github.com/m-ameen-k" target="_blank" rel="noopener" class="footer-link">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-      Github
-    </a>
-  </div>
-
-  <div class="tip-box">
-    <div class="tip-title">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
-       <span data-i="support_project">Support This Project</span>
-    </div><div class="tip-methods">
-      <a href="upi://pay?pa=ameenkariot-2@okicici&pn=Ameen" class="tip-btn" id="tipUpi">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-        UPI
-      </a>
-      <a href="https://paypal.me/mhdameenk" class="tip-btn" id="tipPaypal">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 6.082-8.558 6.082H9.825l-1.353 8.56h3.285l.835-5.284h2.19c4.943 0 7.935-2.394 8.94-7.153.47-2.22.068-3.8-1.5-4.918z"/></svg>
-        PayPal
-      </a>
-      <a href="https://wa.me/917510313630?text=Hi!%20I%20used%20your%20Fara'id%20calculator%20and%20want%20to%20send%20a%20tip!" target="_blank" rel="noopener" class="tip-btn">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-        WhatsApp Pay
-      </a>
-    </div>
-    <p class="tip-note" data-i="payment_soon">Payment links will be configured soon.</p>
-  </div>
-
-  <p class="footer-copy"><span class="status-label" data-i="calculator_status">Calculator status: unavailable</span></p>
-</footer>
-
-<script src="js/data.js"></script>
-<script src="js/app.js"></script>
-<script src="js/engine.js"></script>
-</body>
+    <script src="js/data.js"></script>
+    <script src="js/calculator.js"></script>
+    <script src="js/app.js"></script>
+  </body>
 </html>
