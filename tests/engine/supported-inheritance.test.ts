@@ -182,10 +182,8 @@ describe("SOURCE_DERIVED_TEST: exact supported direct-family executor", () => {
       ]),
       remainderPolicy: "NO_FUNCTIONING_BAYT_AL_MAL_RADD",
     });
-    expect(unsupported.reasons).toEqual([
-      "UNSUPPORTED_HEIR_CATEGORY:PATERNAL_GRANDFATHER",
-      "BLOCKED_HEIR:PATERNAL_GRANDFATHER:BY:FATHER:RULE:KZ-FR-011-FATHER-BLOCKS-PATERNAL-GRANDFATHER",
-    ]);
+    expect(unsupported.status).toBe("SUPPORTED");
+    expect(unsupported.reasons).toEqual([]);
     expect(unsupported.blockedHeirs[0]).toEqual(
       expect.objectContaining({
         type: "PATERNAL_GRANDFATHER",

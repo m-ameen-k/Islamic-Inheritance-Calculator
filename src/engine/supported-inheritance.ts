@@ -211,6 +211,8 @@ function addAssignment(
 }
 
 function fractionReason(heirType: HeirType, ruleId: string): string {
+  if (ruleId.includes("MOTHER-ONE-SIXTH-SIBLINGS"))
+    return "At least two unblocked siblings are present in this admitted subset.";
   if (ruleId.includes("MOTHER-ONE-SIXTH")) return "A qualifying descendant exists.";
   if (ruleId.includes("MOTHER-ONE-THIRD"))
     return "No qualifying descendant or admitted sibling condition applies.";
@@ -220,6 +222,14 @@ function fractionReason(heirType: HeirType, ruleId: string): string {
   if (ruleId.includes("FATHER-ONE-SIXTH-PLUS"))
     return "Female descendants are present without a male descendant.";
   if (ruleId.includes("FATHER-ONE-SIXTH")) return "A qualifying male descendant is present.";
+  if (ruleId.includes("SONS-DAUGHTER") && ruleId.includes("ONE-SIXTH"))
+    return "One direct daughter is present, so the son's daughter receives the complementary 1/6.";
+  if (ruleId.includes("SONS-DAUGHTER"))
+    return "The admitted son's-daughter fixed-share conditions are satisfied.";
+  if (ruleId.includes("UTERINE-SIBLING"))
+    return "No admitted ascendant or descendant blocker is present.";
+  if (ruleId.includes("FULL-SISTER") || ruleId.includes("PATERNAL-SISTER"))
+    return "The fixed-share sister conditions are satisfied without a converting residuary or blocker.";
   if (heirType === "HUSBAND" || heirType === "WIFE")
     return "The spouse share follows the presence or absence of qualifying descendants.";
   return "The admitted production rule's stated conditions are satisfied.";
@@ -291,7 +301,9 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
   }
   const netEstate = afterDeductions - bequest;
   const selected = coverage.normalizedHeirs;
-  const count = (type: HeirType): number => selected.find((heir) => heir.type === type)?.count ?? 0;
+  const blockedTypes = new Set(coverage.blockedHeirs.map((heir) => heir.type));
+  const eligible = selected.filter((heir) => !blockedTypes.has(heir.type));
+  const count = (type: HeirType): number => eligible.find((heir) => heir.type === type)?.count ?? 0;
   const required = new Set(coverage.requiredRuleIds);
   const assignments = new Map<HeirType, MutableAssignment>();
   const fixedShareAssignments: ShareAssignment[] = [];
@@ -343,6 +355,8 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
       addFixed("MOTHER", new Fraction(1n, 3n), "KZ-FR-009-MOTHER-ONE-THIRD");
     if (required.has("KZ-FR-010-MOTHER-ONE-SIXTH-DESCENDANT"))
       addFixed("MOTHER", new Fraction(1n, 6n), "KZ-FR-010-MOTHER-ONE-SIXTH-DESCENDANT");
+    if (required.has("KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS"))
+      addFixed("MOTHER", new Fraction(1n, 6n), "KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS");
     if (required.has("KZ-FR-012-ONE-DAUGHTER-ONE-HALF"))
       addFixed("DAUGHTER", new Fraction(1n, 2n), "KZ-FR-012-ONE-DAUGHTER-ONE-HALF");
     if (required.has("KZ-FR-012-DAUGHTER-GROUP-TWO-THIRDS"))
@@ -351,6 +365,40 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
       addFixed("FATHER", new Fraction(1n, 6n), "KZ-FR-014-FATHER-ONE-SIXTH");
     if (required.has("KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE"))
       addFixed("FATHER", new Fraction(1n, 6n), "KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE");
+    for (const [type, ruleId, share] of [
+      ["SONS_DAUGHTER", "KZ-FR-005-ONE-SONS-DAUGHTER-ONE-HALF", new Fraction(1n, 2n)],
+      ["SONS_DAUGHTER", "KZ-FR-008-SONS-DAUGHTER-GROUP-TWO-THIRDS", new Fraction(2n, 3n)],
+      [
+        "SONS_DAUGHTER",
+        "KZ-FR-010-ONE-SONS-DAUGHTER-WITH-DAUGHTER-ONE-SIXTH",
+        new Fraction(1n, 6n),
+      ],
+      ["FULL_SISTER", "KZ-FR-005-ONE-FULL-SISTER-ONE-HALF", new Fraction(1n, 2n)],
+      ["FULL_SISTER", "KZ-FR-008-FULL-SISTER-GROUP-TWO-THIRDS", new Fraction(2n, 3n)],
+      ["PATERNAL_SISTER", "KZ-FR-005-ONE-PATERNAL-SISTER-ONE-HALF", new Fraction(1n, 2n)],
+      ["PATERNAL_SISTER", "KZ-FR-008-PATERNAL-SISTER-GROUP-TWO-THIRDS", new Fraction(2n, 3n)],
+      [
+        "PATERNAL_SISTER",
+        "KZ-FR-010-ONE-PATERNAL-SISTER-WITH-FULL-SISTER-ONE-SIXTH",
+        new Fraction(1n, 6n),
+      ],
+    ] as const) {
+      if (required.has(ruleId)) addFixed(type, share, ruleId);
+    }
+    const uterineRuleId = required.has("KZ-FR-010-ONE-UTERINE-SIBLING-ONE-SIXTH")
+      ? "KZ-FR-010-ONE-UTERINE-SIBLING-ONE-SIXTH"
+      : required.has("KZ-FR-009-UTERINE-SIBLING-GROUP-ONE-THIRD")
+        ? "KZ-FR-009-UTERINE-SIBLING-GROUP-ONE-THIRD"
+        : null;
+    if (uterineRuleId !== null) {
+      const uterineType: HeirType =
+        count("MATERNAL_BROTHER") > 0 ? "MATERNAL_BROTHER" : "MATERNAL_SISTER";
+      addFixed(
+        uterineType,
+        uterineRuleId.includes("ONE-SIXTH") ? new Fraction(1n, 6n) : new Fraction(1n, 3n),
+        uterineRuleId,
+      );
+    }
   }
 
   const originalFixedTotal = sumFractions(
@@ -553,10 +601,10 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
       title: "Blocked heirs",
       summary:
         coverage.blockedHeirs.length === 0
-          ? "No selected heir is blocked in this supported direct-family case."
+          ? "No selected heir is blocked in this supported case."
           : coverage.blockedHeirs.map((heir) => heir.reason).join(" "),
-      ruleIds: [],
-      sourceReferences: [],
+      ruleIds: coverage.blockedHeirs.map((heir) => heir.ruleId),
+      sourceReferences: ruleSources(coverage.blockedHeirs.map((heir) => heir.ruleId)),
     },
     ...fixedShareAssignments.map((share): ExplanationStep => ({
       kind: "FIXED_SHARE",
@@ -659,7 +707,7 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
     netDistributableEstateMinorUnits: netEstate.toString(),
     currencyCode: input.currencyCode.trim().toUpperCase(),
     selectedHeirs: selected,
-    eligibleHeirs: selected,
+    eligibleHeirs: eligible,
     blockedHeirs: coverage.blockedHeirs,
     fixedShareAssignments,
     residuaryAssignments,

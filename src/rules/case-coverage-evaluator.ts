@@ -302,6 +302,23 @@ const DIRECT_FAMILY_TYPES = new Set<HeirType>([
   "DAUGHTER",
 ]);
 
+const ADMITTED_EXTENDED_FIXED_SHARE_TYPES = new Set<HeirType>([
+  "SONS_DAUGHTER",
+  "MATERNAL_BROTHER",
+  "MATERNAL_SISTER",
+  "FULL_SISTER",
+  "PATERNAL_SISTER",
+]);
+
+const SIBLING_TYPES = new Set<HeirType>([
+  "FULL_BROTHER",
+  "FULL_SISTER",
+  "PATERNAL_BROTHER",
+  "PATERNAL_SISTER",
+  "MATERNAL_BROTHER",
+  "MATERNAL_SISTER",
+]);
+
 function wholeCaseResult(
   status: CaseCoverageStatus,
   normalizedHeirs: readonly HeirInput[],
@@ -336,15 +353,16 @@ export function evaluateWholeCaseCoverage(
     }
   }
   const normalizedHeirs = invalidFields.length === 0 ? normalizedWholeCaseHeirs(input.heirs) : [];
-  const count = (type: HeirType): number =>
+  const selectedCount = (type: HeirType): number =>
     normalizedHeirs.find((heir) => heir.type === type)?.count ?? 0;
-  if (count("HUSBAND") > 1) invalidFields.push("heirs.HUSBAND");
-  if (count("WIFE") > 4) invalidFields.push("heirs.WIFE");
-  if (count("FATHER") > 1) invalidFields.push("heirs.FATHER");
-  if (count("MOTHER") > 1) invalidFields.push("heirs.MOTHER");
-  if (count("HUSBAND") > 0 && count("WIFE") > 0) invalidFields.push("heirs.spouse");
-  if (input.deceasedSex === "MALE" && count("HUSBAND") > 0) invalidFields.push("heirs.HUSBAND");
-  if (input.deceasedSex === "FEMALE" && count("WIFE") > 0) invalidFields.push("heirs.WIFE");
+  if (selectedCount("HUSBAND") > 1) invalidFields.push("heirs.HUSBAND");
+  if (selectedCount("WIFE") > 4) invalidFields.push("heirs.WIFE");
+  if (selectedCount("FATHER") > 1) invalidFields.push("heirs.FATHER");
+  if (selectedCount("MOTHER") > 1) invalidFields.push("heirs.MOTHER");
+  if (selectedCount("HUSBAND") > 0 && selectedCount("WIFE") > 0) invalidFields.push("heirs.spouse");
+  if (input.deceasedSex === "MALE" && selectedCount("HUSBAND") > 0)
+    invalidFields.push("heirs.HUSBAND");
+  if (input.deceasedSex === "FEMALE" && selectedCount("WIFE") > 0) invalidFields.push("heirs.WIFE");
 
   const base = {
     supportedRuleIds: [] as string[],
@@ -372,59 +390,160 @@ export function evaluateWholeCaseCoverage(
     });
   }
 
+  const siblingCount = [...SIBLING_TYPES].reduce((total, type) => total + selectedCount(type), 0);
+  const hasGrandfather = selectedCount("PATERNAL_GRANDFATHER") > 0;
+  const hasFullOrPaternalSibling =
+    selectedCount("FULL_BROTHER") +
+      selectedCount("FULL_SISTER") +
+      selectedCount("PATERNAL_BROTHER") +
+      selectedCount("PATERNAL_SISTER") >
+    0;
+  if (hasGrandfather && hasFullOrPaternalSibling) {
+    const isAkdariyya =
+      selectedCount("HUSBAND") > 0 &&
+      selectedCount("MOTHER") > 0 &&
+      selectedCount("FULL_SISTER") + selectedCount("PATERNAL_SISTER") > 0;
+    const isMuadda =
+      selectedCount("FULL_BROTHER") + selectedCount("FULL_SISTER") > 0 &&
+      selectedCount("PATERNAL_BROTHER") + selectedCount("PATERNAL_SISTER") > 0;
+    return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
+      ...base,
+      reasons: [
+        ...(isAkdariyya ? ["AKDARIYYA_NOT_ADMITTED"] : []),
+        ...(isMuadda ? ["MUADDA_NOT_ADMITTED"] : []),
+        "GRANDFATHER_WITH_SIBLINGS_NOT_ADMITTED",
+      ],
+    });
+  }
+  const selectedUterineCount = selectedCount("MATERNAL_BROTHER") + selectedCount("MATERNAL_SISTER");
+  if (
+    selectedCount("HUSBAND") > 0 &&
+    selectedCount("MOTHER") + selectedCount("MATERNAL_GRANDMOTHER") > 0 &&
+    selectedUterineCount >= 2 &&
+    selectedCount("FULL_BROTHER") > 0
+  ) {
+    return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
+      ...base,
+      reasons: ["MUSHTARAKA_NOT_ADMITTED"],
+    });
+  }
+
+  const blockerPairs = [
+    ["FATHER", "PATERNAL_GRANDFATHER", "KZ-FR-011-FATHER-BLOCKS-PATERNAL-GRANDFATHER"],
+    ["FATHER", "FULL_BROTHER", "KZ-FR-011-FATHER-BLOCKS-FULL-BROTHER"],
+    ["FATHER", "PATERNAL_BROTHER", "KZ-FR-011-FATHER-BLOCKS-PATERNAL-BROTHER"],
+    ["FATHER", "MATERNAL_BROTHER", "KZ-FR-011-FATHER-BLOCKS-MATERNAL-BROTHER"],
+    ["SON", "SONS_SON", "KZ-FR-011-SON-BLOCKS-SONS-SON"],
+    ["SON", "FULL_BROTHER", "KZ-FR-011-SON-BLOCKS-FULL-BROTHER"],
+    ["SON", "PATERNAL_BROTHER", "KZ-FR-011-SON-BLOCKS-PATERNAL-BROTHER"],
+    ["SON", "MATERNAL_BROTHER", "KZ-FR-011-SON-BLOCKS-MATERNAL-BROTHER"],
+  ] as const satisfies readonly (readonly [HeirType, HeirType, string])[];
+  const productionIds = new Set(corpus.rules.map((rule) => rule.ruleId));
+  const blockedHeirs = blockerPairs.flatMap(([blockerType, type, ruleId]) => {
+    const blockedCount = selectedCount(type);
+    return selectedCount(blockerType) > 0 && blockedCount > 0 && productionIds.has(ruleId)
+      ? [
+          {
+            type,
+            count: blockedCount,
+            blockerType,
+            ruleId,
+            reason: `${type} is totally excluded by ${blockerType}.`,
+          },
+        ]
+      : [];
+  });
+  const blockedTypes = new Set<HeirType>(blockedHeirs.map((heir) => heir.type));
+  if (
+    selectedCount("MOTHER") > 0 &&
+    siblingCount >= 2 &&
+    blockedHeirs.some((heir) => SIBLING_TYPES.has(heir.type))
+  ) {
+    return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
+      ...base,
+      blockedHeirs,
+      reasons: ["MOTHER_BLOCKED_SIBLING_COUNT_NOT_ADMITTED"],
+    });
+  }
+
+  const supportedTypes = new Set([...DIRECT_FAMILY_TYPES, ...ADMITTED_EXTENDED_FIXED_SHARE_TYPES]);
   const unsupportedHeirs = normalizedHeirs
-    .filter((heir) => !DIRECT_FAMILY_TYPES.has(heir.type))
+    .filter((heir) => !supportedTypes.has(heir.type) && !blockedTypes.has(heir.type))
     .map(({ type, count: heirCount }) => ({ type, count: heirCount }));
   if (unsupportedHeirs.length > 0) {
-    const blockerPairs = [
-      ["FATHER", "PATERNAL_GRANDFATHER", "KZ-FR-011-FATHER-BLOCKS-PATERNAL-GRANDFATHER"],
-      ["FATHER", "FULL_BROTHER", "KZ-FR-011-FATHER-BLOCKS-FULL-BROTHER"],
-      ["FATHER", "PATERNAL_BROTHER", "KZ-FR-011-FATHER-BLOCKS-PATERNAL-BROTHER"],
-      ["FATHER", "MATERNAL_BROTHER", "KZ-FR-011-FATHER-BLOCKS-MATERNAL-BROTHER"],
-      ["SON", "SONS_SON", "KZ-FR-011-SON-BLOCKS-SONS-SON"],
-      ["SON", "FULL_BROTHER", "KZ-FR-011-SON-BLOCKS-FULL-BROTHER"],
-      ["SON", "PATERNAL_BROTHER", "KZ-FR-011-SON-BLOCKS-PATERNAL-BROTHER"],
-      ["SON", "MATERNAL_BROTHER", "KZ-FR-011-SON-BLOCKS-MATERNAL-BROTHER"],
-    ] as const satisfies readonly (readonly [HeirType, HeirType, string])[];
-    const productionIds = new Set(corpus.rules.map((rule) => rule.ruleId));
-    const blockedHeirs = blockerPairs.flatMap(([blockerType, type, ruleId]) => {
-      const blockedCount = count(type);
-      return count(blockerType) > 0 && blockedCount > 0 && productionIds.has(ruleId)
-        ? [
-            {
-              type,
-              count: blockedCount,
-              blockerType,
-              ruleId,
-              reason: `${type} is totally excluded by ${blockerType}.`,
-            },
-          ]
-        : [];
-    });
     return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
       ...base,
       unsupportedHeirs,
       blockedHeirs,
-      reasons: [
-        ...unsupportedHeirs.map((heir) => `UNSUPPORTED_HEIR_CATEGORY:${heir.type}`),
-        ...blockedHeirs.map(
-          (heir) => `BLOCKED_HEIR:${heir.type}:BY:${heir.blockerType}:RULE:${heir.ruleId}`,
-        ),
-      ],
+      reasons: unsupportedHeirs.map((heir) =>
+        heir.type === "SONS_SON"
+          ? "SONS_SON_POSITIVE_SHARE_NOT_ADMITTED"
+          : heir.type === "PATERNAL_GRANDMOTHER" || heir.type === "MATERNAL_GRANDMOTHER"
+            ? `GRANDMOTHER_HIERARCHY_NOT_ADMITTED:${heir.type}`
+            : `UNSUPPORTED_HEIR_CATEGORY:${heir.type}`,
+      ),
     });
   }
 
-  const hasDescendant = count("SON") + count("DAUGHTER") > 0;
+  const eligibleHeirs = normalizedHeirs.filter((heir) => !blockedTypes.has(heir.type));
+  const count = (type: HeirType): number =>
+    eligibleHeirs.find((heir) => heir.type === type)?.count ?? 0;
+  const hasDescendant =
+    count("SON") + count("DAUGHTER") + count("SONS_SON") + count("SONS_DAUGHTER") > 0;
+  const hasFemaleDescendant = count("DAUGHTER") + count("SONS_DAUGHTER") > 0;
+  const uterineCount = count("MATERNAL_BROTHER") + count("MATERNAL_SISTER");
+  const interactionReasons: string[] = [];
+  if (count("SONS_DAUGHTER") > 0) {
+    if (count("SON") > 0) interactionReasons.push("SON_BLOCKS_SONS_DAUGHTER_RULE_NOT_ADMITTED");
+    if (count("SONS_SON") > 0)
+      interactionReasons.push("SONS_DESCENDANT_RESIDUARY_MODE_NOT_ADMITTED");
+    if (count("DAUGHTER") >= 2)
+      interactionReasons.push("DAUGHTERS_BLOCK_SONS_DAUGHTER_RULE_NOT_ADMITTED");
+    if (count("DAUGHTER") === 1 && count("SONS_DAUGHTER") > 1)
+      interactionReasons.push("PLURAL_SONS_DAUGHTER_COMPLEMENT_NOT_ADMITTED");
+  }
+  if (uterineCount > 0) {
+    if (hasDescendant || count("FATHER") > 0 || hasGrandfather)
+      interactionReasons.push(
+        "UTERINE_SIBLING_BLOCKER_RELATIONSHIP_NOT_ADMITTED_FOR_SELECTED_CLASS",
+      );
+    if (count("MATERNAL_BROTHER") > 0 && count("MATERNAL_SISTER") > 0)
+      interactionReasons.push("MIXED_UTERINE_SIBLING_DIVISION_NOT_ADMITTED");
+  }
+  const hasSister = count("FULL_SISTER") + count("PATERNAL_SISTER") > 0;
+  if (hasSister && (hasDescendant || count("FATHER") > 0 || hasGrandfather))
+    interactionReasons.push("SISTER_RESIDUARY_OR_BLOCKING_INTERACTION_NOT_ADMITTED");
+  if (count("FULL_SISTER") > 0 && count("FULL_BROTHER") > 0)
+    interactionReasons.push("FULL_SIBLING_RESIDUARY_MODE_NOT_ADMITTED");
+  if (count("PATERNAL_SISTER") > 0 && count("PATERNAL_BROTHER") > 0)
+    interactionReasons.push("PATERNAL_SIBLING_RESIDUARY_MODE_NOT_ADMITTED");
+  if (count("FULL_SISTER") > 0 && count("PATERNAL_SISTER") > 0) {
+    if (count("FULL_SISTER") !== 1 || count("PATERNAL_SISTER") !== 1)
+      interactionReasons.push("FULL_PATERNAL_SISTER_PRIORITY_NOT_ADMITTED_FOR_THIS_PLURALITY");
+  } else if (
+    count("PATERNAL_SISTER") > 0 &&
+    (count("FULL_BROTHER") > 0 || count("PATERNAL_BROTHER") > 0)
+  ) {
+    interactionReasons.push("PATERNAL_SISTER_PRIORITY_NOT_ADMITTED");
+  }
+  if (interactionReasons.length > 0) {
+    return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
+      ...base,
+      blockedHeirs,
+      reasons: [...new Set(interactionReasons)],
+    });
+  }
+
   const hasSon = count("SON") > 0;
-  const hasDaughter = count("DAUGHTER") > 0;
-  const activeTypes = normalizedHeirs.map((heir) => heir.type);
+  const hasDaughter = hasFemaleDescendant;
+  const activeTypes = eligibleHeirs.map((heir) => heir.type);
   const exactly = (...types: readonly HeirType[]): boolean =>
     activeTypes.length === types.length && types.every((type) => activeTypes.includes(type));
   const husbandUmari = exactly("HUSBAND", "MOTHER", "FATHER");
   const wifeUmari = exactly("WIFE", "MOTHER", "FATHER");
   const multipleWifeUmari = wifeUmari && count("WIFE") > 1;
 
-  const requiredRuleIds: string[] = [];
+  const requiredRuleIds: string[] = blockedHeirs.map((heir) => heir.ruleId);
   const fixedShares: Fraction[] = [];
   let hasResiduary = false;
   if (count("HUSBAND") > 0) {
@@ -451,10 +570,17 @@ export function evaluateWholeCaseCoverage(
     fixedShares.push(husbandUmari ? new Fraction(1n, 3n) : new Fraction(1n, 2n));
   } else {
     if (count("MOTHER") > 0) {
+      const siblingTriggered = !hasDescendant && siblingCount >= 2;
       requiredRuleIds.push(
-        hasDescendant ? "KZ-FR-010-MOTHER-ONE-SIXTH-DESCENDANT" : "KZ-FR-009-MOTHER-ONE-THIRD",
+        hasDescendant
+          ? "KZ-FR-010-MOTHER-ONE-SIXTH-DESCENDANT"
+          : siblingTriggered
+            ? "KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS"
+            : "KZ-FR-009-MOTHER-ONE-THIRD",
       );
-      fixedShares.push(hasDescendant ? new Fraction(1n, 6n) : new Fraction(1n, 3n));
+      fixedShares.push(
+        hasDescendant || siblingTriggered ? new Fraction(1n, 6n) : new Fraction(1n, 3n),
+      );
     }
     if (count("FATHER") > 0) {
       if (hasSon) {
@@ -482,10 +608,46 @@ export function evaluateWholeCaseCoverage(
       requiredRuleIds.push("KZ-FR-012-DAUGHTER-GROUP-TWO-THIRDS");
       fixedShares.push(new Fraction(2n, 3n));
     }
+    if (count("SONS_DAUGHTER") === 1 && count("DAUGHTER") === 0) {
+      requiredRuleIds.push("KZ-FR-005-ONE-SONS-DAUGHTER-ONE-HALF");
+      fixedShares.push(new Fraction(1n, 2n));
+    } else if (count("SONS_DAUGHTER") >= 2 && count("DAUGHTER") === 0) {
+      requiredRuleIds.push("KZ-FR-008-SONS-DAUGHTER-GROUP-TWO-THIRDS");
+      fixedShares.push(new Fraction(2n, 3n));
+    } else if (count("SONS_DAUGHTER") === 1 && count("DAUGHTER") === 1) {
+      requiredRuleIds.push("KZ-FR-010-ONE-SONS-DAUGHTER-WITH-DAUGHTER-ONE-SIXTH");
+      fixedShares.push(new Fraction(1n, 6n));
+    }
+    if (uterineCount === 1) {
+      requiredRuleIds.push("KZ-FR-010-ONE-UTERINE-SIBLING-ONE-SIXTH");
+      fixedShares.push(new Fraction(1n, 6n));
+    } else if (uterineCount >= 2) {
+      requiredRuleIds.push("KZ-FR-009-UTERINE-SIBLING-GROUP-ONE-THIRD");
+      fixedShares.push(new Fraction(1n, 3n));
+    }
+    if (count("FULL_SISTER") === 1) {
+      requiredRuleIds.push("KZ-FR-005-ONE-FULL-SISTER-ONE-HALF");
+      fixedShares.push(new Fraction(1n, 2n));
+    } else if (count("FULL_SISTER") >= 2) {
+      requiredRuleIds.push("KZ-FR-008-FULL-SISTER-GROUP-TWO-THIRDS");
+      fixedShares.push(new Fraction(2n, 3n));
+    }
+    if (count("PATERNAL_SISTER") > 0 && count("FULL_SISTER") === 0) {
+      requiredRuleIds.push(
+        count("PATERNAL_SISTER") === 1
+          ? "KZ-FR-005-ONE-PATERNAL-SISTER-ONE-HALF"
+          : "KZ-FR-008-PATERNAL-SISTER-GROUP-TWO-THIRDS",
+      );
+      fixedShares.push(
+        count("PATERNAL_SISTER") === 1 ? new Fraction(1n, 2n) : new Fraction(2n, 3n),
+      );
+    } else if (count("PATERNAL_SISTER") === 1 && count("FULL_SISTER") === 1) {
+      requiredRuleIds.push("KZ-FR-010-ONE-PATERNAL-SISTER-WITH-FULL-SISTER-ONE-SIXTH");
+      fixedShares.push(new Fraction(1n, 6n));
+    }
   }
 
   requiredRuleIds.push(ORIGINAL_ASL_RULE_ID);
-  const productionIds = new Set(corpus.rules.map((rule) => rule.ruleId));
   const originalAsl = deriveOriginalAsl(fixedShares);
   if (
     !productionIds.has(ORIGINAL_ASL_RULE_ID) ||
@@ -493,6 +655,7 @@ export function evaluateWholeCaseCoverage(
   ) {
     return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
       ...base,
+      blockedHeirs,
       requiredRuleIds: [...new Set(requiredRuleIds)],
       reasons: [`RULE_NOT_ADMITTED:${ORIGINAL_ASL_RULE_ID}`],
     });
@@ -509,6 +672,7 @@ export function evaluateWholeCaseCoverage(
     ) {
       return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
         ...base,
+        blockedHeirs,
         requiredRuleIds: [...new Set(requiredRuleIds)],
         reasons: [
           awlDenominator === null
@@ -523,6 +687,7 @@ export function evaluateWholeCaseCoverage(
     if (input.remainderPolicy === null) {
       return wholeCaseResult("MISSING_INFORMATION", normalizedHeirs, {
         ...base,
+        blockedHeirs,
         requiredRuleIds,
         missingFields: ["remainderPolicy"],
         reasons: ["REMAINDER_POLICY_MISSING"],
@@ -531,17 +696,26 @@ export function evaluateWholeCaseCoverage(
     if (input.remainderPolicy === "UNSURE") {
       return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
         ...base,
+        blockedHeirs,
         requiredRuleIds,
         reasons: ["REMAINDER_POLICY_UNRESOLVED"],
       });
     }
     if (
       input.remainderPolicy === "NO_FUNCTIONING_BAYT_AL_MAL_RADD" &&
-      count("MOTHER") === 0 &&
-      count("DAUGHTER") === 0
+      [
+        "MOTHER",
+        "DAUGHTER",
+        "SONS_DAUGHTER",
+        "MATERNAL_BROTHER",
+        "MATERNAL_SISTER",
+        "FULL_SISTER",
+        "PATERNAL_SISTER",
+      ].every((type) => count(type as HeirType) === 0)
     ) {
       return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
         ...base,
+        blockedHeirs,
         requiredRuleIds,
         reasons: ["RADD_HAS_NO_ELIGIBLE_NON_SPOUSE_RECIPIENT"],
       });
@@ -557,12 +731,14 @@ export function evaluateWholeCaseCoverage(
   if (missingRuleIds.length > 0) {
     return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
       ...base,
+      blockedHeirs,
       requiredRuleIds: [...new Set(requiredRuleIds)],
       reasons: missingRuleIds.map((id) => `RULE_NOT_ADMITTED:${id}`),
     });
   }
   return wholeCaseResult("SUPPORTED", normalizedHeirs, {
     ...base,
+    blockedHeirs,
     requiredRuleIds: [...new Set(requiredRuleIds)],
     supportedRuleIds: [...new Set(requiredRuleIds)],
     requiresAwl: fixedTotal.compare(Fraction.ONE) > 0,
