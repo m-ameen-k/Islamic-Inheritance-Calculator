@@ -3,6 +3,8 @@ import { defineProductionRule, type RulePriority } from "./rule-file.ts";
 
 export type DirectFamilyParentRuleId =
   | "KZ-FR-004"
+  | "KZ-FR-005"
+  | "KZ-FR-008"
   | "KZ-FR-009"
   | "KZ-FR-010"
   | "KZ-FR-011"
@@ -19,6 +21,7 @@ interface Definition {
   readonly atomicRuleKind:
     | "REMAINDER_POLICY"
     | "PARENT_FIXED_SHARE"
+    | "EXTENDED_FIXED_SHARE"
     | "TOTAL_BLOCKING_RELATIONSHIP"
     | "DESCENDANT_FIXED_SHARE"
     | "DESCENDANT_RESIDUARY"
@@ -46,6 +49,14 @@ const LOCATORS: Readonly<Record<DirectFamilyParentRuleId, { kanz: string; khulas
   "KZ-FR-004": {
     kanz: "Printed pages 134–135; local PDF pages 5–6.",
     khulasa: "Printed page 269; residue, Bayt al-Mal, and radd paragraph.",
+  },
+  "KZ-FR-005": {
+    kanz: "Printed page 136; local PDF page 7.",
+    khulasa: "Printed pages 271–272; category-specific one-half conditions.",
+  },
+  "KZ-FR-008": {
+    kanz: "Printed page 137; local PDF page 8.",
+    khulasa: "Printed pages 271–273; category-specific two-thirds conditions.",
   },
   "KZ-FR-009": {
     kanz: "Printed page 137; local PDF page 8.",

@@ -34,7 +34,7 @@ describe("TECHNICAL_TEST: protected rule corpus boundaries", () => {
     ) as { readonly rules: readonly { readonly ruleId: string }[] };
     const registry = readFileSync(join(SRC_ROOT, "rules/generated/production-registry.ts"), "utf8");
 
-    expect(manifest.rules).toHaveLength(30);
+    expect(manifest.rules).toHaveLength(41);
     expect(manifest.rules.map(({ ruleId }) => ruleId)).toContain("KZ-FR-015-WIFE-MOTHER-FATHER");
     expect(registry).toContain("Generated file. Do not edit manually.");
     expect(registry.match(/from ["']\.\.\/production\//g)).toHaveLength(manifest.rules.length);

@@ -28,7 +28,7 @@ describe("SOURCE_CORROBORATED_TEST: remaining direct-family gaps", () => {
     expect(KZ_FR_028_AWL_ADJUSTMENT.executable).toBe(false);
   });
 
-  it("records the exact two-sibling threshold but does not admit an unresolved blocked-sibling model", () => {
+  it("admits only the unblocked two-sibling subset and preserves the unresolved boundary", () => {
     const comparison = readJson(
       "references/review/source-corroborated/SOURCE-COMPARISON-20260809-KZ-FR-010-MOTHER-SIBLINGS.comparison.json",
     );
@@ -36,6 +36,13 @@ describe("SOURCE_CORROBORATED_TEST: remaining direct-family gaps", () => {
       minimumSiblingCount: "2",
     });
     expect(comparison).toMatchObject({ readyForAdmission: false });
+    const narrowComparison = readJson(
+      "references/review/source-corroborated/SOURCE-COMPARISON-20260809-KZ-FR-010-MOTHER-SIBLINGS-UNBLOCKED-SUBSET.comparison.json",
+    );
+    expect(narrowComparison).toMatchObject({
+      readyForAdmission: true,
+      unresolvedQuestions: [expect.stringContaining("Blocked-sibling counting")],
+    });
     expect(KZ_FR_010_MOTHER_SIBLING_FIXTURES).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ siblingCount: 2, expectedMotherShare: "1/6" }),
@@ -43,7 +50,7 @@ describe("SOURCE_CORROBORATED_TEST: remaining direct-family gaps", () => {
         expect.objectContaining({ unresolved: expect.stringContaining("blocked-sibling") }),
       ]),
     );
-    expect(new Set<string>(PRODUCTION_RULES.map((rule) => rule.ruleId))).not.toContain(
+    expect(new Set<string>(PRODUCTION_RULES.map((rule) => rule.ruleId))).toContain(
       "KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS",
     );
   });

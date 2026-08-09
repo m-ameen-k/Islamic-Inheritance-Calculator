@@ -1,0 +1,24 @@
+{
+  "admissionRecordId": "ADMISSION-20260809-KZ-FR-005-ONE-PATERNAL-SISTER-ONE-HALF",
+  "ruleId": "KZ-FR-005-ONE-PATERNAL-SISTER-ONE-HALF",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
+  "reviewRecordIds": [
+    "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES"
+  ],
+  "fixtureIds": [
+    "KZ-FR-005-ONE-PATERNAL-SISTER-ONE-HALF-POS",
+    "KZ-FR-005-ONE-PATERNAL-SISTER-ONE-HALF-NEG"
+  ],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "Admitted only for the narrow atomic conditions and exclusions in the production rule; unresolved interactions fail closed in whole-case coverage."
+}

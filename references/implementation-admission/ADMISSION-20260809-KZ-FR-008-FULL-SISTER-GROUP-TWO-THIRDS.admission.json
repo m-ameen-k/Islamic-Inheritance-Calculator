@@ -1,0 +1,24 @@
+{
+  "admissionRecordId": "ADMISSION-20260809-KZ-FR-008-FULL-SISTER-GROUP-TWO-THIRDS",
+  "ruleId": "KZ-FR-008-FULL-SISTER-GROUP-TWO-THIRDS",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
+  "reviewRecordIds": [
+    "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES"
+  ],
+  "fixtureIds": [
+    "KZ-FR-008-FULL-SISTER-GROUP-TWO-THIRDS-POS",
+    "KZ-FR-008-FULL-SISTER-GROUP-TWO-THIRDS-NEG"
+  ],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "Admitted only for the narrow atomic conditions and exclusions in the production rule; unresolved interactions fail closed in whole-case coverage."
+}
