@@ -1,0 +1,16 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-010-MOTHER-SIBLINGS-UNBLOCKED-SUBSET",
+  "ruleId": "KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS",
+  "parentComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-010-MOTHER-SIBLINGS",
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_NARROW_ATOMIC_SUBSET",
+  "executable": false,
+  "kanzAlMahalliLocator": "Printed page 138; local PDF page 9.",
+  "khulasaLocator": "Printed pages 270 and 272–273; mother fixed-share statement and decrement table.",
+  "sourceAgreement": "Both sources establish two or more brothers and/or sisters as the threshold.",
+  "conditions": ["Mother is present.", "At least two siblings are present.", "Every selected sibling is unblocked in the admitted whole case."],
+  "exclusions": ["One sibling.", "A qualifying descendant branch.", "Any case asking whether a totally blocked sibling still counts."],
+  "unresolvedQuestions": ["Blocked-sibling counting remains unresolved and is not answered by this subset."],
+  "readyForAdmission": true,
+  "readinessExplanation": "Excluding every blocked-sibling case removes the unresolved interaction without asserting an answer to it."
+}

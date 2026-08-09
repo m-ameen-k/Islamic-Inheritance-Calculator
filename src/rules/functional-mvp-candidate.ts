@@ -16,6 +16,8 @@ export const FUNCTIONAL_MVP_PARENT_RULE_IDS = [
 
 export type FunctionalMvpParentRuleId =
   | (typeof FUNCTIONAL_MVP_PARENT_RULE_IDS)[number]
+  | "KZ-FR-005"
+  | "KZ-FR-008"
   | "KZ-FR-009"
   | "KZ-FR-010"
   | "KZ-FR-027"
@@ -30,6 +32,7 @@ export const FUNCTIONAL_MVP_ATOMIC_RULE_KINDS = [
   "UMARIYYATAYN",
   "CASE_CORRECTION",
   "PARENT_FIXED_SHARE",
+  "EXTENDED_FIXED_SHARE",
   "CASE_ORIGIN",
   "AWL_ADJUSTMENT",
 ] as const;
@@ -82,6 +85,14 @@ const SOURCE_LOCATORS: Readonly<
   >
 > = {
   "KZ-FR-009": {
+    kanz: "references/extracted/kanz-faraid-extracted-rules-v0.1.json; printed page 137; local PDF page 8",
+    khulasa: "references/source-notes/khulasa/fixed-share-locators.md; printed pages 271–273",
+  },
+  "KZ-FR-005": {
+    kanz: "references/extracted/kanz-faraid-extracted-rules-v0.1.json; printed page 136; local PDF page 7",
+    khulasa: "references/source-notes/khulasa/fixed-share-locators.md; printed pages 271–272",
+  },
+  "KZ-FR-008": {
     kanz: "references/extracted/kanz-faraid-extracted-rules-v0.1.json; printed page 137; local PDF page 8",
     khulasa: "references/source-notes/khulasa/fixed-share-locators.md; printed pages 271–273",
   },
