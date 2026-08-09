@@ -1,0 +1,25 @@
+{
+  "admissionRecordId": "ADMISSION-20260809-KZ-FR-012-DAUGHTER-GROUP-TWO-THIRDS",
+  "ruleId": "KZ-FR-012-DAUGHTER-GROUP-TWO-THIRDS",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-012",
+  "reviewRecordIds": [
+    "SOURCE-COMPARISON-20260809-KZ-FR-012"
+  ],
+  "fixtureIds": [
+    "KZ-FR-012-DAUGHTER-GROUP-TWO-THIRDS-POS",
+    "KZ-FR-012-DAUGHTER-GROUP-TWO-THIRDS-NEG"
+  ],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "Admitted only for the atomic direct-family conditions and exclusions recorded in the production rule. Unsupported heir categories and unresolved facts fail closed at whole-case coverage."
+}
+

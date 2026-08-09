@@ -1,0 +1,25 @@
+{
+  "admissionRecordId": "ADMISSION-20260809-KZ-FR-004-FUNCTIONING-BAYT-AL-MAL-RESIDUE",
+  "ruleId": "KZ-FR-004-FUNCTIONING-BAYT-AL-MAL-RESIDUE",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-004",
+  "reviewRecordIds": [
+    "SOURCE-COMPARISON-20260809-KZ-FR-004"
+  ],
+  "fixtureIds": [
+    "KZ-FR-004-FUNCTIONING-BAYT-AL-MAL-RESIDUE-POS",
+    "KZ-FR-004-FUNCTIONING-BAYT-AL-MAL-RESIDUE-NEG"
+  ],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "Admitted only for the atomic direct-family conditions and exclusions recorded in the production rule. Unsupported heir categories and unresolved facts fail closed at whole-case coverage."
+}
+

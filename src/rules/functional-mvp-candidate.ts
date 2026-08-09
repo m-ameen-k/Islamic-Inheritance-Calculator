@@ -14,7 +14,8 @@ export const FUNCTIONAL_MVP_PARENT_RULE_IDS = [
   "KZ-FR-029",
 ] as const;
 
-export type FunctionalMvpParentRuleId = (typeof FUNCTIONAL_MVP_PARENT_RULE_IDS)[number];
+export type FunctionalMvpParentRuleId =
+  (typeof FUNCTIONAL_MVP_PARENT_RULE_IDS)[number] | "KZ-FR-009" | "KZ-FR-010";
 
 export const FUNCTIONAL_MVP_ATOMIC_RULE_KINDS = [
   "REMAINDER_POLICY",
@@ -24,6 +25,7 @@ export const FUNCTIONAL_MVP_ATOMIC_RULE_KINDS = [
   "FATHER_MODE",
   "UMARIYYATAYN",
   "CASE_CORRECTION",
+  "PARENT_FIXED_SHARE",
 ] as const;
 
 export type FunctionalMvpAtomicRuleKind = (typeof FUNCTIONAL_MVP_ATOMIC_RULE_KINDS)[number];
@@ -71,6 +73,14 @@ const SOURCE_LOCATORS: Readonly<
     }
   >
 > = {
+  "KZ-FR-009": {
+    kanz: "references/extracted/kanz-faraid-extracted-rules-v0.1.json; printed page 137; local PDF page 8",
+    khulasa: "references/source-notes/khulasa/fixed-share-locators.md; printed pages 271–273",
+  },
+  "KZ-FR-010": {
+    kanz: "references/extracted/kanz-faraid-extracted-rules-v0.1.json; printed page 138; local PDF page 9",
+    khulasa: "references/source-notes/khulasa/fixed-share-locators.md; printed pages 271–274",
+  },
   "KZ-FR-004": {
     kanz: "references/extracted/kanz-faraid-extracted-rules-v0.1.json; printed pages 134–135; local PDF pages 5–6",
     khulasa:
@@ -107,7 +117,10 @@ function sourceReferences(
   parentResearchRuleId: FunctionalMvpParentRuleId,
 ): readonly RuleSourceReference[] {
   const locators = SOURCE_LOCATORS[parentResearchRuleId];
-  const sourceComparisonId = `SOURCE-COMPARISON-20260809-${parentResearchRuleId}`;
+  const sourceComparisonId =
+    parentResearchRuleId === "KZ-FR-009" || parentResearchRuleId === "KZ-FR-010"
+      ? parentResearchRuleId
+      : `SOURCE-COMPARISON-20260809-${parentResearchRuleId}`;
 
   return [
     {
@@ -126,7 +139,11 @@ function sourceReferences(
 export function defineFunctionalMvpCandidate<const Definition extends CandidateDefinition>(
   definition: Definition,
 ): FunctionalMvpAtomicCandidateRule & Definition {
-  const sourceComparisonId = `SOURCE-COMPARISON-20260809-${definition.parentResearchRuleId}`;
+  const sourceComparisonId =
+    definition.parentResearchRuleId === "KZ-FR-009" ||
+    definition.parentResearchRuleId === "KZ-FR-010"
+      ? definition.parentResearchRuleId
+      : `SOURCE-COMPARISON-20260809-${definition.parentResearchRuleId}`;
 
   return {
     ...definition,

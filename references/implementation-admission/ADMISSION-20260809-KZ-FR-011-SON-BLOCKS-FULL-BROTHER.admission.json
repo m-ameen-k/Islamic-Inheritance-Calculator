@@ -1,0 +1,25 @@
+{
+  "admissionRecordId": "ADMISSION-20260809-KZ-FR-011-SON-BLOCKS-FULL-BROTHER",
+  "ruleId": "KZ-FR-011-SON-BLOCKS-FULL-BROTHER",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-011",
+  "reviewRecordIds": [
+    "SOURCE-COMPARISON-20260809-KZ-FR-011"
+  ],
+  "fixtureIds": [
+    "KZ-FR-011-SON-BLOCKS-FULL-BROTHER-POS",
+    "KZ-FR-011-SON-BLOCKS-FULL-BROTHER-NEG"
+  ],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "Admitted only as the exact atomic relationship or exact bigint correction transform stated by the corroborated parent record."
+}
+

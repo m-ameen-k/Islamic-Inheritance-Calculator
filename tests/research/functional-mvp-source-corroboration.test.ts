@@ -52,6 +52,9 @@ const EXPECTED_LOCATORS = {
 const EXPECTED_ATOMIC_IDS = [
   "KZ-FR-004-FUNCTIONING-BAYT-AL-MAL-RESIDUE",
   "KZ-FR-004-NO-FUNCTIONING-BAYT-AL-MAL-RADD",
+  "KZ-FR-009-MOTHER-ONE-THIRD",
+  "KZ-FR-010-MOTHER-ONE-SIXTH-DESCENDANT",
+  "KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS",
   "KZ-FR-011-FATHER-BLOCKS-PATERNAL-GRANDFATHER",
   "KZ-FR-011-FATHER-BLOCKS-FULL-BROTHER",
   "KZ-FR-011-FATHER-BLOCKS-PATERNAL-BROTHER",
@@ -251,7 +254,7 @@ describe("SOURCE_CORROBORATED_TEST: functional MVP research pass", () => {
     }
   });
 
-  it("does not change production admission or the four spouse production files", () => {
+  it("preserves the four spouse production files byte-for-byte during later admission", () => {
     const expectedProductionHashes: Readonly<Record<string, string>> = {
       "KZ-FR-005-HUSBAND-ONE-HALF.ts":
         "5c743732c61fe9ea6c6c470571e4fa754577ea3f2c331af9b4e5fcf453654e84",
@@ -262,16 +265,6 @@ describe("SOURCE_CORROBORATED_TEST: functional MVP research pass", () => {
       "KZ-FR-007-WIVES-ONE-EIGHTH.ts":
         "c58f47ee5a0d60905c568512d0d8c50c7a8db36f5f84e75e53debe595cfa96bc",
     };
-    const manifest = readJson(join(PROJECT_ROOT, "src/rules/production-manifest.json")) as {
-      readonly rules: readonly { readonly ruleId: string }[];
-    };
-
-    expect(manifest.rules.map((entry) => entry.ruleId)).toEqual([
-      "KZ-FR-005-HUSBAND-ONE-HALF",
-      "KZ-FR-006-HUSBAND-ONE-QUARTER",
-      "KZ-FR-006-WIVES-ONE-QUARTER",
-      "KZ-FR-007-WIVES-ONE-EIGHTH",
-    ]);
     for (const [file, expectedHash] of Object.entries(expectedProductionHashes)) {
       const actualHash = createHash("sha256")
         .update(readFileSync(join(PROJECT_ROOT, "src/rules/production", file)))
