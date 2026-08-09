@@ -1,0 +1,24 @@
+{
+  "admissionRecordId": "ADMISSION-20260809-KZ-FR-027-ORIGINAL-ASL",
+  "ruleId": "KZ-FR-027-ORIGINAL-ASL",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-027",
+  "reviewRecordIds": ["MANUAL-20260727-KZ-FR-027", "SOURCE-COMPARISON-20260809-KZ-FR-027"],
+  "fixtureIds": [
+    "KZ-FR-027-ORIGINAL-ASL-SOURCE-SEVEN-ORIGINS",
+    "KZ-FR-027-ORIGINAL-ASL-POS-LCM-SIX",
+    "KZ-FR-027-ORIGINAL-ASL-POS-LCM-TWENTY-FOUR",
+    "KZ-FR-027-ORIGINAL-ASL-NEG-UNLISTED-FIVE"
+  ],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "Admitted only as exact denominator infrastructure after fiqh shares are selected by other production rules."
+}

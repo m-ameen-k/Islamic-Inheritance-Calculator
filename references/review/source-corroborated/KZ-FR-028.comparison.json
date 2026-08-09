@@ -1,0 +1,51 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-028",
+  "ruleId": "KZ-FR-028",
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_ATOMIC_SPLIT_REQUIRED",
+  "executable": false,
+  "kanzAlMahalliRecord": {
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "evidenceRecordIds": ["KZ-FR-028", "MANUAL-20260727-KZ-FR-028"],
+    "locator": "Printed page 153; local PDF page 24.",
+    "statement": "The reviewed page confirms awl endpoints 6→7/8/9/10, 12→13/15/17, and 24→27."
+  },
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locator": "references/source-notes/khulasa/khulasa-full.pdf; printed pages 281–283; awl statement and eight worked tables.",
+    "printedPages": [281, 282, 283],
+    "visuallyConfirmed": true,
+    "statement": "The source gives the same eight endpoints with worked heir compositions and exact original saham for every endpoint."
+  },
+  "supportingSourceStatus": "No project-local Fath al-Mu‘in locator was available, so none is asserted.",
+  "ruleSummary": "When admitted fixed-share saham exceed their original case base, retain those integer saham and replace the denominator with their exact sum, only for the eight corroborated endpoints.",
+  "conditions": [
+    "KZ-FR-027 has produced original base 6, 12, or 24.",
+    "The admitted fixed-share saham exceed that base.",
+    "The resulting pair is one of 6→7/8/9/10, 12→13/15/17, or 24→27."
+  ],
+  "exclusions": [
+    "This technical rule does not decide which heirs or fixed shares apply.",
+    "No unlisted origin or endpoint is admitted.",
+    "Floating-point and rounded-decimal arithmetic are excluded."
+  ],
+  "blockingAndPriorityInteractions": [
+    "Run after original-asl derivation and before residuary, remainder-policy, monetary, or tashih processing.",
+    "An awl case consumes the estate through proportionally adjusted fixed shares; no positive residue remains."
+  ],
+  "sourceAgreement": {
+    "agrees": true,
+    "detail": "Both Shafi‘i sources agree on all eight endpoint pairs; Khulasa supplies a worked composition for each one."
+  },
+  "unresolvedQuestions": [],
+  "atomicCandidateAssessment": {
+    "ready": true,
+    "candidateRuleIds": ["KZ-FR-028-AWL-ADJUSTMENT"],
+    "rationale": "One exact arithmetic atom covers the source-enumerated endpoints while eligibility remains in separate production rules."
+  },
+  "sourceCorroborationComplete": true,
+  "implementationAdmissionBlocked": true,
+  "admissionBlockers": [
+    "Eight exact source-worked fixtures, boundary fixtures, and a calculation-readiness admission remain required."
+  ]
+}

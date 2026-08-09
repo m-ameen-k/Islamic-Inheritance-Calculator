@@ -1,0 +1,37 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-015-MULTIPLE-WIVES-UMARIYYATAYN",
+  "ruleId": "KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER",
+  "parentRuleId": "KZ-FR-015",
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_ATOMIC_INTERACTION_READY",
+  "executable": false,
+  "kanzAlMahalliRecord": {
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "evidenceRecordIds": ["KZ-FR-015", "KZ-FR-006", "MANUAL-20260727-KZ-FR-006"],
+    "locator": "Printed page 142; local PDF page 13 (Umariyyatayn); printed page 137; local PDF page 8 (wife-category quarter).",
+    "statement": "The mother takes one third of the post-wife-share remainder in the wife-and-parents case, while eligible wives collectively take the wife category's quarter."
+  },
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locator": "references/source-notes/khulasa/khulasa-full.pdf; printed page 270 including footnote 10 (wife and parents); printed pages 271–272 (wife-group quarter conditions).",
+    "printedPages": [270, 271, 272],
+    "visuallyConfirmed": true,
+    "statement": "The named case uses the wife category's quarter before the mother's remainder-third; the separately corroborated spouse-group atom validates one through four wives sharing that quarter collectively."
+  },
+  "sourceAgreement": {
+    "agrees": true,
+    "detail": "The admitted wife-group rule supplies the complete collective-share semantics, and both Umariyyatayn sources apply the mother's rule to the remainder after that spouse-category share."
+  },
+  "conditions": [
+    "The complete heir set is two, three, or four eligible wives, mother, and father.",
+    "No descendant or additional heir changes the named wife-and-parents configuration.",
+    "KZ-FR-006-WIVES-ONE-QUARTER validates and divides the collective wife-group share."
+  ],
+  "exclusions": [
+    "One wife remains covered by KZ-FR-015-WIFE-MOTHER-FATHER.",
+    "Invalid wife counts and additional heirs are excluded."
+  ],
+  "unresolvedQuestions": [],
+  "readyForAdmission": true,
+  "atomicCandidateRuleId": "KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER"
+}

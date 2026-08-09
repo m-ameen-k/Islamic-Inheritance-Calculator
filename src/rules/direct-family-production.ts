@@ -9,6 +9,8 @@ export type DirectFamilyParentRuleId =
   | "KZ-FR-012"
   | "KZ-FR-014"
   | "KZ-FR-015"
+  | "KZ-FR-027"
+  | "KZ-FR-028"
   | "KZ-FR-029";
 
 interface Definition {
@@ -22,6 +24,8 @@ interface Definition {
     | "DESCENDANT_RESIDUARY"
     | "FATHER_MODE"
     | "UMARIYYATAYN"
+    | "CASE_ORIGIN"
+    | "AWL_ADJUSTMENT"
     | "CASE_CORRECTION";
   readonly conditions: readonly string[];
   readonly exclusions: readonly string[];
@@ -30,6 +34,12 @@ interface Definition {
   readonly outcomeSpecification: string;
   readonly executionSpecification: { readonly [key: string]: JsonValue };
   readonly fixtureIds: readonly string[];
+  readonly sourceComparisonId?: string;
+  readonly additionalSourceReferences?: readonly {
+    readonly sourceId: string;
+    readonly evidenceRecordId: string;
+    readonly locator: string;
+  }[];
 }
 
 const LOCATORS: Readonly<Record<DirectFamilyParentRuleId, { kanz: string; khulasa: string }>> = {
@@ -61,6 +71,14 @@ const LOCATORS: Readonly<Record<DirectFamilyParentRuleId, { kanz: string; khulas
     kanz: "Printed page 142; local PDF page 13.",
     khulasa: "Printed page 270, including footnote 10.",
   },
+  "KZ-FR-027": {
+    kanz: "Printed pages 152–153; local PDF pages 23–24.",
+    khulasa: "Printed page 279; fixed-share denominator/origin table.",
+  },
+  "KZ-FR-028": {
+    kanz: "Printed page 153; local PDF page 24.",
+    khulasa: "Printed pages 281–283; awl statement and eight worked tables.",
+  },
   "KZ-FR-029": {
     kanz: "Printed pages 154–156; local PDF pages 25–27.",
     khulasa: "Printed pages 284–288; exact case correction.",
@@ -74,11 +92,12 @@ export function sourceComparisonId(parentRuleId: DirectFamilyParentRuleId): stri
 }
 
 export function defineDirectFamilyProductionRule<const Rule extends Definition>(rule: Rule) {
-  const comparisonId = sourceComparisonId(rule.parentResearchRuleId);
+  const comparisonId = rule.sourceComparisonId ?? sourceComparisonId(rule.parentResearchRuleId);
   const locators = LOCATORS[rule.parentResearchRuleId];
+  const { additionalSourceReferences = [], ...definition } = rule;
 
   return defineProductionRule({
-    ...rule,
+    ...definition,
     lifecycleStatus: "PRODUCTION",
     executable: true,
     sourceReferences: [
@@ -92,6 +111,7 @@ export function defineDirectFamilyProductionRule<const Rule extends Definition>(
         evidenceRecordId: comparisonId,
         locator: locators.khulasa,
       },
+      ...additionalSourceReferences,
     ],
     admissionRecordId: `ADMISSION-20260809-${rule.ruleId}`,
   });

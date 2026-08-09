@@ -57,11 +57,12 @@ describe("SOURCE_DERIVED_TEST: direct-family production admissions", () => {
     }
   });
 
-  it("leaves unresolved sibling counting and awl atoms outside production", () => {
+  it("admits exact asl and awl atoms while leaving unresolved sibling counting outside production", () => {
     const productionIds = new Set<string>(PRODUCTION_RULES.map((rule) => rule.ruleId));
     expect(productionIds.has("KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS")).toBe(false);
-    expect([...productionIds].some((id) => id.startsWith("KZ-FR-027"))).toBe(false);
-    expect([...productionIds].some((id) => id.startsWith("KZ-FR-028"))).toBe(false);
+    expect(productionIds.has("KZ-FR-027-ORIGINAL-ASL")).toBe(true);
+    expect(productionIds.has("KZ-FR-028-AWL-ADJUSTMENT")).toBe(true);
+    expect(productionIds.has("KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER")).toBe(true);
   });
 
   it("preserves the four previously admitted spouse rules", () => {

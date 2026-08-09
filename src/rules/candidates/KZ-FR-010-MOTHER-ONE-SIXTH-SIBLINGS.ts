@@ -3,8 +3,9 @@ import { defineFunctionalMvpCandidate } from "../functional-mvp-candidate";
 export const KZ_FR_010_MOTHER_ONE_SIXTH_SIBLINGS = defineFunctionalMvpCandidate({
   ruleId: "KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS",
   parentResearchRuleId: "KZ-FR-010",
+  sourceComparisonId: "SOURCE-COMPARISON-20260809-KZ-FR-010-MOTHER-SIBLINGS",
   atomicRuleKind: "PARENT_FIXED_SHARE",
-  conditions: ["The mother is present.", "Two source-counted siblings are present."],
+  conditions: ["The mother is present.", "Two or more source-counted siblings are present."],
   exclusions: [
     "The descendant branch is a separate atom.",
     "This atom cannot execute until the exact source-counted sibling model is admitted.",
@@ -20,7 +21,8 @@ export const KZ_FR_010_MOTHER_ONE_SIXTH_SIBLINGS = defineFunctionalMvpCandidate(
     "When the source-defined sibling condition is met, the mother receives 1/6.",
   executionSpecification: {
     heirCategory: "MOTHER",
-    trigger: "TWO_SOURCE_COUNTED_SIBLINGS",
+    trigger: "AT_LEAST_TWO_SOURCE_COUNTED_SIBLINGS",
+    minimumSiblingCount: "2",
     fixedShare: { numerator: "1", denominator: "6" },
   },
   unresolvedQuestions: [

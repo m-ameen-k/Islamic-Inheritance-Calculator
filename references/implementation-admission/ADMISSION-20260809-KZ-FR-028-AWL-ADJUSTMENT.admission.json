@@ -1,0 +1,30 @@
+{
+  "admissionRecordId": "ADMISSION-20260809-KZ-FR-028-AWL-ADJUSTMENT",
+  "ruleId": "KZ-FR-028-AWL-ADJUSTMENT",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-028",
+  "reviewRecordIds": ["MANUAL-20260727-KZ-FR-028", "SOURCE-COMPARISON-20260809-KZ-FR-028"],
+  "fixtureIds": [
+    "KZ-FR-028-AWL-ADJUSTMENT-SOURCE-6-TO-7",
+    "KZ-FR-028-AWL-ADJUSTMENT-SOURCE-6-TO-8",
+    "KZ-FR-028-AWL-ADJUSTMENT-SOURCE-6-TO-9",
+    "KZ-FR-028-AWL-ADJUSTMENT-SOURCE-6-TO-10",
+    "KZ-FR-028-AWL-ADJUSTMENT-SOURCE-12-TO-13",
+    "KZ-FR-028-AWL-ADJUSTMENT-SOURCE-12-TO-15",
+    "KZ-FR-028-AWL-ADJUSTMENT-SOURCE-12-TO-17",
+    "KZ-FR-028-AWL-ADJUSTMENT-SOURCE-24-TO-27",
+    "KZ-FR-028-AWL-ADJUSTMENT-NEG-NO-EXCESS",
+    "KZ-FR-028-AWL-ADJUSTMENT-NEG-UNLISTED-ENDPOINT"
+  ],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "All eight source-worked endpoints are exact fixtures. Eligibility remains exclusively with separate production rules."
+}

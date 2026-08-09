@@ -1,0 +1,49 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-027",
+  "ruleId": "KZ-FR-027",
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_ATOMIC_SPLIT_REQUIRED",
+  "executable": false,
+  "kanzAlMahalliRecord": {
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "evidenceRecordIds": ["KZ-FR-027", "MANUAL-20260727-KZ-FR-027"],
+    "locator": "Printed pages 152–153; local PDF pages 23–24.",
+    "statement": "The reviewed text identifies the fixed-share denominators and the seven standard case origins: 2, 3, 4, 6, 8, 12, and 24."
+  },
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locator": "references/source-notes/khulasa/khulasa-full.pdf; printed page 279; fixed-share denominator/origin table.",
+    "printedPages": [279],
+    "visuallyConfirmed": true,
+    "statement": "The table lists the same seven case origins and shows how coexisting fixed-share denominators produce them."
+  },
+  "supportingSourceStatus": "No project-local Fath al-Mu‘in locator was available, so none is asserted.",
+  "ruleSummary": "Derive the original case denominator exactly from the denominators of all admitted fixed shares in the case.",
+  "conditions": [
+    "All fiqh eligibility and fixed-share decisions have already been made by admitted production rules.",
+    "Use exact integer least-common-multiple arithmetic over the fixed-share denominators."
+  ],
+  "exclusions": [
+    "This technical rule does not decide heir eligibility, blocking, fixed shares, residue, awl, radd, or correction.",
+    "A denominator outside the source-listed origins is not admitted by this atom."
+  ],
+  "blockingAndPriorityInteractions": [
+    "Run after admitted fixed shares are assigned and before awl or tashih.",
+    "The no-fixed-share residuary identity base of 1 is arithmetic infrastructure, not an additional source-listed fixed-share origin."
+  ],
+  "sourceAgreement": {
+    "agrees": true,
+    "detail": "Kanz/al-Mahalli and Khulasa both list exactly 2, 3, 4, 6, 8, 12, and 24 as the standard fixed-share case origins."
+  },
+  "unresolvedQuestions": [],
+  "atomicCandidateAssessment": {
+    "ready": true,
+    "candidateRuleIds": ["KZ-FR-027-ORIGINAL-ASL"],
+    "rationale": "One atom derives the original denominator without deciding any share."
+  },
+  "sourceCorroborationComplete": true,
+  "implementationAdmissionBlocked": true,
+  "admissionBlockers": [
+    "Exact source-derived fixtures and a calculation-readiness admission remain required."
+  ]
+}

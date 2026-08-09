@@ -26,9 +26,12 @@ import { productionRule as RULE_0021 } from "../production/KZ-FR-014-FATHER-ONE-
 import { productionRule as RULE_0022 } from "../production/KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE";
 import { productionRule as RULE_0023 } from "../production/KZ-FR-014-FATHER-RESIDUARY";
 import { productionRule as RULE_0024 } from "../production/KZ-FR-015-HUSBAND-MOTHER-FATHER";
-import { productionRule as RULE_0025 } from "../production/KZ-FR-015-WIFE-MOTHER-FATHER";
-import { productionRule as RULE_0026 } from "../production/KZ-FR-029-MULTIPLE-CLASS-CORRECTION";
-import { productionRule as RULE_0027 } from "../production/KZ-FR-029-SINGLE-CLASS-CORRECTION";
+import { productionRule as RULE_0025 } from "../production/KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER";
+import { productionRule as RULE_0026 } from "../production/KZ-FR-015-WIFE-MOTHER-FATHER";
+import { productionRule as RULE_0027 } from "../production/KZ-FR-027-ORIGINAL-ASL";
+import { productionRule as RULE_0028 } from "../production/KZ-FR-028-AWL-ADJUSTMENT";
+import { productionRule as RULE_0029 } from "../production/KZ-FR-029-MULTIPLE-CLASS-CORRECTION";
+import { productionRule as RULE_0030 } from "../production/KZ-FR-029-SINGLE-CLASS-CORRECTION";
 
 export const PRODUCTION_RULES = [
   RULE_0001,
@@ -58,4 +61,7 @@ export const PRODUCTION_RULES = [
   RULE_0025,
   RULE_0026,
   RULE_0027,
+  RULE_0028,
+  RULE_0029,
+  RULE_0030,
 ] as const satisfies readonly ProductionRuleFile[];
