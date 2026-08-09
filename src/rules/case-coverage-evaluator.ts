@@ -2,10 +2,12 @@ import {
   type CoverageDescendantEvaluation,
   type CoverageReasonCode,
   type CoverageResult,
+  type CaseCoverageStatus,
   type NormalizedCaseCoverageInput,
   type NormalizedSpouseCoverageContext,
 } from "../domain/case-coverage";
 import { HEIR_TYPES, type HeirInput, type HeirType } from "../domain/heirs";
+import { Fraction, sumFractions } from "../domain/fractions";
 import {
   QUALIFYING_DESCENDANT_CATEGORIES,
   evaluateQualifyingDescendant,
@@ -245,5 +247,291 @@ export function evaluateCaseCoverage(
     spouseCoverage: "SPOUSE_SCOPE_SUPPORTED",
     supportedRuleIds: [matchedRule.ruleId],
     descendantConditionCategories,
+  });
+}
+
+export const REMAINDER_POLICIES = [
+  "FUNCTIONING_BAYT_AL_MAL",
+  "NO_FUNCTIONING_BAYT_AL_MAL_RADD",
+  "UNSURE",
+] as const;
+
+export type RemainderPolicy = (typeof REMAINDER_POLICIES)[number];
+
+export interface WholeCaseCoverageInput {
+  readonly deceasedSex: "MALE" | "FEMALE";
+  readonly heirs: readonly HeirInput[];
+  readonly remainderPolicy: RemainderPolicy | null;
+  readonly unresolvedFacts?: readonly string[];
+}
+
+export interface WholeCaseCoverageResult {
+  readonly status: CaseCoverageStatus;
+  readonly wholeCaseCoverage: "WHOLE_CASE_SUPPORTED" | "WHOLE_CASE_UNSUPPORTED";
+  readonly supportedRuleIds: readonly string[];
+  readonly requiredRuleIds: readonly string[];
+  readonly reasons: readonly string[];
+  readonly missingFields: readonly string[];
+  readonly invalidFields: readonly string[];
+  readonly unsupportedHeirs: readonly { readonly type: HeirType; readonly count: number }[];
+  readonly blockedHeirs: readonly {
+    readonly type: HeirType;
+    readonly count: number;
+    readonly blockerType: HeirType;
+    readonly ruleId: string;
+    readonly reason: string;
+  }[];
+  readonly normalizedHeirs: readonly HeirInput[];
+  readonly requiresAwl: boolean;
+}
+
+const DIRECT_FAMILY_TYPES = new Set<HeirType>([
+  "HUSBAND",
+  "WIFE",
+  "FATHER",
+  "MOTHER",
+  "SON",
+  "DAUGHTER",
+]);
+
+function wholeCaseResult(
+  status: CaseCoverageStatus,
+  normalizedHeirs: readonly HeirInput[],
+  options: Omit<WholeCaseCoverageResult, "status" | "wholeCaseCoverage" | "normalizedHeirs">,
+): WholeCaseCoverageResult {
+  return {
+    status,
+    wholeCaseCoverage: status === "SUPPORTED" ? "WHOLE_CASE_SUPPORTED" : "WHOLE_CASE_UNSUPPORTED",
+    normalizedHeirs,
+    ...options,
+  };
+}
+
+function normalizedWholeCaseHeirs(heirs: readonly HeirInput[]): readonly HeirInput[] {
+  const counts = new Map<HeirType, number>();
+  for (const heir of heirs) counts.set(heir.type, (counts.get(heir.type) ?? 0) + heir.count);
+  return [...counts.entries()]
+    .filter(([, count]) => count > 0)
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([type, count]) => ({ heirId: type.toLowerCase(), type, count }));
+}
+
+/** Pure whole-case gate. Every required atom must exist in the generated production registry. */
+export function evaluateWholeCaseCoverage(
+  input: WholeCaseCoverageInput,
+  corpus: ProductionCorpusAdapter = DEFAULT_PRODUCTION_CORPUS,
+): WholeCaseCoverageResult {
+  const invalidFields: string[] = [];
+  for (const [index, heir] of input.heirs.entries()) {
+    if (!heirTypeSet.has(heir.type) || !Number.isInteger(heir.count) || heir.count < 0) {
+      invalidFields.push(`heirs[${index}]`);
+    }
+  }
+  const normalizedHeirs = invalidFields.length === 0 ? normalizedWholeCaseHeirs(input.heirs) : [];
+  const count = (type: HeirType): number =>
+    normalizedHeirs.find((heir) => heir.type === type)?.count ?? 0;
+  if (count("HUSBAND") > 1) invalidFields.push("heirs.HUSBAND");
+  if (count("WIFE") > 4) invalidFields.push("heirs.WIFE");
+  if (count("FATHER") > 1) invalidFields.push("heirs.FATHER");
+  if (count("MOTHER") > 1) invalidFields.push("heirs.MOTHER");
+  if (count("HUSBAND") > 0 && count("WIFE") > 0) invalidFields.push("heirs.spouse");
+  if (input.deceasedSex === "MALE" && count("HUSBAND") > 0) invalidFields.push("heirs.HUSBAND");
+  if (input.deceasedSex === "FEMALE" && count("WIFE") > 0) invalidFields.push("heirs.WIFE");
+
+  const base = {
+    supportedRuleIds: [] as string[],
+    requiredRuleIds: [] as string[],
+    reasons: [] as string[],
+    missingFields: [] as string[],
+    invalidFields,
+    unsupportedHeirs: [] as { type: HeirType; count: number }[],
+    blockedHeirs: [] as WholeCaseCoverageResult["blockedHeirs"],
+    requiresAwl: false,
+  };
+  if (invalidFields.length > 0) return wholeCaseResult("INVALID_INPUT", normalizedHeirs, base);
+  if (normalizedHeirs.length === 0) {
+    return wholeCaseResult("MISSING_INFORMATION", normalizedHeirs, {
+      ...base,
+      missingFields: ["heirs"],
+      reasons: ["NO_HEIRS_SELECTED"],
+    });
+  }
+  if ((input.unresolvedFacts?.length ?? 0) > 0) {
+    return wholeCaseResult("MISSING_INFORMATION", normalizedHeirs, {
+      ...base,
+      missingFields: [...(input.unresolvedFacts ?? [])],
+      reasons: ["UNRESOLVED_CASE_FACTS"],
+    });
+  }
+
+  const unsupportedHeirs = normalizedHeirs
+    .filter((heir) => !DIRECT_FAMILY_TYPES.has(heir.type))
+    .map(({ type, count: heirCount }) => ({ type, count: heirCount }));
+  if (unsupportedHeirs.length > 0) {
+    const blockerPairs = [
+      ["FATHER", "PATERNAL_GRANDFATHER", "KZ-FR-011-FATHER-BLOCKS-PATERNAL-GRANDFATHER"],
+      ["FATHER", "FULL_BROTHER", "KZ-FR-011-FATHER-BLOCKS-FULL-BROTHER"],
+      ["FATHER", "PATERNAL_BROTHER", "KZ-FR-011-FATHER-BLOCKS-PATERNAL-BROTHER"],
+      ["FATHER", "MATERNAL_BROTHER", "KZ-FR-011-FATHER-BLOCKS-MATERNAL-BROTHER"],
+      ["SON", "SONS_SON", "KZ-FR-011-SON-BLOCKS-SONS-SON"],
+      ["SON", "FULL_BROTHER", "KZ-FR-011-SON-BLOCKS-FULL-BROTHER"],
+      ["SON", "PATERNAL_BROTHER", "KZ-FR-011-SON-BLOCKS-PATERNAL-BROTHER"],
+      ["SON", "MATERNAL_BROTHER", "KZ-FR-011-SON-BLOCKS-MATERNAL-BROTHER"],
+    ] as const satisfies readonly (readonly [HeirType, HeirType, string])[];
+    const productionIds = new Set(corpus.rules.map((rule) => rule.ruleId));
+    const blockedHeirs = blockerPairs.flatMap(([blockerType, type, ruleId]) => {
+      const blockedCount = count(type);
+      return count(blockerType) > 0 && blockedCount > 0 && productionIds.has(ruleId)
+        ? [
+            {
+              type,
+              count: blockedCount,
+              blockerType,
+              ruleId,
+              reason: `${type} is totally excluded by ${blockerType}.`,
+            },
+          ]
+        : [];
+    });
+    return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
+      ...base,
+      unsupportedHeirs,
+      blockedHeirs,
+      reasons: [
+        ...unsupportedHeirs.map((heir) => `UNSUPPORTED_HEIR_CATEGORY:${heir.type}`),
+        ...blockedHeirs.map(
+          (heir) => `BLOCKED_HEIR:${heir.type}:BY:${heir.blockerType}:RULE:${heir.ruleId}`,
+        ),
+      ],
+    });
+  }
+
+  const hasDescendant = count("SON") + count("DAUGHTER") > 0;
+  const hasSon = count("SON") > 0;
+  const hasDaughter = count("DAUGHTER") > 0;
+  const activeTypes = normalizedHeirs.map((heir) => heir.type);
+  const exactly = (...types: readonly HeirType[]): boolean =>
+    activeTypes.length === types.length && types.every((type) => activeTypes.includes(type));
+  const husbandUmari = exactly("HUSBAND", "MOTHER", "FATHER");
+  const wifeUmari = exactly("WIFE", "MOTHER", "FATHER") && count("WIFE") === 1;
+  if (exactly("WIFE", "MOTHER", "FATHER") && count("WIFE") > 1) {
+    return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
+      ...base,
+      reasons: ["UMARIYYATAYN_MULTIPLE_WIVES_NOT_ADMITTED"],
+    });
+  }
+
+  const requiredRuleIds: string[] = [];
+  const fixedShares: Fraction[] = [];
+  let hasResiduary = false;
+  if (count("HUSBAND") > 0) {
+    requiredRuleIds.push(
+      hasDescendant ? "KZ-FR-006-HUSBAND-ONE-QUARTER" : "KZ-FR-005-HUSBAND-ONE-HALF",
+    );
+    fixedShares.push(hasDescendant ? new Fraction(1n, 4n) : new Fraction(1n, 2n));
+  }
+  if (count("WIFE") > 0) {
+    requiredRuleIds.push(
+      hasDescendant ? "KZ-FR-007-WIVES-ONE-EIGHTH" : "KZ-FR-006-WIVES-ONE-QUARTER",
+    );
+    fixedShares.push(hasDescendant ? new Fraction(1n, 8n) : new Fraction(1n, 4n));
+  }
+  if (husbandUmari || wifeUmari) {
+    requiredRuleIds.push(
+      husbandUmari ? "KZ-FR-015-HUSBAND-MOTHER-FATHER" : "KZ-FR-015-WIFE-MOTHER-FATHER",
+    );
+    fixedShares.push(husbandUmari ? new Fraction(1n, 6n) : new Fraction(1n, 4n));
+    fixedShares.push(husbandUmari ? new Fraction(1n, 3n) : new Fraction(1n, 2n));
+  } else {
+    if (count("MOTHER") > 0) {
+      requiredRuleIds.push(
+        hasDescendant ? "KZ-FR-010-MOTHER-ONE-SIXTH-DESCENDANT" : "KZ-FR-009-MOTHER-ONE-THIRD",
+      );
+      fixedShares.push(hasDescendant ? new Fraction(1n, 6n) : new Fraction(1n, 3n));
+    }
+    if (count("FATHER") > 0) {
+      if (hasSon) {
+        requiredRuleIds.push("KZ-FR-014-FATHER-ONE-SIXTH");
+        fixedShares.push(new Fraction(1n, 6n));
+      } else if (hasDaughter) {
+        requiredRuleIds.push("KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE");
+        fixedShares.push(new Fraction(1n, 6n));
+        hasResiduary = true;
+      } else {
+        requiredRuleIds.push("KZ-FR-014-FATHER-RESIDUARY");
+        hasResiduary = true;
+      }
+    }
+    if (hasSon && hasDaughter) {
+      requiredRuleIds.push("KZ-FR-012-SONS-AND-DAUGHTERS-TWO-TO-ONE");
+      hasResiduary = true;
+    } else if (hasSon) {
+      requiredRuleIds.push("KZ-FR-012-SON-GROUP-RESIDUARY");
+      hasResiduary = true;
+    } else if (count("DAUGHTER") === 1) {
+      requiredRuleIds.push("KZ-FR-012-ONE-DAUGHTER-ONE-HALF");
+      fixedShares.push(new Fraction(1n, 2n));
+    } else if (count("DAUGHTER") >= 2) {
+      requiredRuleIds.push("KZ-FR-012-DAUGHTER-GROUP-TWO-THIRDS");
+      fixedShares.push(new Fraction(2n, 3n));
+    }
+  }
+
+  const fixedTotal = sumFractions(fixedShares);
+  if (fixedTotal.compare(Fraction.ONE) > 0) {
+    return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
+      ...base,
+      requiredRuleIds,
+      reasons: ["AWL_RULE_NOT_ADMITTED"],
+      requiresAwl: true,
+    });
+  }
+  if (!hasResiduary && fixedTotal.compare(Fraction.ONE) < 0) {
+    if (input.remainderPolicy === null) {
+      return wholeCaseResult("MISSING_INFORMATION", normalizedHeirs, {
+        ...base,
+        requiredRuleIds,
+        missingFields: ["remainderPolicy"],
+        reasons: ["REMAINDER_POLICY_MISSING"],
+      });
+    }
+    if (input.remainderPolicy === "UNSURE") {
+      return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
+        ...base,
+        requiredRuleIds,
+        reasons: ["REMAINDER_POLICY_UNRESOLVED"],
+      });
+    }
+    if (
+      input.remainderPolicy === "NO_FUNCTIONING_BAYT_AL_MAL_RADD" &&
+      count("MOTHER") === 0 &&
+      count("DAUGHTER") === 0
+    ) {
+      return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
+        ...base,
+        requiredRuleIds,
+        reasons: ["RADD_HAS_NO_ELIGIBLE_NON_SPOUSE_RECIPIENT"],
+      });
+    }
+    requiredRuleIds.push(
+      input.remainderPolicy === "FUNCTIONING_BAYT_AL_MAL"
+        ? "KZ-FR-004-FUNCTIONING-BAYT-AL-MAL-RESIDUE"
+        : "KZ-FR-004-NO-FUNCTIONING-BAYT-AL-MAL-RADD",
+    );
+  }
+
+  const productionIds = new Set(corpus.rules.map((rule) => rule.ruleId));
+  const missingRuleIds = [...new Set(requiredRuleIds)].filter((id) => !productionIds.has(id));
+  if (missingRuleIds.length > 0) {
+    return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
+      ...base,
+      requiredRuleIds: [...new Set(requiredRuleIds)],
+      reasons: missingRuleIds.map((id) => `RULE_NOT_ADMITTED:${id}`),
+    });
+  }
+  return wholeCaseResult("SUPPORTED", normalizedHeirs, {
+    ...base,
+    requiredRuleIds: [...new Set(requiredRuleIds)],
+    supportedRuleIds: [...new Set(requiredRuleIds)],
   });
 }
