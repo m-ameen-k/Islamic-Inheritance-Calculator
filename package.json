@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "A Shafi'i inheritance case-preparation tool under technical and scholarly validation.",
+  "description": "A source-corroborated Shafi'i inheritance calculator with broad ordinary coverage and selected advanced cases.",
   "license": "MIT",
   "scripts": {
     "generate:production-registry": "node scripts/generate-production-registry.ts",

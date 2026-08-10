@@ -8,7 +8,22 @@ This is an inventory of the admitted calculator corpus, not an executable source
 
 The 45-entry inventory is backed by 110 admitted production rules. The calculator has broad support for ordinary cases involving spouses, parents, children, explicit male-line descendant generations, source-eligible grandmother routes and degrees, ordinary uterine/full/consanguine siblings, the six UI-modeled brother's-son/uncle residuary classes, and one direct male or female emancipator. It also supports exact asl, admitted awl endpoints, correction, radd/Bayt al-Mal, both Umariyyatayn, ordinary paternal-grandfather modes, grandfather-with-siblings comparisons, canonical Akdariyya, canonical Mushtaraka, the full-male-line Mu‘adda branch, and two exact female Mu‘adda worked branches.
 
-It is not complete Shafi‘i coverage. Source gaps and input-model boundaries remain explicit and whole-case coverage rejects them before calculation.
+It is not complete Shafi‘i coverage. Source and admission gaps remain explicit and whole-case coverage rejects them before calculation.
+
+## Stable-v1 end-to-end audit
+
+The 2026-08-10 release audit traced the public workflow from input through coverage, exact execution, result rendering, learning output, and stale-result invalidation. The declared supported scope is coherent enough for a stable public v1 with these safeguards:
+
+- the browser supplies estate uncertainty and uncertain death order to the existing pure coverage gate;
+- calculation remains disabled until the user confirms that estate facts are settled;
+- unsupported and unresolved branches render user-facing review messages instead of raw internal reason codes;
+- exact minor-unit values drive the estate review and final calculation, while percentages remain secondary display only;
+- result tabs are semantic and keyboard operable, readiness is announced as a live status, and a completed result receives focus;
+- detailed Arabic and Malayalam rule explanations carry an explicit English-fallback notice until reviewed translations exist;
+- selected heirs, eligible heirs after blocking, deductions, and net estate now appear as distinct engine-derived learning steps;
+- the 110-rule manifest, admission records, source comparisons, source catalog IDs, locators, fixtures, generated registry, and coverage inventory are cross-checked by automated architecture tests.
+
+The recommended public description is: **“Source-corroborated Shafi‘i inheritance calculator with broad ordinary coverage and selected advanced cases.”** “Complete Shafi‘i inheritance calculator” is not supported by this matrix.
 
 ## Heir inventory
 
