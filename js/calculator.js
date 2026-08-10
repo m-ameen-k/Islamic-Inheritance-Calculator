@@ -3280,6 +3280,22 @@
 			this.name = "UnsupportedInheritanceCaseError";
 		}
 	};
+	function presentationShareClassification(assignment) {
+		const hasFixed = assignment.kinds.includes("FIXED");
+		const hasResiduary = assignment.kinds.includes("RESIDUARY");
+		if (assignment.ruleIds.some((ruleId) => ruleId.includes("AKDARIYYA") || ruleId.includes("MUSHTARAKA") || ruleId.includes("MUADDA"))) return "SPECIAL_CASE";
+		if (hasFixed && hasResiduary) return "FIXED_PLUS_ASABAH";
+		if (!hasResiduary) return "FIXED";
+		if ((assignment.heirType === "FULL_SISTER" || assignment.heirType === "PATERNAL_SISTER") && assignment.ruleIds.some((ruleId) => ruleId.includes("WITH-FEMALE-DESCENDANT"))) return "ASABAH_MA_AL_GHAYR";
+		if ([
+			"DAUGHTER",
+			"SONS_DAUGHTER",
+			"FULL_SISTER",
+			"PATERNAL_SISTER"
+		].includes(assignment.heirType) && assignment.ruleIds.some((ruleId) => ruleId.includes("TWO-TO-ONE"))) return "ASABAH_BIL_GHAYR";
+		if (assignment.heirType === "FEMALE_EMANCIPATOR") return "ASABAH";
+		return "ASABAH_BI_NAFSIHI";
+	}
 	var productionById = new Map(PRODUCTION_RULES.map((rule) => [rule.ruleId, rule]));
 	function parseMinorUnits(value, field, issues) {
 		const normalized = value.trim();
@@ -3821,6 +3837,7 @@
 				exactAmountMinorUnits: perPersonAmounts.reduce((total, amount) => total + amount, 0n).toString(),
 				perPersonAmountsMinorUnits: perPersonAmounts.map(String),
 				assignmentKinds: assignment.kinds,
+				shareClassification: presentationShareClassification(assignment),
 				appliedRuleIds: assignment.ruleIds
 			};
 		});

@@ -105,14 +105,18 @@
         </div>
       </div>
 
-      <div class="validation-banner ai" role="status" data-i="page_intro">
-        Source-corroborated Shafi‘i calculations are available for the declared supported scope.
-        Unsupported cases stop before calculation.
+      <div
+        class="validation-banner calculation-status-incomplete ai"
+        id="primaryCaseStatus"
+        role="status"
+        aria-live="polite"
+      >
+        Complete the highlighted fields to calculate.
       </div>
 
       <main class="workspace-layout">
         <div class="main-workspace">
-          <div class="card ai">
+          <div class="card ai" id="deceasedCard">
             <div class="ch">
               <div class="cn numeric-value">1</div>
               <div class="ct" data-i="dec_t">Who passed away?</div>
@@ -128,7 +132,7 @@
             </div>
           </div>
 
-          <div class="card ai">
+          <div class="card ai" id="estateCard">
             <div class="ch">
               <div class="cn numeric-value">2</div>
               <div class="ct" data-i="est_t">Estate &amp; Liabilities</div>
@@ -410,9 +414,20 @@
                 bequest validity with qualified scholarly or legal review before confirming.
               </p>
             </div>
+            <div class="field death-order-safety">
+              <div class="checkbox-row">
+                <input type="checkbox" id="uncertainDeathOrder" />
+                <label for="uncertainDeathOrder" data-i="uncertain_death_order"
+                  >The death order of potential mutual heirs is uncertain</label
+                >
+              </div>
+              <p class="disclosure-note" data-i="uncertain_death_order_help">
+                This requires separate estate review; the calculator will not assume an order.
+              </p>
+            </div>
           </div>
 
-          <div class="card ai">
+          <div class="card ai" id="madhabCard">
             <div class="ch">
               <div class="cn numeric-value">3</div>
               <div class="ct" data-i="mad_t">Madhab</div>
@@ -460,12 +475,12 @@
               style="margin-top: 10px; margin-bottom: 0"
               data-i="limited_scope_note"
             >
-              Broad ordinary Shafi‘i coverage with selected advanced cases; unsupported
-              combinations stop before calculation.
+              Broad ordinary Shafi‘i coverage with selected advanced cases; unsupported combinations
+              stop before calculation.
             </div>
           </div>
 
-          <div class="card ai">
+          <div class="card ai" id="heirsCard">
             <div class="ch">
               <div class="cn numeric-value">4</div>
               <div class="ct" data-i="heir_t">Select Heirs</div>
@@ -475,31 +490,52 @@
               Select deceased gender first, then tap heirs.
             </div>
             <div class="heir-groups" id="hgrid">
-              <section class="heir-group" aria-labelledby="spouseHeirsTitle">
-                <h3 id="spouseHeirsTitle" data-bilingual="group_spouse">Spouse</h3>
-                <div class="hgrid" id="hgrid-spouse"></div>
+              <section class="heir-group immediate-heirs" aria-labelledby="immediateHeirsTitle">
+                <h3 id="immediateHeirsTitle" data-i="group_immediate">Immediate family</h3>
+                <div class="hgrid" id="hgrid-immediate"></div>
               </section>
-              <section class="heir-group" aria-labelledby="descendantHeirsTitle">
-                <h3 id="descendantHeirsTitle" data-bilingual="group_descendants">
-                  Children and descendants
-                </h3>
-                <div class="hgrid" id="hgrid-descendants"></div>
-              </section>
-              <details class="heir-group" open aria-labelledby="parentsHeirsTitle">
-                <summary id="parentsHeirsTitle" data-bilingual="group_parents">
-                  Parents and grandparents
-                </summary>
-                <div class="hgrid" id="hgrid-parents"></div>
-              </details>
-              <details class="heir-group" aria-labelledby="siblingsHeirsTitle">
-                <summary id="siblingsHeirsTitle" data-bilingual="group_siblings">Siblings</summary>
-                <div class="hgrid" id="hgrid-siblings"></div>
-              </details>
-              <details class="heir-group" aria-labelledby="extendedHeirsTitle">
-                <summary id="extendedHeirsTitle" data-bilingual="group_extended">
-                  Extended relatives
-                </summary>
-                <div class="hgrid" id="hgrid-extended"></div>
+              <details class="advanced-heirs" id="advancedHeirs">
+                <summary data-i="show_advanced_heirs">Show advanced heirs</summary>
+                <div class="advanced-heir-groups">
+                  <details
+                    class="heir-group"
+                    id="descendantHeirGroup"
+                    aria-labelledby="descendantHeirsTitle"
+                  >
+                    <summary id="descendantHeirsTitle" data-i="group_descendants">
+                      Descendants
+                    </summary>
+                    <div class="hgrid" id="hgrid-descendants"></div>
+                  </details>
+                  <details
+                    class="heir-group"
+                    id="grandparentHeirGroup"
+                    aria-labelledby="grandparentHeirsTitle"
+                  >
+                    <summary id="grandparentHeirsTitle" data-i="group_grandparents">
+                      Grandparents
+                    </summary>
+                    <div class="hgrid" id="hgrid-grandparents"></div>
+                  </details>
+                  <details
+                    class="heir-group"
+                    id="siblingHeirGroup"
+                    aria-labelledby="siblingsHeirsTitle"
+                  >
+                    <summary id="siblingsHeirsTitle" data-i="group_siblings">Siblings</summary>
+                    <div class="hgrid" id="hgrid-siblings"></div>
+                  </details>
+                  <details
+                    class="heir-group"
+                    id="extendedHeirGroup"
+                    aria-labelledby="extendedHeirsTitle"
+                  >
+                    <summary id="extendedHeirsTitle" data-i="group_extended">
+                      Extended residuaries / walā’
+                    </summary>
+                    <div class="hgrid" id="hgrid-extended"></div>
+                  </details>
+                </div>
               </details>
             </div>
             <section class="lineage-details" id="lineageDetails" hidden aria-live="polite">
@@ -518,105 +554,7 @@
               <div class="car" data-i-secondary="res_t">النتائج</div>
               <div id="ctag"></div>
             </div>
-            <div class="tabs" role="tablist" aria-label="Result views" data-i-aria="result_views">
-              <button type="button" class="tab on" id="tabShares" role="tab" aria-selected="true" aria-controls="tcShares" data-tab="Shares" data-i="tab_sh">Shares</button>
-              <button type="button" class="tab" id="tabHajb" role="tab" aria-selected="false" aria-controls="tcHajb" data-tab="Hajb" data-i="tab_hj">Hajb</button>
-              <button type="button" class="tab" id="tabAsl" role="tab" aria-selected="false" aria-controls="tcAsl" data-tab="Asl" data-i="tab_asl">Case origin</button>
-              <button type="button" class="tab" id="tabAssets" role="tab" aria-selected="false" aria-controls="tcAssets" data-tab="Assets" data-i="tab_ass">Assets</button>
-              <button type="button" class="tab" id="tabLearn" role="tab" aria-selected="false" aria-controls="tcLearn" data-tab="Learn" data-i="tab_learn">📘 Learn</button>
-            </div>
-            <div class="tc on" id="tcShares" role="tabpanel" aria-labelledby="tabShares">
-              <div class="metrics" id="metrics"></div>
-              <div id="sharesList"></div>
-            </div>
-            <div class="tc" id="tcHajb" role="tabpanel" aria-labelledby="tabHajb" hidden><div id="hajbList"></div></div>
-            <div class="tc" id="tcAsl" role="tabpanel" aria-labelledby="tabAsl" hidden><div id="aslDetail"></div></div>
-            <div class="tc" id="tcAssets" role="tabpanel" aria-labelledby="tabAssets" hidden><div id="assetsDetail"></div></div>
-            <div class="tc" id="tcLearn" role="tabpanel" aria-labelledby="tabLearn" hidden><div id="learnContent"></div></div>
-          </div>
-        </div>
-
-        <aside class="case-sidebar ai" aria-labelledby="caseSummaryTitle">
-          <section class="card case-summary">
-            <div class="ch">
-              <div class="ct" id="caseSummaryTitle" data-i="review">Review</div>
-              <div class="car" data-i-secondary="review">مراجعة</div>
-            </div>
-            <dl class="review-list">
-              <div>
-                <dt data-i="gross_estate">Gross estate</dt>
-                <dd id="reviewGross" class="numeric-value" aria-live="polite">0</dd>
-              </div>
-              <div>
-                <dt data-i="supported_deductions">Supported deductions</dt>
-                <dd id="reviewDeductions" class="numeric-value" aria-live="polite">0</dd>
-              </div>
-              <div class="net-amount">
-                <dt data-i="current_net">Current net amount</dt>
-                <dd id="reviewEstate" class="numeric-value" aria-live="polite">0</dd>
-              </div>
-              <div>
-                <dt data-i="selected_heirs">Selected heirs</dt>
-                <dd id="selectedHeirsSummary" aria-live="polite">None selected</dd>
-              </div>
-              <div>
-                <dt data-i="incomplete_information">Incomplete information</dt>
-                <dd id="caseCompleteness" aria-live="polite">Select who passed away.</dd>
-              </div>
-              <div>
-                <dt data-i="verification_status">Verification status</dt>
-                <dd>
-                  <span class="status-label" data-i="source_supported_scope"
-                    >Source-corroborated supported scope</span
-                  >
-                </dd>
-              </div>
-            </dl>
-            <div class="field remainder-policy-field">
-              <label class="flabel" for="remainderPolicy" data-i="remainder_policy"
-                >Remainder policy</label
-              >
-              <select id="remainderPolicy" class="inp">
-                <option value="UNSURE" data-i="remainder_unsure">Unsure</option>
-                <option value="FUNCTIONING_BAYT_AL_MAL" data-i="remainder_bayt">
-                  Functioning Bayt al-Mal
-                </option>
-                <option value="NO_FUNCTIONING_BAYT_AL_MAL_RADD" data-i="remainder_radd">
-                  No functioning Bayt al-Mal — apply radd
-                </option>
-              </select>
-              <p class="disclosure-note" data-i="remainder_help">
-                An ordinary charity is not automatically Bayt al-Mal.
-              </p>
-            </div>
-            <div class="field">
-              <div class="checkbox-row">
-                <input type="checkbox" id="uncertainDeathOrder" />
-                <label for="uncertainDeathOrder" data-i="uncertain_death_order"
-                  >The death order of potential mutual heirs is uncertain</label
-                >
-              </div>
-              <p class="disclosure-note" data-i="uncertain_death_order_help">
-                This requires separate estate review; the calculator will not assume an order.
-              </p>
-            </div>
-            <button
-              class="calcbtn"
-              id="calcBtn"
-              disabled
-              aria-describedby="calculationDisabledReason"
-            >
-              <span data-i="calc_btn">Calculate shares</span>
-            </button>
-            <p
-              class="calculation-disabled-reason"
-              id="calculationDisabledReason"
-              role="status"
-              aria-live="polite"
-            >
-              Add the missing case information.
-            </p>
-            <details class="summary-disclosure report-options">
+            <details class="summary-disclosure report-options result-report-options">
               <summary data-i="report_options">Report options</summary>
               <div class="field disclosure-content">
                 <label class="flabel" for="amountSymbol" data-i="amount_symbol"
@@ -635,19 +573,120 @@
                 </p>
               </div>
             </details>
-            <details class="summary-disclosure" id="calculationExplanation">
-              <summary data-i="how_calculated">How was this calculated?</summary>
-              <div id="verificationContent" class="disclosure-content" data-i="calculate_first">
-                Calculate a supported case to see its rule-derived explanation.
+            <div class="tabs" role="tablist" aria-label="Result views" data-i-aria="result_views">
+              <button
+                type="button"
+                class="tab on"
+                id="tabShares"
+                role="tab"
+                aria-selected="true"
+                aria-controls="tcShares"
+                data-tab="Shares"
+                data-i="tab_sh"
+              >
+                Shares
+              </button>
+              <button
+                type="button"
+                class="tab"
+                id="tabHajb"
+                role="tab"
+                aria-selected="false"
+                aria-controls="tcHajb"
+                data-tab="Hajb"
+                data-i="tab_hj"
+              >
+                Blocked
+              </button>
+              <button
+                type="button"
+                class="tab"
+                id="tabCalculation"
+                role="tab"
+                aria-selected="false"
+                aria-controls="tcCalculation"
+                data-tab="Calculation"
+                data-i="tab_calculation"
+              >
+                Calculation
+              </button>
+              <button
+                type="button"
+                class="tab"
+                id="tabLearn"
+                role="tab"
+                aria-selected="false"
+                aria-controls="tcLearn"
+                data-tab="Learn"
+                data-i="tab_learn"
+              >
+                📘 Learn
+              </button>
+            </div>
+            <div class="tc on" id="tcShares" role="tabpanel" aria-labelledby="tabShares">
+              <div class="metrics" id="metrics"></div>
+              <div id="sharesList"></div>
+            </div>
+            <div class="tc" id="tcHajb" role="tabpanel" aria-labelledby="tabHajb" hidden>
+              <div id="hajbList"></div>
+            </div>
+            <div
+              class="tc"
+              id="tcCalculation"
+              role="tabpanel"
+              aria-labelledby="tabCalculation"
+              hidden
+            >
+              <div id="calculationDetail"></div>
+            </div>
+            <div class="tc" id="tcLearn" role="tabpanel" aria-labelledby="tabLearn" hidden>
+              <div id="learnContent"></div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="case-sidebar ai" aria-labelledby="caseSummaryTitle">
+          <section class="card case-summary">
+            <div class="ch">
+              <div class="ct" id="caseSummaryTitle" data-i="review">Review</div>
+              <div class="car" data-i-secondary="review">مراجعة</div>
+            </div>
+            <dl class="review-list">
+              <div class="net-amount">
+                <dt data-i="current_net">Net estate</dt>
+                <dd id="reviewEstate" class="numeric-value" aria-live="polite">0</dd>
               </div>
-            </details>
+              <div>
+                <dt data-i="selected_heirs">Selected heirs</dt>
+                <dd id="selectedHeirsSummary" aria-live="polite">None selected</dd>
+              </div>
+            </dl>
+            <div class="field remainder-policy-field" hidden>
+              <label class="flabel" for="remainderPolicy" data-i="remainder_policy"
+                >Remainder policy</label
+              >
+              <select id="remainderPolicy" class="inp">
+                <option value="UNSURE" data-i="remainder_unsure">Unsure</option>
+                <option value="FUNCTIONING_BAYT_AL_MAL" data-i="remainder_bayt">
+                  Functioning Bayt al-Mal
+                </option>
+                <option value="NO_FUNCTIONING_BAYT_AL_MAL_RADD" data-i="remainder_radd">
+                  No functioning Bayt al-Mal — apply radd
+                </option>
+              </select>
+              <p class="disclosure-note" data-i="remainder_help">
+                An ordinary charity is not automatically Bayt al-Mal.
+              </p>
+            </div>
+            <button class="calcbtn" id="calcBtn" disabled aria-describedby="primaryCaseStatus">
+              <span data-i="calc_btn">Calculate shares</span>
+            </button>
           </section>
         </aside>
       </main>
 
       <div class="fab-group">
         <button class="fab" id="fabTop" data-i-aria="scroll_top">↑</button>
-        <button class="fab fab-down" id="fabBottom" data-i-aria="scroll_bottom">↓</button>
       </div>
 
       <footer class="site-footer card ai">
@@ -745,12 +784,6 @@
           </div>
           <p class="tip-note" data-i="payment_soon">Payment links will be configured soon.</p>
         </div>
-
-        <p class="footer-copy">
-          <span class="status-label" data-i="limited_status"
-            >Calculator status: source-corroborated supported scope</span
-          >
-        </p>
       </footer>
     </div>
 

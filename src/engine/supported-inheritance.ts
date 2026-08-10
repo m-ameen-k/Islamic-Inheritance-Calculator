@@ -77,6 +77,15 @@ export interface InheritanceAllocation {
   readonly exactAmountMinorUnits: string;
   readonly perPersonAmountsMinorUnits: readonly string[];
   readonly assignmentKinds: readonly ("FIXED" | "RESIDUARY" | "RADD")[];
+  /** Juridical classification for presentation; it does not affect the calculated fraction. */
+  readonly shareClassification:
+    | "FIXED"
+    | "ASABAH"
+    | "ASABAH_BI_NAFSIHI"
+    | "ASABAH_BIL_GHAYR"
+    | "ASABAH_MA_AL_GHAYR"
+    | "FIXED_PLUS_ASABAH"
+    | "SPECIAL_CASE";
   readonly appliedRuleIds: readonly string[];
 }
 
@@ -194,6 +203,34 @@ interface MutableAssignment {
   readonly fixedFraction: Fraction;
   readonly ruleIds: string[];
   readonly kinds: ("FIXED" | "RESIDUARY" | "RADD")[];
+}
+
+function presentationShareClassification(
+  assignment: MutableAssignment,
+): InheritanceAllocation["shareClassification"] {
+  const hasFixed = assignment.kinds.includes("FIXED");
+  const hasResiduary = assignment.kinds.includes("RESIDUARY");
+  if (
+    assignment.ruleIds.some(
+      (ruleId) =>
+        ruleId.includes("AKDARIYYA") || ruleId.includes("MUSHTARAKA") || ruleId.includes("MUADDA"),
+    )
+  )
+    return "SPECIAL_CASE";
+  if (hasFixed && hasResiduary) return "FIXED_PLUS_ASABAH";
+  if (!hasResiduary) return "FIXED";
+  if (
+    (assignment.heirType === "FULL_SISTER" || assignment.heirType === "PATERNAL_SISTER") &&
+    assignment.ruleIds.some((ruleId) => ruleId.includes("WITH-FEMALE-DESCENDANT"))
+  )
+    return "ASABAH_MA_AL_GHAYR";
+  if (
+    ["DAUGHTER", "SONS_DAUGHTER", "FULL_SISTER", "PATERNAL_SISTER"].includes(assignment.heirType) &&
+    assignment.ruleIds.some((ruleId) => ruleId.includes("TWO-TO-ONE"))
+  )
+    return "ASABAH_BIL_GHAYR";
+  if (assignment.heirType === "FEMALE_EMANCIPATOR") return "ASABAH";
+  return "ASABAH_BI_NAFSIHI";
 }
 
 const productionById = new Map<string, ProductionRuleFile>(
@@ -1015,6 +1052,7 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
         .toString(),
       perPersonAmountsMinorUnits: perPersonAmounts.map(String),
       assignmentKinds: assignment.kinds,
+      shareClassification: presentationShareClassification(assignment),
       appliedRuleIds: assignment.ruleIds,
     };
   });

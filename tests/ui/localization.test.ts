@@ -140,18 +140,7 @@ describe("TECHNICAL_TEST: deterministic bilingual UI localization", () => {
     const bilingualKeys = [...HTML_SOURCE.matchAll(/data-bilingual="([^"]+)"/g)].map(
       (match) => match[1],
     );
-    expect(bilingualKeys).toEqual([
-      "s_dec",
-      "s_est",
-      "s_mad",
-      "s_heir",
-      "s_res",
-      "group_spouse",
-      "group_descendants",
-      "group_parents",
-      "group_siblings",
-      "group_extended",
-    ]);
+    expect(bilingualKeys).toEqual(["s_dec", "s_est", "s_mad", "s_heir", "s_res"]);
     expect(HTML_SOURCE).not.toMatch(
       /data-bilingual="(?:gross_estate|calc_disabled|payment_soon|support_project)"/,
     );
@@ -178,9 +167,22 @@ describe("TECHNICAL_TEST: deterministic bilingual UI localization", () => {
   it("starts disabled and exposes localized dynamic coverage status", () => {
     expect(HTML_SOURCE).toMatch(/<button[^>]*id="calcBtn"[^>]*\bdisabled\b/);
     expect(HTML_SOURCE).toContain('data-i="calc_btn"');
-    expect(HTML_SOURCE).toContain('id="calculationDisabledReason"');
+    expect(HTML_SOURCE).toContain('id="primaryCaseStatus"');
     expect(APP_SOURCE).toContain('getPrimaryText("ready_calculate",lang)');
     expect(APP_SOURCE).toContain('getPrimaryText("case_not_supported",lang)');
+  });
+
+  it("localizes simplified status, navigation, and classical share classifications", () => {
+    for (const language of ["en", "ar", "ml"]) {
+      expect(localization.getPrimaryText("complete_highlighted", language).text).not.toBe("");
+      expect(localization.getPrimaryText("show_advanced_heirs", language).text).not.toBe("");
+      expect(localization.getPrimaryText("tab_calculation", language).text).not.toBe("");
+      expect(localization.getPrimaryText("technical_details", language).text).not.toBe("");
+      expect(localization.getPrimaryText("share_asabah_bi_nafsihi", language).text).toContain(
+        "عصبة بالنفس",
+      );
+      expect(localization.getPrimaryText("share_blocked", language).text).toContain("محجوب");
+    }
   });
 
   it("marks untranslated engine explanations as an explicit English fallback", () => {

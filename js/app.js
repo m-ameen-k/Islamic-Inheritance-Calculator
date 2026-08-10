@@ -229,7 +229,7 @@ function setGender(g){
   document.getElementById("gbm").setAttribute("aria-pressed",g==="m");
   document.getElementById("gbf").setAttribute("aria-pressed",g==="f");
   document.getElementById("heirsHint").style.display = "none";
-  setStep(1); renderHeirs();
+  renderHeirs();
 }
 document.querySelectorAll(".gbtn").forEach(b=>b.addEventListener("click",()=>setGender(b.dataset.g)));
 
@@ -253,30 +253,74 @@ function updateCaseSummary(){
   const selectedHeirs=HEIRS
     .filter(h=>(sel[h.id]||0)>0)
   const selected=selectedHeirs.map(h=>`${resolveHeirText(h,lang).text}${h.max>1?` × ${sel[h.id]}`:""}`);
-  const missingKeys=[];
-  if(!gender) missingKeys.push("missing_gender");
-  if(estate.gross<=0n) missingKeys.push("missing_estate");
-  if(selectedHeirs.length===0) missingKeys.push("missing_heirs");
-
-  document.getElementById("reviewGross").textContent=formatMinorUnits(estate.gross);
-  document.getElementById("reviewDeductions").textContent=formatMinorUnits(estate.debts+estate.zakat+estate.bequest);
   document.getElementById("reviewEstate").textContent=formatMinorUnits(net);
   const selectedText=selected.length
     ? {text:selected.join(", "),requestedLanguage:lang,resolvedLanguage:lang,direction:lang==="ar"?"rtl":"ltr",fallbackUsed:false,missingKey:null}
     : getPrimaryText("none_selected",lang);
   applyResolvedText(document.getElementById("selectedHeirsSummary"),selectedText);
-  if(missingKeys.length){
-    const items=missingKeys.map(key=>resolveText(key,lang).text).join(", ");
-    applyResolvedText(document.getElementById("caseCompleteness"),getPrimaryText("add_missing",lang),{items});
-  }else{
-    applyResolvedText(document.getElementById("caseCompleteness"),getPrimaryText("case_entered",lang));
-  }
   updateCalculatorState();
 }
 
-function updateDynamicUI() {
-  // The TypeScript production executor is the only source of eligibility and blocking decisions.
-  document.querySelectorAll(".hcard.blocked").forEach(card=>card.classList.remove("blocked"));
+function guidanceCoverage(heirs){
+  if(!window.FaraidCalculator||!gender||heirs.length===0) return null;
+  return window.FaraidCalculator.evaluateWholeCaseCoverage({
+    ...coverageInput(),
+    heirs,
+    unresolvedFacts:[],
+    uncertainDeathOrder:false
+  });
+}
+
+function blockedGuidanceFor(type,currentCoverage){
+  const selected=(sel[TYPE_TO_HEIR_ID[type]]||0)>0;
+  const coverage=selected
+    ?currentCoverage
+    :guidanceCoverage([
+      ...selectedCaseHeirs(),
+      {heirId:`guidance-${type}`,type,count:1}
+    ]);
+  return coverage?.blockedHeirs.find(blocked=>blocked.type===type&&blocked.partialLineageBlock!==true)||null;
+}
+
+function updateDynamicUI(){
+  // Eligibility and blocking come only from the TypeScript production coverage evaluator.
+  const currentCoverage=guidanceCoverage(selectedCaseHeirs());
+  for(const heir of HEIRS){
+    const card=document.getElementById(`hc-${heir.id}`);
+    if(!card||card.classList.contains("hide")) continue;
+    const selected=(sel[heir.id]||0)>0;
+    const blocked=blockedGuidanceFor(UI_HEIR_TYPES[heir.id],currentCoverage);
+    const state=blocked?"BLOCKED":selected?"SELECTED":"AVAILABLE";
+    card.dataset.heirState=state;
+    card.classList.toggle("blocked",Boolean(blocked));
+    card.querySelector(".heir-status")?.remove();
+    const wrapper=card.closest(".heir-card-wrap");
+    wrapper?.querySelector(".heir-guidance")?.remove();
+    if(blocked){
+      const status=uiElement("span","heir-status");
+      const blocker=heirLabel(blocked.blockerType);
+      applyResolvedText(
+        status,
+        getPrimaryText(selected?"blocked_receives_zero":"blocked_by",lang),
+        {heir:blocker}
+      );
+      status.title=presentableEngineText(blocked.reason);
+      card.appendChild(status);
+      card.setAttribute("aria-description",presentableEngineText(blocked.reason));
+      const why=uiElement("details","heir-guidance");
+      why.append(
+        uiElement("summary","",getPrimaryText("why",lang).text),
+        uiElement("p","",presentableEngineText(blocked.reason))
+      );
+      wrapper?.appendChild(why);
+    }else{
+      card.removeAttribute("aria-description");
+    }
+    if(heir.max===1) card.disabled=Boolean(blocked&&!selected);
+    card.querySelectorAll(".cb").forEach(button=>{
+      if(Number(button.dataset.d)>0) button.disabled=Boolean(blocked);
+    });
+  }
 }
 
 const LINEAGE_UI_IDS=new Set(["ibn_ibn","bint_ibn","jadda_ab","jadda_umm"]);
@@ -422,9 +466,9 @@ function renderLineageDetails(){
 function renderHeirs(){
   const g=document.getElementById("hgrid");
   const groupIds={
-    zawj:"spouse",zawja:"spouse",
-    ibn:"descendants",bint:"descendants",ibn_ibn:"descendants",bint_ibn:"descendants",
-    ab:"parents",umm:"parents",jadd:"parents",jadda_ab:"parents",jadda_umm:"parents",
+    zawj:"immediate",zawja:"immediate",ab:"immediate",umm:"immediate",ibn:"immediate",bint:"immediate",
+    ibn_ibn:"descendants",bint_ibn:"descendants",
+    jadd:"grandparents",jadda_ab:"grandparents",jadda_umm:"grandparents",
     akh_sh:"siblings",akh_ab:"siblings",akh_um:"siblings",ukht_sh:"siblings",ukht_ab:"siblings",ukht_um:"siblings"
   };
   g.querySelectorAll(".hgrid").forEach(group=>{ group.innerHTML=""; });
@@ -445,7 +489,7 @@ function renderHeirs(){
       (h.max>1?`<div class="ctr"><button class="cb" data-id="${h.id}" data-d="-1">−</button><span class="cn2" id="cn-${h.id}">${c||""}</span><button class="cb" data-id="${h.id}" data-d="1">+</button></div>`:"");
     
     if(h.max===1) card.addEventListener("click",()=>{
-        if(card.classList.contains("blocked")) return;
+        if(card.classList.contains("blocked")&&!sel[h.id]) return;
         sel[h.id]=sel[h.id]?0:1;
         if(LINEAGE_UI_IDS.has(h.id)){
           if(sel[h.id]) ensureLineageGroups(h.id);
@@ -459,15 +503,17 @@ function renderHeirs(){
         updateCaseSummary();
     });
     const group=document.getElementById("hgrid-"+(groupIds[h.id]||"extended"));
-    group.appendChild(card);
+    const wrapper=uiElement("div","heir-card-wrap"+(show?"":" hide"));
+    wrapper.appendChild(card);
+    group.appendChild(wrapper);
   });
 
   g.querySelectorAll(".cb").forEach(btn=>btn.addEventListener("click",e=>{
     e.stopPropagation();
     const id=btn.dataset.id;
     const card = document.getElementById("hc-" + id);
-    if(card.classList.contains("blocked")) return;
     const d=parseInt(btn.dataset.d), h=HEIRS.find(x=>x.id===id);
+    if(card.classList.contains("blocked")&&d>0) return;
     if(LINEAGE_UI_IDS.has(id)) adjustPrimaryLineageGroup(id,d,h.max);
     else sel[id]=Math.max(0,Math.min(h.max,(sel[id]||0)+d));
     invalidateCalculation();
@@ -486,14 +532,38 @@ function renderHeirs(){
     );
   });
   renderLineageDetails();
+  const advancedSelected=HEIRS.some(heir=>(groupIds[heir.id]||"extended")!=="immediate"&&(sel[heir.id]||0)>0);
+  if(advancedSelected) document.getElementById("advancedHeirs").open=true;
+  for(const [group,id] of [["descendants","descendantHeirGroup"],["grandparents","grandparentHeirGroup"],["siblings","siblingHeirGroup"],["extended","extendedHeirGroup"]]){
+    if(HEIRS.some(heir=>(groupIds[heir.id]||"extended")===group&&(sel[heir.id]||0)>0)) document.getElementById(id).open=true;
+  }
   updateDynamicUI();
   updateCaseSummary();
 }
 
-function setStep(n){
-  for(let i=1;i<=5;i++){
-    const s=document.getElementById("s"+i); s.classList.remove("done","active");
-    if(i<n) s.classList.add("done"); else if(i===n) s.classList.add("active");
+function updateProgress(statusKind){
+  const estate=exactEstateInput();
+  const deceasedComplete=Boolean(gender);
+  const estateComplete=deceasedComplete&&estate.gross>0n&&estate.issues.length===0&&document.getElementById("estateFactsConfirmed")?.checked===true;
+  const madhhabComplete=estateComplete;
+  const heirsComplete=madhhabComplete&&(statusKind==="ready"||Boolean(_lastCalculationResult));
+  const completed=[
+    deceasedComplete,
+    estateComplete,
+    madhhabComplete,
+    heirsComplete,
+    Boolean(_lastCalculationResult)
+  ];
+  let current=completed.findIndex(value=>!value);
+  if(current<0) current=4;
+  for(let index=0;index<5;index++){
+    const step=document.getElementById(`s${index+1}`);
+    const circle=step.querySelector(".sc");
+    step.classList.toggle("done",completed[index]);
+    step.classList.toggle("active",!completed[index]&&index===current);
+    if(!completed[index]&&index===current) step.setAttribute("aria-current","step");
+    else step.removeAttribute("aria-current");
+    circle.textContent=completed[index]?"✓":String(index+1);
   }
 }
 
@@ -659,49 +729,73 @@ function fieldIssueText(issue){
   return getPrimaryText("case_requires_review",lang);
 }
 
-function setCalculationStatus(kind,lines){
+function setFieldAttention({genderMissing=false,estateMissing=false,heirsMissing=false,estateReview=false,remainderMissing=false}={}){
+  document.getElementById("deceasedCard")?.classList.toggle("needs-attention",genderMissing);
+  document.getElementById("estateCard")?.classList.toggle("needs-attention",estateMissing||estateReview);
+  document.getElementById("heirsCard")?.classList.toggle("needs-attention",heirsMissing);
+  document.getElementById("estateFactsConfirmed")?.closest(".estate-safety-confirmation")?.classList.toggle("needs-attention",estateReview);
+  document.getElementById("remainderPolicy")?.classList.toggle("needs-attention",remainderMissing);
+}
+
+function setCalculationStatus(kind,primary,details=[]){
   const button=document.getElementById("calcBtn");
-  const status=document.getElementById("calculationDisabledReason");
+  const status=document.getElementById("primaryCaseStatus");
   button.disabled=kind!=="ready";
-  status.className=`calculation-disabled-reason calculation-status-${kind}`;
-  status.replaceChildren(...lines.map((line,index)=>{
-    const item=uiElement("span","calculation-status-line");
-    if(typeof line==="string") item.textContent=line;
-    else applyResolvedText(item,line);
-    if(index<lines.length-1) item.appendChild(document.createElement("br"));
-    return item;
-  }));
+  status.className=`validation-banner calculation-status-${kind} ai`;
+  const heading=uiElement("strong","calculation-status-primary");
+  if(typeof primary==="string") heading.textContent=primary;
+  else applyResolvedText(heading,primary);
+  status.replaceChildren(heading);
+  const uniqueDetails=[...new Set(details.map(detail=>typeof detail==="string"?detail:detail.text))];
+  if(uniqueDetails.length) status.appendChild(uiElement("span","calculation-status-detail",uniqueDetails.join(" ")));
+  updateProgress(kind);
 }
 
 function updateCalculatorState(){
   if(!window.FaraidCalculator) return;
   const estate=exactEstateInput();
-  const missing=[];
-  if(!gender) missing.push(resolveText("missing_gender",lang).text);
-  if(estate.gross<=0n) missing.push(resolveText("missing_estate",lang).text);
-  if(selectedCaseHeirs().length===0) missing.push(resolveText("missing_heirs",lang).text);
-  if(missing.length){
-    setCalculationStatus("missing",[
-      getPrimaryText("missing_information",lang).text,
-      ...missing
-    ]);
+  const remainderField=document.querySelector(".remainder-policy-field");
+  const genderMissing=!gender;
+  const estateMissing=estate.gross<=0n;
+  const heirsMissing=selectedCaseHeirs().length===0;
+  if(genderMissing||estateMissing||heirsMissing){
+    remainderField.hidden=true;
+    setFieldAttention({genderMissing,estateMissing,heirsMissing});
+    setCalculationStatus("incomplete",getPrimaryText("complete_highlighted",lang));
     return;
   }
   if(estate.issues.length){
-    setCalculationStatus("missing",[getPrimaryText("missing_information",lang).text,...estate.issues.map(fieldIssueText)]);
+    remainderField.hidden=true;
+    setFieldAttention({estateReview:true});
+    setCalculationStatus("invalid",fieldIssueText(estate.issues[0]),estate.issues.slice(1).map(fieldIssueText));
     return;
   }
   const coverage=window.FaraidCalculator.evaluateWholeCaseCoverage(coverageInput());
+  remainderField.hidden=!(
+    coverage.reasons.some(reason=>reason.startsWith("REMAINDER_POLICY"))||
+    coverage.requiredRuleIds.some(ruleId=>ruleId.startsWith("KZ-FR-004-"))
+  );
   if(coverage.status==="SUPPORTED"){
-    setCalculationStatus("ready",[getPrimaryText("ready_calculate",lang).text]);
+    setFieldAttention();
+    setCalculationStatus("ready",getPrimaryText("ready_calculate",lang));
     return;
   }
-  const heading=coverage.status==="MISSING_INFORMATION"
-    ?getPrimaryText("missing_information",lang).text
-    :getPrimaryText("case_not_supported",lang).text;
-  setCalculationStatus(coverage.status==="MISSING_INFORMATION"?"missing":"unsupported",[
-    heading,...coverage.missingFields.map(fieldIssueText),...coverage.invalidFields.map(()=>getPrimaryText("invalid_case_input",lang)),...coverage.reasons.map(coverageReasonText)
-  ]);
+  const details=[...coverage.missingFields.map(fieldIssueText),...coverage.invalidFields.map(()=>getPrimaryText("invalid_case_input",lang)),...coverage.reasons.map(coverageReasonText)];
+  const remainderMissing=coverage.reasons.some(reason=>reason.startsWith("REMAINDER_POLICY"));
+  const reviewRequired=coverage.reasons.some(reason=>
+    reason==="UNCERTAIN_DEATH_ORDER_REQUIRES_REVIEW"||
+    reason==="UNRESOLVED_CASE_FACTS"||
+    reason.includes("NOT_ADMITTED")||
+    reason.startsWith("RULE_NOT_ADMITTED:")
+  );
+  const kind=coverage.status==="INVALID_INPUT"?"invalid":coverage.status==="MISSING_INFORMATION"?"review":reviewRequired?"review":"unsupported";
+  setFieldAttention({estateReview:coverage.missingFields.includes("ESTATE_FACTS_REVIEW_REQUIRED"),remainderMissing});
+  const heading=kind==="invalid"
+    ?getPrimaryText("invalid_case_input",lang)
+    :kind==="review"
+      ?getPrimaryText("case_needs_review",lang)
+      :getPrimaryText("case_not_supported",lang);
+  setCalculationStatus(kind,heading,details);
 }
 
 function calculationInput(){
@@ -739,10 +833,75 @@ function presentableEngineText(value){
 }
 
 function sourceLabel(sourceId){
-  if(sourceId.includes("KANZ")||sourceId.includes("MAHALLI")) return "Kanz / al-Mahalli";
-  if(sourceId.includes("KHULASA")) return "Khulasat al-Fiqh al-Islami";
-  if(sourceId.includes("FATH")) return "Fath al-Mu'in";
-  return sourceId;
+  if(sourceId.includes("KANZ")||sourceId.includes("MAHALLI")) return "Kanz al-Rāghibīn (al-Maḥallī)";
+  if(sourceId.includes("KHULASA")) return "Khulāṣat al-Fiqh al-Islāmī";
+  if(sourceId.includes("FATH")) return "Fatḥ al-Mu‘īn";
+  return getPrimaryText("reviewed_source",lang).text;
+}
+
+function printedLocator(locator){
+  const printed=locator.split(";").find(part=>/printed/i.test(part));
+  return (printed||locator).trim().replace(/\.$/,"");
+}
+
+function humanRuleName(ruleId){
+  const known={
+    "KZ-FR-012-SON-GROUP-RESIDUARY":"Children as residuaries — الأولاد عصبة",
+    "KZ-FR-012-SONS-AND-DAUGHTERS-TWO-TO-ONE":"Children as residuaries at 2:1 — للذكر مثل حظ الأنثيين",
+    "KZ-FR-027-ORIGINAL-ASL":"Case origin — أصل المسألة",
+    "KZ-FR-028-AWL-ADJUSTMENT":"Awl adjustment — العول",
+    "KZ-FR-004-NO-FUNCTIONING-BAYT-AL-MAL-RADD":"Radd — الرد",
+    "KZ-FR-004-FUNCTIONING-BAYT-AL-MAL-RESIDUE":"Bayt al-Mal residue",
+    "KZ-FR-029-SINGLE-CLASS-CORRECTION":"Case correction — التصحيح",
+    "KZ-FR-029-MULTIPLE-CLASS-CORRECTION":"Case correction — التصحيح"
+  };
+  if(known[ruleId]) return known[ruleId];
+  return ruleId
+    .replace(/^KZ-FR-\d+-/,"")
+    .replaceAll("-"," ")
+    .toLowerCase()
+    .replace(/^./,letter=>letter.toUpperCase());
+}
+
+function appendTechnicalDetails(container,result,ruleIds=result.appliedProductionRuleIds,sources=result.sourceReferences){
+  const details=uiElement("details","technical-details");
+  details.appendChild(uiElement("summary","",getPrimaryText("technical_details",lang).text));
+  const content=uiElement("div","technical-content");
+  content.appendChild(uiElement("p","code-like",`${getPrimaryText("rules_used",lang).text}: ${[...new Set(ruleIds)].join(", ")}`));
+  if(sources.length){
+    const ids=uiElement("ul","source-list code-like");
+    for(const source of sources) ids.appendChild(uiElement("li","",`${source.sourceId} — ${source.evidenceRecordId}`));
+    content.appendChild(ids);
+  }
+  details.appendChild(content);
+  container.appendChild(details);
+}
+
+function renderGroupedSources(container,result){
+  const section=uiElement("section","learn-sources");
+  section.appendChild(uiElement("h3","",getPrimaryText("sources",lang).text));
+  const groups=new Map();
+  for(const step of result.explanationSteps){
+    for(const source of step.sourceReferences){
+      const book=sourceLabel(source.sourceId);
+      const key=`${source.sourceId}\0${printedLocator(source.locator)}`;
+      if(!groups.has(book)) groups.set(book,new Map());
+      if(!groups.get(book).has(key)) groups.get(book).set(key,{source,rules:new Set()});
+      step.ruleIds.forEach(ruleId=>groups.get(book).get(key).rules.add(ruleId));
+    }
+  }
+  for(const [book,references] of groups){
+    const group=uiElement("div","source-group");
+    group.appendChild(uiElement("h4","",book));
+    const list=uiElement("ul","source-list");
+    for(const {source,rules} of references.values()){
+      const purpose=[...rules].slice(0,2).map(humanRuleName).join("; ");
+      list.appendChild(uiElement("li","",`${printedLocator(source.locator)}${purpose?` — ${purpose}`:""}`));
+    }
+    group.appendChild(list);
+    section.appendChild(group);
+  }
+  container.appendChild(section);
 }
 
 function renderExplanationInto(container,result){
@@ -752,60 +911,98 @@ function renderExplanationInto(container,result){
     applyResolvedText(note,getPrimaryText("explanation_english_fallback",lang));
     container.appendChild(note);
   }
-  for(const step of result.explanationSteps){
-    const card=uiElement("section","learn-card");
+  const steps=result.explanationSteps.filter(step=>step.kind!=="RULES"&&step.kind!=="SOURCES");
+  for(const [index,step] of steps.entries()){
+    const card=uiElement("details","learn-step");
     card.lang="en";
     card.dir="ltr";
-    card.appendChild(uiElement("h3","",presentableEngineText(step.title)));
-    if(step.fraction) card.appendChild(uiElement("div","rsh",fractionText(step.fraction)));
-    card.appendChild(uiElement("p","",presentableEngineText(step.summary)));
-    if(step.ruleIds.length) card.appendChild(uiElement("p","code-like",`${getPrimaryText("rules_used",lang).text}: ${step.ruleIds.join(", ")}`));
-    if(step.sourceReferences.length){
-      const list=uiElement("ul","source-list");
-      for(const source of step.sourceReferences) list.appendChild(uiElement("li","",`${sourceLabel(source.sourceId)} — ${source.locator}`));
-      card.appendChild(list);
-    }
+    if(index===0) card.open=true;
+    const summary=uiElement("summary","learn-step-summary");
+    summary.appendChild(uiElement("span","",presentableEngineText(step.title)));
+    if(step.fraction) summary.appendChild(uiElement("strong","rsh",fractionText(step.fraction)));
+    card.append(summary,uiElement("p","learn-step-body",presentableEngineText(step.summary)));
+    if(step.ruleIds.length) card.appendChild(uiElement("p","human-rule-name",humanRuleName(step.ruleIds[0])));
     container.appendChild(card);
   }
+  renderGroupedSources(container,result);
+  appendTechnicalDetails(container,result);
 }
 
 function updateLearn(){
-  const containers=[document.getElementById("learnContent"),document.getElementById("verificationContent")].filter(Boolean);
+  const containers=[document.getElementById("learnContent")].filter(Boolean);
   for(const container of containers){
     if(_lastCalculationResult) renderExplanationInto(container,_lastCalculationResult);
     else applyResolvedText(container,getPrimaryText("calculate_first",lang));
   }
 }
 
+function caseTypePresentation(result){
+  if(result.calculationType==="AKDARIYYA") return ["الأكدرية",getPrimaryText("case_akdariyya",lang).text];
+  if(result.calculationType==="MUSHTARAKA") return ["المشتركة",getPrimaryText("case_mushtaraka",lang).text];
+  if(result.calculationType==="MUADDA") return ["المعادة",getPrimaryText("case_muadda",lang).text];
+  if(result.calculationType==="UMARIYYATAYN") return ["العمريتان",getPrimaryText("case_umariyyatayn",lang).text];
+  if(result.awlDetails) return ["العول",getPrimaryText("case_awl",lang).text];
+  if(result.raddDetails) return ["الرد",getPrimaryText("case_radd",lang).text];
+  if(result.calculationType==="GRANDFATHER_WITH_SIBLINGS") return ["الجد مع الإخوة",getPrimaryText("case_grandfather_siblings",lang).text];
+  return ["عادية",getPrimaryText("case_ordinary",lang).text];
+}
+
+function shareClassificationText(classification){
+  const key={
+    FIXED:"share_fixed",ASABAH:"share_asabah",ASABAH_BI_NAFSIHI:"share_asabah_bi_nafsihi",
+    ASABAH_BIL_GHAYR:"share_asabah_bil_ghayr",ASABAH_MA_AL_GHAYR:"share_asabah_ma_al_ghayr",
+    FIXED_PLUS_ASABAH:"share_fixed_plus_asabah",SPECIAL_CASE:"share_special_case"
+  }[classification]||"share_asabah";
+  return getPrimaryText(key,lang).text;
+}
+
+function appendCalculationSection(container,title,lines){
+  if(lines.length===0) return;
+  const section=uiElement("section","calculation-section");
+  section.appendChild(uiElement("h3","",title));
+  for(const line of lines) section.appendChild(uiElement("p","numeric-value",line));
+  container.appendChild(section);
+}
+
 function renderCalculationResult(result){
   _lastCalculationResult=result;
   document.getElementById("resSec").style.display="block";
-  setStep(5);
-  document.getElementById("ctag").replaceChildren(uiElement("span","ctag tnorm",result.calculationType));
+  activateResultTab(document.getElementById("tabShares"));
+  document.querySelector(".workspace-layout")?.classList.add("has-results");
+  document.querySelector(".case-sidebar")?.classList.add("result-ready");
+  updateProgress("ready");
+  const [arabicCase,caseMeaning]=caseTypePresentation(result);
+  document.getElementById("ctag").replaceChildren(uiElement("span","ctag tnorm",`${arabicCase} — ${caseMeaning}`));
   const metrics=document.getElementById("metrics");
   metrics.replaceChildren();
   const resultMetrics=[
     [formatMinorUnits(result.netDistributableEstateMinorUnits),getPrimaryText("current_net",lang).text],
-    [result.calculationType,getPrimaryText("calculation_type",lang).text],
-    [result.originalAsl,"أصل المسألة"],
-    [result.correctedDenominator,getPrimaryText("corrected_denominator",lang).text]
+    [`${arabicCase} — ${caseMeaning}`,getPrimaryText("calculation_type",lang).text]
   ];
-  if(result.awlDetails) resultMetrics.splice(3,0,[result.awlDetails.adjustedDenominator,"عول denominator"]);
   for(const [value,label] of resultMetrics){
     const card=uiElement("div","mc");card.append(uiElement("div","mv",value),uiElement("div","ml",label));metrics.appendChild(card);
   }
   const sharesList=document.getElementById("sharesList");sharesList.replaceChildren();
   for(const allocation of result.allocations){
     const row=uiElement("div","rrow");
-    const name=uiElement("div","rname",`${heirLabel(allocation.heirType)} × ${allocation.count}`);
+    const name=uiElement("div","rname");
+    name.append(uiElement("strong","",`${heirLabel(allocation.heirType)} × ${allocation.count}`),uiElement("span","share-classification",shareClassificationText(allocation.shareClassification)));
     const share=uiElement("div","rsh",fractionText(allocation.collectiveFraction));
     share.appendChild(uiElement("div","ramt",`${getPrimaryText("per_person_share",lang).text}: ${fractionText(allocation.perPersonFraction)} · ${percentageText(allocation.collectiveFraction)}`));
     const amount=uiElement("div","ramtv",formatMinorUnits(allocation.exactAmountMinorUnits));
+    if(allocation.count>1) amount.appendChild(uiElement("span","per-person-amounts",`${getPrimaryText("per_person_share",lang).text}: ${allocation.perPersonAmountsMinorUnits.map(formatMinorUnits).join(", ")}`));
     row.append(name,share,amount);sharesList.appendChild(row);
   }
   if(result.baytAlMalResidue){
     const row=uiElement("div","rrow");
     row.append(uiElement("div","rname",getPrimaryText("bayt_residue",lang).text),uiElement("div","rsh",fractionText(result.baytAlMalResidue.fraction)),uiElement("div","ramtv",formatMinorUnits(result.baytAlMalResidue.exactAmountMinorUnits)));
+    sharesList.appendChild(row);
+  }
+  for(const blocked of result.blockedHeirs){
+    const row=uiElement("div","rrow blocked-result");
+    const name=uiElement("div","rname");
+    name.append(uiElement("strong","",`${heirLabel(blocked.type)} × ${blocked.count}`),uiElement("span","share-classification",`${getPrimaryText("share_blocked",lang).text} ${heirLabel(blocked.blockerType)}`));
+    row.append(name,uiElement("div","rsh","0"),uiElement("div","ramtv",formatMinorUnits("0")));
     sharesList.appendChild(row);
   }
   const hajb=document.getElementById("hajbList");
@@ -817,22 +1014,30 @@ function renderCalculationResult(result){
       const card=uiElement("div","learn-card");
       card.append(
         uiElement("h3","",`${heirLabel(blocked.type)} × ${blocked.count}`),
-        uiElement("p","",presentableEngineText(blocked.reason)),
-        uiElement("p","code-like",`${getPrimaryText("rules_used",lang).text}: ${blocked.ruleId}`)
+        uiElement("p","share-classification",`${getPrimaryText("share_blocked",lang).text} ${heirLabel(blocked.blockerType)}`),
+        uiElement("p","",presentableEngineText(blocked.reason))
       );
+      appendTechnicalDetails(card,result,[blocked.ruleId],result.sourceReferences.filter(source=>result.explanationSteps.some(step=>step.ruleIds.includes(blocked.ruleId)&&step.sourceReferences.includes(source))));
       hajb.appendChild(card);
     }
   }
-  const asl=document.getElementById("aslDetail");asl.replaceChildren();
-  const aslBox=uiElement("div","learn-card");
-  aslBox.append(uiElement("p","code-like",`أصل المسألة: ${result.originalAsl}`));
-  if(result.awlDetails) aslBox.appendChild(uiElement("p","code-like",`العول: ${result.awlDetails.originalAsl} → ${result.awlDetails.adjustedDenominator}`));
-  aslBox.append(uiElement("p","code-like",`${getPrimaryText("working_denominator",lang).text}: ${result.workingDenominator}`),uiElement("p","code-like",`${getPrimaryText("corrected_denominator",lang).text}: ${result.correctedDenominator}`));
-  asl.appendChild(aslBox);
-  const assets=document.getElementById("assetsDetail");assets.replaceChildren();
-  const assetCard=uiElement("div","learn-card");
-  assetCard.append(uiElement("p","",`${getPrimaryText("gross_estate",lang).text}: ${formatMinorUnits(result.grossEstateMinorUnits)}`),uiElement("p","",`${getPrimaryText("supported_deductions",lang).text}: ${formatMinorUnits(result.totalDeductionsMinorUnits)}`),uiElement("p","",`${getPrimaryText("current_net",lang).text}: ${formatMinorUnits(result.netDistributableEstateMinorUnits)}`));
-  assets.appendChild(assetCard);
+  const calculation=document.getElementById("calculationDetail");calculation.replaceChildren();
+  appendCalculationSection(calculation,getPrimaryText("estate_calculation",lang).text,[
+    `${getPrimaryText("gross_estate",lang).text}: ${formatMinorUnits(result.grossEstateMinorUnits)}`,
+    `${getPrimaryText("supported_deductions",lang).text}: ${formatMinorUnits(result.totalDeductionsMinorUnits)}`,
+    `${getPrimaryText("current_net",lang).text}: ${formatMinorUnits(result.netDistributableEstateMinorUnits)}`
+  ]);
+  appendCalculationSection(calculation,"أصل المسألة",[
+    `أصل المسألة: ${result.originalAsl}`,
+    `${getPrimaryText("working_denominator",lang).text}: ${result.workingDenominator}`,
+    ...(result.correctedDenominator!==result.workingDenominator?[`${getPrimaryText("corrected_denominator",lang).text}: ${result.correctedDenominator}`]:[])
+  ]);
+  if(result.awlDetails) appendCalculationSection(calculation,"العول",[`${result.awlDetails.originalAsl} → ${result.awlDetails.adjustedDenominator}`]);
+  if(result.residuaryAssignments.length) appendCalculationSection(calculation,`عصبة — ${getPrimaryText("residuary_distribution",lang).text}`,result.residuaryAssignments.map(assignment=>`${heirLabel(assignment.heirType)}: ${fractionText(assignment.fraction)}`));
+  if(result.correctionDetails) appendCalculationSection(calculation,"التصحيح",[`${getPrimaryText("correction_factor",lang).text}: ${result.correctionDetails.factor}`]);
+  if(result.raddDetails) appendCalculationSection(calculation,"الرد",[`${getPrimaryText("remainder",lang).text}: ${fractionText(result.raddDetails.originalResidue)}`]);
+  if(result.baytAlMalResidue) appendCalculationSection(calculation,getPrimaryText("bayt_residue",lang).text,[fractionText(result.baytAlMalResidue.fraction)]);
+  appendTechnicalDetails(calculation,result);
   updateLearn();
 }
 
@@ -840,7 +1045,10 @@ function invalidateCalculation(){
   _lastCalculationResult=null;
   const result=document.getElementById("resSec");
   if(result) result.style.display="none";
+  document.querySelector(".workspace-layout")?.classList.remove("has-results");
+  document.querySelector(".case-sidebar")?.classList.remove("result-ready");
   updateLearn();
+  updateProgress(document.getElementById("calcBtn")?.disabled?"incomplete":"ready");
 }
 
 document.getElementById("remainderPolicy")?.addEventListener("change",()=>{invalidateCalculation();updateCalculatorState();});
@@ -854,8 +1062,8 @@ document.getElementById("calcBtn")?.addEventListener("click",()=>{
     document.getElementById("resSec").scrollIntoView({behavior:"smooth",block:"start"});
   }catch(error){
     const coverage=error?.coverage;
-    const lines=[getPrimaryText("case_not_supported",lang).text,...(error?.issues||[]).map(fieldIssueText),...(coverage?.reasons||[]).map(coverageReasonText)];
-    setCalculationStatus("unsupported",[...new Set(lines)]);
+    const details=[...(error?.issues||[]).map(fieldIssueText),...(coverage?.reasons||[]).map(coverageReasonText)];
+    setCalculationStatus("unsupported",getPrimaryText("case_not_supported",lang),details);
     invalidateCalculation();
   }
 });
@@ -891,12 +1099,10 @@ document.querySelectorAll(".tab").forEach(tab=>{
 });
 
 window.addEventListener("scroll", () => {
-  const show = window.scrollY > 300;
+  const show = window.scrollY > 700;
   document.getElementById("fabTop")?.classList.toggle("show", show);
-  document.getElementById("fabBottom")?.classList.toggle("show", show);
 });
 document.getElementById("fabTop")?.addEventListener("click", () => window.scrollTo({top:0, behavior:'smooth'}));
-document.getElementById("fabBottom")?.addEventListener("click", () => window.scrollTo({top:document.body.scrollHeight, behavior:'smooth'}));
 
 // Initialize UI
 lang=loadMainLanguage(localStorage);

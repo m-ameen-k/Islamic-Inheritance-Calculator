@@ -146,6 +146,36 @@ describe("SOURCE_DERIVED_TEST: exact supported direct-family executor", () => {
     expect(shares(result)).toEqual({ HUSBAND: "1/4", DAUGHTER: "3/4" });
   });
 
+  it("exposes juridical share classifications without changing exact allocations", () => {
+    const mixedChildren = calculateSupportedInheritance(
+      input([
+        ["WIFE", 1],
+        ["SON", 1],
+        ["DAUGHTER", 1],
+      ]),
+    );
+    expect(
+      Object.fromEntries(
+        mixedChildren.allocations.map((allocation) => [
+          allocation.heirType,
+          allocation.shareClassification,
+        ]),
+      ),
+    ).toEqual({ WIFE: "FIXED", SON: "ASABAH_BI_NAFSIHI", DAUGHTER: "ASABAH_BIL_GHAYR" });
+
+    const fixedAndResidue = calculateSupportedInheritance(
+      input([
+        ["FATHER", 1],
+        ["DAUGHTER", 1],
+      ]),
+    );
+    expect(
+      fixedAndResidue.allocations.find((allocation) => allocation.heirType === "FATHER")
+        ?.shareClassification,
+    ).toBe("FIXED_PLUS_ASABAH");
+    expect(shares(fixedAndResidue)).toEqual({ FATHER: "1/2", DAUGHTER: "1/2" });
+  });
+
   it("sends the same unresolved residue to a functioning Bayt al-Mal", () => {
     const result = calculateSupportedInheritance(
       input([["DAUGHTER", 1]], { remainderPolicy: "FUNCTIONING_BAYT_AL_MAL" }),

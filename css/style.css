@@ -192,6 +192,23 @@ body::before {
 .case-sidebar {
   position: sticky;
   top: 1rem;
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+}
+
+.workspace-layout.has-results {
+  display: block;
+}
+
+.workspace-layout.has-results .case-sidebar {
+  position: static;
+  max-height: none;
+  overflow: visible;
+}
+
+.workspace-layout.has-results .case-summary {
+  max-width: 680px;
+  margin-inline: auto;
 }
 
 .case-summary {
@@ -490,13 +507,28 @@ body::before {
 .validation-banner {
   margin: -1rem 0 1.5rem;
   padding: 14px 16px;
-  border: 2px solid var(--danger);
+  border: 1px solid var(--border2);
   border-radius: var(--r2);
-  background: var(--dangerbg);
-  color: var(--danger);
+  background: var(--bg2);
+  color: var(--txt2);
   font-size: 14px;
-  font-weight: 700;
   line-height: 1.5;
+}
+
+.calculation-status-primary,
+.calculation-status-detail { display: block; }
+.calculation-status-detail { margin-top: 2px; font-size: 12px; font-weight: 500; }
+.calculation-status-ready { border-color: var(--pri); background: var(--pribg); color: var(--pri); }
+.calculation-status-incomplete,
+.calculation-status-review { border-color: var(--warn); background: var(--warnbg); color: var(--warn); }
+.calculation-status-unsupported { border-color: var(--border2); background: var(--bg2); color: var(--txt2); }
+.calculation-status-invalid { border-color: var(--danger); background: var(--dangerbg); color: var(--danger); }
+
+.card.needs-attention,
+.estate-safety-confirmation.needs-attention,
+.inp.needs-attention {
+  border-color: var(--warn);
+  box-shadow: 0 0 0 2px rgba(180, 83, 9, 0.16);
 }
 
 .step {
@@ -1039,6 +1071,24 @@ body::before {
   min-width: 0;
 }
 
+.advanced-heirs {
+  margin-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.advanced-heirs > summary {
+  color: var(--pri);
+  cursor: pointer;
+  font-weight: 700;
+  min-height: 44px;
+  padding-block: 12px;
+}
+
+.advanced-heir-groups {
+  display: grid;
+  gap: 4px;
+}
+
 .heir-group h3 {
   color: var(--txt2);
   font-size: 14px;
@@ -1068,6 +1118,19 @@ body::before {
   text-align: start;
 }
 
+.heir-card-wrap { min-width: 0; }
+.heir-card-wrap.hide { display: none; }
+
+.heir-guidance {
+  margin-top: 4px;
+  padding-inline: 8px;
+  color: var(--txt3);
+  font-size: 11px;
+}
+
+.heir-guidance summary { cursor: pointer; color: var(--pri); font-weight: 700; }
+.heir-guidance p { padding-block: 4px; }
+
 .hcard:hover {
   border-color: var(--pri);
   background: var(--pribg);
@@ -1087,9 +1150,24 @@ body::before {
 }
 
 .hcard.blocked {
-  opacity: 0.45;
-  pointer-events: none;
-  filter: grayscale(100%);
+  opacity: 0.62;
+  border-style: dashed;
+  filter: saturate(40%);
+}
+
+.hcard:disabled,
+.cb:disabled { cursor: not-allowed; }
+
+.hcard:disabled:hover,
+.cb:disabled:hover { transform: none; box-shadow: none; }
+
+.heir-status {
+  display: block;
+  margin-top: 8px;
+  color: var(--danger);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.35;
 }
 
 .hn {
@@ -1178,28 +1256,8 @@ body::before {
   box-shadow: none;
 }
 
-.calculation-disabled-reason {
-  margin-top: 8px;
-  color: var(--danger);
-  font-size: 12px;
-  text-align: center;
-}
-
 .remainder-policy-field {
   margin: 14px 0;
-}
-
-.calculation-status-ready {
-  color: var(--pri);
-}
-
-.calculation-status-missing,
-.calculation-status-unsupported {
-  color: var(--danger);
-}
-
-.calculation-status-line {
-  overflow-wrap: anywhere;
 }
 
 .source-list {
@@ -1257,7 +1315,7 @@ body::before {
 
 .metrics {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   margin-bottom: 1.5rem;
 }
@@ -1317,6 +1375,19 @@ body::before {
   color: var(--txt);
 }
 
+.rname strong,
+.share-classification { display: block; }
+
+.share-classification {
+  margin-top: 3px;
+  color: var(--txt3);
+  font-family: 'Amiri', 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.blocked-result { opacity: 0.72; }
+
 .rar2 {
   font-family: 'Amiri', serif;
   font-size: 15px;
@@ -1342,6 +1413,14 @@ body::before {
   font-size: 16px;
   font-weight: 700;
   color: var(--pri);
+}
+
+.per-person-amounts {
+  display: block;
+  margin-top: 3px;
+  color: var(--txt3);
+  font-size: 11px;
+  font-weight: 500;
 }
 
 .pbar {
@@ -1404,6 +1483,49 @@ body::before {
   color: var(--txt2);
   font-size: 15px;
 }
+
+.learn-step,
+.calculation-section,
+.learn-sources,
+.technical-details {
+  border-top: 1px solid var(--border);
+  padding-block: 10px;
+}
+
+.learn-step:first-child,
+.calculation-section:first-child { border-top: 0; }
+
+.learn-step-summary,
+.technical-details > summary {
+  min-height: 44px;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--txt);
+}
+
+.learn-step-summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.learn-step-body,
+.human-rule-name,
+.technical-content { margin-top: 8px; color: var(--txt2); }
+
+.human-rule-name { color: var(--pri); font-size: 13px; font-weight: 700; }
+
+.learn-sources h3,
+.calculation-section h3 {
+  color: var(--pri);
+  font-family: 'Amiri', serif;
+  margin-bottom: 6px;
+}
+
+.source-group { margin-top: 12px; }
+.source-group h4 { color: var(--txt); font-size: 14px; }
+.technical-details { margin-top: 12px; color: var(--txt3); }
 
 .learn-card h3 {
   font-family: 'Amiri', serif;
@@ -1517,15 +1639,6 @@ body::before {
   background: var(--pri2);
 }
 
-.fab-down {
-  background: var(--male);
-  box-shadow: 0 4px 20px rgba(28, 78, 216, 0.4);
-}
-
-.fab-down:hover {
-  background: #1e40af;
-}
-
 /* ==========================================================================
    Animations & Responsive Breakpoints
    ========================================================================== */
@@ -1538,13 +1651,15 @@ body::before {
 .ai { animation: fi 0.4s ease forwards; }
 
 
-@media(max-width:799px) {
+@media(max-width:768px) {
   .workspace-layout {
     grid-template-columns: minmax(0, 1fr);
   }
 
   .case-sidebar {
     position: static;
+    max-height: none;
+    overflow: visible;
   }
 
   .g2 {
@@ -1616,10 +1731,6 @@ body::before {
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 130px), 1fr));
   }
 
-  .metrics {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
   .card {
     padding: 1rem
   }
@@ -1682,4 +1793,19 @@ body::before {
 svg,
 img {
   max-width: 100%;
+}
+
+@media print {
+  body::before,
+  .fab-group,
+  .case-sidebar,
+  .tabs { display: none !important; }
+
+  .workspace-layout,
+  .workspace-layout.has-results { display: block; }
+
+  .res,
+  .tc.on { display: block !important; }
+
+  * { position: static !important; }
 }
