@@ -1,0 +1,25 @@
+{
+  "admissionRecordId": "ADMISSION-20260810-KZ-FR-023-AKDARIYYA-PATERNAL-SISTER",
+  "ruleId": "KZ-FR-023-AKDARIYYA-PATERNAL-SISTER",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260810-ADVANCED-SHAFII-INHERITANCE",
+  "reviewRecordIds": [
+    "MANUAL-20260810-KZ-FR-023",
+    "SOURCE-COMPARISON-20260810-ADVANCED-SHAFII-INHERITANCE"
+  ],
+  "fixtureIds": [
+    "KZ-FR-023-AKDARIYYA-PATERNAL-SISTER-POS",
+    "KZ-FR-023-AKDARIYYA-PATERNAL-SISTER-NEG"
+  ],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "Admitted only for the exact narrow advanced condition; excluded branches retain typed coverage rejection."
+}

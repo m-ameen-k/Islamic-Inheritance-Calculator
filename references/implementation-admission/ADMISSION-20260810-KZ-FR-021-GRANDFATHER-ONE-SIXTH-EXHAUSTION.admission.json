@@ -1,0 +1,25 @@
+{
+  "admissionRecordId": "ADMISSION-20260810-KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION",
+  "ruleId": "KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260810-ADVANCED-SHAFII-INHERITANCE",
+  "reviewRecordIds": [
+    "MANUAL-20260810-KZ-FR-021",
+    "SOURCE-COMPARISON-20260810-ADVANCED-SHAFII-INHERITANCE"
+  ],
+  "fixtureIds": [
+    "KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION-POS",
+    "KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION-NEG"
+  ],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "Admitted only for the exact narrow advanced condition; excluded branches retain typed coverage rejection."
+}

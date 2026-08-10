@@ -44,32 +44,44 @@ import { productionRule as RULE_0039 } from "../production/KZ-FR-014-FATHER-RESI
 import { productionRule as RULE_0040 } from "../production/KZ-FR-015-HUSBAND-MOTHER-FATHER";
 import { productionRule as RULE_0041 } from "../production/KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER";
 import { productionRule as RULE_0042 } from "../production/KZ-FR-015-WIFE-MOTHER-FATHER";
-import { productionRule as RULE_0043 } from "../production/KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH";
-import { productionRule as RULE_0044 } from "../production/KZ-FR-017-FATHER-BLOCKS-PATERNAL-GRANDMOTHER";
-import { productionRule as RULE_0045 } from "../production/KZ-FR-017-MOTHER-BLOCKS-GRANDMOTHER-GROUP";
-import { productionRule as RULE_0046 } from "../production/KZ-FR-019-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP";
-import { productionRule as RULE_0047 } from "../production/KZ-FR-019-FATHER-BLOCKS-MATERNAL-SISTER";
-import { productionRule as RULE_0048 } from "../production/KZ-FR-019-FATHER-BLOCKS-SISTER-GROUP";
-import { productionRule as RULE_0049 } from "../production/KZ-FR-019-FULL-BROTHER-BLOCKS-PATERNAL-SIBLING-GROUP";
-import { productionRule as RULE_0050 } from "../production/KZ-FR-019-FULL-BROTHER-RESIDUARY";
-import { productionRule as RULE_0051 } from "../production/KZ-FR-019-FULL-SIBLINGS-TWO-TO-ONE";
-import { productionRule as RULE_0052 } from "../production/KZ-FR-019-FULL-SISTER-GROUP-BLOCKS-PATERNAL-SISTER";
-import { productionRule as RULE_0053 } from "../production/KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-BLOCKS-PATERNAL-SIBLINGS";
-import { productionRule as RULE_0054 } from "../production/KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY";
-import { productionRule as RULE_0055 } from "../production/KZ-FR-019-MIXED-UTERINE-SIBLING-GROUP-ONE-THIRD-EQUAL";
-import { productionRule as RULE_0056 } from "../production/KZ-FR-019-PATERNAL-BROTHER-RESIDUARY";
-import { productionRule as RULE_0057 } from "../production/KZ-FR-019-PATERNAL-SIBLINGS-TWO-TO-ONE";
-import { productionRule as RULE_0058 } from "../production/KZ-FR-019-PATERNAL-SISTER-GROUP-WITH-FULL-SISTER-ONE-SIXTH";
-import { productionRule as RULE_0059 } from "../production/KZ-FR-019-PATERNAL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY";
-import { productionRule as RULE_0060 } from "../production/KZ-FR-019-SON-BLOCKS-MATERNAL-SISTER";
-import { productionRule as RULE_0061 } from "../production/KZ-FR-019-SON-BLOCKS-SISTER-GROUP";
-import { productionRule as RULE_0062 } from "../production/KZ-FR-019-SONS-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP";
-import { productionRule as RULE_0063 } from "../production/KZ-FR-019-SONS-SON-BLOCKS-FULL-PATERNAL-SIBLINGS";
-import { productionRule as RULE_0064 } from "../production/KZ-FR-019-SONS-SON-BLOCKS-UTERINE-SIBLING-GROUP";
-import { productionRule as RULE_0065 } from "../production/KZ-FR-027-ORIGINAL-ASL";
-import { productionRule as RULE_0066 } from "../production/KZ-FR-028-AWL-ADJUSTMENT";
-import { productionRule as RULE_0067 } from "../production/KZ-FR-029-MULTIPLE-CLASS-CORRECTION";
-import { productionRule as RULE_0068 } from "../production/KZ-FR-029-SINGLE-CLASS-CORRECTION";
+import { productionRule as RULE_0043 } from "../production/KZ-FR-016-PATERNAL-GRANDFATHER-BLOCKS-UTERINE-SIBLING-GROUP";
+import { productionRule as RULE_0044 } from "../production/KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH";
+import { productionRule as RULE_0045 } from "../production/KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS-RESIDUE";
+import { productionRule as RULE_0046 } from "../production/KZ-FR-016-PATERNAL-GRANDFATHER-RESIDUARY";
+import { productionRule as RULE_0047 } from "../production/KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH";
+import { productionRule as RULE_0048 } from "../production/KZ-FR-017-FATHER-BLOCKS-PATERNAL-GRANDMOTHER";
+import { productionRule as RULE_0049 } from "../production/KZ-FR-017-MOTHER-BLOCKS-GRANDMOTHER-GROUP";
+import { productionRule as RULE_0050 } from "../production/KZ-FR-018-MUSHTARAKA-CANONICAL";
+import { productionRule as RULE_0051 } from "../production/KZ-FR-019-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP";
+import { productionRule as RULE_0052 } from "../production/KZ-FR-019-FATHER-BLOCKS-MATERNAL-SISTER";
+import { productionRule as RULE_0053 } from "../production/KZ-FR-019-FATHER-BLOCKS-SISTER-GROUP";
+import { productionRule as RULE_0054 } from "../production/KZ-FR-019-FULL-BROTHER-BLOCKS-PATERNAL-SIBLING-GROUP";
+import { productionRule as RULE_0055 } from "../production/KZ-FR-019-FULL-BROTHER-RESIDUARY";
+import { productionRule as RULE_0056 } from "../production/KZ-FR-019-FULL-SIBLINGS-TWO-TO-ONE";
+import { productionRule as RULE_0057 } from "../production/KZ-FR-019-FULL-SISTER-GROUP-BLOCKS-PATERNAL-SISTER";
+import { productionRule as RULE_0058 } from "../production/KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-BLOCKS-PATERNAL-SIBLINGS";
+import { productionRule as RULE_0059 } from "../production/KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY";
+import { productionRule as RULE_0060 } from "../production/KZ-FR-019-MIXED-UTERINE-SIBLING-GROUP-ONE-THIRD-EQUAL";
+import { productionRule as RULE_0061 } from "../production/KZ-FR-019-PATERNAL-BROTHER-RESIDUARY";
+import { productionRule as RULE_0062 } from "../production/KZ-FR-019-PATERNAL-SIBLINGS-TWO-TO-ONE";
+import { productionRule as RULE_0063 } from "../production/KZ-FR-019-PATERNAL-SISTER-GROUP-WITH-FULL-SISTER-ONE-SIXTH";
+import { productionRule as RULE_0064 } from "../production/KZ-FR-019-PATERNAL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY";
+import { productionRule as RULE_0065 } from "../production/KZ-FR-019-SON-BLOCKS-MATERNAL-SISTER";
+import { productionRule as RULE_0066 } from "../production/KZ-FR-019-SON-BLOCKS-SISTER-GROUP";
+import { productionRule as RULE_0067 } from "../production/KZ-FR-019-SONS-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP";
+import { productionRule as RULE_0068 } from "../production/KZ-FR-019-SONS-SON-BLOCKS-FULL-PATERNAL-SIBLINGS";
+import { productionRule as RULE_0069 } from "../production/KZ-FR-019-SONS-SON-BLOCKS-UTERINE-SIBLING-GROUP";
+import { productionRule as RULE_0070 } from "../production/KZ-FR-020-GRANDFATHER-SIBLING-RESIDUE-DISTRIBUTION";
+import { productionRule as RULE_0071 } from "../production/KZ-FR-020-GRANDFATHER-SIBLINGS-NO-FIXED-SHARE-COMPARISON";
+import { productionRule as RULE_0072 } from "../production/KZ-FR-020-GRANDFATHER-SIBLINGS-WITH-FIXED-SHARE-COMPARISON";
+import { productionRule as RULE_0073 } from "../production/KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION";
+import { productionRule as RULE_0074 } from "../production/KZ-FR-022-MUADDA-FULL-MALE-LINE";
+import { productionRule as RULE_0075 } from "../production/KZ-FR-023-AKDARIYYA-FULL-SISTER";
+import { productionRule as RULE_0076 } from "../production/KZ-FR-023-AKDARIYYA-PATERNAL-SISTER";
+import { productionRule as RULE_0077 } from "../production/KZ-FR-027-ORIGINAL-ASL";
+import { productionRule as RULE_0078 } from "../production/KZ-FR-028-AWL-ADJUSTMENT";
+import { productionRule as RULE_0079 } from "../production/KZ-FR-029-MULTIPLE-CLASS-CORRECTION";
+import { productionRule as RULE_0080 } from "../production/KZ-FR-029-SINGLE-CLASS-CORRECTION";
 
 export const PRODUCTION_RULES = [
   RULE_0001,
@@ -140,4 +152,16 @@ export const PRODUCTION_RULES = [
   RULE_0066,
   RULE_0067,
   RULE_0068,
+  RULE_0069,
+  RULE_0070,
+  RULE_0071,
+  RULE_0072,
+  RULE_0073,
+  RULE_0074,
+  RULE_0075,
+  RULE_0076,
+  RULE_0077,
+  RULE_0078,
+  RULE_0079,
+  RULE_0080,
 ] as const satisfies readonly ProductionRuleFile[];
