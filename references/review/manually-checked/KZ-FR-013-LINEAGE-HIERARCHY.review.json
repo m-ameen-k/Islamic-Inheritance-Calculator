@@ -1,0 +1,23 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Focused manual scan comparison only; not independently executable.",
+  "executable": false,
+  "reviewId": "MANUAL-20260810-KZ-FR-013-LINEAGE-HIERARCHY",
+  "parentRuleId": "KZ-FR-013",
+  "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+  "reviewStatus": "MANUALLY_CHECKED",
+  "locator": "Printed pages 140–141 in the trusted Dar al-Minhaj volume-2 scan.",
+  "shortParaphrase": "Son-line descendants at every level follow the stated descendant modes; a nearer male blocks lower levels, while a lower male can make females at his level and qualifying females above him residuaries.",
+  "conditions": [
+    "Every intermediate link from the deceased to the represented descendant is a son.",
+    "Generation and sex of the final descendant are explicit.",
+    "The lower-male rescue applies to females above him only when they received none of the two-thirds entitlement."
+  ],
+  "exclusions": [
+    "A path through a daughter is not a son-line descendant.",
+    "Females below the nearest eligible male generation remain blocked."
+  ],
+  "unresolvedQuestions": [],
+  "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED",
+  "notes": "No raw PDF is added to git. The review was limited to the already identified fara'id pages."
+}
