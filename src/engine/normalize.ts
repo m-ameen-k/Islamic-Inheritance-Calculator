@@ -1,6 +1,7 @@
 import type { EstateInput, EstateObligation, WasiyyahInput } from "../domain/estate";
 import type { HeirInput } from "../domain/heirs";
 import type { InheritanceCase } from "../domain/inheritance-case";
+import { normalizeLineageAwareHeirs } from "../domain/lineage";
 
 function normalizeIdentifier(value: string): string {
   return value.trim();
@@ -50,6 +51,7 @@ function normalizeHeir(heir: HeirInput): HeirInput {
     heirId: normalizeIdentifier(heir.heirId),
     type: heir.type,
     count: heir.count,
+    ...(heir.lineage === undefined ? {} : { lineage: heir.lineage }),
   };
 }
 
@@ -63,7 +65,7 @@ export function normalizeCase(input: InheritanceCase): InheritanceCase {
     mode: input.mode,
     deceasedSex: input.deceasedSex,
     estate: normalizeEstate(input.estate),
-    heirs: input.heirs.map(normalizeHeir),
+    heirs: normalizeLineageAwareHeirs(input.heirs.map(normalizeHeir)).heirs,
   };
 }
 
