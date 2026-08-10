@@ -1,0 +1,34 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Manual scan comparison only; this record is not independently executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-021",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "printedPages": [146],
+    "localPdfPages": [17],
+    "sourceSummary": "When fixed shares leave none, less than one sixth, or exactly one sixth, the grandfather receives one sixth with exact awl where necessary and the competing siblings fall."
+  },
+  "review": {
+    "reviewId": "MANUAL-20260810-KZ-FR-021",
+    "extractedRuleId": "KZ-FR-021",
+    "reviewStatus": "MANUALLY_CHECKED",
+    "exactArabicChecked": true,
+    "printedPageChecked": true,
+    "localPdfPageChecked": true,
+    "explicitConditions": [
+      "Grandfather with eligible full or paternal siblings and other fixed-share heirs.",
+      "The pre-grandfather remainder is at most one sixth."
+    ],
+    "explicitExclusions": [
+      "A remainder greater than one sixth returns to the three-alternative comparison."
+    ],
+    "unresolvedWords": [],
+    "conflictingSources": [],
+    "reviewerName": "OpenAI Codex",
+    "reviewerRole": "AI visual transcription assistant; not a qualified Shafi'i scholar",
+    "reviewDate": "2026-08-10",
+    "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED"
+  }
+}

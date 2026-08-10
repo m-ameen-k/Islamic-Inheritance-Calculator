@@ -1,0 +1,72 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260810-ADVANCED-SHAFII-INHERITANCE",
+  "parentRuleIds": ["KZ-FR-016", "KZ-FR-018", "KZ-FR-020", "KZ-FR-021", "KZ-FR-022", "KZ-FR-023"],
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_NARROW_ATOMIC_SUBSETS_ONLY",
+  "executable": false,
+  "kanzAlMahalliRecords": [
+    {
+      "ruleId": "KZ-FR-016",
+      "locator": "Printed page 142; local PDF page 13.",
+      "scope": "Ordinary paternal-grandfather modes and stated exceptions to father analogy."
+    },
+    {
+      "ruleId": "KZ-FR-018",
+      "locator": "Printed pages 143–144; local PDF pages 14–15.",
+      "scope": "Canonical Mushtaraka."
+    },
+    {
+      "ruleId": "KZ-FR-020",
+      "locator": "Printed page 146; local PDF page 17.",
+      "scope": "Grandfather comparison without and with another fixed-share heir."
+    },
+    {
+      "ruleId": "KZ-FR-021",
+      "locator": "Printed page 146; local PDF page 17.",
+      "scope": "None, less-than-one-sixth, and exactly-one-sixth exhaustion branches."
+    },
+    {
+      "ruleId": "KZ-FR-022",
+      "locator": "Printed page 147; local PDF page 18.",
+      "scope": "Mu‘adda counting and the full-brother-present final priority branch."
+    },
+    {
+      "ruleId": "KZ-FR-023",
+      "locator": "Printed page 147; local PDF page 18.",
+      "scope": "Canonical Akdariyya and final 27-share correction."
+    }
+  ],
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locator": "Printed page 274 footnote 1 and printed pages 290–294.",
+    "scope": "Ordinary grandfather modes, both comparison branches, worked exhaustion cases, Mu‘adda continuation, Akdariyya, and canonical Mushtaraka."
+  },
+  "sourceAgreement": {
+    "agrees": true,
+    "detail": "The two Shafi‘i sources agree on every listed narrow atom and exact worked fraction."
+  },
+  "readyAtomicRuleIds": [
+    "KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH",
+    "KZ-FR-016-PATERNAL-GRANDFATHER-RESIDUARY",
+    "KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS-RESIDUE",
+    "KZ-FR-016-PATERNAL-GRANDFATHER-BLOCKS-UTERINE-SIBLING-GROUP",
+    "KZ-FR-018-MUSHTARAKA-CANONICAL",
+    "KZ-FR-020-GRANDFATHER-SIBLINGS-NO-FIXED-SHARE-COMPARISON",
+    "KZ-FR-020-GRANDFATHER-SIBLINGS-WITH-FIXED-SHARE-COMPARISON",
+    "KZ-FR-020-GRANDFATHER-SIBLING-RESIDUE-DISTRIBUTION",
+    "KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION",
+    "KZ-FR-022-MUADDA-FULL-MALE-LINE",
+    "KZ-FR-023-AKDARIYYA-FULL-SISTER",
+    "KZ-FR-023-AKDARIYYA-PATERNAL-SISTER"
+  ],
+  "atomicExclusions": [
+    "Female-only Mu‘adda completion branches remain unsupported.",
+    "Mushtaraka is admitted only for the source's narrow canonical composition.",
+    "Deeper grandfather generations and existing unresolved ordinary hierarchy questions remain unsupported."
+  ],
+  "unresolvedQuestions": [
+    "Broader Mushtaraka plural full-sibling configurations are not explicit enough in the compared local passages.",
+    "Female-only Mu‘adda has multiple completion branches and is not included in the narrow production atom."
+  ],
+  "readyForAdmission": true
+}

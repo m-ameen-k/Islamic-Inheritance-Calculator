@@ -1,0 +1,34 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Manual scan comparison only; this record is not independently executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-022",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "printedPages": [147],
+    "localPdfPages": [18],
+    "sourceSummary": "Full siblings count paternal siblings against the grandfather in muqasama; after his share, a present full brother makes the remaining sibling residue belong to the full sibling line and the paternal line falls."
+  },
+  "review": {
+    "reviewId": "MANUAL-20260810-KZ-FR-022",
+    "extractedRuleId": "KZ-FR-022",
+    "reviewStatus": "MANUALLY_CHECKED",
+    "exactArabicChecked": true,
+    "printedPageChecked": true,
+    "localPdfPageChecked": true,
+    "explicitConditions": [
+      "Grandfather, both full and paternal sibling classes, and at least one full brother.",
+      "Both sibling classes count in the grandfather comparison."
+    ],
+    "explicitExclusions": [
+      "The full-sisters-only completion branches are not admitted by this atom."
+    ],
+    "unresolvedWords": [],
+    "conflictingSources": [],
+    "reviewerName": "OpenAI Codex",
+    "reviewerRole": "AI visual transcription assistant; not a qualified Shafi'i scholar",
+    "reviewDate": "2026-08-10",
+    "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED"
+  }
+}
