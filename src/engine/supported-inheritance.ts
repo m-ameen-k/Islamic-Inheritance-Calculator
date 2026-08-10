@@ -1033,7 +1033,27 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
     ]),
   ];
   const sources = ruleSources(appliedRuleIds);
+  const deductionSummary =
+    input.deductions.length === 0
+      ? "No supported deductions were entered."
+      : input.deductions
+          .map((deduction) => `${deduction.label}: ${deduction.amountMinorUnits} minor units`)
+          .join("; ");
   const explanationSteps: ExplanationStep[] = [
+    {
+      kind: "ESTATE",
+      title: "Estate before distribution",
+      summary: `Gross estate: ${gross} minor units.`,
+      ruleIds: [],
+      sourceReferences: [],
+    },
+    {
+      kind: "DEDUCTIONS",
+      title: "Deductions and valid bequest",
+      summary: `${deductionSummary} Valid bequest: ${bequest} minor units.`,
+      ruleIds: [],
+      sourceReferences: [],
+    },
     {
       kind: "ESTATE",
       title: "Net distributable estate",
@@ -1043,8 +1063,15 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
     },
     {
       kind: "HEIRS",
-      title: "Eligible heirs",
+      title: "Selected heirs",
       summary: selected.map((heir) => `${lineageDescription(heir)} × ${heir.count}`).join(", "),
+      ruleIds: [],
+      sourceReferences: [],
+    },
+    {
+      kind: "HEIRS",
+      title: "Eligible heirs after blocking",
+      summary: eligible.map((heir) => `${lineageDescription(heir)} × ${heir.count}`).join(", "),
       ruleIds: [],
       sourceReferences: [],
     },

@@ -139,7 +139,7 @@ Object.assign(T.en, {
 });
 
 Object.assign(T.en, {
-  page_intro:"Ordinary direct-family Shafi‘i cases are available. Unsupported cases stop before calculation.",
+  page_intro:"Source-corroborated Shafi‘i calculations are available for the declared supported scope. Unsupported cases stop before calculation.",
   ready_calculate:"Ready to calculate", case_not_supported:"This case is not supported yet.",
   missing_information:"Missing information", remainder_policy:"Remainder policy",
   remainder_unsure:"Unsure", remainder_bayt:"Functioning Bayt al-Mal",
@@ -150,9 +150,9 @@ Object.assign(T.en, {
   calculation_type:"Calculation type", working_denominator:"Working denominator",
   corrected_denominator:"Corrected denominator", asl_unavailable:"أصل المسألة is not shown because its source rule is not admitted.",
   rules_used:"Rules used", bayt_residue:"Bayt al-Mal residue", source_references:"Source references",
-  limited_status:"Calculator status: limited direct-family scope"
+  limited_status:"Calculator status: source-corroborated supported scope"
   ,bequest_unresolved:"A bequest above one third needs explicit valid consent before calculation."
-  ,limited_scope_note:"Limited direct-family production scope.",source_supported_scope:"Source-corroborated supported scope"
+  ,limited_scope_note:"Broad ordinary Shafi‘i coverage with selected advanced cases; unsupported combinations stop before calculation.",source_supported_scope:"Source-corroborated supported scope"
   ,uncertain_death_order:"The death order of potential mutual heirs is uncertain"
   ,uncertain_death_order_help:"This requires separate estate review; the calculator will not assume an order."
   ,uncertain_death_order_review:"Uncertain death order requires separate estate review."
@@ -162,9 +162,34 @@ Object.assign(T.en, {
   ,descendant_lineage_invalid:"The descendant relationship is not a valid male-line route.",descendant_lineage_ambiguous:"The descendant relationship needs clarification."
   ,grandmother_lineage_invalid:"This ancestry route is not an eligible grandmother route.",grandmother_lineage_ambiguous:"The grandmother relationship needs clarification."
   ,descendant_hierarchy_review:"This unequal-generation descendant combination requires a separately admitted rule."
+  ,estate_facts_confirmed:"The estate values entered here are settled and ready for calculation."
+  ,estate_facts_help:"Resolve funeral costs, ownership, joint property, unpaid mahr, debts, gifts, and bequest validity with qualified scholarly or legal review before confirming."
+  ,estate_facts_review_required:"Confirm that the entered estate values are settled; unresolved estate facts require qualified review."
+  ,mother_blocked_siblings_review:"The mother-and-blocked-siblings branch needs further source review."
+  ,mushtaraka_variant_review:"This Mushtaraka variant is outside the admitted worked cases."
+  ,muadda_variant_review:"This Mu‘adda variant is outside the admitted worked cases."
+  ,remainder_policy_required:"Choose the applicable remainder policy before calculating."
+  ,rule_not_admitted_review:"A rule required by this combination has not been admitted yet."
+  ,unsupported_heir_review:"{heir} is not supported in this combination yet."
+  ,lineage_invalid_review:"The entered family relationship is not a valid supported lineage."
+  ,lineage_ambiguous_review:"The entered family relationship needs clarification."
+  ,case_requires_review:"This combination requires qualified review and cannot be calculated here."
+  ,deductions_exceed_estate:"Supported deductions cannot exceed the gross estate."
+  ,bequest_exceeds_estate:"The bequest cannot exceed the estate remaining after supported deductions."
+  ,minor_units_required:"Enter monetary values with no more than two decimal places."
+  ,exact_asset_value_required:"The asset calculation must resolve to an exact minor-unit amount."
+  ,invalid_amount:"Enter a valid non-negative monetary amount."
+  ,explanation_english_fallback:"Reviewed translations of detailed rule explanations are not yet available; the explanation below is shown in English."
+  ,result_views:"Result views"
+  ,awl_endpoint_review:"This case needs an awl endpoint that is not admitted in the current corpus."
+  ,radd_recipient_review:"The selected radd policy has no admitted eligible non-spouse recipient in this case."
+  ,descendant_interaction_review:"This descendant interaction requires a separately admitted rule."
+  ,uterine_interaction_review:"This uterine-sibling blocking interaction requires separate review."
+  ,invalid_case_input:"Check the deceased sex, spouse selection, heir counts, and relationship details."
+  ,add_heir:"Add {heir}",remove_heir:"Remove {heir}"
 });
 Object.assign(T.ar, {
-  page_intro:"تتوفر الآن مسائل الأسرة المباشرة العادية على المذهب الشافعي، وتتوقف المسائل غير المدعومة قبل الحساب.",
+  page_intro:"تتوفر حسابات شافعية مؤيدة بالمصادر ضمن النطاق المعلن، وتتوقف المسائل غير المدعومة قبل الحساب.",
   ready_calculate:"جاهز للحساب", case_not_supported:"هذه المسألة غير مدعومة بعد.",
   missing_information:"معلومات ناقصة", remainder_policy:"سياسة الباقي",
   remainder_unsure:"غير متأكد", remainder_bayt:"بيت مال قائم بوظيفته",
@@ -175,9 +200,9 @@ Object.assign(T.ar, {
   calculation_type:"نوع المسألة", working_denominator:"المقام العامل",
   corrected_denominator:"المقام المصحح", asl_unavailable:"لا يُعرض أصل المسألة لأن قاعدته المصدرية لم تُعتمد بعد.",
   rules_used:"القواعد المستخدمة", bayt_residue:"باقي بيت المال", source_references:"المراجع",
-  limited_status:"حالة الحاسبة: نطاق أسرة مباشرة محدود"
+  limited_status:"حالة الحاسبة: نطاق مدعوم بالمصادر"
   ,bequest_unresolved:"تحتاج الوصية التي تتجاوز الثلث إلى موافقة صحيحة وصريحة قبل الحساب."
-  ,limited_scope_note:"نطاق إنتاج محدود للأسرة المباشرة.",source_supported_scope:"نطاق مدعوم بأدلة مصدرية متوافقة"
+  ,limited_scope_note:"تغطية واسعة للمسائل الشافعية العادية مع مسائل متقدمة مختارة؛ وتتوقف التركيبات غير المدعومة قبل الحساب.",source_supported_scope:"نطاق مدعوم بأدلة مصدرية متوافقة"
   ,uncertain_death_order:"ترتيب وفاة من قد يتوارثون غير معلوم"
   ,uncertain_death_order_help:"تحتاج هذه الحالة إلى مراجعة تركات منفصلة، ولن تفترض الحاسبة ترتيبًا للوفاة."
   ,uncertain_death_order_review:"يحتاج ترتيب الوفاة غير المعلوم إلى مراجعة تركات منفصلة."
@@ -187,9 +212,14 @@ Object.assign(T.ar, {
   ,descendant_lineage_invalid:"صلة الذرية ليست طريقًا صحيحًا من جهة الذكور.",descendant_lineage_ambiguous:"تحتاج صلة الذرية إلى توضيح."
   ,grandmother_lineage_invalid:"طريق النسب هذا ليس طريق جدة مستحقة.",grandmother_lineage_ambiguous:"تحتاج صلة الجدة إلى توضيح."
   ,descendant_hierarchy_review:"تحتاج هذه التركيبة بين أجيال مختلفة إلى قاعدة معتمدة مستقلة."
+  ,estate_facts_confirmed:"قيم التركة المدخلة مستقرة وجاهزة للحساب."
+  ,estate_facts_help:"يجب حسم تكاليف التجهيز، والملكية، والمال المشترك، والمهر غير المدفوع، والديون، والهبات، وصحة الوصية بمراجعة شرعية أو قانونية مؤهلة قبل التأكيد."
+  ,estate_facts_review_required:"أكّد أن قيم التركة المدخلة مستقرة؛ فالوقائع غير المحسومة تحتاج إلى مراجعة مؤهلة."
+  ,explanation_english_fallback:"لا تتوفر بعد ترجمة مراجعة لشرح القواعد المفصل؛ ولذلك يظهر الشرح الآتي بالإنجليزية."
+  ,result_views:"عروض النتيجة"
 });
 Object.assign(T.ml, {
-  page_intro:"സാധാരണ നേരിട്ടുള്ള കുടുംബ ശാഫിഈ കേസുകൾ ഇപ്പോൾ ലഭ്യമാണ്. പിന്തുണയില്ലാത്ത കേസുകൾ കണക്കിന് മുമ്പ് നിർത്തും.",
+  page_intro:"പ്രഖ്യാപിത പിന്തുണാ പരിധിയിൽ ഉറവിടങ്ങളാൽ സ്ഥിരീകരിച്ച ശാഫിഈ കണക്കുകൾ ലഭ്യമാണ്. പിന്തുണയില്ലാത്ത കേസുകൾ കണക്കിന് മുമ്പ് നിർത്തും.",
   ready_calculate:"കണക്കാക്കാൻ തയ്യാറാണ്", case_not_supported:"ഈ കേസ് ഇതുവരെ പിന്തുണയ്ക്കുന്നില്ല.",
   missing_information:"വിവരങ്ങൾ അപൂർണ്ണമാണ്", remainder_policy:"ബാക്കി വിതരണ നയം",
   remainder_unsure:"ഉറപ്പില്ല", remainder_bayt:"പ്രവർത്തിക്കുന്ന ബൈത്തുൽ മാൽ",
@@ -202,7 +232,7 @@ Object.assign(T.ml, {
   rules_used:"ഉപയോഗിച്ച നിയമങ്ങൾ", bayt_residue:"ബൈത്തുൽ മാൽ ബാക്കി", source_references:"സ്രോതസ്സുകൾ",
   limited_status:"കാൽക്കുലേറ്റർ നില: പരിമിത നേരിട്ടുള്ള കുടുംബ പരിധി"
   ,bequest_unresolved:"മൂന്നിലൊന്നിൽ കൂടുതലുള്ള വസിയ്യത്തിന് കണക്കിന് മുമ്പ് വ്യക്തമായ സാധുവായ സമ്മതം വേണം."
-  ,limited_scope_note:"പരിമിത നേരിട്ടുള്ള കുടുംബ പ്രൊഡക്ഷൻ പരിധി.",source_supported_scope:"സ്രോതസ്സുകളാൽ സ്ഥിരീകരിച്ച പിന്തുണാ പരിധി"
+  ,limited_scope_note:"വിശാലമായ സാധാരണ ശാഫിഈ പരിധിയും തിരഞ്ഞെടുത്ത ഉന്നത കേസുകളും; പിന്തുണയില്ലാത്തവ കണക്കിന് മുമ്പ് നിർത്തും.",source_supported_scope:"സ്രോതസ്സുകളാൽ സ്ഥിരീകരിച്ച പിന്തുണാ പരിധി"
   ,uncertain_death_order:"പരസ്പരം അവകാശികളാകാവുന്നവരുടെ മരണക്രമം ഉറപ്പില്ല"
   ,uncertain_death_order_help:"ഇതിന് വേർതിരിച്ച സ്വത്ത് പരിശോധന വേണം; കാൽക്കുലേറ്റർ മരണക്രമം അനുമാനിക്കില്ല."
   ,uncertain_death_order_review:"ഉറപ്പില്ലാത്ത മരണക്രമത്തിന് വേർതിരിച്ച സ്വത്ത് പരിശോധന ആവശ്യമാണ്."
@@ -212,6 +242,11 @@ Object.assign(T.ml, {
   ,descendant_lineage_invalid:"ഈ സന്തതി ബന്ധം സാധുവായ പുരുഷവഴിയല്ല.",descendant_lineage_ambiguous:"സന്തതി ബന്ധം കൂടുതൽ വ്യക്തമാക്കണം."
   ,grandmother_lineage_invalid:"ഈ വംശവഴി അർഹയായ മുത്തശ്ശിയുടെ വഴിയല്ല.",grandmother_lineage_ambiguous:"മുത്തശ്ശി ബന്ധം കൂടുതൽ വ്യക്തമാക്കണം."
   ,descendant_hierarchy_review:"ഈ അസമതലമുറ സന്തതി കൂട്ടത്തിന് പ്രത്യേകം അംഗീകരിച്ച നിയമം വേണം."
+  ,estate_facts_confirmed:"ഇവിടെ ചേർത്ത സ്വത്ത് മൂല്യങ്ങൾ തീർച്ചയാക്കിയതും കണക്കിന് തയ്യാറായതുമാണ്."
+  ,estate_facts_help:"ശവസംസ്കാരച്ചെലവ്, ഉടമസ്ഥത, സംയുക്ത സ്വത്ത്, നൽകാത്ത മഹർ, കടങ്ങൾ, സമ്മാനങ്ങൾ, വസിയ്യത്തിന്റെ സാധുത എന്നിവ യോഗ്യമായ പണ്ഡിത/നിയമ പരിശോധനയിലൂടെ തീർച്ചപ്പെടുത്തിയശേഷം സ്ഥിരീകരിക്കുക."
+  ,estate_facts_review_required:"ചേർത്ത സ്വത്ത് മൂല്യങ്ങൾ തീർച്ചയാക്കിയതാണെന്ന് സ്ഥിരീകരിക്കുക; അനിശ്ചിത വസ്തുതകൾക്ക് യോഗ്യമായ പരിശോധന വേണം."
+  ,explanation_english_fallback:"വിശദമായ നിയമ വിശദീകരണത്തിന്റെ പരിശോധിച്ച തർജ്ജമ ഇതുവരെ ലഭ്യമല്ല; താഴെയുള്ള വിശദീകരണം ഇംഗ്ലീഷിലാണ്."
+  ,result_views:"ഫല കാഴ്ചകൾ"
 });
 
 const LANGUAGE_PAIRS = Object.freeze({

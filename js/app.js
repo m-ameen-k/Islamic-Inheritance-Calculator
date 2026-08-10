@@ -136,9 +136,9 @@ function setBilingualText(element,key,replacements={}){
   setBilingualResolvedText(element,text.primary,text.secondary,replacements);
 }
 
-function applyLocalizedAttribute(element,attribute,key){
+function applyLocalizedAttribute(element,attribute,key,replacements={}){
   const resolved=getPrimaryText(key,lang);
-  element.setAttribute(attribute,resolved.text);
+  element.setAttribute(attribute,interpolateText(resolved.text,replacements));
   if(resolved.fallbackUsed){
     element.dataset.translationFallback=resolved.requestedLanguage;
     _missingTranslationKeys.add(`${resolved.requestedLanguage}:${resolved.missingKey}`);
@@ -194,19 +194,6 @@ document.querySelectorAll('#langSwitcher .ls-btn').forEach(b=>
   })
 );
 
-function fv(id){return parseFloat(document.getElementById(id)?.value)||0;}
-
-function formatAmount(value){
-  const formatted=value.toLocaleString(undefined,{maximumFractionDigits:2});
-  return cSym?`${cSym} ${formatted}`:formatted;
-}
-
-function calcMetal(metal){
-  const tot=fv(metal+"_tot"); if(tot) return tot;
-  const w=fv(metal+"_w"), p=fv(metal+"_p");
-  return w&&p?w*p:0;
-}
-
 function updateMetalUnit(metal){
   const u=document.getElementById(metal+"_u").value;
   const unitLbl=document.getElementById(metal+"UnitLbl");
@@ -220,25 +207,14 @@ function updateMetalUnit(metal){
   });
 });
 
-function calcLand(){ const t=fv("land_tot"); return t?t:(fv("land_a")&&fv("land_rate")?fv("land_a")*fv("land_rate"):0); }
-function getGross(){
-  const total=fv("estate_total");
-  return total||fv("cash")+calcMetal("gold")+calcMetal("silver")+calcLand()+fv("other_v");
-}
-function getAfterDebts(){return Math.max(0,getGross()-fv("debts")-fv("zakat"));}
-
-function getWasiyyah(ad){
-  const wi=fv("wasiyyah"); if(!wi) return 0;
-  const max=ad/3, consent=document.getElementById("was_con").checked, w=document.getElementById("wasWarn");
-  if(!consent&&wi>max){ if(w){ w.style.display="block"; applyResolvedText(w,getPrimaryText("bequest_unresolved",lang)); } return wi; }
-  if(w) w.style.display="none"; return wi;
-}
-
-function getNet(){const ad=getAfterDebts(); return Math.max(0,ad-getWasiyyah(ad));}
-
 function updateNet(){
-  const gross=getGross(), net=getNet();
-  updateCaseSummary(gross,net);
+  const warning=document.getElementById("wasWarn");
+  const bequestUnresolved=exactEstateInput().issues.includes("BEQUEST_EXCEEDS_ONE_THIRD_UNRESOLVED");
+  if(warning){
+    warning.style.display=bequestUnresolved?"block":"none";
+    if(bequestUnresolved) applyResolvedText(warning,getPrimaryText("bequest_unresolved",lang));
+  }
+  updateCaseSummary();
   updateCalculatorState();
 }
 
@@ -269,18 +245,22 @@ function hn(h){
   return resolveHeirText(h,lang).text;
 }
 
-function updateCaseSummary(gross=getGross(),net=getNet()){
+function updateCaseSummary(){
+  const estate=exactEstateInput();
+  const net=estate.gross>estate.debts+estate.zakat+estate.bequest
+    ?estate.gross-estate.debts-estate.zakat-estate.bequest
+    :0n;
   const selectedHeirs=HEIRS
     .filter(h=>(sel[h.id]||0)>0)
   const selected=selectedHeirs.map(h=>`${resolveHeirText(h,lang).text}${h.max>1?` × ${sel[h.id]}`:""}`);
   const missingKeys=[];
   if(!gender) missingKeys.push("missing_gender");
-  if(gross<=0) missingKeys.push("missing_estate");
+  if(estate.gross<=0n) missingKeys.push("missing_estate");
   if(selectedHeirs.length===0) missingKeys.push("missing_heirs");
 
-  document.getElementById("reviewGross").textContent=formatAmount(gross);
-  document.getElementById("reviewDeductions").textContent=formatAmount(Math.max(0,gross-net));
-  document.getElementById("reviewEstate").textContent=formatAmount(net);
+  document.getElementById("reviewGross").textContent=formatMinorUnits(estate.gross);
+  document.getElementById("reviewDeductions").textContent=formatMinorUnits(estate.debts+estate.zakat+estate.bequest);
+  document.getElementById("reviewEstate").textContent=formatMinorUnits(net);
   const selectedText=selected.length
     ? {text:selected.join(", "),requestedLanguage:lang,resolvedLanguage:lang,direction:lang==="ar"?"rtl":"ltr",fallbackUsed:false,missingKey:null}
     : getPrimaryText("none_selected",lang);
@@ -496,6 +476,15 @@ function renderHeirs(){
     updateDynamicUI();
     updateCaseSummary();
   }));
+  g.querySelectorAll(".cb").forEach(btn=>{
+    const heir=HEIRS.find(candidate=>candidate.id===btn.dataset.id);
+    applyLocalizedAttribute(
+      btn,
+      "aria-label",
+      Number(btn.dataset.d)>0?"add_heir":"remove_heir",
+      {heir:resolveHeirText(heir,lang).text}
+    );
+  });
   renderLineageDetails();
   updateDynamicUI();
   updateCaseSummary();
@@ -507,17 +496,6 @@ function setStep(n){
     if(i<n) s.classList.add("done"); else if(i===n) s.classList.add("active");
   }
 }
-
-window.showAsaba = function(titleEnc, descEnc) {
-    const pair=getLanguagePair(lang);
-    document.getElementById('asabaModTitle').textContent = decodeURIComponent(titleEnc);
-    document.getElementById('asabaModDesc').textContent = decodeURIComponent(descEnc);
-    document.getElementById('asabaModTitle').setAttribute("lang",pair.primaryLanguage);
-    document.getElementById('asabaModTitle').setAttribute("dir",pair.primaryDirection);
-    document.getElementById('asabaModDesc').setAttribute("lang",pair.primaryLanguage);
-    document.getElementById('asabaModDesc').setAttribute("dir",pair.primaryDirection);
-    document.getElementById('asabaModal').style.display = 'flex';
-};
 
 const UI_HEIR_TYPES={
   zawj:"HUSBAND",zawja:"WIFE",ab:"FATHER",umm:"MOTHER",ibn:"SON",bint:"DAUGHTER",
@@ -635,20 +613,50 @@ function coverageInput(){
     deceasedSex:gender==="m"?"MALE":"FEMALE",
     heirs:selectedCaseHeirs(),
     remainderPolicy:document.getElementById("remainderPolicy")?.value||"UNSURE",
-    unresolvedFacts:[],
+    unresolvedFacts:document.getElementById("estateFactsConfirmed")?.checked===true
+      ?[]
+      :["ESTATE_FACTS_REVIEW_REQUIRED"],
     uncertainDeathOrder:document.getElementById("uncertainDeathOrder")?.checked===true
   };
 }
 
 function coverageReasonText(reason){
-  if(reason==="UNCERTAIN_DEATH_ORDER_REQUIRES_REVIEW") return getPrimaryText("uncertain_death_order_review",lang).text;
-  if(reason==="MULTIPLE_EMANCIPATORS_NOT_ADMITTED") return getPrimaryText("multiple_emancipators_review",lang).text;
-  if(reason==="DESCENDANT_LINEAGE_INVALID") return getPrimaryText("descendant_lineage_invalid",lang).text;
-  if(reason==="DESCENDANT_LINEAGE_AMBIGUOUS") return getPrimaryText("descendant_lineage_ambiguous",lang).text;
-  if(reason==="GRANDMOTHER_LINEAGE_INVALID") return getPrimaryText("grandmother_lineage_invalid",lang).text;
-  if(reason==="GRANDMOTHER_LINEAGE_AMBIGUOUS") return getPrimaryText("grandmother_lineage_ambiguous",lang).text;
-  if(reason==="DESCENDANT_MULTILEVEL_FEMALE_FIXED_SHARES_NOT_ADMITTED") return getPrimaryText("descendant_hierarchy_review",lang).text;
-  return reason;
+  if(reason==="UNCERTAIN_DEATH_ORDER_REQUIRES_REVIEW") return getPrimaryText("uncertain_death_order_review",lang);
+  if(reason==="MULTIPLE_EMANCIPATORS_NOT_ADMITTED") return getPrimaryText("multiple_emancipators_review",lang);
+  if(reason==="DESCENDANT_LINEAGE_INVALID") return getPrimaryText("descendant_lineage_invalid",lang);
+  if(reason==="DESCENDANT_LINEAGE_AMBIGUOUS") return getPrimaryText("descendant_lineage_ambiguous",lang);
+  if(reason==="GRANDMOTHER_LINEAGE_INVALID") return getPrimaryText("grandmother_lineage_invalid",lang);
+  if(reason==="GRANDMOTHER_LINEAGE_AMBIGUOUS") return getPrimaryText("grandmother_lineage_ambiguous",lang);
+  if(reason==="DESCENDANT_MULTILEVEL_FEMALE_FIXED_SHARES_NOT_ADMITTED") return getPrimaryText("descendant_hierarchy_review",lang);
+  if(reason==="MOTHER_BLOCKED_SIBLING_COUNT_NOT_ADMITTED") return getPrimaryText("mother_blocked_siblings_review",lang);
+  if(reason==="MUSHTARAKA_VARIANT_NOT_ADMITTED") return getPrimaryText("mushtaraka_variant_review",lang);
+  if(reason==="MUADDA_FEMALE_BRANCH_NOT_ADMITTED") return getPrimaryText("muadda_variant_review",lang);
+  if(reason==="UNRESOLVED_CASE_FACTS") return getPrimaryText("estate_facts_review_required",lang);
+  if(reason==="REMAINDER_POLICY_REQUIRED"||reason==="REMAINDER_POLICY_MISSING"||reason==="REMAINDER_POLICY_UNRESOLVED") return getPrimaryText("remainder_policy_required",lang);
+  if(reason.startsWith("AWL_ENDPOINT_")) return getPrimaryText("awl_endpoint_review",lang);
+  if(reason==="RADD_HAS_NO_ELIGIBLE_NON_SPOUSE_RECIPIENT") return getPrimaryText("radd_recipient_review",lang);
+  if(reason==="DESCENDANT_BLOCKER_CONFLICT") return getPrimaryText("descendant_interaction_review",lang);
+  if(reason==="UTERINE_SIBLING_BLOCKER_RELATIONSHIP_NOT_ADMITTED_FOR_SELECTED_CLASS") return getPrimaryText("uterine_interaction_review",lang);
+  if(reason.startsWith("RULE_NOT_ADMITTED:")) return getPrimaryText("rule_not_admitted_review",lang);
+  if(reason.startsWith("UNSUPPORTED_HEIR_CATEGORY:")){
+    const type=reason.slice(reason.indexOf(":")+1);
+    const resolved=getPrimaryText("unsupported_heir_review",lang);
+    return {...resolved,text:interpolateText(resolved.text,{heir:heirLabel(type)})};
+  }
+  if(reason.includes("LINEAGE_INVALID")) return getPrimaryText("lineage_invalid_review",lang);
+  if(reason.includes("LINEAGE_AMBIGUOUS")) return getPrimaryText("lineage_ambiguous_review",lang);
+  return getPrimaryText("case_requires_review",lang);
+}
+
+function fieldIssueText(issue){
+  if(issue==="ESTATE_FACTS_REVIEW_REQUIRED") return getPrimaryText("estate_facts_review_required",lang);
+  if(issue==="DEDUCTIONS_EXCEED_GROSS_ESTATE") return getPrimaryText("deductions_exceed_estate",lang);
+  if(issue==="BEQUEST_EXCEEDS_REMAINING_ESTATE") return getPrimaryText("bequest_exceeds_estate",lang);
+  if(issue==="BEQUEST_EXCEEDS_ONE_THIRD_UNRESOLVED") return getPrimaryText("bequest_unresolved",lang);
+  if(issue.includes("MORE_THAN_TWO_DECIMAL_PLACES")) return getPrimaryText("minor_units_required",lang);
+  if(issue.includes("NOT_AN_EXACT_MINOR_UNIT")) return getPrimaryText("exact_asset_value_required",lang);
+  if(issue.includes("INVALID_AMOUNT")) return getPrimaryText("invalid_amount",lang);
+  return getPrimaryText("case_requires_review",lang);
 }
 
 function setCalculationStatus(kind,lines){
@@ -657,7 +665,9 @@ function setCalculationStatus(kind,lines){
   button.disabled=kind!=="ready";
   status.className=`calculation-disabled-reason calculation-status-${kind}`;
   status.replaceChildren(...lines.map((line,index)=>{
-    const item=uiElement("span","calculation-status-line",line);
+    const item=uiElement("span","calculation-status-line");
+    if(typeof line==="string") item.textContent=line;
+    else applyResolvedText(item,line);
     if(index<lines.length-1) item.appendChild(document.createElement("br"));
     return item;
   }));
@@ -678,7 +688,7 @@ function updateCalculatorState(){
     return;
   }
   if(estate.issues.length){
-    setCalculationStatus("missing",[getPrimaryText("missing_information",lang).text,...estate.issues]);
+    setCalculationStatus("missing",[getPrimaryText("missing_information",lang).text,...estate.issues.map(fieldIssueText)]);
     return;
   }
   const coverage=window.FaraidCalculator.evaluateWholeCaseCoverage(coverageInput());
@@ -690,7 +700,7 @@ function updateCalculatorState(){
     ?getPrimaryText("missing_information",lang).text
     :getPrimaryText("case_not_supported",lang).text;
   setCalculationStatus(coverage.status==="MISSING_INFORMATION"?"missing":"unsupported",[
-    heading,...coverage.missingFields,...coverage.reasons.map(coverageReasonText)
+    heading,...coverage.missingFields.map(fieldIssueText),...coverage.invalidFields.map(()=>getPrimaryText("invalid_case_input",lang)),...coverage.reasons.map(coverageReasonText)
   ]);
 }
 
@@ -721,17 +731,38 @@ function heirLabel(type){
   return heir?resolveHeirText(heir,lang).text:type;
 }
 
+function presentableEngineText(value){
+  return Object.keys(TYPE_TO_HEIR_ID).sort((left,right)=>right.length-left.length).reduce(
+    (text,type)=>text.replaceAll(type,heirLabel(type)),
+    value
+  );
+}
+
+function sourceLabel(sourceId){
+  if(sourceId.includes("KANZ")||sourceId.includes("MAHALLI")) return "Kanz / al-Mahalli";
+  if(sourceId.includes("KHULASA")) return "Khulasat al-Fiqh al-Islami";
+  if(sourceId.includes("FATH")) return "Fath al-Mu'in";
+  return sourceId;
+}
+
 function renderExplanationInto(container,result){
   container.replaceChildren();
+  if(lang!=="en"){
+    const note=uiElement("p","translation-fallback-note");
+    applyResolvedText(note,getPrimaryText("explanation_english_fallback",lang));
+    container.appendChild(note);
+  }
   for(const step of result.explanationSteps){
     const card=uiElement("section","learn-card");
-    card.appendChild(uiElement("h3","",step.title));
+    card.lang="en";
+    card.dir="ltr";
+    card.appendChild(uiElement("h3","",presentableEngineText(step.title)));
     if(step.fraction) card.appendChild(uiElement("div","rsh",fractionText(step.fraction)));
-    card.appendChild(uiElement("p","",step.summary));
+    card.appendChild(uiElement("p","",presentableEngineText(step.summary)));
     if(step.ruleIds.length) card.appendChild(uiElement("p","code-like",`${getPrimaryText("rules_used",lang).text}: ${step.ruleIds.join(", ")}`));
     if(step.sourceReferences.length){
       const list=uiElement("ul","source-list");
-      for(const source of step.sourceReferences) list.appendChild(uiElement("li","",`${source.sourceId} — ${source.locator}`));
+      for(const source of step.sourceReferences) list.appendChild(uiElement("li","",`${sourceLabel(source.sourceId)} — ${source.locator}`));
       card.appendChild(list);
     }
     container.appendChild(card);
@@ -786,7 +817,7 @@ function renderCalculationResult(result){
       const card=uiElement("div","learn-card");
       card.append(
         uiElement("h3","",`${heirLabel(blocked.type)} × ${blocked.count}`),
-        uiElement("p","",blocked.reason),
+        uiElement("p","",presentableEngineText(blocked.reason)),
         uiElement("p","code-like",`${getPrimaryText("rules_used",lang).text}: ${blocked.ruleId}`)
       );
       hajb.appendChild(card);
@@ -814,25 +845,50 @@ function invalidateCalculation(){
 
 document.getElementById("remainderPolicy")?.addEventListener("change",()=>{invalidateCalculation();updateCalculatorState();});
 document.getElementById("uncertainDeathOrder")?.addEventListener("change",()=>{invalidateCalculation();updateCalculatorState();});
+document.getElementById("estateFactsConfirmed")?.addEventListener("change",()=>{invalidateCalculation();updateNet();});
 document.getElementById("calcBtn")?.addEventListener("click",()=>{
   try{
     const result=window.FaraidCalculator.calculateSupportedInheritance(calculationInput());
     renderCalculationResult(result);
+    document.getElementById("resSec").focus({preventScroll:true});
     document.getElementById("resSec").scrollIntoView({behavior:"smooth",block:"start"});
   }catch(error){
     const coverage=error?.coverage;
-    const lines=[getPrimaryText("case_not_supported",lang).text,...(error?.issues||[]),...(coverage?.reasons||[])];
+    const lines=[getPrimaryText("case_not_supported",lang).text,...(error?.issues||[]).map(fieldIssueText),...(coverage?.reasons||[]).map(coverageReasonText)];
     setCalculationStatus("unsupported",[...new Set(lines)]);
     invalidateCalculation();
   }
 });
 
-document.querySelectorAll(".tab").forEach(tab=>tab.addEventListener("click",()=>{
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("on"));
-  document.querySelectorAll(".tc").forEach(t=>t.classList.remove("on"));
-  tab.classList.add("on"); document.getElementById("tc"+tab.dataset.tab).classList.add("on");
+function activateResultTab(tab){
+  document.querySelectorAll(".tab").forEach(t=>{
+    const active=t===tab;
+    t.classList.toggle("on",active);
+    t.setAttribute("aria-selected",String(active));
+    t.tabIndex=active?0:-1;
+  });
+  document.querySelectorAll(".tc").forEach(t=>{
+    const active=t.id==="tc"+tab.dataset.tab;
+    t.classList.toggle("on",active);
+    t.hidden=!active;
+  });
   if(tab.dataset.tab==="Learn") updateLearn();
-}));
+}
+
+document.querySelectorAll(".tab").forEach(tab=>{
+  tab.addEventListener("click",()=>activateResultTab(tab));
+  tab.addEventListener("keydown",event=>{
+    if(!["ArrowLeft","ArrowRight","Home","End"].includes(event.key)) return;
+    event.preventDefault();
+    const tabs=[...document.querySelectorAll(".tab")];
+    const direction=document.documentElement.dir==="rtl"?-1:1;
+    const current=tabs.indexOf(tab);
+    const next=event.key==="Home"?0:event.key==="End"?tabs.length-1:
+      (current+(event.key==="ArrowRight"?direction:-direction)+tabs.length)%tabs.length;
+    tabs[next].focus();
+    activateResultTab(tabs[next]);
+  });
+});
 
 window.addEventListener("scroll", () => {
   const show = window.scrollY > 300;

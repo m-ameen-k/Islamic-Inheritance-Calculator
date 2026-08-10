@@ -3829,7 +3829,22 @@
 		if (correction.ruleId !== null && !productionById.has(correction.ruleId)) throw new UnsupportedInheritanceCaseError(coverage, [`RULE_NOT_ADMITTED:${correction.ruleId}`]);
 		const appliedRuleIds = [.../* @__PURE__ */ new Set([...coverage.requiredRuleIds, ...correction.ruleId === null ? [] : [correction.ruleId]])];
 		const sources = ruleSources(appliedRuleIds);
+		const deductionSummary = input.deductions.length === 0 ? "No supported deductions were entered." : input.deductions.map((deduction) => `${deduction.label}: ${deduction.amountMinorUnits} minor units`).join("; ");
 		const explanationSteps = [
+			{
+				kind: "ESTATE",
+				title: "Estate before distribution",
+				summary: `Gross estate: ${gross} minor units.`,
+				ruleIds: [],
+				sourceReferences: []
+			},
+			{
+				kind: "DEDUCTIONS",
+				title: "Deductions and valid bequest",
+				summary: `${deductionSummary} Valid bequest: ${bequest} minor units.`,
+				ruleIds: [],
+				sourceReferences: []
+			},
 			{
 				kind: "ESTATE",
 				title: "Net distributable estate",
@@ -3839,8 +3854,15 @@
 			},
 			{
 				kind: "HEIRS",
-				title: "Eligible heirs",
+				title: "Selected heirs",
 				summary: selected.map((heir) => `${lineageDescription(heir)} × ${heir.count}`).join(", "),
+				ruleIds: [],
+				sourceReferences: []
+			},
+			{
+				kind: "HEIRS",
+				title: "Eligible heirs after blocking",
+				summary: eligible.map((heir) => `${lineageDescription(heir)} × ${heir.count}`).join(", "),
 				ruleIds: [],
 				sourceReferences: []
 			},

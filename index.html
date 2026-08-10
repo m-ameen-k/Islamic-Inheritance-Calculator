@@ -106,8 +106,8 @@
       </div>
 
       <div class="validation-banner ai" role="status" data-i="page_intro">
-        Ordinary direct-family Shafi‘i cases are available. Unsupported cases stop before
-        calculation.
+        Source-corroborated Shafi‘i calculations are available for the declared supported scope.
+        Unsupported cases stop before calculation.
       </div>
 
       <main class="workspace-layout">
@@ -394,6 +394,22 @@
                 <div id="wasWarn" class="wbox"></div>
               </div>
             </details>
+            <div class="field estate-safety-confirmation">
+              <div class="checkbox-row">
+                <input
+                  type="checkbox"
+                  id="estateFactsConfirmed"
+                  aria-describedby="estateFactsHelp"
+                />
+                <label for="estateFactsConfirmed" data-i="estate_facts_confirmed">
+                  The estate values entered here are settled and ready for calculation.
+                </label>
+              </div>
+              <p class="disclosure-note" id="estateFactsHelp" data-i="estate_facts_help">
+                Resolve funeral costs, ownership, joint property, unpaid mahr, debts, gifts, and
+                bequest validity with qualified scholarly or legal review before confirming.
+              </p>
+            </div>
           </div>
 
           <div class="card ai">
@@ -444,7 +460,8 @@
               style="margin-top: 10px; margin-bottom: 0"
               data-i="limited_scope_note"
             >
-              Limited direct-family production scope.
+              Broad ordinary Shafi‘i coverage with selected advanced cases; unsupported
+              combinations stop before calculation.
             </div>
           </div>
 
@@ -494,28 +511,28 @@
             </section>
           </div>
 
-          <div class="res card ai" id="resSec">
+          <div class="res card ai" id="resSec" tabindex="-1">
             <div class="ch">
               <div class="cn numeric-value">5</div>
               <div class="ct" data-i="res_t">Results</div>
               <div class="car" data-i-secondary="res_t">النتائج</div>
               <div id="ctag"></div>
             </div>
-            <div class="tabs">
-              <div class="tab on" data-tab="Shares" data-i="tab_sh">Shares</div>
-              <div class="tab" data-tab="Hajb" data-i="tab_hj">Hajb</div>
-              <div class="tab" data-tab="Asl" data-i="tab_asl">Case origin</div>
-              <div class="tab" data-tab="Assets" data-i="tab_ass">Assets</div>
-              <div class="tab" data-tab="Learn" data-i="tab_learn">📘 Learn</div>
+            <div class="tabs" role="tablist" aria-label="Result views" data-i-aria="result_views">
+              <button type="button" class="tab on" id="tabShares" role="tab" aria-selected="true" aria-controls="tcShares" data-tab="Shares" data-i="tab_sh">Shares</button>
+              <button type="button" class="tab" id="tabHajb" role="tab" aria-selected="false" aria-controls="tcHajb" data-tab="Hajb" data-i="tab_hj">Hajb</button>
+              <button type="button" class="tab" id="tabAsl" role="tab" aria-selected="false" aria-controls="tcAsl" data-tab="Asl" data-i="tab_asl">Case origin</button>
+              <button type="button" class="tab" id="tabAssets" role="tab" aria-selected="false" aria-controls="tcAssets" data-tab="Assets" data-i="tab_ass">Assets</button>
+              <button type="button" class="tab" id="tabLearn" role="tab" aria-selected="false" aria-controls="tcLearn" data-tab="Learn" data-i="tab_learn">📘 Learn</button>
             </div>
-            <div class="tc on" id="tcShares">
+            <div class="tc on" id="tcShares" role="tabpanel" aria-labelledby="tabShares">
               <div class="metrics" id="metrics"></div>
               <div id="sharesList"></div>
             </div>
-            <div class="tc" id="tcHajb"><div id="hajbList"></div></div>
-            <div class="tc" id="tcAsl"><div id="aslDetail"></div></div>
-            <div class="tc" id="tcAssets"><div id="assetsDetail"></div></div>
-            <div class="tc" id="tcLearn"><div id="learnContent"></div></div>
+            <div class="tc" id="tcHajb" role="tabpanel" aria-labelledby="tabHajb" hidden><div id="hajbList"></div></div>
+            <div class="tc" id="tcAsl" role="tabpanel" aria-labelledby="tabAsl" hidden><div id="aslDetail"></div></div>
+            <div class="tc" id="tcAssets" role="tabpanel" aria-labelledby="tabAssets" hidden><div id="assetsDetail"></div></div>
+            <div class="tc" id="tcLearn" role="tabpanel" aria-labelledby="tabLearn" hidden><div id="learnContent"></div></div>
           </div>
         </div>
 
@@ -594,6 +611,7 @@
             <p
               class="calculation-disabled-reason"
               id="calculationDisabledReason"
+              role="status"
               aria-live="polite"
             >
               Add the missing case information.
@@ -630,63 +648,6 @@
       <div class="fab-group">
         <button class="fab" id="fabTop" data-i-aria="scroll_top">↑</button>
         <button class="fab fab-down" id="fabBottom" data-i-aria="scroll_bottom">↓</button>
-      </div>
-
-      <div
-        id="asabaModal"
-        style="
-          display: none;
-          position: fixed;
-          inset: 0;
-          background: rgba(0, 0, 0, 0.5);
-          z-index: 999;
-          align-items: center;
-          justify-content: center;
-          padding: 1rem;
-        "
-      >
-        <div
-          style="
-            background: var(--card);
-            padding: 1.8rem;
-            border-radius: var(--r);
-            max-width: 400px;
-            width: 100%;
-            box-shadow: var(--sh2);
-            position: relative;
-          "
-        >
-          <button
-            data-i-aria="close_dialog"
-            onclick="document.getElementById('asabaModal').style.display = 'none'"
-            style="
-              position: absolute;
-              top: 10px;
-              right: 10px;
-              background: none;
-              border: none;
-              font-size: 1.4rem;
-              cursor: pointer;
-              color: var(--txt3);
-              transition: color 0.2s;
-            "
-          >
-            ✕
-          </button>
-          <h3
-            style="
-              color: var(--warn);
-              margin-bottom: 12px;
-              font-family: &quot;Amiri&quot;, serif;
-              font-size: 1.3rem;
-            "
-            id="asabaModTitle"
-          ></h3>
-          <div
-            id="asabaModDesc"
-            style="font-size: 14px; color: var(--txt2); line-height: 1.7"
-          ></div>
-        </div>
       </div>
 
       <footer class="site-footer card ai">
@@ -787,7 +748,7 @@
 
         <p class="footer-copy">
           <span class="status-label" data-i="limited_status"
-            >Calculator status: limited direct-family scope</span
+            >Calculator status: source-corroborated supported scope</span
           >
         </p>
       </footer>
