@@ -1,0 +1,41 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Manual scan comparison only; this record is not independently executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-002",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "chapter": "كتاب الفرائض",
+    "printedPages": [145, 146],
+    "localPdfPages": [16, 17],
+    "sourceSummary": "A direct male or female emancipator receives residue only after eligible nasab residuaries; the female-emancipator text is limited to her direct wala' relationship."
+  },
+  "review": {
+    "reviewId": "MANUAL-20260810-KZ-FR-002-WALA",
+    "extractedRuleId": "KZ-FR-002",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "reviewStatus": "MANUALLY_CHECKED",
+    "statusHistory": ["EXTRACTED_NOT_VERIFIED", "MANUAL_SCAN_CHECK_PENDING", "MANUALLY_CHECKED"],
+    "exactArabicChecked": true,
+    "printedPageChecked": true,
+    "localPdfPageChecked": true,
+    "chapterChecked": true,
+    "arabicCorrections": [],
+    "unresolvedWords": [],
+    "explicitConditions": ["No eligible nasab residuary exists.", "One direct emancipator is represented."],
+    "explicitExclusions": ["Multiple emancipators and the emancipator's agnates are not represented by the current inputs."],
+    "explicitOutcome": ["The direct emancipator receives the residue after fixed shares."],
+    "reviewExplanation": "The wala' paragraph and its continuation were visually checked on the trusted local Kanz/al-Mahalli scan.",
+    "inferredDetails": [],
+    "missingInformation": [],
+    "conflictingSources": [],
+    "reviewerName": "OpenAI Codex",
+    "reviewerRole": "AI visual transcription assistant; manual scan comparison only; not a qualified Shafi'i scholar",
+    "reviewDate": "2026-08-10",
+    "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED",
+    "approvedCaseIds": [],
+    "implementationSpecification": null,
+    "notes": "The admission is intentionally limited to exactly one direct UI-modeled emancipator."
+  }
+}
