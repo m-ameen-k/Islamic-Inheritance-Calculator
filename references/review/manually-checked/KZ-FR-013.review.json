@@ -1,0 +1,55 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Manual scan comparison only; this record is not independently executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-013",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "chapter": "كتاب الفرائض",
+    "printedPages": [140, 141],
+    "localPdfPages": [11, 12],
+    "arabicExcerpt": "وأولاد الابن إذا انفردوا كأولاد الصلب ... فإن كان من ولد الصلب ذكر حجب أولاد الابن ... والباقي لولد الابن الذكور أو الذكور والإناث.",
+    "sourceSummary": "Son's descendants take the direct-child modes when alone; a direct son blocks them, while daughters leave the stated complement or residuary modes."
+  },
+  "review": {
+    "reviewId": "MANUAL-20260810-KZ-FR-013",
+    "extractedRuleId": "KZ-FR-013",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "reviewStatus": "MANUALLY_CHECKED",
+    "statusHistory": ["EXTRACTED_NOT_VERIFIED", "MANUAL_SCAN_CHECK_PENDING", "MANUALLY_CHECKED"],
+    "exactArabicChecked": true,
+    "printedPageChecked": true,
+    "localPdfPageChecked": true,
+    "chapterChecked": true,
+    "arabicCorrections": [],
+    "unresolvedWords": [],
+    "explicitConditions": [
+      "The direct son blocks son's descendants.",
+      "At one normalized son's-descendant generation, males alone take residue and males with females divide at 2:1.",
+      "With one direct daughter, female-only son's descendants collectively complete 2/3 with 1/6; a male makes the group residuary.",
+      "With two or more direct daughters, female-only son's descendants receive nothing unless a qualifying male makes them residuary."
+    ],
+    "explicitExclusions": [
+      "Unequal or deeper son's-descendant generations require generation-aware input and are not admitted."
+    ],
+    "explicitOutcome": [
+      "The stated fixed, blocking, and residuary modes apply to the repository's one normalized son's-descendant generation."
+    ],
+    "reviewExplanation": "Visually checked against the exact Dar al-Minhaj scan on printed pages 140–141.",
+    "inferredDetails": [
+      "The UI's SONS_SON and SONS_DAUGHTER categories are constrained to one equal generation; no deeper generation is inferred."
+    ],
+    "missingInformation": [
+      "A future generation-aware heir model is required for nearer/farther and lower-male rescue cases."
+    ],
+    "conflictingSources": [],
+    "reviewerName": "OpenAI Codex",
+    "reviewerRole": "AI visual transcription assistant; manual scan comparison only; not a qualified Shafi'i scholar",
+    "reviewDate": "2026-08-10",
+    "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED",
+    "approvedCaseIds": [],
+    "implementationSpecification": null,
+    "notes": "The archived scan was inspected in /tmp only and was not added to the repository."
+  }
+}

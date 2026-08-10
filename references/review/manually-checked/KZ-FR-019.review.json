@@ -1,0 +1,55 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Manual scan comparison only; this record is not independently executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-019",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "chapter": "كتاب الفرائض",
+    "printedPages": [143, 144, 145],
+    "localPdfPages": [14, 15, 16],
+    "arabicExcerpt": "والأخوات لأبوين أو لأب مع البنات وبنات الابن عصبة كالإخوة.",
+    "sourceSummary": "Full and paternal siblings have the ordinary direct-child-like 2:1 residuary modes, and eligible sisters become residuaries with daughters or son's daughters."
+  },
+  "review": {
+    "reviewId": "MANUAL-20260810-KZ-FR-019",
+    "extractedRuleId": "KZ-FR-019",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "reviewStatus": "MANUALLY_CHECKED",
+    "statusHistory": ["EXTRACTED_NOT_VERIFIED", "MANUAL_SCAN_CHECK_PENDING", "MANUALLY_CHECKED"],
+    "exactArabicChecked": true,
+    "printedPageChecked": true,
+    "localPdfPageChecked": true,
+    "chapterChecked": true,
+    "arabicCorrections": [],
+    "unresolvedWords": [],
+    "explicitConditions": [
+      "Full siblings, then paternal siblings when not blocked by the full line, use the male-alone residue and mixed 2:1 modes.",
+      "Full or paternal sisters with daughters or son's daughters become residuaries.",
+      "A full sister residuary with a female descendant excludes paternal siblings.",
+      "Uterine siblings share equally rather than at 2:1."
+    ],
+    "explicitExclusions": [
+      "Grandfather-with-siblings, Mushtaraka, Akdariyya, and Mu'adda remain excluded."
+    ],
+    "explicitOutcome": [
+      "The named ordinary sibling modes and explicit blocking priorities are ready for atomic comparison."
+    ],
+    "reviewExplanation": "The KZ-FR-019 sentence and its immediately surrounding inheritance discussion were visually checked on printed pages 143–145.",
+    "inferredDetails": [
+      "None used beyond splitting the visibly stated general modes into atomic runtime rules."
+    ],
+    "missingInformation": [
+      "The current sources do not settle the repository's question whether siblings blocked by another heir count for the mother's reduction."
+    ],
+    "conflictingSources": [],
+    "reviewerName": "OpenAI Codex",
+    "reviewerRole": "AI visual transcription assistant; manual scan comparison only; not a qualified Shafi'i scholar",
+    "reviewDate": "2026-08-10",
+    "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED",
+    "approvedCaseIds": [],
+    "implementationSpecification": null,
+    "notes": "Special cases remain typed unsupported."
+  }
+}

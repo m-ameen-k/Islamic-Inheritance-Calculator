@@ -1,0 +1,53 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Manual scan comparison only; this record is not independently executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-017",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "chapter": "كتاب الفرائض",
+    "printedPages": [139, 142],
+    "localPdfPages": [10, 13],
+    "arabicExcerpt": "والجدة للأم لا يحجبها إلا الأم، وللأب يحجبها الأب أو الأم ... وللجدة السدس، وكذا الجدات.",
+    "sourceSummary": "Eligible grandmothers share one sixth; the mother blocks both immediate lines and the father blocks the paternal line."
+  },
+  "review": {
+    "reviewId": "MANUAL-20260810-KZ-FR-017",
+    "extractedRuleId": "KZ-FR-017",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "reviewStatus": "MANUALLY_CHECKED",
+    "statusHistory": ["EXTRACTED_NOT_VERIFIED", "MANUAL_SCAN_CHECK_PENDING", "MANUALLY_CHECKED"],
+    "exactArabicChecked": true,
+    "printedPageChecked": true,
+    "localPdfPageChecked": true,
+    "chapterChecked": true,
+    "arabicCorrections": [],
+    "unresolvedWords": [],
+    "explicitConditions": [
+      "Eligible grandmothers share 1/6.",
+      "The mother blocks maternal and paternal grandmothers.",
+      "The father blocks the paternal grandmother but not the maternal grandmother.",
+      "Nearness rules differ by lineage direction."
+    ],
+    "explicitExclusions": [
+      "Farther grandmother hierarchy is not executable without a lineage-path input."
+    ],
+    "explicitOutcome": [
+      "The normalized immediate maternal and paternal grandmothers may share 1/6 when unblocked."
+    ],
+    "reviewExplanation": "Visually checked against printed pages 139 and 142; admission is intentionally limited to the two immediate grandmother inputs.",
+    "inferredDetails": [
+      "Each current grandmother input denotes the nearest immediate grandmother on that named side."
+    ],
+    "missingInformation": ["The current UI cannot identify farther grandmother lineage paths."],
+    "conflictingSources": [],
+    "reviewerName": "OpenAI Codex",
+    "reviewerRole": "AI visual transcription assistant; manual scan comparison only; not a qualified Shafi'i scholar",
+    "reviewDate": "2026-08-10",
+    "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED",
+    "approvedCaseIds": [],
+    "implementationSpecification": null,
+    "notes": "No generic all-generation grandmother rule is admitted."
+  }
+}
