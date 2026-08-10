@@ -6,6 +6,7 @@ import {
   type SerializedFraction,
 } from "../domain/fractions";
 import type { HeirInput, HeirType } from "../domain/heirs";
+import { lineageDescription } from "../domain/lineage";
 import { apportionMoney } from "../domain/money";
 import {
   AWL_RULE_ID,
@@ -265,6 +266,14 @@ function fractionReason(heirType: HeirType, ruleId: string): string {
   if (ruleId.includes("FATHER-ONE-SIXTH")) return "A qualifying male descendant is present.";
   if (ruleId.includes("SONS-DAUGHTER") && ruleId.includes("ONE-SIXTH"))
     return "One direct daughter is present, so the son's daughter receives the complementary 1/6.";
+  if (ruleId.includes("DEEPER-FEMALE-DESCENDANT") && ruleId.includes("COMPLEMENT"))
+    return "The nearest eligible farther female son-line descendants complete the two-thirds ceiling with 1/6.";
+  if (ruleId.includes("DEEPER-FEMALE-DESCENDANT"))
+    return "The nearest eligible female son-line descendant generation takes the admitted fixed share.";
+  if (ruleId.includes("LINEAGE-DESCENDANTS-TWO-TO-ONE"))
+    return "The source-admitted corresponding or rescuing male-line descendant makes the eligible group residuary at 2:1.";
+  if (ruleId.includes("LINEAGE-GRANDMOTHER-GROUP"))
+    return "Eligible grandmothers share the collective 1/6 equally after lineage and degree priority.";
   if (ruleId.includes("GRANDMOTHER-GROUP"))
     return "Eligible immediate grandmothers share the collective 1/6 equally.";
   if (ruleId.includes("MIXED-UTERINE"))
@@ -299,7 +308,9 @@ function correctionFor(
     );
   const groupedRules = new Map<string, "EQUAL" | "TWO_TO_ONE">([
     ["KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE", "TWO_TO_ONE"],
+    ["KZ-FR-013-LINEAGE-DESCENDANTS-TWO-TO-ONE", "TWO_TO_ONE"],
     ["KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH", "EQUAL"],
+    ["KZ-FR-017-LINEAGE-GRANDMOTHER-GROUP-ONE-SIXTH", "EQUAL"],
     ["KZ-FR-019-FULL-SIBLINGS-TWO-TO-ONE", "TWO_TO_ONE"],
     ["KZ-FR-019-PATERNAL-SIBLINGS-TWO-TO-ONE", "TWO_TO_ONE"],
     ["KZ-FR-019-MIXED-UTERINE-SIBLING-GROUP-ONE-THIRD-EQUAL", "EQUAL"],
@@ -405,11 +416,16 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
   }
   const netEstate = afterDeductions - bequest;
   const selected = coverage.normalizedHeirs;
-  const blockedTypes = new Set(coverage.blockedHeirs.map((heir) => heir.type));
+  const blockedTypes = new Set(
+    coverage.blockedHeirs
+      .filter((heir) => heir.partialLineageBlock !== true)
+      .map((heir) => heir.type),
+  );
   const eligible = selected.filter((heir) => !blockedTypes.has(heir.type));
-  const count = (type: HeirType): number => eligible.find((heir) => heir.type === type)?.count ?? 0;
+  const count = (type: HeirType): number =>
+    eligible.filter((heir) => heir.type === type).reduce((total, heir) => total + heir.count, 0);
   const selectedCount = (type: HeirType): number =>
-    selected.find((heir) => heir.type === type)?.count ?? 0;
+    selected.filter((heir) => heir.type === type).reduce((total, heir) => total + heir.count, 0);
   const required = new Set(coverage.requiredRuleIds);
   const assignments = new Map<HeirType, MutableAssignment>();
   const fixedShareAssignments: ShareAssignment[] = [];
@@ -547,6 +563,17 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
         "KZ-FR-013-SONS-DAUGHTER-GROUP-WITH-DAUGHTER-ONE-SIXTH",
         new Fraction(1n, 6n),
       ],
+      ["SONS_DAUGHTER", "KZ-FR-013-DEEPER-FEMALE-DESCENDANT-ONE-HALF", new Fraction(1n, 2n)],
+      [
+        "SONS_DAUGHTER",
+        "KZ-FR-013-DEEPER-FEMALE-DESCENDANT-GROUP-TWO-THIRDS",
+        new Fraction(2n, 3n),
+      ],
+      [
+        "SONS_DAUGHTER",
+        "KZ-FR-013-DEEPER-FEMALE-DESCENDANT-COMPLEMENT-ONE-SIXTH",
+        new Fraction(1n, 6n),
+      ],
       ["FULL_SISTER", "KZ-FR-005-ONE-FULL-SISTER-ONE-HALF", new Fraction(1n, 2n)],
       ["FULL_SISTER", "KZ-FR-008-FULL-SISTER-GROUP-TWO-THIRDS", new Fraction(2n, 3n)],
       ["PATERNAL_SISTER", "KZ-FR-005-ONE-PATERNAL-SISTER-ONE-HALF", new Fraction(1n, 2n)],
@@ -577,6 +604,13 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
         ["MATERNAL_GRANDMOTHER", "PATERNAL_GRANDMOTHER"],
         new Fraction(1n, 6n),
         "KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH",
+      );
+    }
+    if (required.has("KZ-FR-017-LINEAGE-GRANDMOTHER-GROUP-ONE-SIXTH")) {
+      addFixedGroup(
+        ["MATERNAL_GRANDMOTHER", "PATERNAL_GRANDMOTHER"],
+        new Fraction(1n, 6n),
+        "KZ-FR-017-LINEAGE-GRANDMOTHER-GROUP-ONE-SIXTH",
       );
     }
   }
@@ -863,9 +897,19 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
     addResidue("SONS_SON", "KZ-FR-013-SONS-SON-GROUP-RESIDUARY");
   if (
     residue.compare(Fraction.ZERO) > 0 &&
+    required.has("KZ-FR-013-DEEPER-MALE-DESCENDANT-RESIDUARY")
+  )
+    addResidue("SONS_SON", "KZ-FR-013-DEEPER-MALE-DESCENDANT-RESIDUARY");
+  if (
+    residue.compare(Fraction.ZERO) > 0 &&
     required.has("KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE")
   )
     addWeightedResidue("SONS_SON", "SONS_DAUGHTER", "KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE");
+  if (
+    residue.compare(Fraction.ZERO) > 0 &&
+    required.has("KZ-FR-013-LINEAGE-DESCENDANTS-TWO-TO-ONE")
+  )
+    addWeightedResidue("SONS_SON", "SONS_DAUGHTER", "KZ-FR-013-LINEAGE-DESCENDANTS-TWO-TO-ONE");
   if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-019-FULL-BROTHER-RESIDUARY"))
     addResidue("FULL_BROTHER", "KZ-FR-019-FULL-BROTHER-RESIDUARY");
   if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-019-FULL-SIBLINGS-TWO-TO-ONE"))
@@ -1000,7 +1044,7 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
     {
       kind: "HEIRS",
       title: "Eligible heirs",
-      summary: selected.map((heir) => `${heir.type} × ${heir.count}`).join(", "),
+      summary: selected.map((heir) => `${lineageDescription(heir)} × ${heir.count}`).join(", "),
       ruleIds: [],
       sourceReferences: [],
     },
