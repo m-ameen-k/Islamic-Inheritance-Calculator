@@ -1,0 +1,64 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260810-REMAINING-SHAFII-GAPS",
+  "parentRuleIds": ["KZ-FR-010", "KZ-FR-013", "KZ-FR-017", "KZ-FR-018", "KZ-FR-022"],
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "TWO_EXACT_MUADDA_BRANCHES_READY_OTHER_GAPS_EXPLICITLY_UNRESOLVED",
+  "executable": false,
+  "sourceRecords": [
+    {
+      "topic": "Mu‘adda female branch",
+      "kanzLocator": "Kanz / al-Mahalli, printed page 147; local PDF page 18.",
+      "khulasaLocator": "Khulasat al-Fiqh al-Islami, printed page 293.",
+      "agreement": "The sources agree that both sibling lines count for the grandfather comparison and that full sisters then complete to the applicable half or two-thirds ceiling. Khulasa gives the two admitted worked compositions and exact final allocations.",
+      "readyAtomicRuleIds": [
+        "KZ-FR-022-MUADDA-ONE-FULL-SISTER-WORKED-BRANCH",
+        "KZ-FR-022-MUADDA-TWO-FULL-SISTERS-WORKED-BRANCH"
+      ],
+      "unresolved": "Other female Mu‘adda pluralities and cases with an additional fixed-share heir are not generalized from these worked examples."
+    },
+    {
+      "topic": "Mushtaraka variants",
+      "kanzLocator": "Kanz / al-Mahalli, printed pages 143–144; local PDF pages 14–15.",
+      "khulasaLocator": "Khulasat al-Fiqh al-Islami, printed page 274, footnote 1.",
+      "agreement": "The compared passages support the already admitted canonical composition and expressly exclude substituting a paternal brother.",
+      "readyAtomicRuleIds": [],
+      "unresolved": "The local passages do not explicitly settle multiple full brothers, participation by full sisters, or uterine groups larger than the admitted exact two-person group."
+    },
+    {
+      "topic": "Mother reduced by blocked siblings",
+      "kanzLocator": "Kanz / al-Mahalli, printed page 138; local PDF page 9.",
+      "khulasaLocator": "Khulasat al-Fiqh al-Islami, printed page 270, footnote 6.",
+      "agreement": "Both passages establish a minimum of two siblings and include male, female, and mixed sibling composition in the ordinary unblocked subset.",
+      "readyAtomicRuleIds": [],
+      "unresolved": "Neither compared local passage expressly states whether siblings totally blocked by another heir still count toward reducing the mother."
+    },
+    {
+      "topic": "Deeper son-line descendants",
+      "kanzLocator": "Kanz / al-Mahalli, KZ-FR-013 extraction at printed pages 139–140; local PDF pages 10–11.",
+      "khulasaLocator": "Existing structured KZ-FR-013 source comparison; no new locator asserted.",
+      "agreement": "The records require generation-aware priority and do not authorize recursive reuse of the first son-line generation.",
+      "readyAtomicRuleIds": [],
+      "unresolved": "The input model has no generation depth or lineage path, so nearer/farther blocking and the corresponding-male conversion cannot be represented safely."
+    },
+    {
+      "topic": "Farther grandmother hierarchy",
+      "kanzLocator": "Kanz / al-Mahalli, printed page 139; local PDF page 10.",
+      "khulasaLocator": "Existing structured KZ-FR-017 source comparison; no new locator asserted.",
+      "agreement": "The primary passage distinguishes valid maternal links, side, degree, same-side blocking, cross-side priority, and the father's effect.",
+      "readyAtomicRuleIds": [],
+      "unresolved": "The input model stores only immediate maternal-grandmother and paternal-grandmother categories and cannot express lineage path or degree."
+    }
+  ],
+  "readyAtomicRuleIds": [
+    "KZ-FR-022-MUADDA-ONE-FULL-SISTER-WORKED-BRANCH",
+    "KZ-FR-022-MUADDA-TWO-FULL-SISTERS-WORKED-BRANCH"
+  ],
+  "unresolvedQuestions": [
+    "Broader female Mu‘adda branches remain outside the exact worked compositions.",
+    "MUSHTARAKA_VARIANT_NOT_ADMITTED remains for broader pluralities.",
+    "MOTHER_BLOCKED_SIBLING_COUNT_NOT_ADMITTED remains because blocked-sibling counting is not explicit in the compared local passages.",
+    "Deeper descendants require generation-aware lineage input.",
+    "Farther grandmothers require side, degree, and lineage-path input."
+  ],
+  "readyForAdmission": true
+}

@@ -8,7 +8,7 @@
     "originalStatus": "EXTRACTED_NOT_VERIFIED",
     "printedPages": [147],
     "localPdfPages": [18],
-    "sourceSummary": "Full siblings count paternal siblings against the grandfather in muqasama; after his share, a present full brother makes the remaining sibling residue belong to the full sibling line and the paternal line falls."
+    "sourceSummary": "Full siblings count paternal siblings against the grandfather in muqasama. The passage separately treats a present full brother, one full sister completing to one half, and two or more full sisters completing to two thirds; the local Khulasa passage supplies two exact female worked examples."
   },
   "review": {
     "reviewId": "MANUAL-20260810-KZ-FR-022",
@@ -19,10 +19,13 @@
     "localPdfPageChecked": true,
     "explicitConditions": [
       "Grandfather, both full and paternal sibling classes, and at least one full brother.",
-      "Both sibling classes count in the grandfather comparison."
+      "Both sibling classes count in the grandfather comparison.",
+      "In the exact first female worked example: one grandfather, one full sister, one paternal brother, and one paternal sister.",
+      "In the exact second female worked example: one grandfather, two full sisters, and one paternal brother."
     ],
     "explicitExclusions": [
-      "The full-sisters-only completion branches are not admitted by this atom."
+      "The existing full-male-line atom does not execute the female completion branches.",
+      "Only the two exact female worked compositions are ready for separate atomic admission; variants with additional fixed-share heirs or different sibling pluralities remain unresolved."
     ],
     "unresolvedWords": [],
     "conflictingSources": [],
