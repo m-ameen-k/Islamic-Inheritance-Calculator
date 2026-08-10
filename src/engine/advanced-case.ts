@@ -1,5 +1,17 @@
 import type { HeirInput, HeirType } from "../domain/heirs";
 
+/** Named detector/comparison atoms that require positive and negative source fixtures. */
+export const ADVANCED_SPECIAL_DETECTOR_RULE_IDS = [
+  "KZ-FR-018-MUSHTARAKA-CANONICAL",
+  "KZ-FR-020-GRANDFATHER-SIBLINGS-NO-FIXED-SHARE-COMPARISON",
+  "KZ-FR-020-GRANDFATHER-SIBLINGS-WITH-FIXED-SHARE-COMPARISON",
+  "KZ-FR-022-MUADDA-FULL-MALE-LINE",
+  "KZ-FR-022-MUADDA-ONE-FULL-SISTER-WORKED-BRANCH",
+  "KZ-FR-022-MUADDA-TWO-FULL-SISTERS-WORKED-BRANCH",
+  "KZ-FR-023-AKDARIYYA-FULL-SISTER",
+  "KZ-FR-023-AKDARIYYA-PATERNAL-SISTER",
+] as const;
+
 export type AdvancedCaseDetection =
   | {
       readonly kind: "AKDARIYYA";
@@ -15,7 +27,12 @@ export type AdvancedCaseDetection =
   | {
       readonly kind: "MUADDA";
       readonly muadda: true;
-      readonly ruleId: "KZ-FR-022-MUADDA-FULL-MALE-LINE";
+      readonly mode:
+        "FULL_MALE_LINE" | "ONE_FULL_SISTER_WORKED_BRANCH" | "TWO_FULL_SISTERS_WORKED_BRANCH";
+      readonly ruleId:
+        | "KZ-FR-022-MUADDA-FULL-MALE-LINE"
+        | "KZ-FR-022-MUADDA-ONE-FULL-SISTER-WORKED-BRANCH"
+        | "KZ-FR-022-MUADDA-TWO-FULL-SISTERS-WORKED-BRANCH";
     }
   | { readonly kind: "UNSUPPORTED_ADVANCED"; readonly reason: string };
 
@@ -101,7 +118,33 @@ export function detectAdvancedCase(heirs: readonly HeirInput[]): AdvancedCaseDet
         return {
           kind: "MUADDA",
           muadda: true,
+          mode: "FULL_MALE_LINE",
           ruleId: "KZ-FR-022-MUADDA-FULL-MALE-LINE",
+        };
+      const oneFullSisterWorkedBranch =
+        exactTypes("PATERNAL_GRANDFATHER", "FULL_SISTER", "PATERNAL_BROTHER", "PATERNAL_SISTER") &&
+        count("PATERNAL_GRANDFATHER") === 1 &&
+        count("FULL_SISTER") === 1 &&
+        count("PATERNAL_BROTHER") === 1 &&
+        count("PATERNAL_SISTER") === 1;
+      if (oneFullSisterWorkedBranch)
+        return {
+          kind: "MUADDA",
+          muadda: true,
+          mode: "ONE_FULL_SISTER_WORKED_BRANCH",
+          ruleId: "KZ-FR-022-MUADDA-ONE-FULL-SISTER-WORKED-BRANCH",
+        };
+      const twoFullSistersWorkedBranch =
+        exactTypes("PATERNAL_GRANDFATHER", "FULL_SISTER", "PATERNAL_BROTHER") &&
+        count("PATERNAL_GRANDFATHER") === 1 &&
+        count("FULL_SISTER") === 2 &&
+        count("PATERNAL_BROTHER") === 1;
+      if (twoFullSistersWorkedBranch)
+        return {
+          kind: "MUADDA",
+          muadda: true,
+          mode: "TWO_FULL_SISTERS_WORKED_BRANCH",
+          ruleId: "KZ-FR-022-MUADDA-TWO-FULL-SISTERS-WORKED-BRANCH",
         };
       return { kind: "UNSUPPORTED_ADVANCED", reason: "MUADDA_FEMALE_BRANCH_NOT_ADMITTED" };
     }

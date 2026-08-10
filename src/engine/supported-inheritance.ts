@@ -147,7 +147,22 @@ export interface InheritanceResult {
   readonly advancedCaseDetails:
     | null
     | {
-        readonly kind: "GRANDFATHER_WITH_SIBLINGS" | "MUADDA";
+        readonly kind: "GRANDFATHER_WITH_SIBLINGS";
+        readonly alternatives: readonly {
+          readonly name: string;
+          readonly fraction: SerializedFraction;
+        }[];
+        readonly selectedAlternative: string;
+        readonly selectedFraction: SerializedFraction;
+      }
+    | {
+        readonly kind: "MUADDA";
+        readonly mode:
+          "FULL_MALE_LINE" | "ONE_FULL_SISTER_WORKED_BRANCH" | "TWO_FULL_SISTERS_WORKED_BRANCH";
+        readonly ruleId:
+          | "KZ-FR-022-MUADDA-FULL-MALE-LINE"
+          | "KZ-FR-022-MUADDA-ONE-FULL-SISTER-WORKED-BRANCH"
+          | "KZ-FR-022-MUADDA-TWO-FULL-SISTERS-WORKED-BRANCH";
         readonly alternatives: readonly {
           readonly name: string;
           readonly fraction: SerializedFraction;
@@ -775,12 +790,56 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
     const siblingResidue = residue.subtract(selectedAlternative.fraction);
     const siblingRuleId = "KZ-FR-020-GRANDFATHER-SIBLING-RESIDUE-DISTRIBUTION";
     if (siblingResidue.compare(Fraction.ZERO) > 0) {
-      if (count("FULL_BROTHER") + count("FULL_SISTER") > 0)
+      if (
+        advancedCase?.kind === "MUADDA" &&
+        advancedCase.mode === "ONE_FULL_SISTER_WORKED_BRANCH"
+      ) {
+        const fullSisterShare = new Fraction(1n, 2n);
+        addAssignment(
+          assignments,
+          "FULL_SISTER",
+          count("FULL_SISTER"),
+          fullSisterShare,
+          "FIXED",
+          advancedCase.ruleId,
+        );
+        fixedShareAssignments.push({
+          heirType: "FULL_SISTER",
+          fraction: fullSisterShare.toJSON(),
+          ruleId: advancedCase.ruleId,
+          reason: "In this exact Mu‘adda branch, the full sister completes her share to 1/2.",
+        });
+        addWeightedShare(
+          siblingResidue.subtract(fullSisterShare),
+          "PATERNAL_BROTHER",
+          "PATERNAL_SISTER",
+          advancedCase.ruleId,
+        );
+      } else if (
+        advancedCase?.kind === "MUADDA" &&
+        advancedCase.mode === "TWO_FULL_SISTERS_WORKED_BRANCH"
+      ) {
+        const fullSisterGroupShare = new Fraction(2n, 3n);
+        addAssignment(
+          assignments,
+          "FULL_SISTER",
+          count("FULL_SISTER"),
+          fullSisterGroupShare,
+          "FIXED",
+          advancedCase.ruleId,
+        );
+        fixedShareAssignments.push({
+          heirType: "FULL_SISTER",
+          fraction: fullSisterGroupShare.toJSON(),
+          ruleId: advancedCase.ruleId,
+          reason:
+            "In this exact Mu‘adda branch, the two full sisters complete their collective share to 2/3.",
+        });
+      } else if (count("FULL_BROTHER") + count("FULL_SISTER") > 0)
         addWeightedShare(siblingResidue, "FULL_BROTHER", "FULL_SISTER", siblingRuleId);
       else addWeightedShare(siblingResidue, "PATERNAL_BROTHER", "PATERNAL_SISTER", siblingRuleId);
     }
-    advancedCaseDetails = {
-      kind: advancedCase?.kind === "MUADDA" ? "MUADDA" : "GRANDFATHER_WITH_SIBLINGS",
+    const comparisonDetails = {
       alternatives: alternatives.map((alternative) => ({
         name: alternative.name,
         fraction: alternative.fraction.toJSON(),
@@ -788,6 +847,15 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
       selectedAlternative: selectedAlternative.name,
       selectedFraction: selectedAlternative.fraction.toJSON(),
     };
+    advancedCaseDetails =
+      advancedCase?.kind === "MUADDA"
+        ? {
+            kind: "MUADDA",
+            mode: advancedCase.mode,
+            ruleId: advancedCase.ruleId,
+            ...comparisonDetails,
+          }
+        : { kind: "GRANDFATHER_WITH_SIBLINGS", ...comparisonDetails };
   }
   if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-013-SONS-SON-GROUP-RESIDUARY"))
     addResidue("SONS_SON", "KZ-FR-013-SONS-SON-GROUP-RESIDUARY");
@@ -976,9 +1044,13 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
         kind: "SPECIAL_CASE",
         title: "المعادة — Mu‘adda",
         summary:
-          "Both sibling lines were counted in the grandfather comparison; after his share, the admitted full-brother-present branch gives the sibling residue to the full sibling line and the paternal line receives zero.",
-        ruleIds: ["KZ-FR-022-MUADDA-FULL-MALE-LINE"],
-        sourceReferences: ruleSources(["KZ-FR-022-MUADDA-FULL-MALE-LINE"]),
+          advancedCaseDetails.mode === "FULL_MALE_LINE"
+            ? "Both sibling lines were counted in the grandfather comparison; after his share, the admitted full-brother-present branch gives the sibling residue to the full sibling line and the paternal line receives zero."
+            : advancedCaseDetails.mode === "ONE_FULL_SISTER_WORKED_BRANCH"
+              ? "Both sibling lines were counted in the grandfather comparison. The full sister then completed to 1/2, and the remaining 1/6 passed to the paternal brother and sister at 2:1."
+              : "Both sibling lines were counted in the grandfather comparison. The two full sisters then completed their collective share to 2/3, leaving the paternal brother zero.",
+        ruleIds: [advancedCaseDetails.ruleId],
+        sourceReferences: ruleSources([advancedCaseDetails.ruleId]),
       });
   } else if (advancedCaseDetails?.kind === "AKDARIYYA") {
     const ruleId =

@@ -585,8 +585,17 @@ export function evaluateWholeCaseCoverage(
     selectedCount("FULL_SISTER") >= 2 && selectedCount("PATERNAL_BROTHER") === 0,
   );
   if (advancedCase?.kind === "MUADDA") {
-    for (const type of ["PATERNAL_BROTHER", "PATERNAL_SISTER"] as const)
-      addBlocked("FULL_BROTHER", type, advancedCase.ruleId, selectedCount(type) > 0);
+    if (advancedCase.mode === "FULL_MALE_LINE") {
+      for (const type of ["PATERNAL_BROTHER", "PATERNAL_SISTER"] as const)
+        addBlocked("FULL_BROTHER", type, advancedCase.ruleId, selectedCount(type) > 0);
+    } else if (advancedCase.mode === "TWO_FULL_SISTERS_WORKED_BRANCH") {
+      addBlocked(
+        "FULL_SISTER",
+        "PATERNAL_BROTHER",
+        advancedCase.ruleId,
+        selectedCount("PATERNAL_BROTHER") > 0,
+      );
+    }
   }
   const blockedTypes = new Set<HeirType>(blockedHeirs.map((heir) => heir.type));
   const selectedHasDescendant =
@@ -840,10 +849,9 @@ export function evaluateWholeCaseCoverage(
     if (grandfatherSiblingCase) {
       const preGrandfatherFixedTotal = sumFractions(fixedShares);
       if (preGrandfatherFixedTotal.isZero()) {
-        requiredRuleIds.push(
-          "KZ-FR-020-GRANDFATHER-SIBLINGS-NO-FIXED-SHARE-COMPARISON",
-          "KZ-FR-020-GRANDFATHER-SIBLING-RESIDUE-DISTRIBUTION",
-        );
+        requiredRuleIds.push("KZ-FR-020-GRANDFATHER-SIBLINGS-NO-FIXED-SHARE-COMPARISON");
+        if (advancedCase?.kind !== "MUADDA" || advancedCase.mode === "FULL_MALE_LINE")
+          requiredRuleIds.push("KZ-FR-020-GRANDFATHER-SIBLING-RESIDUE-DISTRIBUTION");
         hasResiduary = true;
       } else if (
         Fraction.ONE.subtract(preGrandfatherFixedTotal).compare(new Fraction(1n, 6n)) <= 0

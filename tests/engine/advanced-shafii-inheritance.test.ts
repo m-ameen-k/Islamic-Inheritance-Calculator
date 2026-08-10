@@ -256,6 +256,56 @@ describe("SOURCE_DERIVED_TEST: advanced named cases", () => {
     });
   });
 
+  it("calculates the exact one-full-sister Mu‘adda worked branch", () => {
+    const entries = [
+      ["PATERNAL_GRANDFATHER", 1],
+      ["FULL_SISTER", 1],
+      ["PATERNAL_BROTHER", 1],
+      ["PATERNAL_SISTER", 1],
+    ] as const;
+    const calculated = result(entries);
+    expect(shares(entries)).toEqual({
+      PATERNAL_GRANDFATHER: "1/3",
+      FULL_SISTER: "1/2",
+      PATERNAL_BROTHER: "1/9",
+      PATERNAL_SISTER: "1/18",
+    });
+    expect(calculated.calculationType).toBe("MUADDA");
+    expect(calculated.appliedProductionRuleIds).toContain(
+      "KZ-FR-022-MUADDA-ONE-FULL-SISTER-WORKED-BRANCH",
+    );
+    expect(
+      calculated.explanationSteps.some(
+        (step) => step.title.includes("المعادة") && step.summary.includes("1/2"),
+      ),
+    ).toBe(true);
+  });
+
+  it("calculates the exact two-full-sisters Mu‘adda worked branch", () => {
+    const entries = [
+      ["PATERNAL_GRANDFATHER", 1],
+      ["FULL_SISTER", 2],
+      ["PATERNAL_BROTHER", 1],
+    ] as const;
+    const calculated = result(entries);
+    expect(shares(entries)).toEqual({
+      PATERNAL_GRANDFATHER: "1/3",
+      FULL_SISTER: "2/3",
+    });
+    expect(calculated.blockedHeirs).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "PATERNAL_BROTHER",
+          blockerType: "FULL_SISTER",
+          ruleId: "KZ-FR-022-MUADDA-TWO-FULL-SISTERS-WORKED-BRANCH",
+        }),
+      ]),
+    );
+    expect(calculated.appliedProductionRuleIds).toContain(
+      "KZ-FR-022-MUADDA-TWO-FULL-SISTERS-WORKED-BRANCH",
+    );
+  });
+
   it.each(["FULL_SISTER", "PATERNAL_SISTER"] as const)(
     "calculates canonical Akdariyya with %s",
     (sisterType) => {
