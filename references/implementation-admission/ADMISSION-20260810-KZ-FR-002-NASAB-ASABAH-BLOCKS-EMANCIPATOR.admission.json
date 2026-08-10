@@ -1,0 +1,25 @@
+{
+  "admissionRecordId": "ADMISSION-20260810-KZ-FR-002-NASAB-ASABAH-BLOCKS-EMANCIPATOR",
+  "ruleId": "KZ-FR-002-NASAB-ASABAH-BLOCKS-EMANCIPATOR",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260810-EXTENDED-RESIDUARY-PRIORITY",
+  "reviewRecordIds": [
+    "MANUAL-20260810-KZ-FR-002-WALA",
+    "SOURCE-COMPARISON-20260810-EXTENDED-RESIDUARY-PRIORITY"
+  ],
+  "fixtureIds": [
+    "KZ-FR-002-NASAB-ASABAH-BLOCKS-EMANCIPATOR-POS",
+    "KZ-FR-002-NASAB-ASABAH-BLOCKS-EMANCIPATOR-NEG"
+  ],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "Admitted only for the exact finite UI-modeled relationship, priority, blocker, and plurality conditions."
+}
