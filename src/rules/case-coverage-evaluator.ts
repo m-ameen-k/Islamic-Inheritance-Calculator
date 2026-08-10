@@ -20,6 +20,7 @@ import {
   QUALIFYING_DESCENDANT_CATEGORIES,
   evaluateQualifyingDescendant,
 } from "../domain/qualifying-descendant";
+import { detectAdvancedCase, type AdvancedCaseDetection } from "../engine/advanced-case";
 import { PRODUCTION_RULES } from "./generated/production-registry";
 import type { ProductionRuleFile, ProductionSpouseRuleFile } from "./rule-file";
 
@@ -291,6 +292,7 @@ export interface WholeCaseCoverageResult {
   }[];
   readonly normalizedHeirs: readonly HeirInput[];
   readonly requiresAwl: boolean;
+  readonly advancedCase: AdvancedCaseDetection | null;
 }
 
 const DIRECT_FAMILY_TYPES = new Set<HeirType>([
@@ -380,6 +382,7 @@ export function evaluateWholeCaseCoverage(
     unsupportedHeirs: [] as { type: HeirType; count: number }[],
     blockedHeirs: [] as WholeCaseCoverageResult["blockedHeirs"],
     requiresAwl: false,
+    advancedCase: null as AdvancedCaseDetection | null,
   };
   if (invalidFields.length > 0) return wholeCaseResult("INVALID_INPUT", normalizedHeirs, base);
   if (normalizedHeirs.length === 0) {
@@ -397,43 +400,64 @@ export function evaluateWholeCaseCoverage(
     });
   }
 
+  const productionIds = new Set(corpus.rules.map((rule) => rule.ruleId));
+  const advancedCase = detectAdvancedCase(normalizedHeirs);
+  base.advancedCase = advancedCase;
+  if (advancedCase?.kind === "UNSUPPORTED_ADVANCED") {
+    return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
+      ...base,
+      reasons: [advancedCase.reason],
+    });
+  }
+  if (advancedCase?.kind === "AKDARIYYA") {
+    const requiredRuleIds = [
+      "KZ-FR-005-HUSBAND-ONE-HALF",
+      advancedCase.ruleId,
+      ORIGINAL_ASL_RULE_ID,
+      AWL_RULE_ID,
+      "KZ-FR-029-SINGLE-CLASS-CORRECTION",
+    ];
+    const missing = requiredRuleIds.filter((id) => !productionIds.has(id));
+    return wholeCaseResult(
+      missing.length === 0 ? "SUPPORTED" : "UNSUPPORTED_RULE",
+      normalizedHeirs,
+      {
+        ...base,
+        requiredRuleIds,
+        supportedRuleIds: missing.length === 0 ? requiredRuleIds : [],
+        reasons: missing.map((id) => `RULE_NOT_ADMITTED:${id}`),
+        requiresAwl: true,
+      },
+    );
+  }
+  if (advancedCase?.kind === "MUSHTARAKA") {
+    const ascendantRuleId =
+      advancedCase.ascendantType === "MOTHER"
+        ? "KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS"
+        : "KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH";
+    const requiredRuleIds = [
+      "KZ-FR-005-HUSBAND-ONE-HALF",
+      ascendantRuleId,
+      advancedCase.ruleId,
+      ORIGINAL_ASL_RULE_ID,
+    ];
+    const missing = requiredRuleIds.filter((id) => !productionIds.has(id));
+    return wholeCaseResult(
+      missing.length === 0 ? "SUPPORTED" : "UNSUPPORTED_RULE",
+      normalizedHeirs,
+      {
+        ...base,
+        requiredRuleIds,
+        supportedRuleIds: missing.length === 0 ? requiredRuleIds : [],
+        reasons: missing.map((id) => `RULE_NOT_ADMITTED:${id}`),
+      },
+    );
+  }
+
   const siblingCount = [...SIBLING_TYPES].reduce((total, type) => total + selectedCount(type), 0);
   const hasGrandfather = selectedCount("PATERNAL_GRANDFATHER") > 0;
-  const hasFullOrPaternalSibling =
-    selectedCount("FULL_BROTHER") +
-      selectedCount("FULL_SISTER") +
-      selectedCount("PATERNAL_BROTHER") +
-      selectedCount("PATERNAL_SISTER") >
-    0;
-  if (hasGrandfather && hasFullOrPaternalSibling) {
-    const isAkdariyya =
-      selectedCount("HUSBAND") > 0 &&
-      selectedCount("MOTHER") > 0 &&
-      selectedCount("FULL_SISTER") + selectedCount("PATERNAL_SISTER") > 0;
-    const isMuadda =
-      selectedCount("FULL_BROTHER") + selectedCount("FULL_SISTER") > 0 &&
-      selectedCount("PATERNAL_BROTHER") + selectedCount("PATERNAL_SISTER") > 0;
-    return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
-      ...base,
-      reasons: [
-        ...(isAkdariyya ? ["AKDARIYYA_NOT_ADMITTED"] : []),
-        ...(isMuadda ? ["MUADDA_NOT_ADMITTED"] : []),
-        "GRANDFATHER_WITH_SIBLINGS_NOT_ADMITTED",
-      ],
-    });
-  }
-  const selectedUterineCount = selectedCount("MATERNAL_BROTHER") + selectedCount("MATERNAL_SISTER");
-  if (
-    selectedCount("HUSBAND") > 0 &&
-    selectedCount("MOTHER") + selectedCount("MATERNAL_GRANDMOTHER") > 0 &&
-    selectedUterineCount >= 2 &&
-    selectedCount("FULL_BROTHER") > 0
-  ) {
-    return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
-      ...base,
-      reasons: ["MUSHTARAKA_NOT_ADMITTED"],
-    });
-  }
+  const grandfatherSiblingCase =
+    advancedCase?.kind === "GRANDFATHER_WITH_SIBLINGS" || advancedCase?.kind === "MUADDA";
 
   const blockerPairs = [
     ["FATHER", "PATERNAL_GRANDFATHER", "KZ-FR-011-FATHER-BLOCKS-PATERNAL-GRANDFATHER"],
@@ -454,12 +478,21 @@ export function evaluateWholeCaseCoverage(
     ["SON", "FULL_SISTER", "KZ-FR-019-SON-BLOCKS-SISTER-GROUP"],
     ["SON", "PATERNAL_SISTER", "KZ-FR-019-SON-BLOCKS-SISTER-GROUP"],
     ["SON", "MATERNAL_SISTER", "KZ-FR-019-SON-BLOCKS-MATERNAL-SISTER"],
+    [
+      "PATERNAL_GRANDFATHER",
+      "MATERNAL_BROTHER",
+      "KZ-FR-016-PATERNAL-GRANDFATHER-BLOCKS-UTERINE-SIBLING-GROUP",
+    ],
+    [
+      "PATERNAL_GRANDFATHER",
+      "MATERNAL_SISTER",
+      "KZ-FR-016-PATERNAL-GRANDFATHER-BLOCKS-UTERINE-SIBLING-GROUP",
+    ],
     ["DAUGHTER", "MATERNAL_BROTHER", "KZ-FR-019-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP"],
     ["DAUGHTER", "MATERNAL_SISTER", "KZ-FR-019-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP"],
     ["SONS_DAUGHTER", "MATERNAL_BROTHER", "KZ-FR-019-SONS-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP"],
     ["SONS_DAUGHTER", "MATERNAL_SISTER", "KZ-FR-019-SONS-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP"],
   ] as const satisfies readonly (readonly [HeirType, HeirType, string])[];
-  const productionIds = new Set(corpus.rules.map((rule) => rule.ruleId));
   const blockedHeirs: Array<WholeCaseCoverageResult["blockedHeirs"][number]> = blockerPairs.flatMap(
     ([blockerType, type, ruleId]) => {
       const blockedCount = selectedCount(type);
@@ -517,7 +550,8 @@ export function evaluateWholeCaseCoverage(
       "FULL_BROTHER",
       type,
       "KZ-FR-019-FULL-BROTHER-BLOCKS-PATERNAL-SIBLING-GROUP",
-      selectedCount("FULL_BROTHER") > 0 &&
+      !grandfatherSiblingCase &&
+        selectedCount("FULL_BROTHER") > 0 &&
         selectedCount("FATHER") === 0 &&
         selectedCount("SON") === 0 &&
         selectedCount("SONS_SON") === 0,
@@ -530,6 +564,7 @@ export function evaluateWholeCaseCoverage(
   );
   const femaleDescendantPresent = selectedCount("DAUGHTER") + selectedCount("SONS_DAUGHTER") > 0;
   const fullSisterResiduary =
+    !grandfatherSiblingCase &&
     selectedCount("FULL_SISTER") > 0 &&
     selectedCount("FULL_BROTHER") === 0 &&
     selectedCount("FATHER") === 0 &&
@@ -549,6 +584,10 @@ export function evaluateWholeCaseCoverage(
     "KZ-FR-019-FULL-SISTER-GROUP-BLOCKS-PATERNAL-SISTER",
     selectedCount("FULL_SISTER") >= 2 && selectedCount("PATERNAL_BROTHER") === 0,
   );
+  if (advancedCase?.kind === "MUADDA") {
+    for (const type of ["PATERNAL_BROTHER", "PATERNAL_SISTER"] as const)
+      addBlocked("FULL_BROTHER", type, advancedCase.ruleId, selectedCount(type) > 0);
+  }
   const blockedTypes = new Set<HeirType>(blockedHeirs.map((heir) => heir.type));
   const selectedHasDescendant =
     selectedCount("SON") +
@@ -569,7 +608,11 @@ export function evaluateWholeCaseCoverage(
     });
   }
 
-  const supportedTypes = new Set([...DIRECT_FAMILY_TYPES, ...ADMITTED_EXTENDED_FIXED_SHARE_TYPES]);
+  const supportedTypes = new Set([
+    ...DIRECT_FAMILY_TYPES,
+    ...ADMITTED_EXTENDED_FIXED_SHARE_TYPES,
+    "PATERNAL_GRANDFATHER" as const,
+  ]);
   const unsupportedHeirs = normalizedHeirs
     .filter((heir) => !supportedTypes.has(heir.type) && !blockedTypes.has(heir.type))
     .map(({ type, count: heirCount }) => ({ type, count: heirCount }));
@@ -606,8 +649,6 @@ export function evaluateWholeCaseCoverage(
         "UTERINE_SIBLING_BLOCKER_RELATIONSHIP_NOT_ADMITTED_FOR_SELECTED_CLASS",
       );
   }
-  if (hasGrandfather && siblingCount > 0)
-    interactionReasons.push("GRANDFATHER_WITH_SIBLINGS_NOT_ADMITTED");
   if (interactionReasons.length > 0) {
     return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
       ...base,
@@ -678,6 +719,19 @@ export function evaluateWholeCaseCoverage(
         hasResiduary = true;
       }
     }
+    if (count("PATERNAL_GRANDFATHER") > 0 && !grandfatherSiblingCase) {
+      if (hasMaleDescendant) {
+        requiredRuleIds.push("KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH");
+        fixedShares.push(new Fraction(1n, 6n));
+      } else if (hasDaughter) {
+        requiredRuleIds.push("KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS-RESIDUE");
+        fixedShares.push(new Fraction(1n, 6n));
+        hasResiduary = true;
+      } else {
+        requiredRuleIds.push("KZ-FR-016-PATERNAL-GRANDFATHER-RESIDUARY");
+        hasResiduary = true;
+      }
+    }
     if (hasSon && count("DAUGHTER") > 0) {
       requiredRuleIds.push("KZ-FR-012-SONS-AND-DAUGHTERS-TWO-TO-ONE");
       hasResiduary = true;
@@ -726,7 +780,9 @@ export function evaluateWholeCaseCoverage(
       count("FULL_BROTHER") === 0 &&
       hasFemaleDescendant &&
       !hasMaleDescendant;
-    if (count("FULL_BROTHER") > 0 && count("FULL_SISTER") > 0) {
+    if (grandfatherSiblingCase) {
+      // The special comparison below replaces ordinary sibling fixed/residuary modes.
+    } else if (count("FULL_BROTHER") > 0 && count("FULL_SISTER") > 0) {
       requiredRuleIds.push("KZ-FR-019-FULL-SIBLINGS-TWO-TO-ONE");
       hasResiduary = true;
     } else if (count("FULL_BROTHER") > 0) {
@@ -748,7 +804,9 @@ export function evaluateWholeCaseCoverage(
       count("FULL_SISTER") === 0 &&
       hasFemaleDescendant &&
       !hasMaleDescendant;
-    if (count("PATERNAL_BROTHER") > 0 && count("PATERNAL_SISTER") > 0) {
+    if (grandfatherSiblingCase) {
+      // The special comparison below replaces ordinary sibling fixed/residuary modes.
+    } else if (count("PATERNAL_BROTHER") > 0 && count("PATERNAL_SISTER") > 0) {
       requiredRuleIds.push("KZ-FR-019-PATERNAL-SIBLINGS-TWO-TO-ONE");
       hasResiduary = true;
     } else if (count("PATERNAL_BROTHER") > 0) {
@@ -778,6 +836,52 @@ export function evaluateWholeCaseCoverage(
     if (eligibleGrandmotherCount > 0) {
       requiredRuleIds.push("KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH");
       fixedShares.push(new Fraction(1n, 6n));
+    }
+    if (grandfatherSiblingCase) {
+      const preGrandfatherFixedTotal = sumFractions(fixedShares);
+      if (preGrandfatherFixedTotal.isZero()) {
+        requiredRuleIds.push(
+          "KZ-FR-020-GRANDFATHER-SIBLINGS-NO-FIXED-SHARE-COMPARISON",
+          "KZ-FR-020-GRANDFATHER-SIBLING-RESIDUE-DISTRIBUTION",
+        );
+        hasResiduary = true;
+      } else if (
+        Fraction.ONE.subtract(preGrandfatherFixedTotal).compare(new Fraction(1n, 6n)) <= 0
+      ) {
+        if (count("MOTHER") > 0) {
+          return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
+            ...base,
+            blockedHeirs,
+            requiredRuleIds,
+            reasons: ["MOTHER_BLOCKED_SIBLING_COUNT_NOT_ADMITTED"],
+          });
+        }
+        requiredRuleIds.push("KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION");
+        fixedShares.push(new Fraction(1n, 6n));
+        for (const type of [
+          "FULL_BROTHER",
+          "FULL_SISTER",
+          "PATERNAL_BROTHER",
+          "PATERNAL_SISTER",
+        ] as const) {
+          const blockedCount = selectedCount(type);
+          if (blockedCount > 0 && !blockedHeirs.some((heir) => heir.type === type))
+            blockedHeirs.push({
+              type,
+              count: blockedCount,
+              blockerType: "PATERNAL_GRANDFATHER",
+              ruleId: "KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION",
+              reason: `${type} receives zero because the fixed shares leave at most the grandfather's 1/6.`,
+            });
+        }
+      } else {
+        requiredRuleIds.push(
+          "KZ-FR-020-GRANDFATHER-SIBLINGS-WITH-FIXED-SHARE-COMPARISON",
+          "KZ-FR-020-GRANDFATHER-SIBLING-RESIDUE-DISTRIBUTION",
+        );
+        hasResiduary = true;
+      }
+      if (advancedCase?.kind === "MUADDA") requiredRuleIds.push(advancedCase.ruleId);
     }
   }
 

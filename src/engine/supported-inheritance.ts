@@ -54,6 +54,8 @@ export interface ExplanationStep {
     | "RESIDUARY"
     | "REMAINDER"
     | "CORRECTION"
+    | "SPECIAL_CASE"
+    | "GRANDFATHER_COMPARISON"
     | "AMOUNTS"
     | "RULES"
     | "SOURCES";
@@ -135,7 +137,26 @@ export interface InheritanceResult {
   readonly appliedProductionRuleIds: readonly string[];
   readonly sourceReferences: readonly RuleSourceReference[];
   readonly explanationSteps: readonly ExplanationStep[];
-  readonly calculationType: "ORDINARY" | "UMARIYYATAYN";
+  readonly calculationType:
+    | "ORDINARY"
+    | "UMARIYYATAYN"
+    | "GRANDFATHER_WITH_SIBLINGS"
+    | "MUADDA"
+    | "AKDARIYYA"
+    | "MUSHTARAKA";
+  readonly advancedCaseDetails:
+    | null
+    | {
+        readonly kind: "GRANDFATHER_WITH_SIBLINGS" | "MUADDA";
+        readonly alternatives: readonly {
+          readonly name: string;
+          readonly fraction: SerializedFraction;
+        }[];
+        readonly selectedAlternative: string;
+        readonly selectedFraction: SerializedFraction;
+      }
+    | { readonly kind: "AKDARIYYA"; readonly sisterType: HeirType }
+    | { readonly kind: "MUSHTARAKA"; readonly participants: readonly HeirType[] };
   readonly remainderPolicy: RemainderPolicy;
 }
 
@@ -211,6 +232,10 @@ function addAssignment(
 }
 
 function fractionReason(heirType: HeirType, ruleId: string): string {
+  if (ruleId.includes("PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS"))
+    return "A female descendant exists without a male descendant; the grandfather takes 1/6 plus residue.";
+  if (ruleId.includes("PATERNAL-GRANDFATHER-ONE-SIXTH"))
+    return "An eligible male descendant exists, so the grandfather takes 1/6.";
   if (ruleId.includes("MOTHER-ONE-SIXTH-SIBLINGS"))
     return "At least two unblocked siblings are present in this admitted subset.";
   if (ruleId.includes("MOTHER-ONE-SIXTH")) return "A qualifying descendant exists.";
@@ -262,6 +287,9 @@ function correctionFor(
     ["KZ-FR-019-FULL-SIBLINGS-TWO-TO-ONE", "TWO_TO_ONE"],
     ["KZ-FR-019-PATERNAL-SIBLINGS-TWO-TO-ONE", "TWO_TO_ONE"],
     ["KZ-FR-019-MIXED-UTERINE-SIBLING-GROUP-ONE-THIRD-EQUAL", "EQUAL"],
+    ["KZ-FR-018-MUSHTARAKA-CANONICAL", "EQUAL"],
+    ["KZ-FR-023-AKDARIYYA-FULL-SISTER", "TWO_TO_ONE"],
+    ["KZ-FR-023-AKDARIYYA-PATERNAL-SISTER", "TWO_TO_ONE"],
   ]);
   const groupedAssignmentIds = new Set<string>();
   const correctionClasses: {
@@ -270,7 +298,12 @@ function correctionFor(
     units: bigint;
   }[] = [];
   for (const [ruleId, division] of groupedRules) {
-    const members = assignments.filter((assignment) => assignment.ruleIds.includes(ruleId));
+    const members = assignments.filter(
+      (assignment) =>
+        assignment.ruleIds.includes(ruleId) &&
+        (!ruleId.includes("AKDARIYYA") ||
+          ["PATERNAL_GRANDFATHER", "FULL_SISTER", "PATERNAL_SISTER"].includes(assignment.heirType)),
+    );
     if (members.length === 0) continue;
     members.forEach((member) => groupedAssignmentIds.add(member.heirType));
     correctionClasses.push({
@@ -284,7 +317,8 @@ function correctionFor(
               (division === "TWO_TO_ONE" &&
               (member.heirType === "SONS_SON" ||
                 member.heirType === "FULL_BROTHER" ||
-                member.heirType === "PATERNAL_BROTHER")
+                member.heirType === "PATERNAL_BROTHER" ||
+                member.heirType === "PATERNAL_GRANDFATHER")
                 ? 2
                 : 1),
           0,
@@ -357,6 +391,8 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
   const blockedTypes = new Set(coverage.blockedHeirs.map((heir) => heir.type));
   const eligible = selected.filter((heir) => !blockedTypes.has(heir.type));
   const count = (type: HeirType): number => eligible.find((heir) => heir.type === type)?.count ?? 0;
+  const selectedCount = (type: HeirType): number =>
+    selected.find((heir) => heir.type === type)?.count ?? 0;
   const required = new Set(coverage.requiredRuleIds);
   const assignments = new Map<HeirType, MutableAssignment>();
   const fixedShareAssignments: ShareAssignment[] = [];
@@ -403,7 +439,27 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
       ? "KZ-FR-015-WIFE-MOTHER-FATHER"
       : null;
   const wifeUmari = wifeUmariRuleId !== null;
-  if (husbandUmari) {
+  const advancedCase = coverage.advancedCase;
+  if (advancedCase?.kind === "AKDARIYYA") {
+    addFixed("HUSBAND", new Fraction(1n, 2n), "KZ-FR-005-HUSBAND-ONE-HALF");
+    addFixed("MOTHER", new Fraction(1n, 3n), advancedCase.ruleId);
+    addFixed("PATERNAL_GRANDFATHER", new Fraction(1n, 6n), advancedCase.ruleId);
+    addFixed(advancedCase.sisterType, new Fraction(1n, 2n), advancedCase.ruleId);
+  } else if (advancedCase?.kind === "MUSHTARAKA") {
+    addFixed("HUSBAND", new Fraction(1n, 2n), "KZ-FR-005-HUSBAND-ONE-HALF");
+    addFixed(
+      advancedCase.ascendantType,
+      new Fraction(1n, 6n),
+      advancedCase.ascendantType === "MOTHER"
+        ? "KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS"
+        : "KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH",
+    );
+    addFixedGroup(
+      ["MATERNAL_BROTHER", "MATERNAL_SISTER", "FULL_BROTHER"],
+      new Fraction(1n, 3n),
+      advancedCase.ruleId,
+    );
+  } else if (husbandUmari) {
     addFixed("HUSBAND", new Fraction(1n, 2n), "KZ-FR-005-HUSBAND-ONE-HALF");
     addFixed("MOTHER", new Fraction(1n, 6n), "KZ-FR-015-HUSBAND-MOTHER-FATHER");
     addFixed("FATHER", new Fraction(1n, 3n), "KZ-FR-015-HUSBAND-MOTHER-FATHER");
@@ -443,6 +499,24 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
       addFixed("FATHER", new Fraction(1n, 6n), "KZ-FR-014-FATHER-ONE-SIXTH");
     if (required.has("KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE"))
       addFixed("FATHER", new Fraction(1n, 6n), "KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE");
+    if (required.has("KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH"))
+      addFixed(
+        "PATERNAL_GRANDFATHER",
+        new Fraction(1n, 6n),
+        "KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH",
+      );
+    if (required.has("KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS-RESIDUE"))
+      addFixed(
+        "PATERNAL_GRANDFATHER",
+        new Fraction(1n, 6n),
+        "KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS-RESIDUE",
+      );
+    if (required.has("KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION"))
+      addFixed(
+        "PATERNAL_GRANDFATHER",
+        new Fraction(1n, 6n),
+        "KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION",
+      );
     for (const [type, ruleId, share] of [
       ["SONS_DAUGHTER", "KZ-FR-005-ONE-SONS-DAUGHTER-ONE-HALF", new Fraction(1n, 2n)],
       ["SONS_DAUGHTER", "KZ-FR-008-SONS-DAUGHTER-GROUP-TWO-THIRDS", new Fraction(2n, 3n)],
@@ -535,6 +609,23 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
       ruleId: AWL_RULE_ID,
     };
   }
+  let advancedCaseDetails: InheritanceResult["advancedCaseDetails"] = null;
+  if (advancedCase?.kind === "AKDARIYYA") {
+    const grandfather = assignments.get("PATERNAL_GRANDFATHER");
+    const sister = assignments.get(advancedCase.sisterType);
+    if (grandfather === undefined || sister === undefined)
+      throw new Error("Akdariyya assignments are incomplete.");
+    grandfather.fraction = new Fraction(8n, 27n);
+    sister.fraction = new Fraction(4n, 27n);
+    advancedCaseDetails = { kind: "AKDARIYYA", sisterType: advancedCase.sisterType };
+  } else if (advancedCase?.kind === "MUSHTARAKA") {
+    advancedCaseDetails = {
+      kind: "MUSHTARAKA",
+      participants: ["MATERNAL_BROTHER", "MATERNAL_SISTER", "FULL_BROTHER"].filter(
+        (type): type is HeirType => count(type as HeirType) > 0,
+      ),
+    };
+  }
   const adjustedFixedTotal = sumFractions(
     [...assignments.values()].map((assignment) => assignment.fraction),
   );
@@ -548,26 +639,39 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
       reason: "This class receives the residue after fixed shares.",
     });
   };
-  const addWeightedResidue = (maleType: HeirType, femaleType: HeirType, ruleId: string): void => {
-    const units = BigInt(2 * count(maleType) + count(femaleType));
-    const maleShare = residue.multiply(new Fraction(BigInt(2 * count(maleType)), units));
-    const femaleShare = residue.subtract(maleShare);
-    addAssignment(assignments, maleType, count(maleType), maleShare, "RESIDUARY", ruleId);
-    addAssignment(assignments, femaleType, count(femaleType), femaleShare, "RESIDUARY", ruleId);
-    residuaryAssignments.push(
-      {
+  const addWeightedShare = (
+    totalShare: Fraction,
+    maleType: HeirType,
+    femaleType: HeirType,
+    ruleId: string,
+  ): void => {
+    const maleCount = count(maleType);
+    const femaleCount = count(femaleType);
+    const units = BigInt(2 * maleCount + femaleCount);
+    if (units === 0n) throw new Error(`No eligible recipients for ${ruleId}.`);
+    const maleShare = totalShare.multiply(new Fraction(BigInt(2 * maleCount), units));
+    const femaleShare = totalShare.subtract(maleShare);
+    if (maleCount > 0) {
+      addAssignment(assignments, maleType, maleCount, maleShare, "RESIDUARY", ruleId);
+      residuaryAssignments.push({
         heirType: maleType,
         fraction: maleShare.toJSON(),
         ruleId,
         reason: `Each ${maleType} receives two weight units.`,
-      },
-      {
+      });
+    }
+    if (femaleCount > 0) {
+      addAssignment(assignments, femaleType, femaleCount, femaleShare, "RESIDUARY", ruleId);
+      residuaryAssignments.push({
         heirType: femaleType,
         fraction: femaleShare.toJSON(),
         ruleId,
         reason: `Each ${femaleType} receives one weight unit.`,
-      },
-    );
+      });
+    }
+  };
+  const addWeightedResidue = (maleType: HeirType, femaleType: HeirType, ruleId: string): void => {
+    addWeightedShare(residue, maleType, femaleType, ruleId);
   };
   if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-012-SON-GROUP-RESIDUARY"))
     addResidue("SON", "KZ-FR-012-SON-GROUP-RESIDUARY");
@@ -613,6 +717,78 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
     addResidue("FATHER", "KZ-FR-014-FATHER-RESIDUARY");
   if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE"))
     addResidue("FATHER", "KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE");
+  if (
+    residue.compare(Fraction.ZERO) > 0 &&
+    required.has("KZ-FR-016-PATERNAL-GRANDFATHER-RESIDUARY")
+  )
+    addResidue("PATERNAL_GRANDFATHER", "KZ-FR-016-PATERNAL-GRANDFATHER-RESIDUARY");
+  if (
+    residue.compare(Fraction.ZERO) > 0 &&
+    required.has("KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS-RESIDUE")
+  )
+    addResidue("PATERNAL_GRANDFATHER", "KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS-RESIDUE");
+  const grandfatherComparisonRuleId = required.has(
+    "KZ-FR-020-GRANDFATHER-SIBLINGS-NO-FIXED-SHARE-COMPARISON",
+  )
+    ? "KZ-FR-020-GRANDFATHER-SIBLINGS-NO-FIXED-SHARE-COMPARISON"
+    : required.has("KZ-FR-020-GRANDFATHER-SIBLINGS-WITH-FIXED-SHARE-COMPARISON")
+      ? "KZ-FR-020-GRANDFATHER-SIBLINGS-WITH-FIXED-SHARE-COMPARISON"
+      : null;
+  if (residue.compare(Fraction.ZERO) > 0 && grandfatherComparisonRuleId !== null) {
+    const siblingCountForComparison = (type: HeirType): number =>
+      advancedCase?.kind === "MUADDA" ? selectedCount(type) : count(type);
+    const siblingUnits = BigInt(
+      2 *
+        (siblingCountForComparison("FULL_BROTHER") +
+          siblingCountForComparison("PATERNAL_BROTHER")) +
+        siblingCountForComparison("FULL_SISTER") +
+        siblingCountForComparison("PATERNAL_SISTER"),
+    );
+    const muqasama = residue.multiply(new Fraction(2n, 2n + siblingUnits));
+    const alternatives = grandfatherComparisonRuleId.includes("NO-FIXED")
+      ? [
+          { name: "ONE_THIRD_OF_ESTATE", fraction: new Fraction(1n, 3n) },
+          { name: "MUQASAMA", fraction: muqasama },
+        ]
+      : [
+          { name: "ONE_SIXTH_OF_ESTATE", fraction: new Fraction(1n, 6n) },
+          { name: "ONE_THIRD_OF_REMAINDER", fraction: residue.divide(new Fraction(3n)) },
+          { name: "MUQASAMA_OF_REMAINDER", fraction: muqasama },
+        ];
+    const selectedAlternative = alternatives.reduce((best, candidate) =>
+      candidate.fraction.compare(best.fraction) > 0 ? candidate : best,
+    );
+    addAssignment(
+      assignments,
+      "PATERNAL_GRANDFATHER",
+      count("PATERNAL_GRANDFATHER"),
+      selectedAlternative.fraction,
+      "RESIDUARY",
+      grandfatherComparisonRuleId,
+    );
+    residuaryAssignments.push({
+      heirType: "PATERNAL_GRANDFATHER",
+      fraction: selectedAlternative.fraction.toJSON(),
+      ruleId: grandfatherComparisonRuleId,
+      reason: `The exact comparison selected ${selectedAlternative.name}.`,
+    });
+    const siblingResidue = residue.subtract(selectedAlternative.fraction);
+    const siblingRuleId = "KZ-FR-020-GRANDFATHER-SIBLING-RESIDUE-DISTRIBUTION";
+    if (siblingResidue.compare(Fraction.ZERO) > 0) {
+      if (count("FULL_BROTHER") + count("FULL_SISTER") > 0)
+        addWeightedShare(siblingResidue, "FULL_BROTHER", "FULL_SISTER", siblingRuleId);
+      else addWeightedShare(siblingResidue, "PATERNAL_BROTHER", "PATERNAL_SISTER", siblingRuleId);
+    }
+    advancedCaseDetails = {
+      kind: advancedCase?.kind === "MUADDA" ? "MUADDA" : "GRANDFATHER_WITH_SIBLINGS",
+      alternatives: alternatives.map((alternative) => ({
+        name: alternative.name,
+        fraction: alternative.fraction.toJSON(),
+      })),
+      selectedAlternative: selectedAlternative.name,
+      selectedFraction: selectedAlternative.fraction.toJSON(),
+    };
+  }
   if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-013-SONS-SON-GROUP-RESIDUARY"))
     addResidue("SONS_SON", "KZ-FR-013-SONS-SON-GROUP-RESIDUARY");
   if (
@@ -774,6 +950,73 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
       sourceReferences: ruleSources([share.ruleId]),
     })),
   ];
+  if (
+    advancedCaseDetails?.kind === "GRANDFATHER_WITH_SIBLINGS" ||
+    advancedCaseDetails?.kind === "MUADDA"
+  ) {
+    if (grandfatherComparisonRuleId === null)
+      throw new Error("Grandfather comparison details require an admitted comparison rule.");
+    const comparisonRuleId = grandfatherComparisonRuleId;
+    explanationSteps.push({
+      kind: "GRANDFATHER_COMPARISON",
+      title: "Paternal grandfather — exact alternatives",
+      summary: `${advancedCaseDetails.alternatives
+        .map(
+          (alternative) =>
+            `${alternative.name}: ${alternative.fraction.numerator}/${alternative.fraction.denominator}`,
+        )
+        .join("; ")}. Selected ${advancedCaseDetails.selectedAlternative}.`,
+      heirType: "PATERNAL_GRANDFATHER",
+      fraction: advancedCaseDetails.selectedFraction,
+      ruleIds: [comparisonRuleId],
+      sourceReferences: ruleSources([comparisonRuleId]),
+    });
+    if (advancedCaseDetails.kind === "MUADDA")
+      explanationSteps.push({
+        kind: "SPECIAL_CASE",
+        title: "المعادة — Mu‘adda",
+        summary:
+          "Both sibling lines were counted in the grandfather comparison; after his share, the admitted full-brother-present branch gives the sibling residue to the full sibling line and the paternal line receives zero.",
+        ruleIds: ["KZ-FR-022-MUADDA-FULL-MALE-LINE"],
+        sourceReferences: ruleSources(["KZ-FR-022-MUADDA-FULL-MALE-LINE"]),
+      });
+  } else if (advancedCaseDetails?.kind === "AKDARIYYA") {
+    const ruleId =
+      advancedCaseDetails.sisterType === "FULL_SISTER"
+        ? "KZ-FR-023-AKDARIYYA-FULL-SISTER"
+        : "KZ-FR-023-AKDARIYYA-PATERNAL-SISTER";
+    explanationSteps.push({
+      kind: "SPECIAL_CASE",
+      title: "الأكدرية — Akdariyya",
+      summary:
+        "The exact four-heir detector replaces the ordinary path: initial fixed shares undergo awl to 9, then the grandfather and sister combine and divide two to one, correcting the case to 27.",
+      ruleIds: [ruleId],
+      sourceReferences: ruleSources([ruleId]),
+    });
+    for (const [heirType, fraction] of [
+      ["PATERNAL_GRANDFATHER", new Fraction(8n, 27n)],
+      [advancedCaseDetails.sisterType, new Fraction(4n, 27n)],
+    ] as const)
+      explanationSteps.push({
+        kind: "SPECIAL_CASE",
+        title: `${heirType} — final Akdariyya share`,
+        summary: "This is the final exact share after the special two-to-one redistribution.",
+        heirType,
+        fraction: fraction.toJSON(),
+        ruleIds: [ruleId],
+        sourceReferences: ruleSources([ruleId]),
+      });
+  } else if (advancedCaseDetails?.kind === "MUSHTARAKA") {
+    explanationSteps.push({
+      kind: "SPECIAL_CASE",
+      title: "المشتركة — Mushtaraka",
+      summary:
+        "The canonical full brother joins the two uterine siblings in their collective one third; all three persons share it equally.",
+      fraction: new Fraction(1n, 3n).toJSON(),
+      ruleIds: ["KZ-FR-018-MUSHTARAKA-CANONICAL"],
+      sourceReferences: ruleSources(["KZ-FR-018-MUSHTARAKA-CANONICAL"]),
+    });
+  }
   if (awlDetails !== null)
     explanationSteps.push({
       kind: "AWL",
@@ -878,7 +1121,19 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
     appliedProductionRuleIds: appliedRuleIds,
     sourceReferences: sources,
     explanationSteps,
-    calculationType: husbandUmari || wifeUmari ? "UMARIYYATAYN" : "ORDINARY",
+    calculationType:
+      advancedCaseDetails?.kind === "AKDARIYYA"
+        ? "AKDARIYYA"
+        : advancedCaseDetails?.kind === "MUSHTARAKA"
+          ? "MUSHTARAKA"
+          : advancedCaseDetails?.kind === "MUADDA"
+            ? "MUADDA"
+            : advancedCaseDetails?.kind === "GRANDFATHER_WITH_SIBLINGS"
+              ? "GRANDFATHER_WITH_SIBLINGS"
+              : husbandUmari || wifeUmari
+                ? "UMARIYYATAYN"
+                : "ORDINARY",
+    advancedCaseDetails,
     remainderPolicy: input.remainderPolicy ?? "UNSURE",
   };
 }

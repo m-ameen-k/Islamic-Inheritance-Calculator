@@ -146,7 +146,7 @@
 	//#region src/engine/exact-case-bases.ts
 	var ORIGINAL_ASL_RULE_ID = "KZ-FR-027-ORIGINAL-ASL";
 	var AWL_RULE_ID = "KZ-FR-028-AWL-ADJUSTMENT";
-	function productionRule$68(rules, ruleId) {
+	function productionRule$80(rules, ruleId) {
 		return rules.find((rule) => rule.ruleId === ruleId && rule.lifecycleStatus === "PRODUCTION" && rule.executable);
 	}
 	function stringArray(value) {
@@ -160,7 +160,7 @@
 		return fixedShares.reduce((origin, share) => leastCommonMultiple(origin, share.denominator), 1n);
 	}
 	function isOriginalAslAdmitted(originalAsl, rules) {
-		const rule = productionRule$68(rules, ORIGINAL_ASL_RULE_ID);
+		const rule = productionRule$80(rules, ORIGINAL_ASL_RULE_ID);
 		if (rule === void 0) return false;
 		const specification = executionSpecification(rule);
 		if (originalAsl === 1n) return specification.noFixedShareIdentity === "1";
@@ -175,7 +175,7 @@
 		return sum > originalAsl ? sum : null;
 	}
 	function isAwlEndpointAdmitted(originalAsl, awlDenominator, rules) {
-		const rule = productionRule$68(rules, AWL_RULE_ID);
+		const rule = productionRule$80(rules, AWL_RULE_ID);
 		if (rule === void 0) return false;
 		const endpoints = executionSpecification(rule).allowedEndpoints;
 		if (endpoints === null || typeof endpoints !== "object" || Array.isArray(endpoints)) return false;
@@ -225,6 +225,78 @@
 	HEIR_TYPES.filter((category) => !QUALIFYING_DESCENDANT_CATEGORIES.includes(category));
 	new Set(HEIR_TYPES);
 	new Set(QUALIFYING_DESCENDANT_CATEGORIES);
+	//#endregion
+	//#region src/engine/advanced-case.ts
+	function normalizedCounts(heirs) {
+		const counts = /* @__PURE__ */ new Map();
+		for (const heir of heirs) counts.set(heir.type, (counts.get(heir.type) ?? 0) + heir.count);
+		return counts;
+	}
+	function detectAdvancedCase(heirs) {
+		const counts = normalizedCounts(heirs);
+		const count = (type) => counts.get(type) ?? 0;
+		const active = [...counts.entries()].filter(([, value]) => value > 0);
+		const exactTypes = (...types) => active.length === types.length && types.every((type) => count(type) > 0);
+		if (exactTypes("HUSBAND", "MOTHER", "PATERNAL_GRANDFATHER", "FULL_SISTER") && count("HUSBAND") === 1 && count("MOTHER") === 1 && count("PATERNAL_GRANDFATHER") === 1 && count("FULL_SISTER") === 1) return {
+			kind: "AKDARIYYA",
+			ruleId: "KZ-FR-023-AKDARIYYA-FULL-SISTER",
+			sisterType: "FULL_SISTER"
+		};
+		if (exactTypes("HUSBAND", "MOTHER", "PATERNAL_GRANDFATHER", "PATERNAL_SISTER") && count("HUSBAND") === 1 && count("MOTHER") === 1 && count("PATERNAL_GRANDFATHER") === 1 && count("PATERNAL_SISTER") === 1) return {
+			kind: "AKDARIYYA",
+			ruleId: "KZ-FR-023-AKDARIYYA-PATERNAL-SISTER",
+			sisterType: "PATERNAL_SISTER"
+		};
+		const selectedAscendants = [
+			"MOTHER",
+			"MATERNAL_GRANDMOTHER",
+			"PATERNAL_GRANDMOTHER"
+		].filter((type) => count(type) > 0);
+		const uterineCount = count("MATERNAL_BROTHER") + count("MATERNAL_SISTER");
+		if (count("HUSBAND") === 1 && selectedAscendants.length === 1 && uterineCount >= 2 && count("FULL_BROTHER") > 0) {
+			if (uterineCount === 2 && count("FULL_BROTHER") === 1 && count("FULL_SISTER") === 0 && active.every(([type]) => [
+				"HUSBAND",
+				selectedAscendants[0],
+				"MATERNAL_BROTHER",
+				"MATERNAL_SISTER",
+				"FULL_BROTHER"
+			].includes(type))) {
+				const ascendantType = selectedAscendants[0];
+				if (ascendantType === void 0) throw new Error("Canonical Mushtaraka needs an ascendant.");
+				return {
+					kind: "MUSHTARAKA",
+					ruleId: "KZ-FR-018-MUSHTARAKA-CANONICAL",
+					ascendantType
+				};
+			}
+			return {
+				kind: "UNSUPPORTED_ADVANCED",
+				reason: "MUSHTARAKA_VARIANT_NOT_ADMITTED"
+			};
+		}
+		const hasGrandfather = count("PATERNAL_GRANDFATHER") === 1 && count("FATHER") === 0;
+		const hasMaleDescendant = count("SON") + count("SONS_SON") > 0;
+		const fullCount = count("FULL_BROTHER") + count("FULL_SISTER");
+		const paternalCount = count("PATERNAL_BROTHER") + count("PATERNAL_SISTER");
+		if (hasGrandfather && !hasMaleDescendant && fullCount + paternalCount > 0) {
+			if (fullCount > 0 && paternalCount > 0) {
+				if (count("FULL_BROTHER") > 0) return {
+					kind: "MUADDA",
+					muadda: true,
+					ruleId: "KZ-FR-022-MUADDA-FULL-MALE-LINE"
+				};
+				return {
+					kind: "UNSUPPORTED_ADVANCED",
+					reason: "MUADDA_FEMALE_BRANCH_NOT_ADMITTED"
+				};
+			}
+			return {
+				kind: "GRANDFATHER_WITH_SIBLINGS",
+				muadda: false
+			};
+		}
+		return null;
+	}
 	//#endregion
 	//#region src/rules/rule-file.ts
 	function defineProductionRule(rule) {
@@ -326,7 +398,7 @@
 	}
 	//#endregion
 	//#region src/rules/production/KZ-FR-004-FUNCTIONING-BAYT-AL-MAL-RESIDUE.ts
-	var productionRule$67 = defineDirectFamilyProductionRule({
+	var productionRule$79 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-004-FUNCTIONING-BAYT-AL-MAL-RESIDUE",
 		parentResearchRuleId: "KZ-FR-004",
 		atomicRuleKind: "REMAINDER_POLICY",
@@ -346,7 +418,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-004-NO-FUNCTIONING-BAYT-AL-MAL-RADD.ts
-	var productionRule$66 = defineDirectFamilyProductionRule({
+	var productionRule$78 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-004-NO-FUNCTIONING-BAYT-AL-MAL-RADD",
 		parentResearchRuleId: "KZ-FR-004",
 		atomicRuleKind: "REMAINDER_POLICY",
@@ -375,7 +447,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-005-HUSBAND-ONE-HALF.ts
-	var productionRule$65 = defineProductionSpouseRule({
+	var productionRule$77 = defineProductionSpouseRule({
 		ruleId: "KZ-FR-005-HUSBAND-ONE-HALF",
 		parentResearchRuleId: "KZ-FR-005",
 		lifecycleStatus: "PRODUCTION",
@@ -413,7 +485,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-005-ONE-FULL-SISTER-ONE-HALF.ts
-	var productionRule$64 = defineDirectFamilyProductionRule({
+	var productionRule$76 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-005-ONE-FULL-SISTER-ONE-HALF",
 		parentResearchRuleId: "KZ-FR-005",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
@@ -437,7 +509,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-005-ONE-PATERNAL-SISTER-ONE-HALF.ts
-	var productionRule$63 = defineDirectFamilyProductionRule({
+	var productionRule$75 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-005-ONE-PATERNAL-SISTER-ONE-HALF",
 		parentResearchRuleId: "KZ-FR-005",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
@@ -461,7 +533,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-005-ONE-SONS-DAUGHTER-ONE-HALF.ts
-	var productionRule$62 = defineDirectFamilyProductionRule({
+	var productionRule$74 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-005-ONE-SONS-DAUGHTER-ONE-HALF",
 		parentResearchRuleId: "KZ-FR-005",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
@@ -485,7 +557,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-006-HUSBAND-ONE-QUARTER.ts
-	var productionRule$61 = defineProductionSpouseRule({
+	var productionRule$73 = defineProductionSpouseRule({
 		ruleId: "KZ-FR-006-HUSBAND-ONE-QUARTER",
 		parentResearchRuleId: "KZ-FR-006",
 		lifecycleStatus: "PRODUCTION",
@@ -523,7 +595,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-006-WIVES-ONE-QUARTER.ts
-	var productionRule$60 = defineProductionSpouseRule({
+	var productionRule$72 = defineProductionSpouseRule({
 		ruleId: "KZ-FR-006-WIVES-ONE-QUARTER",
 		parentResearchRuleId: "KZ-FR-006",
 		lifecycleStatus: "PRODUCTION",
@@ -562,7 +634,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-007-WIVES-ONE-EIGHTH.ts
-	var productionRule$59 = defineProductionSpouseRule({
+	var productionRule$71 = defineProductionSpouseRule({
 		ruleId: "KZ-FR-007-WIVES-ONE-EIGHTH",
 		parentResearchRuleId: "KZ-FR-007",
 		lifecycleStatus: "PRODUCTION",
@@ -601,7 +673,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-008-FULL-SISTER-GROUP-TWO-THIRDS.ts
-	var productionRule$58 = defineDirectFamilyProductionRule({
+	var productionRule$70 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-008-FULL-SISTER-GROUP-TWO-THIRDS",
 		parentResearchRuleId: "KZ-FR-008",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
@@ -625,7 +697,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-008-PATERNAL-SISTER-GROUP-TWO-THIRDS.ts
-	var productionRule$57 = defineDirectFamilyProductionRule({
+	var productionRule$69 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-008-PATERNAL-SISTER-GROUP-TWO-THIRDS",
 		parentResearchRuleId: "KZ-FR-008",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
@@ -649,7 +721,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-008-SONS-DAUGHTER-GROUP-TWO-THIRDS.ts
-	var productionRule$56 = defineDirectFamilyProductionRule({
+	var productionRule$68 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-008-SONS-DAUGHTER-GROUP-TWO-THIRDS",
 		parentResearchRuleId: "KZ-FR-008",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
@@ -673,7 +745,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-009-MOTHER-ONE-THIRD.ts
-	var productionRule$55 = defineDirectFamilyProductionRule({
+	var productionRule$67 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-009-MOTHER-ONE-THIRD",
 		parentResearchRuleId: "KZ-FR-009",
 		atomicRuleKind: "PARENT_FIXED_SHARE",
@@ -705,7 +777,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-009-UTERINE-SIBLING-GROUP-ONE-THIRD.ts
-	var productionRule$54 = defineDirectFamilyProductionRule({
+	var productionRule$66 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-009-UTERINE-SIBLING-GROUP-ONE-THIRD",
 		parentResearchRuleId: "KZ-FR-009",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
@@ -729,7 +801,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-010-MOTHER-ONE-SIXTH-DESCENDANT.ts
-	var productionRule$53 = defineDirectFamilyProductionRule({
+	var productionRule$65 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-010-MOTHER-ONE-SIXTH-DESCENDANT",
 		parentResearchRuleId: "KZ-FR-010",
 		atomicRuleKind: "PARENT_FIXED_SHARE",
@@ -753,7 +825,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS.ts
-	var productionRule$52 = defineDirectFamilyProductionRule({
+	var productionRule$64 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS",
 		parentResearchRuleId: "KZ-FR-010",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-KZ-FR-010-MOTHER-SIBLINGS-UNBLOCKED-SUBSET",
@@ -778,7 +850,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-010-ONE-PATERNAL-SISTER-WITH-FULL-SISTER-ONE-SIXTH.ts
-	var productionRule$51 = defineDirectFamilyProductionRule({
+	var productionRule$63 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-010-ONE-PATERNAL-SISTER-WITH-FULL-SISTER-ONE-SIXTH",
 		parentResearchRuleId: "KZ-FR-010",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
@@ -802,7 +874,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-010-ONE-SONS-DAUGHTER-WITH-DAUGHTER-ONE-SIXTH.ts
-	var productionRule$50 = defineDirectFamilyProductionRule({
+	var productionRule$62 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-010-ONE-SONS-DAUGHTER-WITH-DAUGHTER-ONE-SIXTH",
 		parentResearchRuleId: "KZ-FR-010",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
@@ -826,7 +898,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-010-ONE-UTERINE-SIBLING-ONE-SIXTH.ts
-	var productionRule$49 = defineDirectFamilyProductionRule({
+	var productionRule$61 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-010-ONE-UTERINE-SIBLING-ONE-SIXTH",
 		parentResearchRuleId: "KZ-FR-010",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
@@ -850,7 +922,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-011-FATHER-BLOCKS-FULL-BROTHER.ts
-	var productionRule$48 = defineDirectFamilyProductionRule({
+	var productionRule$60 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-011-FATHER-BLOCKS-FULL-BROTHER",
 		parentResearchRuleId: "KZ-FR-011",
 		atomicRuleKind: "TOTAL_BLOCKING_RELATIONSHIP",
@@ -871,7 +943,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-011-FATHER-BLOCKS-MATERNAL-BROTHER.ts
-	var productionRule$47 = defineDirectFamilyProductionRule({
+	var productionRule$59 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-011-FATHER-BLOCKS-MATERNAL-BROTHER",
 		parentResearchRuleId: "KZ-FR-011",
 		atomicRuleKind: "TOTAL_BLOCKING_RELATIONSHIP",
@@ -892,7 +964,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-011-FATHER-BLOCKS-PATERNAL-BROTHER.ts
-	var productionRule$46 = defineDirectFamilyProductionRule({
+	var productionRule$58 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-011-FATHER-BLOCKS-PATERNAL-BROTHER",
 		parentResearchRuleId: "KZ-FR-011",
 		atomicRuleKind: "TOTAL_BLOCKING_RELATIONSHIP",
@@ -913,7 +985,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-011-FATHER-BLOCKS-PATERNAL-GRANDFATHER.ts
-	var productionRule$45 = defineDirectFamilyProductionRule({
+	var productionRule$57 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-011-FATHER-BLOCKS-PATERNAL-GRANDFATHER",
 		parentResearchRuleId: "KZ-FR-011",
 		atomicRuleKind: "TOTAL_BLOCKING_RELATIONSHIP",
@@ -934,7 +1006,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-011-SON-BLOCKS-FULL-BROTHER.ts
-	var productionRule$44 = defineDirectFamilyProductionRule({
+	var productionRule$56 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-011-SON-BLOCKS-FULL-BROTHER",
 		parentResearchRuleId: "KZ-FR-011",
 		atomicRuleKind: "TOTAL_BLOCKING_RELATIONSHIP",
@@ -955,7 +1027,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-011-SON-BLOCKS-MATERNAL-BROTHER.ts
-	var productionRule$43 = defineDirectFamilyProductionRule({
+	var productionRule$55 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-011-SON-BLOCKS-MATERNAL-BROTHER",
 		parentResearchRuleId: "KZ-FR-011",
 		atomicRuleKind: "TOTAL_BLOCKING_RELATIONSHIP",
@@ -976,7 +1048,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-011-SON-BLOCKS-PATERNAL-BROTHER.ts
-	var productionRule$42 = defineDirectFamilyProductionRule({
+	var productionRule$54 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-011-SON-BLOCKS-PATERNAL-BROTHER",
 		parentResearchRuleId: "KZ-FR-011",
 		atomicRuleKind: "TOTAL_BLOCKING_RELATIONSHIP",
@@ -997,7 +1069,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-011-SON-BLOCKS-SONS-SON.ts
-	var productionRule$41 = defineDirectFamilyProductionRule({
+	var productionRule$53 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-011-SON-BLOCKS-SONS-SON",
 		parentResearchRuleId: "KZ-FR-011",
 		atomicRuleKind: "TOTAL_BLOCKING_RELATIONSHIP",
@@ -1018,7 +1090,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-012-DAUGHTER-GROUP-TWO-THIRDS.ts
-	var productionRule$40 = defineDirectFamilyProductionRule({
+	var productionRule$52 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-012-DAUGHTER-GROUP-TWO-THIRDS",
 		parentResearchRuleId: "KZ-FR-012",
 		atomicRuleKind: "DESCENDANT_FIXED_SHARE",
@@ -1042,7 +1114,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-012-ONE-DAUGHTER-ONE-HALF.ts
-	var productionRule$39 = defineDirectFamilyProductionRule({
+	var productionRule$51 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-012-ONE-DAUGHTER-ONE-HALF",
 		parentResearchRuleId: "KZ-FR-012",
 		atomicRuleKind: "DESCENDANT_FIXED_SHARE",
@@ -1066,7 +1138,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-012-SON-GROUP-RESIDUARY.ts
-	var productionRule$38 = defineDirectFamilyProductionRule({
+	var productionRule$50 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-012-SON-GROUP-RESIDUARY",
 		parentResearchRuleId: "KZ-FR-012",
 		atomicRuleKind: "DESCENDANT_RESIDUARY",
@@ -1086,7 +1158,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-012-SONS-AND-DAUGHTERS-TWO-TO-ONE.ts
-	var productionRule$37 = defineDirectFamilyProductionRule({
+	var productionRule$49 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-012-SONS-AND-DAUGHTERS-TWO-TO-ONE",
 		parentResearchRuleId: "KZ-FR-012",
 		atomicRuleKind: "DESCENDANT_RESIDUARY",
@@ -1169,7 +1241,7 @@
 			khulasa: "references/source-notes/khulasa/khulasa-full.pdf; printed pages 281–283; awl statement and eight worked tables"
 		}
 	};
-	function sourceReferences(parentResearchRuleId, explicitComparisonId, additionalSourceReferences = []) {
+	function sourceReferences$1(parentResearchRuleId, explicitComparisonId, additionalSourceReferences = []) {
 		const locators = SOURCE_LOCATORS[parentResearchRuleId];
 		const sourceComparisonId = explicitComparisonId ?? (parentResearchRuleId === "KZ-FR-009" || parentResearchRuleId === "KZ-FR-010" ? parentResearchRuleId : `SOURCE-COMPARISON-20260809-${parentResearchRuleId}`);
 		return [
@@ -1194,7 +1266,7 @@
 			sourceComparisonId,
 			lifecycleStatus: "SOURCE_CORROBORATED",
 			executable: false,
-			sourceReferences: sourceReferences(definition.parentResearchRuleId, sourceComparisonId, definition.additionalSourceReferences ?? []),
+			sourceReferences: sourceReferences$1(definition.parentResearchRuleId, sourceComparisonId, definition.additionalSourceReferences ?? []),
 			fixtureIds: definition.fixtureIds ?? [],
 			unresolvedQuestions: definition.unresolvedQuestions ?? [],
 			implementationReadiness: definition.implementationReadiness ?? "INCOMPLETE",
@@ -1365,7 +1437,7 @@
 			blockingType: "TOTAL_EXCLUSION"
 		})
 	];
-	function definition(ruleId) {
+	function definition$1(ruleId) {
 		const found = REMAINING_ORDINARY_RULE_DEFINITIONS.find((item) => item.ruleId === ruleId);
 		if (found === void 0) throw new Error(`Missing remaining-ordinary rule definition: ${ruleId}`);
 		return found;
@@ -1377,13 +1449,338 @@
 	}));
 	function defineRemainingOrdinaryProductionRule(ruleId) {
 		return defineDirectFamilyProductionRule({
-			...definition(ruleId),
+			...definition$1(ruleId),
+			admissionRecordId: `ADMISSION-20260810-${ruleId}`
+		});
+	}
+	//#endregion
+	//#region src/rules/production/KZ-FR-013-DAUGHTER-GROUP-BLOCKS-SONS-DAUGHTER.ts
+	var productionRule$48 = defineRemainingOrdinaryProductionRule("KZ-FR-013-DAUGHTER-GROUP-BLOCKS-SONS-DAUGHTER");
+	//#endregion
+	//#region src/rules/production/KZ-FR-013-SON-BLOCKS-SONS-DAUGHTER.ts
+	var productionRule$47 = defineRemainingOrdinaryProductionRule("KZ-FR-013-SON-BLOCKS-SONS-DAUGHTER");
+	//#endregion
+	//#region src/rules/production/KZ-FR-013-SONS-DAUGHTER-GROUP-WITH-DAUGHTER-ONE-SIXTH.ts
+	var productionRule$46 = defineRemainingOrdinaryProductionRule("KZ-FR-013-SONS-DAUGHTER-GROUP-WITH-DAUGHTER-ONE-SIXTH");
+	//#endregion
+	//#region src/rules/production/KZ-FR-013-SONS-SON-GROUP-RESIDUARY.ts
+	var productionRule$45 = defineRemainingOrdinaryProductionRule("KZ-FR-013-SONS-SON-GROUP-RESIDUARY");
+	//#endregion
+	//#region src/rules/production/KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE.ts
+	var productionRule$44 = defineRemainingOrdinaryProductionRule("KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE");
+	//#endregion
+	//#region src/rules/production/KZ-FR-014-FATHER-ONE-SIXTH.ts
+	var productionRule$43 = defineDirectFamilyProductionRule({
+		ruleId: "KZ-FR-014-FATHER-ONE-SIXTH",
+		parentResearchRuleId: "KZ-FR-014",
+		atomicRuleKind: "FATHER_MODE",
+		conditions: ["The father is present.", "A qualifying direct male descendant is present."],
+		exclusions: ["Only female descendants are present.", "No qualifying descendant is present."],
+		priority: {
+			value: 50,
+			rationale: "Assign the fixed share before descendant residue."
+		},
+		interactionsOrBlockers: ["The direct male descendant takes the descendant residue."],
+		outcomeSpecification: "The father receives 1/6.",
+		executionSpecification: {
+			heirCategory: "FATHER",
+			mode: "FIXED_ONE_SIXTH",
+			fixedShare: {
+				numerator: "1",
+				denominator: "6"
+			}
+		},
+		fixtureIds: ["KZ-FR-014-FATHER-ONE-SIXTH-POS", "KZ-FR-014-FATHER-ONE-SIXTH-NEG"]
+	});
+	//#endregion
+	//#region src/rules/production/KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE.ts
+	var productionRule$42 = defineDirectFamilyProductionRule({
+		ruleId: "KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE",
+		parentResearchRuleId: "KZ-FR-014",
+		atomicRuleKind: "FATHER_MODE",
+		conditions: [
+			"The father is present.",
+			"One or more direct daughters are present.",
+			"No direct son is present."
+		],
+		exclusions: ["A direct son is present.", "No qualifying descendant is present."],
+		priority: {
+			value: 70,
+			rationale: "Assign 1/6 before adding the remaining residue."
+		},
+		interactionsOrBlockers: ["Daughters retain their admitted fixed share."],
+		outcomeSpecification: "The father receives 1/6 plus any residue.",
+		executionSpecification: {
+			heirCategory: "FATHER",
+			mode: "FIXED_ONE_SIXTH_PLUS_RESIDUE",
+			fixedShare: {
+				numerator: "1",
+				denominator: "6"
+			}
+		},
+		fixtureIds: ["KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE-POS", "KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE-NEG"]
+	});
+	//#endregion
+	//#region src/rules/production/KZ-FR-014-FATHER-RESIDUARY.ts
+	var productionRule$41 = defineDirectFamilyProductionRule({
+		ruleId: "KZ-FR-014-FATHER-RESIDUARY",
+		parentResearchRuleId: "KZ-FR-014",
+		atomicRuleKind: "FATHER_MODE",
+		conditions: [
+			"The father is present.",
+			"No qualifying descendant is present.",
+			"Neither Umariyyatayn applies."
+		],
+		exclusions: ["A qualifying descendant is present.", "Either Umariyyatayn applies."],
+		priority: {
+			value: 70,
+			rationale: "Assign the father the residue after fixed shares."
+		},
+		interactionsOrBlockers: ["Named Umariyyatayn rules take priority."],
+		outcomeSpecification: "The father receives the residue.",
+		executionSpecification: {
+			heirCategory: "FATHER",
+			mode: "RESIDUARY"
+		},
+		fixtureIds: ["KZ-FR-014-FATHER-RESIDUARY-POS", "KZ-FR-014-FATHER-RESIDUARY-NEG"]
+	});
+	//#endregion
+	//#region src/rules/production/KZ-FR-015-HUSBAND-MOTHER-FATHER.ts
+	var productionRule$40 = defineDirectFamilyProductionRule({
+		ruleId: "KZ-FR-015-HUSBAND-MOTHER-FATHER",
+		parentResearchRuleId: "KZ-FR-015",
+		atomicRuleKind: "UMARIYYATAYN",
+		conditions: ["The complete supported heir set is husband, mother, and father.", "No descendant or other heir is present."],
+		exclusions: ["The mother's ordinary one third of the whole does not apply."],
+		priority: {
+			value: 20,
+			rationale: "The named case precedes ordinary parent rules."
+		},
+		interactionsOrBlockers: ["Apply the husband's half, then give the mother one third of the remainder."],
+		outcomeSpecification: "Husband receives 1/2, mother 1/6, father 1/3.",
+		executionSpecification: {
+			originalAsl: "6",
+			husband: {
+				numerator: "1",
+				denominator: "2"
+			},
+			mother: {
+				numerator: "1",
+				denominator: "6"
+			},
+			father: {
+				numerator: "1",
+				denominator: "3"
+			}
+		},
+		fixtureIds: ["KZ-FR-015-HUSBAND-MOTHER-FATHER-POS", "KZ-FR-015-HUSBAND-MOTHER-FATHER-NEG"]
+	});
+	//#endregion
+	//#region src/rules/production/KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER.ts
+	var productionRule$39 = defineDirectFamilyProductionRule({
+		ruleId: "KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER",
+		parentResearchRuleId: "KZ-FR-015",
+		sourceComparisonId: "SOURCE-COMPARISON-20260809-KZ-FR-015-MULTIPLE-WIVES-UMARIYYATAYN",
+		additionalSourceReferences: [{
+			sourceId: "KHULASAT_AL_FIQH_AL_ISLAMI",
+			evidenceRecordId: "SOURCE-COMPARISON-20260803-KZ-FR-006-WIVES-ONE-QUARTER",
+			locator: "Printed pages 271–272; admitted collective wife-group quarter for counts 1 through 4."
+		}],
+		atomicRuleKind: "UMARIYYATAYN",
+		conditions: ["The complete supported heir set is two, three, or four eligible wives, mother, and father.", "No descendant or other heir is present."],
+		exclusions: ["One wife uses the singular-wife atom.", "Invalid wife counts are excluded."],
+		priority: {
+			value: 20,
+			rationale: "The named case precedes ordinary parent rules."
+		},
+		interactionsOrBlockers: ["Apply the admitted collective wives' quarter, then give the mother one third of the remainder."],
+		outcomeSpecification: "Wives collectively receive 1/4, mother receives 1/4, and father receives 1/2.",
+		executionSpecification: {
+			originalAsl: "4",
+			wifeCountMinimum: "2",
+			wifeCountMaximum: "4",
+			wives: {
+				numerator: "1",
+				denominator: "4"
+			},
+			mother: {
+				numerator: "1",
+				denominator: "4"
+			},
+			father: {
+				numerator: "1",
+				denominator: "2"
+			}
+		},
+		fixtureIds: [
+			"KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER-POS-TWO-WIVES",
+			"KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER-POS-FOUR-WIVES",
+			"KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER-NEG-ONE-WIFE",
+			"KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER-NEG-ADDITIONAL-HEIR"
+		]
+	});
+	//#endregion
+	//#region src/rules/production/KZ-FR-015-WIFE-MOTHER-FATHER.ts
+	var productionRule$38 = defineDirectFamilyProductionRule({
+		ruleId: "KZ-FR-015-WIFE-MOTHER-FATHER",
+		parentResearchRuleId: "KZ-FR-015",
+		atomicRuleKind: "UMARIYYATAYN",
+		conditions: ["The complete supported heir set is wife group, mother, and father.", "No descendant or other heir is present."],
+		exclusions: ["The mother's ordinary one third of the whole does not apply."],
+		priority: {
+			value: 20,
+			rationale: "The named case precedes ordinary parent rules."
+		},
+		interactionsOrBlockers: ["Apply the wives' quarter, then give the mother one third of the remainder."],
+		outcomeSpecification: "Wife group receives 1/4, mother 1/4, father 1/2.",
+		executionSpecification: {
+			originalAsl: "4",
+			wives: {
+				numerator: "1",
+				denominator: "4"
+			},
+			mother: {
+				numerator: "1",
+				denominator: "4"
+			},
+			father: {
+				numerator: "1",
+				denominator: "2"
+			}
+		},
+		fixtureIds: ["KZ-FR-015-WIFE-MOTHER-FATHER-POS", "KZ-FR-015-WIFE-MOTHER-FATHER-NEG"]
+	});
+	//#endregion
+	//#region src/rules/advanced-shafii-rules.ts
+	var ADVANCED_SOURCE_COMPARISON_ID = "SOURCE-COMPARISON-20260810-ADVANCED-SHAFII-INHERITANCE";
+	var definition = (ruleId, parentResearchRuleId, atomicRuleKind, conditions, exclusions, outcomeSpecification, executionSpecification) => ({
+		ruleId,
+		parentResearchRuleId,
+		atomicRuleKind,
+		conditions,
+		exclusions,
+		priority: {
+			value: atomicRuleKind === "MUSHTARAKA" || atomicRuleKind === "AKDARIYYA" ? 5 : atomicRuleKind === "MUADDA" ? 6 : atomicRuleKind === "TOTAL_BLOCKING_RELATIONSHIP" ? 10 : 60,
+			rationale: "Resolve exact special-case precedence and blocking before ordinary shares."
+		},
+		interactionsOrBlockers: ["The exact admitted detector and its exclusions must pass whole-case coverage.", "All comparisons use exact bigint rational arithmetic."],
+		outcomeSpecification,
+		executionSpecification,
+		fixtureIds: [`${ruleId}-POS`, `${ruleId}-NEG`]
+	});
+	var ADVANCED_RULE_DEFINITIONS = [
+		definition("KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH", "KZ-FR-016", "GRANDFATHER_MODE", ["The father is absent.", "An eligible male descendant is present."], ["Grandfather-with-siblings uses KZ-FR-020/021 instead."], "The paternal grandfather receives 1/6 as a fixed share.", {
+			heirCategory: "PATERNAL_GRANDFATHER",
+			fixedShare: "1/6",
+			mode: "FIXED"
+		}),
+		definition("KZ-FR-016-PATERNAL-GRANDFATHER-RESIDUARY", "KZ-FR-016", "GRANDFATHER_MODE", ["The father and descendants are absent.", "No competing full or paternal sibling is present."], ["The two Umariyyatayn do not substitute the grandfather for the father."], "The paternal grandfather receives the residue.", {
+			heirCategory: "PATERNAL_GRANDFATHER",
+			mode: "RESIDUARY"
+		}),
+		definition("KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS-RESIDUE", "KZ-FR-016", "GRANDFATHER_MODE", ["The father and male descendants are absent.", "An eligible female descendant is present."], ["Grandfather-with-siblings uses KZ-FR-020/021 instead."], "The paternal grandfather receives 1/6 plus any residue.", {
+			heirCategory: "PATERNAL_GRANDFATHER",
+			fixedShare: "1/6",
+			mode: "FIXED_PLUS_RESIDUE"
+		}),
+		definition("KZ-FR-016-PATERNAL-GRANDFATHER-BLOCKS-UTERINE-SIBLING-GROUP", "KZ-FR-016", "TOTAL_BLOCKING_RELATIONSHIP", ["The paternal grandfather and a uterine sibling are present."], ["Full and paternal siblings are not blocked by this atom."], "The paternal grandfather totally excludes uterine siblings.", {
+			blocker: "PATERNAL_GRANDFATHER",
+			blockees: ["MATERNAL_BROTHER", "MATERNAL_SISTER"]
+		}),
+		definition("KZ-FR-018-MUSHTARAKA-CANONICAL", "KZ-FR-018", "MUSHTARAKA", ["Exactly husband, mother or one eligible immediate grandmother, exactly two uterine siblings, and exactly one full brother are present.", "No other heir is present."], ["A paternal brother does not substitute for the full brother.", "Broader pluralities are excluded."], "The full brother joins the two uterine siblings in their collective 1/3, shared equally per person.", {
+			fixedShare: "1/3",
+			participants: [
+				"MATERNAL_BROTHER",
+				"MATERNAL_SISTER",
+				"FULL_BROTHER"
+			],
+			division: "EQUAL_PER_PERSON"
+		}),
+		definition("KZ-FR-020-GRANDFATHER-SIBLINGS-NO-FIXED-SHARE-COMPARISON", "KZ-FR-020", "GRANDFATHER_COMPARISON", ["The grandfather competes with eligible full or paternal siblings and no other fixed-share heir exists."], ["Akdariyya and Mu‘adda use dedicated paths."], "Choose the greater of 1/3 of the estate and muqasama as one male sibling.", {
+			alternatives: ["ONE_THIRD_OF_ESTATE", "MUQASAMA"],
+			comparison: "EXACT_MAX"
+		}),
+		definition("KZ-FR-020-GRANDFATHER-SIBLINGS-WITH-FIXED-SHARE-COMPARISON", "KZ-FR-020", "GRANDFATHER_COMPARISON", ["The grandfather competes with eligible full or paternal siblings after other fixed shares."], ["A pre-grandfather remainder at or below 1/6 uses KZ-FR-021."], "Choose the greatest of 1/6 of the estate, 1/3 of the remainder, and muqasama of the remainder.", {
+			alternatives: [
+				"ONE_SIXTH_OF_ESTATE",
+				"ONE_THIRD_OF_REMAINDER",
+				"MUQASAMA_OF_REMAINDER"
+			],
+			comparison: "EXACT_MAX"
+		}),
+		definition("KZ-FR-020-GRANDFATHER-SIBLING-RESIDUE-DISTRIBUTION", "KZ-FR-020", "GRANDFATHER_SIBLING_DISTRIBUTION", ["The grandfather's selected share leaves a residue for eligible full or paternal siblings."], ["Mu‘adda changes the final sibling-class priority."], "Divide the post-grandfather sibling residue at two units per brother and one per sister.", {
+			ratio: "2:1",
+			maleCategories: ["FULL_BROTHER", "PATERNAL_BROTHER"],
+			femaleCategories: ["FULL_SISTER", "PATERNAL_SISTER"]
+		}),
+		definition("KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION", "KZ-FR-021", "GRANDFATHER_EXHAUSTION", ["Other fixed shares leave none, less than 1/6, or exactly 1/6 before the grandfather."], ["A remainder greater than 1/6 returns to KZ-FR-020."], "Assign the grandfather 1/6, apply exact awl if needed, and give competing siblings zero.", {
+			fixedShare: "1/6",
+			siblingsReceive: "ZERO",
+			awl: "WHEN_REQUIRED"
+		}),
+		definition("KZ-FR-022-MUADDA-FULL-MALE-LINE", "KZ-FR-022", "MUADDA", ["Grandfather, both full and paternal sibling classes, and at least one full brother are present."], ["The full-sisters-only completion branches remain unsupported."], "Count both sibling classes in the grandfather comparison, then distribute the sibling residue only to the full sibling line at 2:1.", {
+			comparisonCounts: "FULL_AND_PATERNAL",
+			finalRecipients: "FULL_SIBLINGS",
+			paternalSiblingsReceive: "ZERO"
+		}),
+		definition("KZ-FR-023-AKDARIYYA-FULL-SISTER", "KZ-FR-023", "AKDARIYYA", ["Exactly husband, mother, paternal grandfather, and one full sister are present."], ["Any missing or additional heir prevents this detector."], "Awl the initial shares to 9, combine grandfather and sister, split 2:1, and correct to 27.", {
+			sisterCategory: "FULL_SISTER",
+			finalShares: {
+				HUSBAND: "9/27",
+				MOTHER: "6/27",
+				PATERNAL_GRANDFATHER: "8/27",
+				FULL_SISTER: "4/27"
+			}
+		}),
+		definition("KZ-FR-023-AKDARIYYA-PATERNAL-SISTER", "KZ-FR-023", "AKDARIYYA", ["Exactly husband, mother, paternal grandfather, and one paternal sister are present."], ["Any missing or additional heir prevents this detector."], "Awl the initial shares to 9, combine grandfather and sister, split 2:1, and correct to 27.", {
+			sisterCategory: "PATERNAL_SISTER",
+			finalShares: {
+				HUSBAND: "9/27",
+				MOTHER: "6/27",
+				PATERNAL_GRANDFATHER: "8/27",
+				PATERNAL_SISTER: "4/27"
+			}
+		})
+	];
+	function advancedRuleDefinition(ruleId) {
+		const found = ADVANCED_RULE_DEFINITIONS.find((item) => item.ruleId === ruleId);
+		if (found === void 0) throw new Error(`Unknown advanced rule definition: ${ruleId}`);
+		return found;
+	}
+	var sourceReferences = (definition) => [{
+		sourceId: "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+		evidenceRecordId: definition.parentResearchRuleId,
+		locator: definition.parentResearchRuleId === "KZ-FR-016" ? "Printed page 142; local PDF page 13." : definition.parentResearchRuleId === "KZ-FR-018" ? "Printed pages 143–144; local PDF pages 14–15." : definition.parentResearchRuleId === "KZ-FR-020" || definition.parentResearchRuleId === "KZ-FR-021" ? "Printed page 146; local PDF page 17." : "Printed page 147; local PDF page 18."
+	}, {
+		sourceId: "KHULASAT_AL_FIQH_AL_ISLAMI",
+		evidenceRecordId: ADVANCED_SOURCE_COMPARISON_ID,
+		locator: definition.parentResearchRuleId === "KZ-FR-018" ? "Printed page 274, footnote 1." : definition.parentResearchRuleId === "KZ-FR-016" ? "Printed pages 290–291." : definition.parentResearchRuleId === "KZ-FR-023" ? "Printed pages 274 and 294." : "Printed pages 291–293."
+	}];
+	function defineAdvancedProductionRule(ruleId) {
+		const item = advancedRuleDefinition(ruleId);
+		return defineProductionRule({
+			...item,
+			lifecycleStatus: "PRODUCTION",
+			executable: true,
+			sourceReferences: sourceReferences(item),
 			admissionRecordId: `ADMISSION-20260810-${ruleId}`
 		});
 	}
 	//#endregion
 	//#region src/rules/generated/production-registry.ts
 	var PRODUCTION_RULES = [
+		productionRule$79,
+		productionRule$78,
+		productionRule$77,
+		productionRule$76,
+		productionRule$75,
+		productionRule$74,
+		productionRule$73,
+		productionRule$72,
+		productionRule$71,
+		productionRule$70,
+		productionRule$69,
+		productionRule$68,
 		productionRule$67,
 		productionRule$66,
 		productionRule$65,
@@ -1414,185 +1811,14 @@
 		productionRule$40,
 		productionRule$39,
 		productionRule$38,
-		productionRule$37,
-		defineRemainingOrdinaryProductionRule("KZ-FR-013-DAUGHTER-GROUP-BLOCKS-SONS-DAUGHTER"),
-		defineRemainingOrdinaryProductionRule("KZ-FR-013-SON-BLOCKS-SONS-DAUGHTER"),
-		defineRemainingOrdinaryProductionRule("KZ-FR-013-SONS-DAUGHTER-GROUP-WITH-DAUGHTER-ONE-SIXTH"),
-		defineRemainingOrdinaryProductionRule("KZ-FR-013-SONS-SON-GROUP-RESIDUARY"),
-		defineRemainingOrdinaryProductionRule("KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE"),
-		defineDirectFamilyProductionRule({
-			ruleId: "KZ-FR-014-FATHER-ONE-SIXTH",
-			parentResearchRuleId: "KZ-FR-014",
-			atomicRuleKind: "FATHER_MODE",
-			conditions: ["The father is present.", "A qualifying direct male descendant is present."],
-			exclusions: ["Only female descendants are present.", "No qualifying descendant is present."],
-			priority: {
-				value: 50,
-				rationale: "Assign the fixed share before descendant residue."
-			},
-			interactionsOrBlockers: ["The direct male descendant takes the descendant residue."],
-			outcomeSpecification: "The father receives 1/6.",
-			executionSpecification: {
-				heirCategory: "FATHER",
-				mode: "FIXED_ONE_SIXTH",
-				fixedShare: {
-					numerator: "1",
-					denominator: "6"
-				}
-			},
-			fixtureIds: ["KZ-FR-014-FATHER-ONE-SIXTH-POS", "KZ-FR-014-FATHER-ONE-SIXTH-NEG"]
-		}),
-		defineDirectFamilyProductionRule({
-			ruleId: "KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE",
-			parentResearchRuleId: "KZ-FR-014",
-			atomicRuleKind: "FATHER_MODE",
-			conditions: [
-				"The father is present.",
-				"One or more direct daughters are present.",
-				"No direct son is present."
-			],
-			exclusions: ["A direct son is present.", "No qualifying descendant is present."],
-			priority: {
-				value: 70,
-				rationale: "Assign 1/6 before adding the remaining residue."
-			},
-			interactionsOrBlockers: ["Daughters retain their admitted fixed share."],
-			outcomeSpecification: "The father receives 1/6 plus any residue.",
-			executionSpecification: {
-				heirCategory: "FATHER",
-				mode: "FIXED_ONE_SIXTH_PLUS_RESIDUE",
-				fixedShare: {
-					numerator: "1",
-					denominator: "6"
-				}
-			},
-			fixtureIds: ["KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE-POS", "KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE-NEG"]
-		}),
-		defineDirectFamilyProductionRule({
-			ruleId: "KZ-FR-014-FATHER-RESIDUARY",
-			parentResearchRuleId: "KZ-FR-014",
-			atomicRuleKind: "FATHER_MODE",
-			conditions: [
-				"The father is present.",
-				"No qualifying descendant is present.",
-				"Neither Umariyyatayn applies."
-			],
-			exclusions: ["A qualifying descendant is present.", "Either Umariyyatayn applies."],
-			priority: {
-				value: 70,
-				rationale: "Assign the father the residue after fixed shares."
-			},
-			interactionsOrBlockers: ["Named Umariyyatayn rules take priority."],
-			outcomeSpecification: "The father receives the residue.",
-			executionSpecification: {
-				heirCategory: "FATHER",
-				mode: "RESIDUARY"
-			},
-			fixtureIds: ["KZ-FR-014-FATHER-RESIDUARY-POS", "KZ-FR-014-FATHER-RESIDUARY-NEG"]
-		}),
-		defineDirectFamilyProductionRule({
-			ruleId: "KZ-FR-015-HUSBAND-MOTHER-FATHER",
-			parentResearchRuleId: "KZ-FR-015",
-			atomicRuleKind: "UMARIYYATAYN",
-			conditions: ["The complete supported heir set is husband, mother, and father.", "No descendant or other heir is present."],
-			exclusions: ["The mother's ordinary one third of the whole does not apply."],
-			priority: {
-				value: 20,
-				rationale: "The named case precedes ordinary parent rules."
-			},
-			interactionsOrBlockers: ["Apply the husband's half, then give the mother one third of the remainder."],
-			outcomeSpecification: "Husband receives 1/2, mother 1/6, father 1/3.",
-			executionSpecification: {
-				originalAsl: "6",
-				husband: {
-					numerator: "1",
-					denominator: "2"
-				},
-				mother: {
-					numerator: "1",
-					denominator: "6"
-				},
-				father: {
-					numerator: "1",
-					denominator: "3"
-				}
-			},
-			fixtureIds: ["KZ-FR-015-HUSBAND-MOTHER-FATHER-POS", "KZ-FR-015-HUSBAND-MOTHER-FATHER-NEG"]
-		}),
-		defineDirectFamilyProductionRule({
-			ruleId: "KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER",
-			parentResearchRuleId: "KZ-FR-015",
-			sourceComparisonId: "SOURCE-COMPARISON-20260809-KZ-FR-015-MULTIPLE-WIVES-UMARIYYATAYN",
-			additionalSourceReferences: [{
-				sourceId: "KHULASAT_AL_FIQH_AL_ISLAMI",
-				evidenceRecordId: "SOURCE-COMPARISON-20260803-KZ-FR-006-WIVES-ONE-QUARTER",
-				locator: "Printed pages 271–272; admitted collective wife-group quarter for counts 1 through 4."
-			}],
-			atomicRuleKind: "UMARIYYATAYN",
-			conditions: ["The complete supported heir set is two, three, or four eligible wives, mother, and father.", "No descendant or other heir is present."],
-			exclusions: ["One wife uses the singular-wife atom.", "Invalid wife counts are excluded."],
-			priority: {
-				value: 20,
-				rationale: "The named case precedes ordinary parent rules."
-			},
-			interactionsOrBlockers: ["Apply the admitted collective wives' quarter, then give the mother one third of the remainder."],
-			outcomeSpecification: "Wives collectively receive 1/4, mother receives 1/4, and father receives 1/2.",
-			executionSpecification: {
-				originalAsl: "4",
-				wifeCountMinimum: "2",
-				wifeCountMaximum: "4",
-				wives: {
-					numerator: "1",
-					denominator: "4"
-				},
-				mother: {
-					numerator: "1",
-					denominator: "4"
-				},
-				father: {
-					numerator: "1",
-					denominator: "2"
-				}
-			},
-			fixtureIds: [
-				"KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER-POS-TWO-WIVES",
-				"KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER-POS-FOUR-WIVES",
-				"KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER-NEG-ONE-WIFE",
-				"KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER-NEG-ADDITIONAL-HEIR"
-			]
-		}),
-		defineDirectFamilyProductionRule({
-			ruleId: "KZ-FR-015-WIFE-MOTHER-FATHER",
-			parentResearchRuleId: "KZ-FR-015",
-			atomicRuleKind: "UMARIYYATAYN",
-			conditions: ["The complete supported heir set is wife group, mother, and father.", "No descendant or other heir is present."],
-			exclusions: ["The mother's ordinary one third of the whole does not apply."],
-			priority: {
-				value: 20,
-				rationale: "The named case precedes ordinary parent rules."
-			},
-			interactionsOrBlockers: ["Apply the wives' quarter, then give the mother one third of the remainder."],
-			outcomeSpecification: "Wife group receives 1/4, mother 1/4, father 1/2.",
-			executionSpecification: {
-				originalAsl: "4",
-				wives: {
-					numerator: "1",
-					denominator: "4"
-				},
-				mother: {
-					numerator: "1",
-					denominator: "4"
-				},
-				father: {
-					numerator: "1",
-					denominator: "2"
-				}
-			},
-			fixtureIds: ["KZ-FR-015-WIFE-MOTHER-FATHER-POS", "KZ-FR-015-WIFE-MOTHER-FATHER-NEG"]
-		}),
+		defineAdvancedProductionRule("KZ-FR-016-PATERNAL-GRANDFATHER-BLOCKS-UTERINE-SIBLING-GROUP"),
+		defineAdvancedProductionRule("KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH"),
+		defineAdvancedProductionRule("KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS-RESIDUE"),
+		defineAdvancedProductionRule("KZ-FR-016-PATERNAL-GRANDFATHER-RESIDUARY"),
 		defineRemainingOrdinaryProductionRule("KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH"),
 		defineRemainingOrdinaryProductionRule("KZ-FR-017-FATHER-BLOCKS-PATERNAL-GRANDMOTHER"),
 		defineRemainingOrdinaryProductionRule("KZ-FR-017-MOTHER-BLOCKS-GRANDMOTHER-GROUP"),
+		defineAdvancedProductionRule("KZ-FR-018-MUSHTARAKA-CANONICAL"),
 		defineRemainingOrdinaryProductionRule("KZ-FR-019-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP"),
 		defineRemainingOrdinaryProductionRule("KZ-FR-019-FATHER-BLOCKS-MATERNAL-SISTER"),
 		defineRemainingOrdinaryProductionRule("KZ-FR-019-FATHER-BLOCKS-SISTER-GROUP"),
@@ -1612,6 +1838,13 @@
 		defineRemainingOrdinaryProductionRule("KZ-FR-019-SONS-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP"),
 		defineRemainingOrdinaryProductionRule("KZ-FR-019-SONS-SON-BLOCKS-FULL-PATERNAL-SIBLINGS"),
 		defineRemainingOrdinaryProductionRule("KZ-FR-019-SONS-SON-BLOCKS-UTERINE-SIBLING-GROUP"),
+		defineAdvancedProductionRule("KZ-FR-020-GRANDFATHER-SIBLING-RESIDUE-DISTRIBUTION"),
+		defineAdvancedProductionRule("KZ-FR-020-GRANDFATHER-SIBLINGS-NO-FIXED-SHARE-COMPARISON"),
+		defineAdvancedProductionRule("KZ-FR-020-GRANDFATHER-SIBLINGS-WITH-FIXED-SHARE-COMPARISON"),
+		defineAdvancedProductionRule("KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION"),
+		defineAdvancedProductionRule("KZ-FR-022-MUADDA-FULL-MALE-LINE"),
+		defineAdvancedProductionRule("KZ-FR-023-AKDARIYYA-FULL-SISTER"),
+		defineAdvancedProductionRule("KZ-FR-023-AKDARIYYA-PATERNAL-SISTER"),
 		defineDirectFamilyProductionRule({
 			ruleId: "KZ-FR-027-ORIGINAL-ASL",
 			parentResearchRuleId: "KZ-FR-027",
@@ -1806,7 +2039,8 @@
 			invalidFields,
 			unsupportedHeirs: [],
 			blockedHeirs: [],
-			requiresAwl: false
+			requiresAwl: false,
+			advancedCase: null
 		};
 		if (invalidFields.length > 0) return wholeCaseResult("INVALID_INPUT", normalizedHeirs, base);
 		if (normalizedHeirs.length === 0) return wholeCaseResult("MISSING_INFORMATION", normalizedHeirs, {
@@ -1819,27 +2053,49 @@
 			missingFields: [...input.unresolvedFacts ?? []],
 			reasons: ["UNRESOLVED_CASE_FACTS"]
 		});
-		const siblingCount = [...SIBLING_TYPES].reduce((total, type) => total + selectedCount(type), 0);
-		const hasGrandfather = selectedCount("PATERNAL_GRANDFATHER") > 0;
-		const hasFullOrPaternalSibling = selectedCount("FULL_BROTHER") + selectedCount("FULL_SISTER") + selectedCount("PATERNAL_BROTHER") + selectedCount("PATERNAL_SISTER") > 0;
-		if (hasGrandfather && hasFullOrPaternalSibling) {
-			const isAkdariyya = selectedCount("HUSBAND") > 0 && selectedCount("MOTHER") > 0 && selectedCount("FULL_SISTER") + selectedCount("PATERNAL_SISTER") > 0;
-			const isMuadda = selectedCount("FULL_BROTHER") + selectedCount("FULL_SISTER") > 0 && selectedCount("PATERNAL_BROTHER") + selectedCount("PATERNAL_SISTER") > 0;
-			return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
+		const productionIds = new Set(corpus.rules.map((rule) => rule.ruleId));
+		const advancedCase = detectAdvancedCase(normalizedHeirs);
+		base.advancedCase = advancedCase;
+		if (advancedCase?.kind === "UNSUPPORTED_ADVANCED") return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
+			...base,
+			reasons: [advancedCase.reason]
+		});
+		if (advancedCase?.kind === "AKDARIYYA") {
+			const requiredRuleIds = [
+				"KZ-FR-005-HUSBAND-ONE-HALF",
+				advancedCase.ruleId,
+				ORIGINAL_ASL_RULE_ID,
+				AWL_RULE_ID,
+				"KZ-FR-029-SINGLE-CLASS-CORRECTION"
+			];
+			const missing = requiredRuleIds.filter((id) => !productionIds.has(id));
+			return wholeCaseResult(missing.length === 0 ? "SUPPORTED" : "UNSUPPORTED_RULE", normalizedHeirs, {
 				...base,
-				reasons: [
-					...isAkdariyya ? ["AKDARIYYA_NOT_ADMITTED"] : [],
-					...isMuadda ? ["MUADDA_NOT_ADMITTED"] : [],
-					"GRANDFATHER_WITH_SIBLINGS_NOT_ADMITTED"
-				]
+				requiredRuleIds,
+				supportedRuleIds: missing.length === 0 ? requiredRuleIds : [],
+				reasons: missing.map((id) => `RULE_NOT_ADMITTED:${id}`),
+				requiresAwl: true
 			});
 		}
-		const selectedUterineCount = selectedCount("MATERNAL_BROTHER") + selectedCount("MATERNAL_SISTER");
-		if (selectedCount("HUSBAND") > 0 && selectedCount("MOTHER") + selectedCount("MATERNAL_GRANDMOTHER") > 0 && selectedUterineCount >= 2 && selectedCount("FULL_BROTHER") > 0) return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
-			...base,
-			reasons: ["MUSHTARAKA_NOT_ADMITTED"]
-		});
-		const blockerPairs = [
+		if (advancedCase?.kind === "MUSHTARAKA") {
+			const requiredRuleIds = [
+				"KZ-FR-005-HUSBAND-ONE-HALF",
+				advancedCase.ascendantType === "MOTHER" ? "KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS" : "KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH",
+				advancedCase.ruleId,
+				ORIGINAL_ASL_RULE_ID
+			];
+			const missing = requiredRuleIds.filter((id) => !productionIds.has(id));
+			return wholeCaseResult(missing.length === 0 ? "SUPPORTED" : "UNSUPPORTED_RULE", normalizedHeirs, {
+				...base,
+				requiredRuleIds,
+				supportedRuleIds: missing.length === 0 ? requiredRuleIds : [],
+				reasons: missing.map((id) => `RULE_NOT_ADMITTED:${id}`)
+			});
+		}
+		const siblingCount = [...SIBLING_TYPES].reduce((total, type) => total + selectedCount(type), 0);
+		const hasGrandfather = selectedCount("PATERNAL_GRANDFATHER") > 0;
+		const grandfatherSiblingCase = advancedCase?.kind === "GRANDFATHER_WITH_SIBLINGS" || advancedCase?.kind === "MUADDA";
+		const blockedHeirs = [
 			[
 				"FATHER",
 				"PATERNAL_GRANDFATHER",
@@ -1931,6 +2187,16 @@
 				"KZ-FR-019-SON-BLOCKS-MATERNAL-SISTER"
 			],
 			[
+				"PATERNAL_GRANDFATHER",
+				"MATERNAL_BROTHER",
+				"KZ-FR-016-PATERNAL-GRANDFATHER-BLOCKS-UTERINE-SIBLING-GROUP"
+			],
+			[
+				"PATERNAL_GRANDFATHER",
+				"MATERNAL_SISTER",
+				"KZ-FR-016-PATERNAL-GRANDFATHER-BLOCKS-UTERINE-SIBLING-GROUP"
+			],
+			[
 				"DAUGHTER",
 				"MATERNAL_BROTHER",
 				"KZ-FR-019-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP"
@@ -1950,9 +2216,7 @@
 				"MATERNAL_SISTER",
 				"KZ-FR-019-SONS-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP"
 			]
-		];
-		const productionIds = new Set(corpus.rules.map((rule) => rule.ruleId));
-		const blockedHeirs = blockerPairs.flatMap(([blockerType, type, ruleId]) => {
+		].flatMap(([blockerType, type, ruleId]) => {
 			const blockedCount = selectedCount(type);
 			return selectedCount(blockerType) > 0 && blockedCount > 0 && productionIds.has(ruleId) ? [{
 				type,
@@ -1981,12 +2245,13 @@
 			"PATERNAL_SISTER"
 		]) addBlocked("SONS_SON", type, "KZ-FR-019-SONS-SON-BLOCKS-FULL-PATERNAL-SIBLINGS", noDirectSon && selectedCount("SONS_SON") > 0);
 		for (const type of ["MATERNAL_BROTHER", "MATERNAL_SISTER"]) addBlocked("SONS_SON", type, "KZ-FR-019-SONS-SON-BLOCKS-UTERINE-SIBLING-GROUP", noDirectSon && selectedCount("SONS_SON") > 0);
-		for (const type of ["PATERNAL_BROTHER", "PATERNAL_SISTER"]) addBlocked("FULL_BROTHER", type, "KZ-FR-019-FULL-BROTHER-BLOCKS-PATERNAL-SIBLING-GROUP", selectedCount("FULL_BROTHER") > 0 && selectedCount("FATHER") === 0 && selectedCount("SON") === 0 && selectedCount("SONS_SON") === 0);
+		for (const type of ["PATERNAL_BROTHER", "PATERNAL_SISTER"]) addBlocked("FULL_BROTHER", type, "KZ-FR-019-FULL-BROTHER-BLOCKS-PATERNAL-SIBLING-GROUP", !grandfatherSiblingCase && selectedCount("FULL_BROTHER") > 0 && selectedCount("FATHER") === 0 && selectedCount("SON") === 0 && selectedCount("SONS_SON") === 0);
 		addBlocked("DAUGHTER", "SONS_DAUGHTER", "KZ-FR-013-DAUGHTER-GROUP-BLOCKS-SONS-DAUGHTER", selectedCount("DAUGHTER") >= 2 && selectedCount("SONS_SON") === 0);
 		const femaleDescendantPresent = selectedCount("DAUGHTER") + selectedCount("SONS_DAUGHTER") > 0;
-		const fullSisterResiduary = selectedCount("FULL_SISTER") > 0 && selectedCount("FULL_BROTHER") === 0 && selectedCount("FATHER") === 0 && selectedCount("SON") === 0 && selectedCount("SONS_SON") === 0 && femaleDescendantPresent;
+		const fullSisterResiduary = !grandfatherSiblingCase && selectedCount("FULL_SISTER") > 0 && selectedCount("FULL_BROTHER") === 0 && selectedCount("FATHER") === 0 && selectedCount("SON") === 0 && selectedCount("SONS_SON") === 0 && femaleDescendantPresent;
 		for (const type of ["PATERNAL_BROTHER", "PATERNAL_SISTER"]) addBlocked("FULL_SISTER", type, "KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-BLOCKS-PATERNAL-SIBLINGS", fullSisterResiduary);
 		addBlocked("FULL_SISTER", "PATERNAL_SISTER", "KZ-FR-019-FULL-SISTER-GROUP-BLOCKS-PATERNAL-SISTER", selectedCount("FULL_SISTER") >= 2 && selectedCount("PATERNAL_BROTHER") === 0);
+		if (advancedCase?.kind === "MUADDA") for (const type of ["PATERNAL_BROTHER", "PATERNAL_SISTER"]) addBlocked("FULL_BROTHER", type, advancedCase.ruleId, selectedCount(type) > 0);
 		const blockedTypes = new Set(blockedHeirs.map((heir) => heir.type));
 		const selectedHasDescendant = selectedCount("SON") + selectedCount("DAUGHTER") + selectedCount("SONS_SON") + selectedCount("SONS_DAUGHTER") > 0;
 		if (selectedCount("MOTHER") > 0 && !selectedHasDescendant && siblingCount >= 2 && blockedHeirs.some((heir) => SIBLING_TYPES.has(heir.type))) return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
@@ -1994,7 +2259,11 @@
 			blockedHeirs,
 			reasons: ["MOTHER_BLOCKED_SIBLING_COUNT_NOT_ADMITTED"]
 		});
-		const supportedTypes = /* @__PURE__ */ new Set([...DIRECT_FAMILY_TYPES, ...ADMITTED_EXTENDED_FIXED_SHARE_TYPES]);
+		const supportedTypes = /* @__PURE__ */ new Set([
+			...DIRECT_FAMILY_TYPES,
+			...ADMITTED_EXTENDED_FIXED_SHARE_TYPES,
+			"PATERNAL_GRANDFATHER"
+		]);
 		const unsupportedHeirs = normalizedHeirs.filter((heir) => !supportedTypes.has(heir.type) && !blockedTypes.has(heir.type)).map(({ type, count: heirCount }) => ({
 			type,
 			count: heirCount
@@ -2017,7 +2286,6 @@
 		if (uterineCount > 0) {
 			if (hasDescendant || count("FATHER") > 0 || hasGrandfather) interactionReasons.push("UTERINE_SIBLING_BLOCKER_RELATIONSHIP_NOT_ADMITTED_FOR_SELECTED_CLASS");
 		}
-		if (hasGrandfather && siblingCount > 0) interactionReasons.push("GRANDFATHER_WITH_SIBLINGS_NOT_ADMITTED");
 		if (interactionReasons.length > 0) return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
 			...base,
 			blockedHeirs,
@@ -2063,6 +2331,17 @@
 				requiredRuleIds.push("KZ-FR-014-FATHER-RESIDUARY");
 				hasResiduary = true;
 			}
+			if (count("PATERNAL_GRANDFATHER") > 0 && !grandfatherSiblingCase) if (hasMaleDescendant) {
+				requiredRuleIds.push("KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH");
+				fixedShares.push(new Fraction(1n, 6n));
+			} else if (hasDaughter) {
+				requiredRuleIds.push("KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS-RESIDUE");
+				fixedShares.push(new Fraction(1n, 6n));
+				hasResiduary = true;
+			} else {
+				requiredRuleIds.push("KZ-FR-016-PATERNAL-GRANDFATHER-RESIDUARY");
+				hasResiduary = true;
+			}
 			if (hasSon && count("DAUGHTER") > 0) {
 				requiredRuleIds.push("KZ-FR-012-SONS-AND-DAUGHTERS-TWO-TO-ONE");
 				hasResiduary = true;
@@ -2103,7 +2382,7 @@
 				fixedShares.push(new Fraction(1n, 3n));
 			}
 			const fullSisterWithFemaleDescendant = count("FULL_SISTER") > 0 && count("FULL_BROTHER") === 0 && hasFemaleDescendant && !hasMaleDescendant;
-			if (count("FULL_BROTHER") > 0 && count("FULL_SISTER") > 0) {
+			if (grandfatherSiblingCase) {} else if (count("FULL_BROTHER") > 0 && count("FULL_SISTER") > 0) {
 				requiredRuleIds.push("KZ-FR-019-FULL-SIBLINGS-TWO-TO-ONE");
 				hasResiduary = true;
 			} else if (count("FULL_BROTHER") > 0) {
@@ -2120,7 +2399,7 @@
 				fixedShares.push(new Fraction(2n, 3n));
 			}
 			const paternalSisterWithFemaleDescendant = count("PATERNAL_SISTER") > 0 && count("PATERNAL_BROTHER") === 0 && count("FULL_SISTER") === 0 && hasFemaleDescendant && !hasMaleDescendant;
-			if (count("PATERNAL_BROTHER") > 0 && count("PATERNAL_SISTER") > 0) {
+			if (grandfatherSiblingCase) {} else if (count("PATERNAL_BROTHER") > 0 && count("PATERNAL_SISTER") > 0) {
 				requiredRuleIds.push("KZ-FR-019-PATERNAL-SIBLINGS-TWO-TO-ONE");
 				hasResiduary = true;
 			} else if (count("PATERNAL_BROTHER") > 0) {
@@ -2139,6 +2418,41 @@
 			if (count("MATERNAL_GRANDMOTHER") + count("PATERNAL_GRANDMOTHER") > 0) {
 				requiredRuleIds.push("KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH");
 				fixedShares.push(new Fraction(1n, 6n));
+			}
+			if (grandfatherSiblingCase) {
+				const preGrandfatherFixedTotal = sumFractions(fixedShares);
+				if (preGrandfatherFixedTotal.isZero()) {
+					requiredRuleIds.push("KZ-FR-020-GRANDFATHER-SIBLINGS-NO-FIXED-SHARE-COMPARISON", "KZ-FR-020-GRANDFATHER-SIBLING-RESIDUE-DISTRIBUTION");
+					hasResiduary = true;
+				} else if (Fraction.ONE.subtract(preGrandfatherFixedTotal).compare(new Fraction(1n, 6n)) <= 0) {
+					if (count("MOTHER") > 0) return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
+						...base,
+						blockedHeirs,
+						requiredRuleIds,
+						reasons: ["MOTHER_BLOCKED_SIBLING_COUNT_NOT_ADMITTED"]
+					});
+					requiredRuleIds.push("KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION");
+					fixedShares.push(new Fraction(1n, 6n));
+					for (const type of [
+						"FULL_BROTHER",
+						"FULL_SISTER",
+						"PATERNAL_BROTHER",
+						"PATERNAL_SISTER"
+					]) {
+						const blockedCount = selectedCount(type);
+						if (blockedCount > 0 && !blockedHeirs.some((heir) => heir.type === type)) blockedHeirs.push({
+							type,
+							count: blockedCount,
+							blockerType: "PATERNAL_GRANDFATHER",
+							ruleId: "KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION",
+							reason: `${type} receives zero because the fixed shares leave at most the grandfather's 1/6.`
+						});
+					}
+				} else {
+					requiredRuleIds.push("KZ-FR-020-GRANDFATHER-SIBLINGS-WITH-FIXED-SHARE-COMPARISON", "KZ-FR-020-GRANDFATHER-SIBLING-RESIDUE-DISTRIBUTION");
+					hasResiduary = true;
+				}
+				if (advancedCase?.kind === "MUADDA") requiredRuleIds.push(advancedCase.ruleId);
 			}
 		}
 		requiredRuleIds.push(ORIGINAL_ASL_RULE_ID);
@@ -2260,6 +2574,8 @@
 		if (!current.kinds.includes(kind)) current.kinds.push(kind);
 	}
 	function fractionReason(heirType, ruleId) {
+		if (ruleId.includes("PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS")) return "A female descendant exists without a male descendant; the grandfather takes 1/6 plus residue.";
+		if (ruleId.includes("PATERNAL-GRANDFATHER-ONE-SIXTH")) return "An eligible male descendant exists, so the grandfather takes 1/6.";
 		if (ruleId.includes("MOTHER-ONE-SIXTH-SIBLINGS")) return "At least two unblocked siblings are present in this admitted subset.";
 		if (ruleId.includes("MOTHER-ONE-SIXTH")) return "A qualifying descendant exists.";
 		if (ruleId.includes("MOTHER-ONE-THIRD")) return "No qualifying descendant or admitted sibling condition applies.";
@@ -2283,18 +2599,25 @@
 			["KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH", "EQUAL"],
 			["KZ-FR-019-FULL-SIBLINGS-TWO-TO-ONE", "TWO_TO_ONE"],
 			["KZ-FR-019-PATERNAL-SIBLINGS-TWO-TO-ONE", "TWO_TO_ONE"],
-			["KZ-FR-019-MIXED-UTERINE-SIBLING-GROUP-ONE-THIRD-EQUAL", "EQUAL"]
+			["KZ-FR-019-MIXED-UTERINE-SIBLING-GROUP-ONE-THIRD-EQUAL", "EQUAL"],
+			["KZ-FR-018-MUSHTARAKA-CANONICAL", "EQUAL"],
+			["KZ-FR-023-AKDARIYYA-FULL-SISTER", "TWO_TO_ONE"],
+			["KZ-FR-023-AKDARIYYA-PATERNAL-SISTER", "TWO_TO_ONE"]
 		]);
 		const groupedAssignmentIds = /* @__PURE__ */ new Set();
 		const correctionClasses = [];
 		for (const [ruleId, division] of groupedRules) {
-			const members = assignments.filter((assignment) => assignment.ruleIds.includes(ruleId));
+			const members = assignments.filter((assignment) => assignment.ruleIds.includes(ruleId) && (!ruleId.includes("AKDARIYYA") || [
+				"PATERNAL_GRANDFATHER",
+				"FULL_SISTER",
+				"PATERNAL_SISTER"
+			].includes(assignment.heirType)));
 			if (members.length === 0) continue;
 			members.forEach((member) => groupedAssignmentIds.add(member.heirType));
 			correctionClasses.push({
 				heirTypes: members.map((member) => member.heirType),
 				fraction: sumFractions(members.map((member) => member.fraction)),
-				units: BigInt(members.reduce((total, member) => total + member.count * (division === "TWO_TO_ONE" && (member.heirType === "SONS_SON" || member.heirType === "FULL_BROTHER" || member.heirType === "PATERNAL_BROTHER") ? 2 : 1), 0))
+				units: BigInt(members.reduce((total, member) => total + member.count * (division === "TWO_TO_ONE" && (member.heirType === "SONS_SON" || member.heirType === "FULL_BROTHER" || member.heirType === "PATERNAL_BROTHER" || member.heirType === "PATERNAL_GRANDFATHER") ? 2 : 1), 0))
 			});
 		}
 		correctionClasses.push(...assignments.filter((assignment) => !groupedAssignmentIds.has(assignment.heirType)).map((assignment) => ({
@@ -2346,6 +2669,7 @@
 		const blockedTypes = new Set(coverage.blockedHeirs.map((heir) => heir.type));
 		const eligible = selected.filter((heir) => !blockedTypes.has(heir.type));
 		const count = (type) => eligible.find((heir) => heir.type === type)?.count ?? 0;
+		const selectedCount = (type) => selected.find((heir) => heir.type === type)?.count ?? 0;
 		const required = new Set(coverage.requiredRuleIds);
 		const assignments = /* @__PURE__ */ new Map();
 		const fixedShareAssignments = [];
@@ -2386,7 +2710,21 @@
 		const husbandUmari = required.has("KZ-FR-015-HUSBAND-MOTHER-FATHER");
 		const wifeUmariRuleId = required.has("KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER") ? "KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER" : required.has("KZ-FR-015-WIFE-MOTHER-FATHER") ? "KZ-FR-015-WIFE-MOTHER-FATHER" : null;
 		const wifeUmari = wifeUmariRuleId !== null;
-		if (husbandUmari) {
+		const advancedCase = coverage.advancedCase;
+		if (advancedCase?.kind === "AKDARIYYA") {
+			addFixed("HUSBAND", new Fraction(1n, 2n), "KZ-FR-005-HUSBAND-ONE-HALF");
+			addFixed("MOTHER", new Fraction(1n, 3n), advancedCase.ruleId);
+			addFixed("PATERNAL_GRANDFATHER", new Fraction(1n, 6n), advancedCase.ruleId);
+			addFixed(advancedCase.sisterType, new Fraction(1n, 2n), advancedCase.ruleId);
+		} else if (advancedCase?.kind === "MUSHTARAKA") {
+			addFixed("HUSBAND", new Fraction(1n, 2n), "KZ-FR-005-HUSBAND-ONE-HALF");
+			addFixed(advancedCase.ascendantType, new Fraction(1n, 6n), advancedCase.ascendantType === "MOTHER" ? "KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS" : "KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH");
+			addFixedGroup([
+				"MATERNAL_BROTHER",
+				"MATERNAL_SISTER",
+				"FULL_BROTHER"
+			], new Fraction(1n, 3n), advancedCase.ruleId);
+		} else if (husbandUmari) {
 			addFixed("HUSBAND", new Fraction(1n, 2n), "KZ-FR-005-HUSBAND-ONE-HALF");
 			addFixed("MOTHER", new Fraction(1n, 6n), "KZ-FR-015-HUSBAND-MOTHER-FATHER");
 			addFixed("FATHER", new Fraction(1n, 3n), "KZ-FR-015-HUSBAND-MOTHER-FATHER");
@@ -2406,6 +2744,9 @@
 			if (required.has("KZ-FR-012-DAUGHTER-GROUP-TWO-THIRDS")) addFixed("DAUGHTER", new Fraction(2n, 3n), "KZ-FR-012-DAUGHTER-GROUP-TWO-THIRDS");
 			if (required.has("KZ-FR-014-FATHER-ONE-SIXTH")) addFixed("FATHER", new Fraction(1n, 6n), "KZ-FR-014-FATHER-ONE-SIXTH");
 			if (required.has("KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE")) addFixed("FATHER", new Fraction(1n, 6n), "KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE");
+			if (required.has("KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH")) addFixed("PATERNAL_GRANDFATHER", new Fraction(1n, 6n), "KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH");
+			if (required.has("KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS-RESIDUE")) addFixed("PATERNAL_GRANDFATHER", new Fraction(1n, 6n), "KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS-RESIDUE");
+			if (required.has("KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION")) addFixed("PATERNAL_GRANDFATHER", new Fraction(1n, 6n), "KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION");
 			for (const [type, ruleId, share] of [
 				[
 					"SONS_DAUGHTER",
@@ -2489,6 +2830,25 @@
 				ruleId: AWL_RULE_ID
 			};
 		}
+		let advancedCaseDetails = null;
+		if (advancedCase?.kind === "AKDARIYYA") {
+			const grandfather = assignments.get("PATERNAL_GRANDFATHER");
+			const sister = assignments.get(advancedCase.sisterType);
+			if (grandfather === void 0 || sister === void 0) throw new Error("Akdariyya assignments are incomplete.");
+			grandfather.fraction = new Fraction(8n, 27n);
+			sister.fraction = new Fraction(4n, 27n);
+			advancedCaseDetails = {
+				kind: "AKDARIYYA",
+				sisterType: advancedCase.sisterType
+			};
+		} else if (advancedCase?.kind === "MUSHTARAKA") advancedCaseDetails = {
+			kind: "MUSHTARAKA",
+			participants: [
+				"MATERNAL_BROTHER",
+				"MATERNAL_SISTER",
+				"FULL_BROTHER"
+			].filter((type) => count(type) > 0)
+		};
 		const adjustedFixedTotal = sumFractions([...assignments.values()].map((assignment) => assignment.fraction));
 		const residue = Fraction.ONE.subtract(adjustedFixedTotal);
 		const addResidue = (type, ruleId) => {
@@ -2500,23 +2860,34 @@
 				reason: "This class receives the residue after fixed shares."
 			});
 		};
+		const addWeightedShare = (totalShare, maleType, femaleType, ruleId) => {
+			const maleCount = count(maleType);
+			const femaleCount = count(femaleType);
+			const units = BigInt(2 * maleCount + femaleCount);
+			if (units === 0n) throw new Error(`No eligible recipients for ${ruleId}.`);
+			const maleShare = totalShare.multiply(new Fraction(BigInt(2 * maleCount), units));
+			const femaleShare = totalShare.subtract(maleShare);
+			if (maleCount > 0) {
+				addAssignment(assignments, maleType, maleCount, maleShare, "RESIDUARY", ruleId);
+				residuaryAssignments.push({
+					heirType: maleType,
+					fraction: maleShare.toJSON(),
+					ruleId,
+					reason: `Each ${maleType} receives two weight units.`
+				});
+			}
+			if (femaleCount > 0) {
+				addAssignment(assignments, femaleType, femaleCount, femaleShare, "RESIDUARY", ruleId);
+				residuaryAssignments.push({
+					heirType: femaleType,
+					fraction: femaleShare.toJSON(),
+					ruleId,
+					reason: `Each ${femaleType} receives one weight unit.`
+				});
+			}
+		};
 		const addWeightedResidue = (maleType, femaleType, ruleId) => {
-			const units = BigInt(2 * count(maleType) + count(femaleType));
-			const maleShare = residue.multiply(new Fraction(BigInt(2 * count(maleType)), units));
-			const femaleShare = residue.subtract(maleShare);
-			addAssignment(assignments, maleType, count(maleType), maleShare, "RESIDUARY", ruleId);
-			addAssignment(assignments, femaleType, count(femaleType), femaleShare, "RESIDUARY", ruleId);
-			residuaryAssignments.push({
-				heirType: maleType,
-				fraction: maleShare.toJSON(),
-				ruleId,
-				reason: `Each ${maleType} receives two weight units.`
-			}, {
-				heirType: femaleType,
-				fraction: femaleShare.toJSON(),
-				ruleId,
-				reason: `Each ${femaleType} receives one weight unit.`
-			});
+			addWeightedShare(residue, maleType, femaleType, ruleId);
 		};
 		if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-012-SON-GROUP-RESIDUARY")) addResidue("SON", "KZ-FR-012-SON-GROUP-RESIDUARY");
 		if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-012-SONS-AND-DAUGHTERS-TWO-TO-ONE")) {
@@ -2539,6 +2910,55 @@
 		}
 		if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-014-FATHER-RESIDUARY")) addResidue("FATHER", "KZ-FR-014-FATHER-RESIDUARY");
 		if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE")) addResidue("FATHER", "KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE");
+		if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-016-PATERNAL-GRANDFATHER-RESIDUARY")) addResidue("PATERNAL_GRANDFATHER", "KZ-FR-016-PATERNAL-GRANDFATHER-RESIDUARY");
+		if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS-RESIDUE")) addResidue("PATERNAL_GRANDFATHER", "KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS-RESIDUE");
+		const grandfatherComparisonRuleId = required.has("KZ-FR-020-GRANDFATHER-SIBLINGS-NO-FIXED-SHARE-COMPARISON") ? "KZ-FR-020-GRANDFATHER-SIBLINGS-NO-FIXED-SHARE-COMPARISON" : required.has("KZ-FR-020-GRANDFATHER-SIBLINGS-WITH-FIXED-SHARE-COMPARISON") ? "KZ-FR-020-GRANDFATHER-SIBLINGS-WITH-FIXED-SHARE-COMPARISON" : null;
+		if (residue.compare(Fraction.ZERO) > 0 && grandfatherComparisonRuleId !== null) {
+			const siblingCountForComparison = (type) => advancedCase?.kind === "MUADDA" ? selectedCount(type) : count(type);
+			const siblingUnits = BigInt(2 * (siblingCountForComparison("FULL_BROTHER") + siblingCountForComparison("PATERNAL_BROTHER")) + siblingCountForComparison("FULL_SISTER") + siblingCountForComparison("PATERNAL_SISTER"));
+			const muqasama = residue.multiply(new Fraction(2n, 2n + siblingUnits));
+			const alternatives = grandfatherComparisonRuleId.includes("NO-FIXED") ? [{
+				name: "ONE_THIRD_OF_ESTATE",
+				fraction: new Fraction(1n, 3n)
+			}, {
+				name: "MUQASAMA",
+				fraction: muqasama
+			}] : [
+				{
+					name: "ONE_SIXTH_OF_ESTATE",
+					fraction: new Fraction(1n, 6n)
+				},
+				{
+					name: "ONE_THIRD_OF_REMAINDER",
+					fraction: residue.divide(new Fraction(3n))
+				},
+				{
+					name: "MUQASAMA_OF_REMAINDER",
+					fraction: muqasama
+				}
+			];
+			const selectedAlternative = alternatives.reduce((best, candidate) => candidate.fraction.compare(best.fraction) > 0 ? candidate : best);
+			addAssignment(assignments, "PATERNAL_GRANDFATHER", count("PATERNAL_GRANDFATHER"), selectedAlternative.fraction, "RESIDUARY", grandfatherComparisonRuleId);
+			residuaryAssignments.push({
+				heirType: "PATERNAL_GRANDFATHER",
+				fraction: selectedAlternative.fraction.toJSON(),
+				ruleId: grandfatherComparisonRuleId,
+				reason: `The exact comparison selected ${selectedAlternative.name}.`
+			});
+			const siblingResidue = residue.subtract(selectedAlternative.fraction);
+			const siblingRuleId = "KZ-FR-020-GRANDFATHER-SIBLING-RESIDUE-DISTRIBUTION";
+			if (siblingResidue.compare(Fraction.ZERO) > 0) if (count("FULL_BROTHER") + count("FULL_SISTER") > 0) addWeightedShare(siblingResidue, "FULL_BROTHER", "FULL_SISTER", siblingRuleId);
+			else addWeightedShare(siblingResidue, "PATERNAL_BROTHER", "PATERNAL_SISTER", siblingRuleId);
+			advancedCaseDetails = {
+				kind: advancedCase?.kind === "MUADDA" ? "MUADDA" : "GRANDFATHER_WITH_SIBLINGS",
+				alternatives: alternatives.map((alternative) => ({
+					name: alternative.name,
+					fraction: alternative.fraction.toJSON()
+				})),
+				selectedAlternative: selectedAlternative.name,
+				selectedFraction: selectedAlternative.fraction.toJSON()
+			};
+		}
 		if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-013-SONS-SON-GROUP-RESIDUARY")) addResidue("SONS_SON", "KZ-FR-013-SONS-SON-GROUP-RESIDUARY");
 		if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE")) addWeightedResidue("SONS_SON", "SONS_DAUGHTER", "KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE");
 		if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-019-FULL-BROTHER-RESIDUARY")) addResidue("FULL_BROTHER", "KZ-FR-019-FULL-BROTHER-RESIDUARY");
@@ -2647,6 +3067,51 @@
 				sourceReferences: ruleSources([share.ruleId])
 			}))
 		];
+		if (advancedCaseDetails?.kind === "GRANDFATHER_WITH_SIBLINGS" || advancedCaseDetails?.kind === "MUADDA") {
+			if (grandfatherComparisonRuleId === null) throw new Error("Grandfather comparison details require an admitted comparison rule.");
+			const comparisonRuleId = grandfatherComparisonRuleId;
+			explanationSteps.push({
+				kind: "GRANDFATHER_COMPARISON",
+				title: "Paternal grandfather — exact alternatives",
+				summary: `${advancedCaseDetails.alternatives.map((alternative) => `${alternative.name}: ${alternative.fraction.numerator}/${alternative.fraction.denominator}`).join("; ")}. Selected ${advancedCaseDetails.selectedAlternative}.`,
+				heirType: "PATERNAL_GRANDFATHER",
+				fraction: advancedCaseDetails.selectedFraction,
+				ruleIds: [comparisonRuleId],
+				sourceReferences: ruleSources([comparisonRuleId])
+			});
+			if (advancedCaseDetails.kind === "MUADDA") explanationSteps.push({
+				kind: "SPECIAL_CASE",
+				title: "المعادة — Mu‘adda",
+				summary: "Both sibling lines were counted in the grandfather comparison; after his share, the admitted full-brother-present branch gives the sibling residue to the full sibling line and the paternal line receives zero.",
+				ruleIds: ["KZ-FR-022-MUADDA-FULL-MALE-LINE"],
+				sourceReferences: ruleSources(["KZ-FR-022-MUADDA-FULL-MALE-LINE"])
+			});
+		} else if (advancedCaseDetails?.kind === "AKDARIYYA") {
+			const ruleId = advancedCaseDetails.sisterType === "FULL_SISTER" ? "KZ-FR-023-AKDARIYYA-FULL-SISTER" : "KZ-FR-023-AKDARIYYA-PATERNAL-SISTER";
+			explanationSteps.push({
+				kind: "SPECIAL_CASE",
+				title: "الأكدرية — Akdariyya",
+				summary: "The exact four-heir detector replaces the ordinary path: initial fixed shares undergo awl to 9, then the grandfather and sister combine and divide two to one, correcting the case to 27.",
+				ruleIds: [ruleId],
+				sourceReferences: ruleSources([ruleId])
+			});
+			for (const [heirType, fraction] of [["PATERNAL_GRANDFATHER", new Fraction(8n, 27n)], [advancedCaseDetails.sisterType, new Fraction(4n, 27n)]]) explanationSteps.push({
+				kind: "SPECIAL_CASE",
+				title: `${heirType} — final Akdariyya share`,
+				summary: "This is the final exact share after the special two-to-one redistribution.",
+				heirType,
+				fraction: fraction.toJSON(),
+				ruleIds: [ruleId],
+				sourceReferences: ruleSources([ruleId])
+			});
+		} else if (advancedCaseDetails?.kind === "MUSHTARAKA") explanationSteps.push({
+			kind: "SPECIAL_CASE",
+			title: "المشتركة — Mushtaraka",
+			summary: "The canonical full brother joins the two uterine siblings in their collective one third; all three persons share it equally.",
+			fraction: new Fraction(1n, 3n).toJSON(),
+			ruleIds: ["KZ-FR-018-MUSHTARAKA-CANONICAL"],
+			sourceReferences: ruleSources(["KZ-FR-018-MUSHTARAKA-CANONICAL"])
+		});
 		if (awlDetails !== null) explanationSteps.push({
 			kind: "AWL",
 			title: `العول — ${awlDetails.originalAsl} → ${awlDetails.adjustedDenominator}`,
@@ -2729,7 +3194,8 @@
 			appliedProductionRuleIds: appliedRuleIds,
 			sourceReferences: sources,
 			explanationSteps,
-			calculationType: husbandUmari || wifeUmari ? "UMARIYYATAYN" : "ORDINARY",
+			calculationType: advancedCaseDetails?.kind === "AKDARIYYA" ? "AKDARIYYA" : advancedCaseDetails?.kind === "MUSHTARAKA" ? "MUSHTARAKA" : advancedCaseDetails?.kind === "MUADDA" ? "MUADDA" : advancedCaseDetails?.kind === "GRANDFATHER_WITH_SIBLINGS" ? "GRANDFATHER_WITH_SIBLINGS" : husbandUmari || wifeUmari ? "UMARIYYATAYN" : "ORDINARY",
+			advancedCaseDetails,
 			remainderPolicy: input.remainderPolicy ?? "UNSURE"
 		};
 	}

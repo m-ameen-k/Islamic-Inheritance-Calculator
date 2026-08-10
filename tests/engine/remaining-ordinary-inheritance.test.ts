@@ -225,36 +225,20 @@ describe("SOURCE_DERIVED_TEST: remaining ordinary inheritance modes", () => {
 
   it.each([
     [
-      "GRANDFATHER_WITH_SIBLINGS_NOT_ADMITTED",
-      [
-        ["PATERNAL_GRANDFATHER", 1],
-        ["FULL_BROTHER", 1],
-      ],
-    ],
-    [
-      "AKDARIYYA_NOT_ADMITTED",
-      [
-        ["HUSBAND", 1],
-        ["MOTHER", 1],
-        ["PATERNAL_GRANDFATHER", 1],
-        ["FULL_SISTER", 1],
-      ],
-    ],
-    [
-      "MUSHTARAKA_NOT_ADMITTED",
+      "MUSHTARAKA_VARIANT_NOT_ADMITTED",
       [
         ["HUSBAND", 1],
         ["MOTHER", 1],
         ["MATERNAL_BROTHER", 1],
         ["MATERNAL_SISTER", 1],
-        ["FULL_BROTHER", 1],
+        ["FULL_BROTHER", 2],
       ],
     ],
     [
-      "MUADDA_NOT_ADMITTED",
+      "MUADDA_FEMALE_BRANCH_NOT_ADMITTED",
       [
         ["PATERNAL_GRANDFATHER", 1],
-        ["FULL_BROTHER", 1],
+        ["FULL_SISTER", 1],
         ["PATERNAL_BROTHER", 1],
       ],
     ],

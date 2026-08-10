@@ -192,14 +192,6 @@ describe("SOURCE_DERIVED_TEST: extended ordinary fixed-share executor", () => {
 
   it.each([
     [
-      "grandfather with sibling",
-      [
-        ["PATERNAL_GRANDFATHER", 1],
-        ["FULL_BROTHER", 1],
-      ],
-      "GRANDFATHER_WITH_SIBLINGS_NOT_ADMITTED",
-    ],
-    [
       "blocked siblings counted for mother",
       [
         ["MOTHER", 1],
