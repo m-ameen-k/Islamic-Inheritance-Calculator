@@ -192,8 +192,11 @@ describe("SOURCE_DERIVED_TEST: exact supported direct-family executor", () => {
       }),
     );
 
-    expect(() => calculateSupportedInheritance(input([["FULL_BROTHER", 1]]))).toThrow(
-      UnsupportedInheritanceCaseError,
+    expect(calculateSupportedInheritance(input([["FULL_BROTHER", 1]])).allocations[0]).toEqual(
+      expect.objectContaining({
+        heirType: "FULL_BROTHER",
+        collectiveFraction: { numerator: "1", denominator: "1" },
+      }),
     );
     expect(() =>
       calculateSupportedInheritance(

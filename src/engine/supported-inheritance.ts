@@ -224,6 +224,10 @@ function fractionReason(heirType: HeirType, ruleId: string): string {
   if (ruleId.includes("FATHER-ONE-SIXTH")) return "A qualifying male descendant is present.";
   if (ruleId.includes("SONS-DAUGHTER") && ruleId.includes("ONE-SIXTH"))
     return "One direct daughter is present, so the son's daughter receives the complementary 1/6.";
+  if (ruleId.includes("GRANDMOTHER-GROUP"))
+    return "Eligible immediate grandmothers share the collective 1/6 equally.";
+  if (ruleId.includes("MIXED-UTERINE"))
+    return "Eligible uterine brothers and sisters share the collective 1/3 equally.";
   if (ruleId.includes("SONS-DAUGHTER"))
     return "The admitted son's-daughter fixed-share conditions are satisfied.";
   if (ruleId.includes("UTERINE-SIBLING"))
@@ -235,32 +239,81 @@ function fractionReason(heirType: HeirType, ruleId: string): string {
   return "The admitted production rule's stated conditions are satisfied.";
 }
 
-function correctionFor(assignments: readonly MutableAssignment[]): {
+function correctionFor(
+  assignments: readonly MutableAssignment[],
+  admittedCaseBase?: bigint,
+): {
   workingDenominator: bigint;
   correctedDenominator: bigint;
   factor: bigint;
   brokenClasses: readonly HeirType[];
   ruleId: "KZ-FR-029-SINGLE-CLASS-CORRECTION" | "KZ-FR-029-MULTIPLE-CLASS-CORRECTION" | null;
 } {
-  const workingDenominator = assignments.reduce(
-    (denominator, assignment) => leastCommonMultiple(denominator, assignment.fraction.denominator),
-    1n,
+  const workingDenominator =
+    admittedCaseBase ??
+    assignments.reduce(
+      (denominator, assignment) =>
+        leastCommonMultiple(denominator, assignment.fraction.denominator),
+      1n,
+    );
+  const groupedRules = new Map<string, "EQUAL" | "TWO_TO_ONE">([
+    ["KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE", "TWO_TO_ONE"],
+    ["KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH", "EQUAL"],
+    ["KZ-FR-019-FULL-SIBLINGS-TWO-TO-ONE", "TWO_TO_ONE"],
+    ["KZ-FR-019-PATERNAL-SIBLINGS-TWO-TO-ONE", "TWO_TO_ONE"],
+    ["KZ-FR-019-MIXED-UTERINE-SIBLING-GROUP-ONE-THIRD-EQUAL", "EQUAL"],
+  ]);
+  const groupedAssignmentIds = new Set<string>();
+  const correctionClasses: {
+    heirTypes: readonly HeirType[];
+    fraction: Fraction;
+    units: bigint;
+  }[] = [];
+  for (const [ruleId, division] of groupedRules) {
+    const members = assignments.filter((assignment) => assignment.ruleIds.includes(ruleId));
+    if (members.length === 0) continue;
+    members.forEach((member) => groupedAssignmentIds.add(member.heirType));
+    correctionClasses.push({
+      heirTypes: members.map((member) => member.heirType),
+      fraction: sumFractions(members.map((member) => member.fraction)),
+      units: BigInt(
+        members.reduce(
+          (total, member) =>
+            total +
+            member.count *
+              (division === "TWO_TO_ONE" &&
+              (member.heirType === "SONS_SON" ||
+                member.heirType === "FULL_BROTHER" ||
+                member.heirType === "PATERNAL_BROTHER")
+                ? 2
+                : 1),
+          0,
+        ),
+      ),
+    });
+  }
+  correctionClasses.push(
+    ...assignments
+      .filter((assignment) => !groupedAssignmentIds.has(assignment.heirType))
+      .map((assignment) => ({
+        heirTypes: [assignment.heirType],
+        fraction: assignment.fraction,
+        units: BigInt(assignment.count),
+      })),
   );
-  const broken = assignments.flatMap((assignment) => {
-    if (assignment.count <= 1) return [];
-    const saham =
-      assignment.fraction.numerator * (workingDenominator / assignment.fraction.denominator);
-    if (saham % BigInt(assignment.count) === 0n) return [];
-    const factor =
-      BigInt(assignment.count) / greatestCommonDivisor(BigInt(assignment.count), saham);
-    return [{ heirType: assignment.heirType, factor }];
+  const broken = correctionClasses.flatMap((correctionClass) => {
+    const dividend = correctionClass.fraction.numerator * workingDenominator;
+    const divisor = correctionClass.fraction.denominator * correctionClass.units;
+    const factor = divisor / greatestCommonDivisor(dividend, divisor);
+    if (factor === 1n) return [];
+    return [{ heirTypes: correctionClass.heirTypes, factor }];
   });
   const factor = broken.reduce((combined, item) => leastCommonMultiple(combined, item.factor), 1n);
   return {
     workingDenominator,
     correctedDenominator: workingDenominator * factor,
     factor,
-    brokenClasses: broken.map((item) => item.heirType),
+    brokenClasses: broken.flatMap((item) => item.heirTypes),
     ruleId:
       broken.length === 0
         ? null
@@ -308,6 +361,7 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
   const assignments = new Map<HeirType, MutableAssignment>();
   const fixedShareAssignments: ShareAssignment[] = [];
   const residuaryAssignments: ShareAssignment[] = [];
+  const fixedShareGroups: { fraction: Fraction; heirTypes: readonly HeirType[] }[] = [];
   const addFixed = (type: HeirType, share: Fraction, ruleId: string): void => {
     addAssignment(assignments, type, count(type), share, "FIXED", ruleId);
     fixedShareAssignments.push({
@@ -315,6 +369,30 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
       fraction: share.toJSON(),
       ruleId,
       reason: fractionReason(type, ruleId),
+    });
+    fixedShareGroups.push({ fraction: share, heirTypes: [type] });
+  };
+  const addFixedGroup = (
+    types: readonly HeirType[],
+    groupShare: Fraction,
+    ruleId: string,
+  ): void => {
+    const totalCount = types.reduce((total, type) => total + count(type), 0);
+    for (const type of types) {
+      const categoryCount = count(type);
+      if (categoryCount === 0) continue;
+      const share = groupShare.multiply(new Fraction(BigInt(categoryCount), BigInt(totalCount)));
+      addAssignment(assignments, type, categoryCount, share, "FIXED", ruleId);
+      fixedShareAssignments.push({
+        heirType: type,
+        fraction: share.toJSON(),
+        ruleId,
+        reason: fractionReason(type, ruleId),
+      });
+    }
+    fixedShareGroups.push({
+      fraction: groupShare,
+      heirTypes: types.filter((type) => count(type) > 0),
     });
   };
 
@@ -373,6 +451,11 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
         "KZ-FR-010-ONE-SONS-DAUGHTER-WITH-DAUGHTER-ONE-SIXTH",
         new Fraction(1n, 6n),
       ],
+      [
+        "SONS_DAUGHTER",
+        "KZ-FR-013-SONS-DAUGHTER-GROUP-WITH-DAUGHTER-ONE-SIXTH",
+        new Fraction(1n, 6n),
+      ],
       ["FULL_SISTER", "KZ-FR-005-ONE-FULL-SISTER-ONE-HALF", new Fraction(1n, 2n)],
       ["FULL_SISTER", "KZ-FR-008-FULL-SISTER-GROUP-TWO-THIRDS", new Fraction(2n, 3n)],
       ["PATERNAL_SISTER", "KZ-FR-005-ONE-PATERNAL-SISTER-ONE-HALF", new Fraction(1n, 2n)],
@@ -387,30 +470,28 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
     }
     const uterineRuleId = required.has("KZ-FR-010-ONE-UTERINE-SIBLING-ONE-SIXTH")
       ? "KZ-FR-010-ONE-UTERINE-SIBLING-ONE-SIXTH"
-      : required.has("KZ-FR-009-UTERINE-SIBLING-GROUP-ONE-THIRD")
-        ? "KZ-FR-009-UTERINE-SIBLING-GROUP-ONE-THIRD"
-        : null;
+      : required.has("KZ-FR-019-MIXED-UTERINE-SIBLING-GROUP-ONE-THIRD-EQUAL")
+        ? "KZ-FR-019-MIXED-UTERINE-SIBLING-GROUP-ONE-THIRD-EQUAL"
+        : required.has("KZ-FR-009-UTERINE-SIBLING-GROUP-ONE-THIRD")
+          ? "KZ-FR-009-UTERINE-SIBLING-GROUP-ONE-THIRD"
+          : null;
     if (uterineRuleId !== null) {
-      const uterineType: HeirType =
-        count("MATERNAL_BROTHER") > 0 ? "MATERNAL_BROTHER" : "MATERNAL_SISTER";
-      addFixed(
-        uterineType,
-        uterineRuleId.includes("ONE-SIXTH") ? new Fraction(1n, 6n) : new Fraction(1n, 3n),
-        uterineRuleId,
+      const groupShare = uterineRuleId.includes("ONE-SIXTH")
+        ? new Fraction(1n, 6n)
+        : new Fraction(1n, 3n);
+      addFixedGroup(["MATERNAL_BROTHER", "MATERNAL_SISTER"], groupShare, uterineRuleId);
+    }
+    if (required.has("KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH")) {
+      addFixedGroup(
+        ["MATERNAL_GRANDMOTHER", "PATERNAL_GRANDMOTHER"],
+        new Fraction(1n, 6n),
+        "KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH",
       );
     }
   }
 
-  const originalFixedTotal = sumFractions(
-    [...assignments.values()].map((assignment) => assignment.fraction),
-  );
-  const originalFixedAssignments = [...assignments.values()].map((assignment) => ({
-    assignment,
-    originalFraction: assignment.fraction,
-  }));
-  const originalAsl = deriveOriginalAsl(
-    originalFixedAssignments.map(({ originalFraction }) => originalFraction),
-  );
+  const originalFixedTotal = sumFractions(fixedShareGroups.map((group) => group.fraction));
+  const originalAsl = deriveOriginalAsl(fixedShareGroups.map((group) => group.fraction));
   if (!isOriginalAslAdmitted(originalAsl, PRODUCTION_RULES)) {
     throw new UnsupportedInheritanceCaseError(coverage, [
       `RULE_NOT_ADMITTED:${ORIGINAL_ASL_RULE_ID}`,
@@ -418,7 +499,7 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
   }
   let awlDetails: InheritanceResult["awlDetails"] = null;
   const awlDenominator = deriveAwlDenominator(
-    originalFixedAssignments.map(({ originalFraction }) => originalFraction),
+    fixedShareGroups.map((group) => group.fraction),
     originalAsl,
   );
   if (awlDenominator !== null) {
@@ -427,16 +508,24 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
         `AWL_ENDPOINT_NOT_ADMITTED:${originalAsl}->${awlDenominator}`,
       ]);
     }
-    const adjustments = originalFixedAssignments.map(({ assignment, originalFraction }) => {
-      const saham = originalSaham(originalFraction, originalAsl);
-      const adjustedFraction = new Fraction(saham, awlDenominator);
-      assignment.fraction = adjustedFraction;
-      return {
-        heirType: assignment.heirType,
-        originalFraction: originalFraction.toJSON(),
-        originalSaham: saham.toString(),
-        adjustedFraction: adjustedFraction.toJSON(),
-      };
+    const adjustments = fixedShareGroups.flatMap((group) => {
+      const saham = originalSaham(group.fraction, originalAsl);
+      const adjustedGroupFraction = new Fraction(saham, awlDenominator);
+      return group.heirTypes.map((heirType) => {
+        const assignment = assignments.get(heirType);
+        if (assignment === undefined) throw new Error(`Missing fixed assignment for ${heirType}.`);
+        const originalFraction = assignment.fraction;
+        const adjustedFraction = adjustedGroupFraction.multiply(
+          originalFraction.divide(group.fraction),
+        );
+        assignment.fraction = adjustedFraction;
+        return {
+          heirType,
+          originalFraction: originalFraction.toJSON(),
+          originalSaham: saham.toString(),
+          adjustedFraction: adjustedFraction.toJSON(),
+        };
+      });
     });
     awlDetails = {
       originalAsl: originalAsl.toString(),
@@ -458,6 +547,27 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
       ruleId,
       reason: "This class receives the residue after fixed shares.",
     });
+  };
+  const addWeightedResidue = (maleType: HeirType, femaleType: HeirType, ruleId: string): void => {
+    const units = BigInt(2 * count(maleType) + count(femaleType));
+    const maleShare = residue.multiply(new Fraction(BigInt(2 * count(maleType)), units));
+    const femaleShare = residue.subtract(maleShare);
+    addAssignment(assignments, maleType, count(maleType), maleShare, "RESIDUARY", ruleId);
+    addAssignment(assignments, femaleType, count(femaleType), femaleShare, "RESIDUARY", ruleId);
+    residuaryAssignments.push(
+      {
+        heirType: maleType,
+        fraction: maleShare.toJSON(),
+        ruleId,
+        reason: `Each ${maleType} receives two weight units.`,
+      },
+      {
+        heirType: femaleType,
+        fraction: femaleShare.toJSON(),
+        ruleId,
+        reason: `Each ${femaleType} receives one weight unit.`,
+      },
+    );
   };
   if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-012-SON-GROUP-RESIDUARY"))
     addResidue("SON", "KZ-FR-012-SON-GROUP-RESIDUARY");
@@ -503,6 +613,35 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
     addResidue("FATHER", "KZ-FR-014-FATHER-RESIDUARY");
   if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE"))
     addResidue("FATHER", "KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE");
+  if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-013-SONS-SON-GROUP-RESIDUARY"))
+    addResidue("SONS_SON", "KZ-FR-013-SONS-SON-GROUP-RESIDUARY");
+  if (
+    residue.compare(Fraction.ZERO) > 0 &&
+    required.has("KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE")
+  )
+    addWeightedResidue("SONS_SON", "SONS_DAUGHTER", "KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE");
+  if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-019-FULL-BROTHER-RESIDUARY"))
+    addResidue("FULL_BROTHER", "KZ-FR-019-FULL-BROTHER-RESIDUARY");
+  if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-019-FULL-SIBLINGS-TWO-TO-ONE"))
+    addWeightedResidue("FULL_BROTHER", "FULL_SISTER", "KZ-FR-019-FULL-SIBLINGS-TWO-TO-ONE");
+  if (
+    residue.compare(Fraction.ZERO) > 0 &&
+    required.has("KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY")
+  )
+    addResidue("FULL_SISTER", "KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY");
+  if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-019-PATERNAL-BROTHER-RESIDUARY"))
+    addResidue("PATERNAL_BROTHER", "KZ-FR-019-PATERNAL-BROTHER-RESIDUARY");
+  if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-019-PATERNAL-SIBLINGS-TWO-TO-ONE"))
+    addWeightedResidue(
+      "PATERNAL_BROTHER",
+      "PATERNAL_SISTER",
+      "KZ-FR-019-PATERNAL-SIBLINGS-TWO-TO-ONE",
+    );
+  if (
+    residue.compare(Fraction.ZERO) > 0 &&
+    required.has("KZ-FR-019-PATERNAL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY")
+  )
+    addResidue("PATERNAL_SISTER", "KZ-FR-019-PATERNAL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY");
 
   let raddDetails: InheritanceResult["raddDetails"] = null;
   let baytFraction = Fraction.ZERO;
@@ -570,7 +709,10 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
     };
   });
   const baytAmount = money.find((item) => item.id === "BAYT_AL_MAL")?.minorUnits ?? 0n;
-  const correction = correctionFor(assignmentList);
+  const correction = correctionFor(
+    assignmentList,
+    raddDetails === null ? (awlDenominator ?? originalAsl) : undefined,
+  );
   if (correction.ruleId !== null && !productionById.has(correction.ruleId)) {
     throw new UnsupportedInheritanceCaseError(coverage, [`RULE_NOT_ADMITTED:${correction.ruleId}`]);
   }

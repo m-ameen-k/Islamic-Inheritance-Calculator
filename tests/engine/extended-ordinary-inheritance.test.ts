@@ -125,36 +125,58 @@ describe("SOURCE_DERIVED_TEST: extended ordinary fixed-share executor", () => {
   });
 
   it.each([
-    ["positive son's-son share", [["SONS_SON", 1]], "SONS_SON_POSITIVE_SHARE_NOT_ADMITTED"],
+    ["son's son alone", [["SONS_SON", 1]], { SONS_SON: "1/1" }],
     [
-      "grandmother hierarchy",
+      "son's son and son's daughter",
       [
-        ["MOTHER", 1],
-        ["MATERNAL_GRANDMOTHER", 1],
+        ["SONS_SON", 1],
+        ["SONS_DAUGHTER", 1],
       ],
-      "GRANDMOTHER_HIERARCHY_NOT_ADMITTED:MATERNAL_GRANDMOTHER",
+      { SONS_SON: "2/3", SONS_DAUGHTER: "1/3" },
     ],
     [
-      "paternal grandmother with father",
+      "daughter and son's son",
       [
-        ["FATHER", 1],
-        ["PATERNAL_GRANDMOTHER", 1],
+        ["DAUGHTER", 1],
+        ["SONS_SON", 1],
       ],
-      "GRANDMOTHER_HIERARCHY_NOT_ADMITTED:PATERNAL_GRANDMOTHER",
+      { DAUGHTER: "1/2", SONS_SON: "1/2" },
     ],
-    ["unblocked full brother", [["FULL_BROTHER", 1]], "UNSUPPORTED_HEIR_CATEGORY:FULL_BROTHER"],
+    ["maternal grandmother alone", [["MATERNAL_GRANDMOTHER", 1]], { MATERNAL_GRANDMOTHER: "1/1" }],
+    ["paternal grandmother alone", [["PATERNAL_GRANDMOTHER", 1]], { PATERNAL_GRANDMOTHER: "1/1" }],
+    ["full brother alone", [["FULL_BROTHER", 1]], { FULL_BROTHER: "1/1" }],
     [
-      "unblocked paternal brother",
-      [["PATERNAL_BROTHER", 1]],
-      "UNSUPPORTED_HEIR_CATEGORY:PATERNAL_BROTHER",
+      "full brother and sister",
+      [
+        ["FULL_BROTHER", 1],
+        ["FULL_SISTER", 1],
+      ],
+      { FULL_BROTHER: "2/3", FULL_SISTER: "1/3" },
     ],
     [
-      "sister with daughter",
+      "daughter and full sister",
       [
         ["DAUGHTER", 1],
         ["FULL_SISTER", 1],
       ],
-      "SISTER_RESIDUARY_OR_BLOCKING_INTERACTION_NOT_ADMITTED",
+      { DAUGHTER: "1/2", FULL_SISTER: "1/2" },
+    ],
+    ["paternal brother alone", [["PATERNAL_BROTHER", 1]], { PATERNAL_BROTHER: "1/1" }],
+    [
+      "paternal brother and sister",
+      [
+        ["PATERNAL_BROTHER", 1],
+        ["PATERNAL_SISTER", 1],
+      ],
+      { PATERNAL_BROTHER: "2/3", PATERNAL_SISTER: "1/3" },
+    ],
+    [
+      "daughter and paternal sister",
+      [
+        ["DAUGHTER", 1],
+        ["PATERNAL_SISTER", 1],
+      ],
+      { DAUGHTER: "1/2", PATERNAL_SISTER: "1/2" },
     ],
     [
       "mixed uterine siblings",
@@ -162,8 +184,13 @@ describe("SOURCE_DERIVED_TEST: extended ordinary fixed-share executor", () => {
         ["MATERNAL_BROTHER", 1],
         ["MATERNAL_SISTER", 1],
       ],
-      "MIXED_UTERINE_SIBLING_DIVISION_NOT_ADMITTED",
+      { MATERNAL_BROTHER: "1/2", MATERNAL_SISTER: "1/2" },
     ],
+  ] as const)("calculates newly admitted %s", (_name, entries, expected) => {
+    expect(shares(entries)).toEqual(expected);
+  });
+
+  it.each([
     [
       "grandfather with sibling",
       [
@@ -171,6 +198,15 @@ describe("SOURCE_DERIVED_TEST: extended ordinary fixed-share executor", () => {
         ["FULL_BROTHER", 1],
       ],
       "GRANDFATHER_WITH_SIBLINGS_NOT_ADMITTED",
+    ],
+    [
+      "blocked siblings counted for mother",
+      [
+        ["MOTHER", 1],
+        ["FATHER", 1],
+        ["FULL_SISTER", 2],
+      ],
+      "MOTHER_BLOCKED_SIBLING_COUNT_NOT_ADMITTED",
     ],
   ] as const)("rejects %s with a typed reason", (_name, entries, reason) => {
     const coverage = evaluateWholeCaseCoverage({
@@ -182,6 +218,30 @@ describe("SOURCE_DERIVED_TEST: extended ordinary fixed-share executor", () => {
     expect(coverage.reasons).toContain(reason);
     expect(() => calculateSupportedInheritance(input(entries))).toThrow(
       UnsupportedInheritanceCaseError,
+    );
+  });
+
+  it("keeps blocked ordinary heirs visible with zero allocation and a rule-derived explanation", () => {
+    const result = calculateSupportedInheritance(
+      input([
+        ["SON", 1],
+        ["SONS_SON", 1],
+        ["SONS_DAUGHTER", 1],
+        ["FULL_SISTER", 1],
+      ]),
+    );
+    expect(result.allocations.map((allocation) => allocation.heirType)).toEqual(["SON"]);
+    expect(result.blockedHeirs.map((heir) => heir.type).sort()).toEqual([
+      "FULL_SISTER",
+      "SONS_DAUGHTER",
+      "SONS_SON",
+    ]);
+    expect(result.explanationSteps.find((step) => step.kind === "BLOCKING")?.ruleIds).toEqual(
+      expect.arrayContaining([
+        "KZ-FR-011-SON-BLOCKS-SONS-SON",
+        "KZ-FR-013-SON-BLOCKS-SONS-DAUGHTER",
+        "KZ-FR-019-SON-BLOCKS-SISTER-GROUP",
+      ]),
     );
   });
 

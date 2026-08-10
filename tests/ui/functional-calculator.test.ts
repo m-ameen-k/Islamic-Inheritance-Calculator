@@ -32,6 +32,7 @@ describe("TECHNICAL_TEST: functional public calculator wiring", () => {
 
   it("renders learning content from the same structured result and invalidates stale results", () => {
     expect(app).toContain("result.explanationSteps");
+    expect(app).toContain("result.blockedHeirs");
     expect(app).toContain("renderCalculationResult(result)");
     expect(app).toContain("invalidateCalculation();");
     expect(html).toContain('id="calculationExplanation"');

@@ -591,7 +591,20 @@ function renderCalculationResult(result){
     sharesList.appendChild(row);
   }
   const hajb=document.getElementById("hajbList");
-  hajb.replaceChildren(uiElement("p","learn-card",getPrimaryText("no_blk",lang).text));
+  hajb.replaceChildren();
+  if(result.blockedHeirs.length===0){
+    hajb.appendChild(uiElement("p","learn-card",getPrimaryText("no_blk",lang).text));
+  }else{
+    for(const blocked of result.blockedHeirs){
+      const card=uiElement("div","learn-card");
+      card.append(
+        uiElement("h3","",`${heirLabel(blocked.type)} × ${blocked.count}`),
+        uiElement("p","",blocked.reason),
+        uiElement("p","code-like",`${getPrimaryText("rules_used",lang).text}: ${blocked.ruleId}`)
+      );
+      hajb.appendChild(card);
+    }
+  }
   const asl=document.getElementById("aslDetail");asl.replaceChildren();
   const aslBox=uiElement("div","learn-card");
   aslBox.append(uiElement("p","code-like",`أصل المسألة: ${result.originalAsl}`));
