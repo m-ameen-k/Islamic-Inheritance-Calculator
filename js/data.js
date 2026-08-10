@@ -153,6 +153,10 @@ Object.assign(T.en, {
   limited_status:"Calculator status: limited direct-family scope"
   ,bequest_unresolved:"A bequest above one third needs explicit valid consent before calculation."
   ,limited_scope_note:"Limited direct-family production scope.",source_supported_scope:"Source-corroborated supported scope"
+  ,uncertain_death_order:"The death order of potential mutual heirs is uncertain"
+  ,uncertain_death_order_help:"This requires separate estate review; the calculator will not assume an order."
+  ,uncertain_death_order_review:"Uncertain death order requires separate estate review."
+  ,multiple_emancipators_review:"Multiple emancipators are not supported by the admitted source rule yet."
 });
 Object.assign(T.ar, {
   page_intro:"تتوفر الآن مسائل الأسرة المباشرة العادية على المذهب الشافعي، وتتوقف المسائل غير المدعومة قبل الحساب.",
@@ -169,6 +173,10 @@ Object.assign(T.ar, {
   limited_status:"حالة الحاسبة: نطاق أسرة مباشرة محدود"
   ,bequest_unresolved:"تحتاج الوصية التي تتجاوز الثلث إلى موافقة صحيحة وصريحة قبل الحساب."
   ,limited_scope_note:"نطاق إنتاج محدود للأسرة المباشرة.",source_supported_scope:"نطاق مدعوم بأدلة مصدرية متوافقة"
+  ,uncertain_death_order:"ترتيب وفاة من قد يتوارثون غير معلوم"
+  ,uncertain_death_order_help:"تحتاج هذه الحالة إلى مراجعة تركات منفصلة، ولن تفترض الحاسبة ترتيبًا للوفاة."
+  ,uncertain_death_order_review:"يحتاج ترتيب الوفاة غير المعلوم إلى مراجعة تركات منفصلة."
+  ,multiple_emancipators_review:"لا تدعم القاعدة المصدرية المعتمدة تعدد المعتقين بعد."
 });
 Object.assign(T.ml, {
   page_intro:"സാധാരണ നേരിട്ടുള്ള കുടുംബ ശാഫിഈ കേസുകൾ ഇപ്പോൾ ലഭ്യമാണ്. പിന്തുണയില്ലാത്ത കേസുകൾ കണക്കിന് മുമ്പ് നിർത്തും.",
@@ -185,6 +193,10 @@ Object.assign(T.ml, {
   limited_status:"കാൽക്കുലേറ്റർ നില: പരിമിത നേരിട്ടുള്ള കുടുംബ പരിധി"
   ,bequest_unresolved:"മൂന്നിലൊന്നിൽ കൂടുതലുള്ള വസിയ്യത്തിന് കണക്കിന് മുമ്പ് വ്യക്തമായ സാധുവായ സമ്മതം വേണം."
   ,limited_scope_note:"പരിമിത നേരിട്ടുള്ള കുടുംബ പ്രൊഡക്ഷൻ പരിധി.",source_supported_scope:"സ്രോതസ്സുകളാൽ സ്ഥിരീകരിച്ച പിന്തുണാ പരിധി"
+  ,uncertain_death_order:"പരസ്പരം അവകാശികളാകാവുന്നവരുടെ മരണക്രമം ഉറപ്പില്ല"
+  ,uncertain_death_order_help:"ഇതിന് വേർതിരിച്ച സ്വത്ത് പരിശോധന വേണം; കാൽക്കുലേറ്റർ മരണക്രമം അനുമാനിക്കില്ല."
+  ,uncertain_death_order_review:"ഉറപ്പില്ലാത്ത മരണക്രമത്തിന് വേർതിരിച്ച സ്വത്ത് പരിശോധന ആവശ്യമാണ്."
+  ,multiple_emancipators_review:"ഒന്നിലധികം മോചകരുടെ കേസ് അംഗീകരിച്ച സ്രോതസ്സ് നിയമം ഇതുവരെ പിന്തുണയ്ക്കുന്നില്ല."
 });
 
 const LANGUAGE_PAIRS = Object.freeze({

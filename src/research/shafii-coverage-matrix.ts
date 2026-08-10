@@ -146,10 +146,9 @@ export const SHAFII_COVERAGE_MATRIX = [
     specialCaseInteractions: ["Canonical Mushtaraka ascendant alternative"],
     sourceRecordIds: ["KZ-FR-017", "KZ-FR-018"],
     productionRuleIds: rules("KZ-FR-017-", "KZ-FR-018-"),
-    status: "PARTIALLY_SUPPORTED",
-    unsupportedReason: "FARTHER_GRANDMOTHER_LINEAGE_NOT_REPRESENTABLE",
-    sourceGap:
-      "The immediate category is supported; farther degree and lineage paths are not representable.",
+    status: "PRODUCTION_SUPPORTED",
+    unsupportedReason: null,
+    sourceGap: null,
   }),
   heir("PATERNAL_GRANDMOTHER", "Immediate grandmother", {
     fixedShareModes: ["Eligible grandmother group 1/6"],
@@ -158,10 +157,9 @@ export const SHAFII_COVERAGE_MATRIX = [
     specialCaseInteractions: ["Canonical Mushtaraka ascendant alternative"],
     sourceRecordIds: ["KZ-FR-017", "KZ-FR-018"],
     productionRuleIds: rules("KZ-FR-017-", "KZ-FR-018-"),
-    status: "PARTIALLY_SUPPORTED",
-    unsupportedReason: "FARTHER_GRANDMOTHER_LINEAGE_NOT_REPRESENTABLE",
-    sourceGap:
-      "The immediate category is supported; farther degree and lineage paths are not representable.",
+    status: "PRODUCTION_SUPPORTED",
+    unsupportedReason: null,
+    sourceGap: null,
   }),
   heir("SON", "Descendant", {
     residuaryModes: ["Residuary group", "With daughters at 2:1"],
@@ -191,9 +189,9 @@ export const SHAFII_COVERAGE_MATRIX = [
       "KZ-FR-013-SONS-SON",
       "KZ-FR-019-SONS-SON",
     ),
-    status: "PARTIALLY_SUPPORTED",
-    unsupportedReason: "DEEPER_DESCENDANT_GENERATION_NOT_REPRESENTABLE",
-    sourceGap: "Only the normalized first son-line generation is modeled.",
+    status: "PRODUCTION_SUPPORTED",
+    unsupportedReason: null,
+    sourceGap: null,
   }),
   heir("SONS_DAUGHTER", "First son-line generation", {
     fixedShareModes: ["1/2", "2/3 collectively", "1/6 complement with one daughter"],
@@ -208,9 +206,9 @@ export const SHAFII_COVERAGE_MATRIX = [
       "KZ-FR-013-",
       "KZ-FR-019-SONS-DAUGHTER",
     ),
-    status: "PARTIALLY_SUPPORTED",
-    unsupportedReason: "DEEPER_DESCENDANT_GENERATION_NOT_REPRESENTABLE",
-    sourceGap: "Only the normalized first son-line generation is modeled.",
+    status: "PRODUCTION_SUPPORTED",
+    unsupportedReason: null,
+    sourceGap: null,
   }),
   heir("MATERNAL_BROTHER", "Uterine sibling", {
     fixedShareModes: ["One uterine sibling 1/6", "Plural group 1/3"],
@@ -362,23 +360,54 @@ export const SHAFII_COVERAGE_MATRIX = [
   }),
   ...(
     [
-      ["FULL_BROTHERS_SON", "Full brother's son"],
-      ["PATERNAL_BROTHERS_SON", "Consanguine brother's son"],
-      ["FULL_PATERNAL_UNCLE", "Full paternal uncle"],
-      ["PATERNAL_UNCLE", "Consanguine paternal uncle"],
-      ["FULL_PATERNAL_UNCLES_SON", "Full paternal uncle's son"],
-      ["PATERNAL_UNCLES_SON", "Consanguine paternal uncle's son"],
-      ["MALE_EMANCIPATOR", "Male emancipator / wala’"],
-      ["FEMALE_EMANCIPATOR", "Female emancipator / wala’"],
+      ["FULL_BROTHERS_SON", "Full brother's son", "FULL-BROTHERS-SON"],
+      ["PATERNAL_BROTHERS_SON", "Consanguine brother's son", "PATERNAL-BROTHERS-SON"],
+      ["FULL_PATERNAL_UNCLE", "Full paternal uncle", "FULL-PATERNAL-UNCLE"],
+      ["PATERNAL_UNCLE", "Consanguine paternal uncle", "PATERNAL-UNCLE"],
+      ["FULL_PATERNAL_UNCLES_SON", "Full paternal uncle's son", "FULL-PATERNAL-UNCLES-SON"],
+      ["PATERNAL_UNCLES_SON", "Consanguine paternal uncle's son", "PATERNAL-UNCLES-SON"],
     ] as const
-  ).map(([heirType, category]) =>
+  ).map(([heirType, category, ruleSuffix], index, categories) =>
     heir(heirType, category, {
-      sourceRecordIds: ["KZ-FR-002", "KZ-FR-003"],
-      status: "EXTRACTED_NOT_VERIFIED",
-      sourceGap:
-        "Only the Kanz extraction exists; exact order, blockers, exclusions, corroboration, fixtures, and admission are incomplete.",
+      residuaryModes: ["Residue when no source-prioritized nearer nasab residuary is eligible"],
+      blockingReceived: [
+        "Son, son's son, father, paternal grandfather, eligible full/consanguine sibling residuaries",
+        ...categories.slice(0, index).map(([, nearer]) => nearer),
+      ],
+      blockingCaused: categories.slice(index + 1).map(([, lower]) => lower),
+      collectiveHandling: "Members of the same modeled male category share its residue equally.",
+      sourceRecordIds: ["KZ-FR-019"],
+      productionRuleIds: rules(
+        `KZ-FR-019-${ruleSuffix}-RESIDUARY`,
+        `KZ-FR-019-NEARER-ASABAH-BLOCKS-${ruleSuffix}`,
+      ),
+      status: "PRODUCTION_SUPPORTED",
+      unsupportedReason: null,
+      sourceGap: null,
     }),
   ),
+  heir("MALE_EMANCIPATOR", "Male emancipator / wala’", {
+    residuaryModes: ["Direct wala' residue after all nasab residuaries"],
+    blockingReceived: ["Every eligible nasab residuary"],
+    collectiveHandling: "Exactly one direct emancipator is admitted.",
+    sourceRecordIds: ["KZ-FR-002"],
+    productionRuleIds: rules("KZ-FR-002-"),
+    status: "PARTIALLY_SUPPORTED",
+    unsupportedReason: "MULTIPLE_EMANCIPATORS_NOT_ADMITTED",
+    sourceGap:
+      "Multiple emancipators and the emancipator's agnates are not represented by the admitted atom.",
+  }),
+  heir("FEMALE_EMANCIPATOR", "Female emancipator / wala’", {
+    residuaryModes: ["Direct wala' residue after all nasab residuaries"],
+    blockingReceived: ["Every eligible nasab residuary"],
+    collectiveHandling: "Exactly one direct emancipator is admitted.",
+    sourceRecordIds: ["KZ-FR-002"],
+    productionRuleIds: rules("KZ-FR-002-"),
+    status: "PARTIALLY_SUPPORTED",
+    unsupportedReason: "MULTIPLE_EMANCIPATORS_NOT_ADMITTED",
+    sourceGap:
+      "Multiple emancipators and the emancipator's agnates are not represented by the admitted atom.",
+  }),
   topic("DESCENDANTS:DEEPER_SON_LINE", "Deeper son-line descendants", {
     sourceRecordIds: ["KZ-FR-013"],
     status: "INPUT_MODEL_LIMITATION",
@@ -485,10 +514,13 @@ export const SHAFII_COVERAGE_MATRIX = [
       "The extraction has not completed corroboration, input modeling, fixtures, or admission.",
   }),
   topic("OTHER:UNCERTAIN_DEATH_ORDER", "Simultaneous or uncertain death order", {
-    status: "NOT_IMPLEMENTED",
-    unsupportedReason: "UNCERTAIN_DEATH_ORDER_NOT_ADMITTED",
+    blockingCaused: ["Prevents ordinary single-estate calculation from assuming an order"],
+    sourceRecordIds: ["KZ-FR-024"],
+    productionRuleIds: rules("KZ-FR-024-UNCERTAIN-DEATH-ORDER"),
+    status: "PRODUCTION_SUPPORTED",
+    unsupportedReason: null,
     sourceGap:
-      "No complete structured rule record and no input model were found in the audited corpus.",
+      "The admitted safety gate does not distribute the two linked estates; that requires a future multi-estate model.",
   }),
   topic("OTHER:MUNASAKHAT", "Successive estates / munāsakhāt", {
     sourceRecordIds: ["KZ-FR-030"],

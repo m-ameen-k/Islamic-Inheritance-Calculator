@@ -10,6 +10,31 @@ import { PRODUCTION_RULES } from "../../src/rules/generated/production-registry"
 import { ADVANCED_PRODUCTION_FIXTURES } from "../fixtures/production/advanced-shafii.fixtures";
 
 describe("TECHNICAL_TEST: machine-readable Shafi‘i coverage inventory", () => {
+  it("publishes the audited status totals", () => {
+    const counts = Object.fromEntries(
+      [
+        "PRODUCTION_SUPPORTED",
+        "PARTIALLY_SUPPORTED",
+        "SOURCE_CORROBORATED_NOT_ADMITTED",
+        "EXTRACTED_NOT_VERIFIED",
+        "INPUT_MODEL_LIMITATION",
+        "NOT_IMPLEMENTED",
+      ].map((status) => [
+        status,
+        SHAFII_COVERAGE_MATRIX.filter((entry) => entry.status === status).length,
+      ]),
+    );
+    expect(SHAFII_COVERAGE_MATRIX).toHaveLength(45);
+    expect(counts).toEqual({
+      PRODUCTION_SUPPORTED: 24,
+      PARTIALLY_SUPPORTED: 12,
+      SOURCE_CORROBORATED_NOT_ADMITTED: 1,
+      EXTRACTED_NOT_VERIFIED: 6,
+      INPUT_MODEL_LIMITATION: 2,
+      NOT_IMPLEMENTED: 0,
+    });
+  });
+
   it("lists every UI-selectable heir category exactly once with an explicit status", () => {
     const heirEntries = SHAFII_COVERAGE_MATRIX.filter(
       (entry): entry is (typeof SHAFII_COVERAGE_MATRIX)[number] & { heirType: HeirType } =>
@@ -45,6 +70,18 @@ describe("TECHNICAL_TEST: machine-readable Shafi‘i coverage inventory", () => 
       expect(coverage.status, entry.id).toBe("UNSUPPORTED_RULE");
       expect(coverage.reasons, entry.id).toContain(entry.unsupportedReason);
     }
+  });
+
+  it("exposes the admitted uncertain-death-order gate as a typed non-calculation result", () => {
+    const coverage = evaluateWholeCaseCoverage({
+      deceasedSex: "MALE",
+      heirs: [{ heirId: "son", type: "SON", count: 1 }],
+      remainderPolicy: "NO_FUNCTIONING_BAYT_AL_MAL_RADD",
+      uncertainDeathOrder: true,
+    });
+    expect(coverage.status).toBe("UNSUPPORTED_RULE");
+    expect(coverage.reasons).toEqual(["UNCERTAIN_DEATH_ORDER_REQUIRES_REVIEW"]);
+    expect(coverage.supportedRuleIds).toEqual(["KZ-FR-024-UNCERTAIN-DEATH-ORDER-SAFETY-GATE"]);
   });
 
   it("requires positive and negative fixtures for every named advanced detector", () => {

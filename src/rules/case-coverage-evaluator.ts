@@ -22,6 +22,7 @@ import {
 } from "../domain/qualifying-descendant";
 import { detectAdvancedCase, type AdvancedCaseDetection } from "../engine/advanced-case";
 import { PRODUCTION_RULES } from "./generated/production-registry";
+import { EXTENDED_NASAB_RESIDUARY_ORDER } from "./extended-residuary-rules";
 import type { ProductionRuleFile, ProductionSpouseRuleFile } from "./rule-file";
 
 export interface ProductionCorpusAdapter {
@@ -272,6 +273,7 @@ export interface WholeCaseCoverageInput {
   readonly heirs: readonly HeirInput[];
   readonly remainderPolicy: RemainderPolicy | null;
   readonly unresolvedFacts?: readonly string[];
+  readonly uncertainDeathOrder?: boolean;
 }
 
 export interface WholeCaseCoverageResult {
@@ -315,6 +317,12 @@ const ADMITTED_EXTENDED_FIXED_SHARE_TYPES = new Set<HeirType>([
   "MATERNAL_SISTER",
   "FULL_SISTER",
   "PATERNAL_SISTER",
+]);
+
+const ADMITTED_EXTENDED_RESIDUARY_TYPES = new Set<HeirType>([
+  ...EXTENDED_NASAB_RESIDUARY_ORDER,
+  "MALE_EMANCIPATOR",
+  "FEMALE_EMANCIPATOR",
 ]);
 
 const SIBLING_TYPES = new Set<HeirType>([
@@ -392,6 +400,19 @@ export function evaluateWholeCaseCoverage(
       reasons: ["NO_HEIRS_SELECTED"],
     });
   }
+  const productionIds = new Set(corpus.rules.map((rule) => rule.ruleId));
+  if (input.uncertainDeathOrder === true) {
+    const safetyRuleId = "KZ-FR-024-UNCERTAIN-DEATH-ORDER-SAFETY-GATE";
+    const admitted = productionIds.has(safetyRuleId);
+    return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
+      ...base,
+      supportedRuleIds: admitted ? [safetyRuleId] : [],
+      requiredRuleIds: [safetyRuleId],
+      reasons: [
+        admitted ? "UNCERTAIN_DEATH_ORDER_REQUIRES_REVIEW" : `RULE_NOT_ADMITTED:${safetyRuleId}`,
+      ],
+    });
+  }
   if ((input.unresolvedFacts?.length ?? 0) > 0) {
     return wholeCaseResult("MISSING_INFORMATION", normalizedHeirs, {
       ...base,
@@ -400,7 +421,6 @@ export function evaluateWholeCaseCoverage(
     });
   }
 
-  const productionIds = new Set(corpus.rules.map((rule) => rule.ruleId));
   const advancedCase = detectAdvancedCase(normalizedHeirs);
   base.advancedCase = advancedCase;
   if (advancedCase?.kind === "UNSUPPORTED_ADVANCED") {
@@ -578,6 +598,64 @@ export function evaluateWholeCaseCoverage(
       "KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-BLOCKS-PATERNAL-SIBLINGS",
       fullSisterResiduary,
     );
+  const paternalSisterResiduary =
+    !grandfatherSiblingCase &&
+    selectedCount("PATERNAL_SISTER") > 0 &&
+    selectedCount("PATERNAL_BROTHER") === 0 &&
+    selectedCount("FULL_BROTHER") === 0 &&
+    selectedCount("FULL_SISTER") === 0 &&
+    selectedCount("FATHER") === 0 &&
+    selectedCount("SON") === 0 &&
+    selectedCount("SONS_SON") === 0 &&
+    femaleDescendantPresent;
+
+  const nearerCoreNasabResiduary = (): HeirType | null => {
+    if (selectedCount("SON") > 0) return "SON";
+    if (selectedCount("SONS_SON") > 0) return "SONS_SON";
+    if (selectedCount("FATHER") > 0) return "FATHER";
+    if (selectedCount("PATERNAL_GRANDFATHER") > 0) return "PATERNAL_GRANDFATHER";
+    if (selectedCount("FULL_BROTHER") > 0) return "FULL_BROTHER";
+    if (fullSisterResiduary) return "FULL_SISTER";
+    if (selectedCount("PATERNAL_BROTHER") > 0) return "PATERNAL_BROTHER";
+    if (paternalSisterResiduary) return "PATERNAL_SISTER";
+    return null;
+  };
+  const coreNasabBlocker = nearerCoreNasabResiduary();
+  for (const [index, type] of EXTENDED_NASAB_RESIDUARY_ORDER.entries()) {
+    if (selectedCount(type) === 0) continue;
+    const nearerExtended = EXTENDED_NASAB_RESIDUARY_ORDER.slice(0, index).find(
+      (candidate) => selectedCount(candidate) > 0,
+    );
+    const blockerType = coreNasabBlocker ?? nearerExtended;
+    if (blockerType !== undefined && blockerType !== null) {
+      const suffix = type.replaceAll("_", "-");
+      addBlocked(blockerType, type, `KZ-FR-019-NEARER-ASABAH-BLOCKS-${suffix}`, true);
+    }
+  }
+
+  const selectedEmancipatorCount =
+    selectedCount("MALE_EMANCIPATOR") + selectedCount("FEMALE_EMANCIPATOR");
+  if (selectedEmancipatorCount > 1) {
+    return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
+      ...base,
+      blockedHeirs,
+      reasons: ["MULTIPLE_EMANCIPATORS_NOT_ADMITTED"],
+    });
+  }
+  const nearestExtendedResiduary = EXTENDED_NASAB_RESIDUARY_ORDER.find(
+    (candidate) =>
+      selectedCount(candidate) > 0 && !blockedHeirs.some((heir) => heir.type === candidate),
+  );
+  const walaBlocker = coreNasabBlocker ?? nearestExtendedResiduary;
+  if (walaBlocker !== undefined && walaBlocker !== null) {
+    for (const type of ["MALE_EMANCIPATOR", "FEMALE_EMANCIPATOR"] as const)
+      addBlocked(
+        walaBlocker,
+        type,
+        "KZ-FR-002-NASAB-ASABAH-BLOCKS-EMANCIPATOR",
+        selectedCount(type) > 0,
+      );
+  }
   addBlocked(
     "FULL_SISTER",
     "PATERNAL_SISTER",
@@ -620,6 +698,7 @@ export function evaluateWholeCaseCoverage(
   const supportedTypes = new Set([
     ...DIRECT_FAMILY_TYPES,
     ...ADMITTED_EXTENDED_FIXED_SHARE_TYPES,
+    ...ADMITTED_EXTENDED_RESIDUARY_TYPES,
     "PATERNAL_GRANDFATHER" as const,
   ]);
   const unsupportedHeirs = normalizedHeirs
@@ -890,6 +969,16 @@ export function evaluateWholeCaseCoverage(
         hasResiduary = true;
       }
       if (advancedCase?.kind === "MUADDA") requiredRuleIds.push(advancedCase.ruleId);
+    }
+    for (const type of EXTENDED_NASAB_RESIDUARY_ORDER) {
+      if (count(type) === 0) continue;
+      requiredRuleIds.push(`KZ-FR-019-${type.replaceAll("_", "-")}-RESIDUARY`);
+      hasResiduary = true;
+    }
+    for (const type of ["MALE_EMANCIPATOR", "FEMALE_EMANCIPATOR"] as const) {
+      if (count(type) === 0) continue;
+      requiredRuleIds.push("KZ-FR-002-EMANCIPATOR-RESIDUARY");
+      hasResiduary = true;
     }
   }
 

@@ -22,6 +22,8 @@ describe("TECHNICAL_TEST: functional public calculator wiring", () => {
     expect(app).toContain("evaluateWholeCaseCoverage(coverageInput())");
     expect(app).toContain('button.disabled=kind!=="ready"');
     expect(app).toContain("calculateSupportedInheritance(calculationInput())");
+    expect(html).toContain('id="uncertainDeathOrder"');
+    expect(app).toContain("uncertainDeathOrder:document.getElementById");
   });
 
   it("contains no inheritance share or blocking table in UI JavaScript", () => {

@@ -460,8 +460,15 @@ function coverageInput(){
     deceasedSex:gender==="m"?"MALE":"FEMALE",
     heirs:selectedCaseHeirs(),
     remainderPolicy:document.getElementById("remainderPolicy")?.value||"UNSURE",
-    unresolvedFacts:[]
+    unresolvedFacts:[],
+    uncertainDeathOrder:document.getElementById("uncertainDeathOrder")?.checked===true
   };
+}
+
+function coverageReasonText(reason){
+  if(reason==="UNCERTAIN_DEATH_ORDER_REQUIRES_REVIEW") return getPrimaryText("uncertain_death_order_review",lang).text;
+  if(reason==="MULTIPLE_EMANCIPATORS_NOT_ADMITTED") return getPrimaryText("multiple_emancipators_review",lang).text;
+  return reason;
 }
 
 function setCalculationStatus(kind,lines){
@@ -503,7 +510,7 @@ function updateCalculatorState(){
     ?getPrimaryText("missing_information",lang).text
     :getPrimaryText("case_not_supported",lang).text;
   setCalculationStatus(coverage.status==="MISSING_INFORMATION"?"missing":"unsupported",[
-    heading,...coverage.missingFields,...coverage.reasons
+    heading,...coverage.missingFields,...coverage.reasons.map(coverageReasonText)
   ]);
 }
 
@@ -626,6 +633,7 @@ function invalidateCalculation(){
 }
 
 document.getElementById("remainderPolicy")?.addEventListener("change",()=>{invalidateCalculation();updateCalculatorState();});
+document.getElementById("uncertainDeathOrder")?.addEventListener("change",()=>{invalidateCalculation();updateCalculatorState();});
 document.getElementById("calcBtn")?.addEventListener("click",()=>{
   try{
     const result=window.FaraidCalculator.calculateSupportedInheritance(calculationInput());

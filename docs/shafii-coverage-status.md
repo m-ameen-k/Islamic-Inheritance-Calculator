@@ -6,7 +6,7 @@ This is an inventory of the admitted calculator corpus, not an executable source
 
 ## Summary
 
-The calculator has broad support for ordinary cases involving spouses, parents, children, the normalized first son-line generation, immediate grandmothers, and ordinary uterine/full/consanguine siblings. It also supports exact asl, admitted awl endpoints, correction, radd/Bayt al-Mal, both Umariyyatayn, ordinary paternal-grandfather modes, grandfather-with-siblings comparisons, canonical Akdariyya, canonical Mushtaraka, the full-male-line Mu‘adda branch, and two exact female Mu‘adda worked branches.
+The 45-entry inventory is backed by 97 admitted production rules. The calculator has broad support for ordinary cases involving spouses, parents, children, the normalized first son-line generation, immediate grandmothers, ordinary uterine/full/consanguine siblings, the six UI-modeled brother's-son/uncle residuary classes, and one direct male or female emancipator. It also supports exact asl, admitted awl endpoints, correction, radd/Bayt al-Mal, both Umariyyatayn, ordinary paternal-grandfather modes, grandfather-with-siblings comparisons, canonical Akdariyya, canonical Mushtaraka, the full-male-line Mu‘adda branch, and two exact female Mu‘adda worked branches.
 
 It is not complete Shafi‘i coverage. Source gaps and input-model boundaries remain explicit and whole-case coverage rejects them before calculation.
 
@@ -19,15 +19,26 @@ It is not complete Shafi‘i coverage. Source gaps and input-model boundaries re
 | Father                                        | PRODUCTION_SUPPORTED   | 1/6, residue, 1/6 plus residue, blocking, Umariyyatayn                              | None within the modeled father category                                           |
 | Mother                                        | PARTIALLY_SUPPORTED    | 1/3, descendant-triggered 1/6, unblocked two-sibling subset, Umariyyatayn           | `MOTHER_BLOCKED_SIBLING_COUNT_NOT_ADMITTED`                                       |
 | Paternal grandfather                          | PARTIALLY_SUPPORTED    | Ordinary modes, sibling comparison, exhaustion, admitted named cases                | Other female Mu‘adda compositions                                                 |
-| Immediate maternal/paternal grandmothers      | PARTIALLY_SUPPORTED    | Collective 1/6 and admitted immediate blocking                                      | Farther lineage and degree cannot be represented                                  |
+| Immediate maternal/paternal grandmothers      | PRODUCTION_SUPPORTED   | Collective 1/6 and admitted immediate blocking                                      | Farther lineage is a separate input-model-limited category                        |
 | Son                                           | PRODUCTION_SUPPORTED   | Residue and mixed children 2:1                                                      | None within the modeled direct-son category                                       |
 | Daughter                                      | PRODUCTION_SUPPORTED   | 1/2, collective 2/3, mixed children 2:1                                             | None within the modeled direct-daughter category                                  |
-| Son's son / son's daughter                    | PARTIALLY_SUPPORTED    | Normalized first son-line generation                                                | Deeper and unequal generations cannot be represented                              |
+| Son's son / son's daughter                    | PRODUCTION_SUPPORTED   | All admitted modes for the normalized first son-line generation                     | Deeper generations are a separate input-model-limited category                    |
 | Uterine siblings                              | PARTIALLY_SUPPORTED    | One 1/6; plural 1/3 equally, including mixed sex                                    | Broader Mushtaraka variants                                                       |
 | Full siblings                                 | PARTIALLY_SUPPORTED    | Fixed and residuary modes, 2:1, with-female-descendant mode, grandfather comparison | Broader Mushtaraka and female Mu‘adda variants                                    |
 | Consanguine siblings                          | PARTIALLY_SUPPORTED    | Fixed and residuary modes, 2:1, with-female-descendant mode, grandfather comparison | Broader female Mu‘adda variants                                                   |
-| Brother's sons, paternal uncles, uncle's sons | EXTRACTED_NOT_VERIFIED | None executable                                                                     | Exact order, blocking, exclusions, corroboration, and admission remain incomplete |
-| Male/female emancipator                       | EXTRACTED_NOT_VERIFIED | None executable                                                                     | Wala’ extraction is not corroborated or admitted                                  |
+| Brother's sons, paternal uncles, uncle's sons | PRODUCTION_SUPPORTED   | Exact six-class priority, residue, equal same-class plurality, and total exclusion   | No unmodeled farther agnatic category is inferred                                 |
+| Male/female emancipator                       | PARTIALLY_SUPPORTED    | One direct emancipator receives residue after every eligible nasab residuary         | Multiple emancipators and emancipator's agnates remain unadmitted                 |
+
+## Coverage-completion classification
+
+The matrix entries that were not production-supported at the start of this pass were classified and processed as follows:
+
+- **CAN_COMPLETE_NOW:** the six UI-modeled brother's-son/uncle classes; direct single-person wala'; and an uncertain-death-order pre-calculation gate. These completed the normal source/manual-check/corroboration/fixture/admission/manifest lifecycle.
+- **SOURCE_GAP:** mother's reduction where selected siblings are themselves blocked; broader Mushtaraka pluralities; additional female Mu‘adda compositions; multiple emancipators and emancipator-agnate branches.
+- **INPUT_MODEL_LIMITATION:** deeper/unequal son-line generations and farther-grandmother lineage; the linked-estate distribution needed after simultaneous/unknown death order.
+- **OUTSIDE_CURRENT_CALCULATOR_SCOPE:** dhawū al-arḥām distribution, general impediment adjudication, missing-person branching, pregnancy branching, intersex inheritance, munāsakhāt, and disputed estate-order facts. Their inventory statuses remain explicit; none was promoted merely because it appears in the classical corpus.
+
+Kanz/al-Mahalli printed pages 144–145 and Khulasa printed pages 275 and 277 provide the exact finite extended-residuary order. Kanz printed pages 145–146 and the same Khulasa order place direct wala' after nasab residuaries. No generic or recursive “nearest male” rule was introduced.
 
 ## Remaining five audited gaps
 
@@ -74,9 +85,9 @@ Kanz/al-Mahalli printed page 139 distinguishes valid maternal links, side, degre
 
 - Dhawū al-arḥām: SOURCE_CORROBORATED_NOT_ADMITTED; no executable heir/distribution corpus.
 - Impediments, missing person, uncertain pregnancy, intersex inheritance, and munāsakhāt: EXTRACTED_NOT_VERIFIED.
-- Simultaneous or uncertain death order: NOT_IMPLEMENTED; no complete structured record or input model found.
+- Simultaneous or uncertain death order: PRODUCTION_SUPPORTED as a safety gate. Kanz/al-Mahalli printed page 148 and Khulasa printed page 268 agree that potential mutual heirs do not inherit from one another when simultaneity/order cannot be resolved. The public input now stops with `UNCERTAIN_DEATH_ORDER_REQUIRES_REVIEW`; the current single-estate model does not fabricate the two resulting estate distributions.
 - Disputed ownership, debts, unpaid mahr, joint property, and uncertain/invalid bequests remain external fact-resolution boundaries.
 
 ## Completeness conclusion
 
-The calculator can reasonably be described as having broad ordinary Shafi‘i coverage with selected advanced cases. It cannot be described as complete Shafi‘i coverage because several UI-selectable extended residuaries remain extraction-only, some named advanced variants remain unadmitted, and deeper-descendant/farther-grandmother lineage cannot be expressed by the current input model.
+The calculator can reasonably be described as having broad ordinary Shafi‘i coverage with selected advanced cases. Within the present one-generation/immediate-grandmother heir model, this audit found no remaining ordinary positive mode with complete Kanz/Mahalli + Khulasa evidence that is still merely extraction-only. It still cannot be described as complete Shafi‘i coverage: named advanced variants and blocked-sibling counting retain source gaps; multiple-wala' branches are unadmitted; deeper-descendant, farther-grandmother, and linked-estate lineage cannot be expressed; and several uncertainty/special-person topics remain outside the current calculator workflow.

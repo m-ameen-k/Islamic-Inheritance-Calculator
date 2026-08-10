@@ -40,6 +40,7 @@ export interface SupportedInheritanceInput {
   readonly heirs: readonly HeirInput[];
   readonly remainderPolicy: RemainderPolicy | null;
   readonly unresolvedFacts?: readonly string[];
+  readonly uncertainDeathOrder?: boolean;
 }
 
 export interface ExplanationStep {
@@ -397,6 +398,7 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
     heirs: input.heirs,
     remainderPolicy: input.remainderPolicy,
     unresolvedFacts: input.unresolvedFacts ?? [],
+    uncertainDeathOrder: input.uncertainDeathOrder ?? false,
   });
   if (estateIssues.length > 0 || coverage.status !== "SUPPORTED") {
     throw new UnsupportedInheritanceCaseError(coverage, estateIssues);
@@ -886,6 +888,26 @@ export function calculateSupportedInheritance(input: SupportedInheritanceInput):
     required.has("KZ-FR-019-PATERNAL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY")
   )
     addResidue("PATERNAL_SISTER", "KZ-FR-019-PATERNAL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY");
+
+  for (const type of [
+    "FULL_BROTHERS_SON",
+    "PATERNAL_BROTHERS_SON",
+    "FULL_PATERNAL_UNCLE",
+    "PATERNAL_UNCLE",
+    "FULL_PATERNAL_UNCLES_SON",
+    "PATERNAL_UNCLES_SON",
+  ] as const) {
+    const ruleId = `KZ-FR-019-${type.replaceAll("_", "-")}-RESIDUARY`;
+    if (residue.compare(Fraction.ZERO) > 0 && required.has(ruleId)) addResidue(type, ruleId);
+  }
+  for (const type of ["MALE_EMANCIPATOR", "FEMALE_EMANCIPATOR"] as const) {
+    if (
+      residue.compare(Fraction.ZERO) > 0 &&
+      required.has("KZ-FR-002-EMANCIPATOR-RESIDUARY") &&
+      count(type) > 0
+    )
+      addResidue(type, "KZ-FR-002-EMANCIPATOR-RESIDUARY");
+  }
 
   let raddDetails: InheritanceResult["raddDetails"] = null;
   let baytFraction = Fraction.ZERO;
