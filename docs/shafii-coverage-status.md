@@ -6,7 +6,7 @@ This is an inventory of the admitted calculator corpus, not an executable source
 
 ## Summary
 
-The 45-entry inventory is backed by 97 admitted production rules. The calculator has broad support for ordinary cases involving spouses, parents, children, the normalized first son-line generation, immediate grandmothers, ordinary uterine/full/consanguine siblings, the six UI-modeled brother's-son/uncle residuary classes, and one direct male or female emancipator. It also supports exact asl, admitted awl endpoints, correction, radd/Bayt al-Mal, both Umariyyatayn, ordinary paternal-grandfather modes, grandfather-with-siblings comparisons, canonical Akdariyya, canonical Mushtaraka, the full-male-line Mu‘adda branch, and two exact female Mu‘adda worked branches.
+The 45-entry inventory is backed by 110 admitted production rules. The calculator has broad support for ordinary cases involving spouses, parents, children, explicit male-line descendant generations, source-eligible grandmother routes and degrees, ordinary uterine/full/consanguine siblings, the six UI-modeled brother's-son/uncle residuary classes, and one direct male or female emancipator. It also supports exact asl, admitted awl endpoints, correction, radd/Bayt al-Mal, both Umariyyatayn, ordinary paternal-grandfather modes, grandfather-with-siblings comparisons, canonical Akdariyya, canonical Mushtaraka, the full-male-line Mu‘adda branch, and two exact female Mu‘adda worked branches.
 
 It is not complete Shafi‘i coverage. Source gaps and input-model boundaries remain explicit and whole-case coverage rejects them before calculation.
 
@@ -19,10 +19,10 @@ It is not complete Shafi‘i coverage. Source gaps and input-model boundaries re
 | Father                                        | PRODUCTION_SUPPORTED   | 1/6, residue, 1/6 plus residue, blocking, Umariyyatayn                              | None within the modeled father category                                           |
 | Mother                                        | PARTIALLY_SUPPORTED    | 1/3, descendant-triggered 1/6, unblocked two-sibling subset, Umariyyatayn           | `MOTHER_BLOCKED_SIBLING_COUNT_NOT_ADMITTED`                                       |
 | Paternal grandfather                          | PARTIALLY_SUPPORTED    | Ordinary modes, sibling comparison, exhaustion, admitted named cases                | Other female Mu‘adda compositions                                                 |
-| Immediate maternal/paternal grandmothers      | PRODUCTION_SUPPORTED   | Collective 1/6 and admitted immediate blocking                                      | Farther lineage is a separate input-model-limited category                        |
+| Maternal/paternal grandmothers                | PRODUCTION_SUPPORTED   | Valid F*M+ routes, collective 1/6, degree and asymmetric cross-side priority         | Invalid and ambiguous ancestry routes reject before calculation                   |
 | Son                                           | PRODUCTION_SUPPORTED   | Residue and mixed children 2:1                                                      | None within the modeled direct-son category                                       |
 | Daughter                                      | PRODUCTION_SUPPORTED   | 1/2, collective 2/3, mixed children 2:1                                             | None within the modeled direct-daughter category                                  |
-| Son's son / son's daughter                    | PRODUCTION_SUPPORTED   | All admitted modes for the normalized first son-line generation                     | Deeper generations are a separate input-model-limited category                    |
+| Son-line male/female descendants              | PARTIALLY_SUPPORTED    | Explicit generations, nearer-male blocking, unequal-generation fixed/residue, complement and 2:1 rescue | Distinct fixed allocations for multiple female levels remain separately unadmitted |
 | Uterine siblings                              | PARTIALLY_SUPPORTED    | One 1/6; plural 1/3 equally, including mixed sex                                    | Broader Mushtaraka variants                                                       |
 | Full siblings                                 | PARTIALLY_SUPPORTED    | Fixed and residuary modes, 2:1, with-female-descendant mode, grandfather comparison | Broader Mushtaraka and female Mu‘adda variants                                    |
 | Consanguine siblings                          | PARTIALLY_SUPPORTED    | Fixed and residuary modes, 2:1, with-female-descendant mode, grandfather comparison | Broader female Mu‘adda variants                                                   |
@@ -35,7 +35,7 @@ The matrix entries that were not production-supported at the start of this pass 
 
 - **CAN_COMPLETE_NOW:** the six UI-modeled brother's-son/uncle classes; direct single-person wala'; and an uncertain-death-order pre-calculation gate. These completed the normal source/manual-check/corroboration/fixture/admission/manifest lifecycle.
 - **SOURCE_GAP:** mother's reduction where selected siblings are themselves blocked; broader Mushtaraka pluralities; additional female Mu‘adda compositions; multiple emancipators and emancipator-agnate branches.
-- **INPUT_MODEL_LIMITATION:** deeper/unequal son-line generations and farther-grandmother lineage; the linked-estate distribution needed after simultaneous/unknown death order.
+- **INPUT_MODEL_LIMITATION:** none in the 45-entry coverage matrix. The separate linked-estate workflow needed after simultaneous/unknown death order remains outside this single-estate calculator, but its safety gate is production-supported.
 - **OUTSIDE_CURRENT_CALCULATOR_SCOPE:** dhawū al-arḥām distribution, general impediment adjudication, missing-person branching, pregnancy branching, intersex inheritance, munāsakhāt, and disputed estate-order facts. Their inventory statuses remain explicit; none was promoted merely because it appears in the classical corpus.
 
 Kanz/al-Mahalli printed pages 144–145 and Khulasa printed pages 275 and 277 provide the exact finite extended-residuary order. Kanz printed pages 145–146 and the same Khulasa order place direct wala' after nasab residuaries. No generic or recursive “nearest male” rule was introduced.
@@ -61,11 +61,13 @@ Kanz/al-Mahalli printed page 138 and Khulasa printed page 270 footnote 6 establi
 
 ### Deeper descendants
 
-The current `SONS_SON` and `SONS_DAUGHTER` inputs encode one normalized generation only. Safe support requires generation depth, male-line lineage path, nearer/farther competition, and identification of the corresponding male descendant that can convert a female descendant to residuary status. Status: INPUT_MODEL_LIMITATION.
+`SONS_SON` and `SONS_DAUGHTER` now carry a complete path from the deceased. Legacy inputs still normalize to the first son-line generation, while new input preserves every explicit male-line generation. Kanz/al-Mahalli printed pages 140–141 and Khulasa printed page 277 support nearer-male blocking, fixed entitlements across levels, the one-sixth complement, and the source-defined lower-male rescue. Invalid routes reject as `DESCENDANT_LINEAGE_INVALID`.
+
+Unequal-generation male/female cases are supported when the source gives one fixed female level plus the farther male residue, and when a lower male rescues source-qualified females above him. A composition requiring different fixed allocations for two separate female son-line levels retains `DESCENDANT_MULTILEVEL_FEMALE_FIXED_SHARES_NOT_ADMITTED`. Its status is PARTIALLY_SUPPORTED, not an input-model limitation.
 
 ### Farther grandmothers
 
-Kanz/al-Mahalli printed page 139 distinguishes valid maternal links, side, degree, same-side blocking, cross-side priority, and the father's effect. The current two immediate-grandmother inputs contain no lineage path or degree. Safe support requires those fields before recursive hierarchy rules can be admitted. Status: INPUT_MODEL_LIMITATION.
+Kanz/al-Mahalli printed pages 139 and 142 and Khulasa printed page 276 distinguish eligible lineage routes, degree, same-side blocking, asymmetric cross-side priority, and the effect of a male ascendant on his own mother. Grandmother input now preserves a complete F*M+ ancestry route. Eligible equal-degree grandmothers share the collective one-sixth; nearer same-side and nearer maternal routes apply the admitted priority rules. Invalid and ambiguous routes stop before calculation. Status: PRODUCTION_SUPPORTED.
 
 ## Special calculations
 
@@ -90,4 +92,4 @@ Kanz/al-Mahalli printed page 139 distinguishes valid maternal links, side, degre
 
 ## Completeness conclusion
 
-The calculator can reasonably be described as having broad ordinary Shafi‘i coverage with selected advanced cases. Within the present one-generation/immediate-grandmother heir model, this audit found no remaining ordinary positive mode with complete Kanz/Mahalli + Khulasa evidence that is still merely extraction-only. It still cannot be described as complete Shafi‘i coverage: named advanced variants and blocked-sibling counting retain source gaps; multiple-wala' branches are unadmitted; deeper-descendant, farther-grandmother, and linked-estate lineage cannot be expressed; and several uncertainty/special-person topics remain outside the current calculator workflow.
+The calculator can reasonably be described as having broad ordinary Shafi‘i coverage with selected advanced cases. Deeper male-line descent and farther-grandmother ancestry are now expressible without flattening lineage, so the inventory has no remaining INPUT_MODEL_LIMITATION entry. It still cannot be described as complete Shafi‘i coverage: one multiple-female-level descendant allocation remains unadmitted; named advanced variants and blocked-sibling counting retain source gaps; multiple-wala' branches are unadmitted; linked-estate processing is outside this single-estate workflow; and several uncertainty/special-person topics remain outside the current calculator.

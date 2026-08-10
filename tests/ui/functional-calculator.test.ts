@@ -32,6 +32,16 @@ describe("TECHNICAL_TEST: functional public calculator wiring", () => {
     expect(app).not.toMatch(/new Fraction|fixedShare|ONE_SIXTH|TWO_THIRDS/);
   });
 
+  it("passes progressive lineage details to the typed engine without calculating shares in UI", () => {
+    expect(html).toContain('id="lineageDetails"');
+    expect(app).toContain('kind:"SON_LINE_DESCENDANT"');
+    expect(app).toContain('kind:"GRANDMOTHER"');
+    expect(app).toContain("group.generation");
+    expect(app).toContain("group.fatherSteps");
+    expect(app).toContain("group.motherSteps");
+    expect(app).not.toContain("DESCENDANT_GENERATION_NOT_REPRESENTABLE");
+  });
+
   it("renders learning content from the same structured result and invalidates stale results", () => {
     expect(app).toContain("result.explanationSteps");
     expect(app).toContain("result.blockedHeirs");

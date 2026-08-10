@@ -247,7 +247,7 @@ function updateNet(){
 
 function setGender(g){
   invalidateCalculation();
-  gender=g; sel={};
+  gender=g; sel={}; lineageGroups={};
   document.getElementById("gbm").className="gbtn"+(g==="m"?" am":"");
   document.getElementById("gbf").className="gbtn"+(g==="f"?" af":"");
   document.getElementById("gbm").setAttribute("aria-pressed",g==="m");
@@ -299,6 +299,146 @@ function updateDynamicUI() {
   document.querySelectorAll(".hcard.blocked").forEach(card=>card.classList.remove("blocked"));
 }
 
+const LINEAGE_UI_IDS=new Set(["ibn_ibn","bint_ibn","jadda_ab","jadda_umm"]);
+const DESCENDANT_LINEAGE_IDS=new Set(["ibn_ibn","bint_ibn"]);
+let lineageGroups={};
+
+function defaultLineageGroup(id){
+  if(DESCENDANT_LINEAGE_IDS.has(id)) return {generation:1,count:1};
+  return id==="jadda_ab"?{fatherSteps:1,motherSteps:1,count:1}:{fatherSteps:0,motherSteps:2,count:1};
+}
+
+function ensureLineageGroups(id){
+  if(!lineageGroups[id]?.length) lineageGroups[id]=[defaultLineageGroup(id)];
+  return lineageGroups[id];
+}
+
+function syncLineageSelection(id){
+  const groups=lineageGroups[id]||[];
+  sel[id]=groups.reduce((total,group)=>total+group.count,0);
+  const card=document.getElementById("hc-"+id);
+  card?.classList.toggle("sel",sel[id]>0);
+  card?.setAttribute("aria-pressed",String(sel[id]>0));
+  const count=document.getElementById("cn-"+id);
+  if(count) count.textContent=sel[id]||"";
+}
+
+function adjustPrimaryLineageGroup(id,delta,max){
+  if(!lineageGroups[id]?.length){
+    const first=defaultLineageGroup(id);
+    first.count=0;
+    lineageGroups[id]=[first];
+  }
+  const groups=lineageGroups[id];
+  groups[0].count=Math.max(0,Math.min(max,groups[0].count+delta));
+  if(groups[0].count===0) groups.shift();
+  syncLineageSelection(id);
+}
+
+function lineageField(labelKey,value,onInput,min=1){
+  const field=document.createElement("label");
+  field.className="field";
+  const label=document.createElement("span");
+  label.className="flabel";
+  label.textContent=getPrimaryText(labelKey,lang).text;
+  const input=document.createElement("input");
+  input.className="inp numeric-value";
+  input.type="number";
+  input.inputMode="numeric";
+  input.min=String(min);
+  input.step="1";
+  input.value=String(value);
+  input.addEventListener("input",()=>{
+    const parsed=Number.parseInt(input.value,10);
+    if(Number.isInteger(parsed)&&parsed>=min) onInput(parsed);
+  });
+  field.append(label,input);
+  return field;
+}
+
+function renderLineageDetails(){
+  const panel=document.getElementById("lineageDetails");
+  const container=document.getElementById("lineageRows");
+  const active=[...LINEAGE_UI_IDS].filter(id=>(sel[id]||0)>0);
+  panel.hidden=active.length===0;
+  container.replaceChildren();
+  for(const id of active){
+    const heir=HEIRS.find(candidate=>candidate.id===id);
+    const editor=document.createElement("section");
+    editor.className="lineage-editor";
+    const title=document.createElement("h4");
+    title.textContent=resolveHeirText(heir,lang).text;
+    editor.appendChild(title);
+    ensureLineageGroups(id).forEach((group,index)=>{
+      const row=document.createElement("div");
+      row.className="lineage-row";
+      if(DESCENDANT_LINEAGE_IDS.has(id)){
+        row.appendChild(lineageField("descendant_generation",group.generation,value=>{
+          group.generation=value;
+          invalidateCalculation();
+          updateCaseSummary();
+        }));
+      }else{
+        if(id==="jadda_ab"){
+          row.appendChild(lineageField("paternal_links",group.fatherSteps,value=>{
+            group.fatherSteps=value;
+            invalidateCalculation();
+            updateCaseSummary();
+          }));
+        }
+        row.appendChild(lineageField("maternal_links",group.motherSteps,value=>{
+          group.motherSteps=value;
+          invalidateCalculation();
+          updateCaseSummary();
+        }));
+      }
+      if(DESCENDANT_LINEAGE_IDS.has(id)){
+        row.appendChild(lineageField("lineage_count",group.count,value=>{
+          group.count=value;
+          syncLineageSelection(id);
+          invalidateCalculation();
+          updateCaseSummary();
+        }));
+      }
+      const remove=document.createElement("button");
+      remove.type="button";
+      remove.className="btn secondary lineage-remove";
+      remove.textContent=getPrimaryText("remove_relationship",lang).text;
+      remove.addEventListener("click",()=>{
+        lineageGroups[id].splice(index,1);
+        syncLineageSelection(id);
+        invalidateCalculation();
+        renderLineageDetails();
+        updateCaseSummary();
+      });
+      row.appendChild(remove);
+      editor.appendChild(row);
+    });
+    const add=document.createElement("button");
+    add.type="button";
+    add.className="btn secondary lineage-add";
+    add.textContent=getPrimaryText("add_relationship",lang).text;
+    add.addEventListener("click",()=>{
+      const group=defaultLineageGroup(id);
+      const current=lineageGroups[id];
+      if(DESCENDANT_LINEAGE_IDS.has(id)){
+        group.generation=Math.max(...current.map(item=>item.generation))+1;
+      }else if(id==="jadda_umm"){
+        group.motherSteps=Math.max(...current.map(item=>item.motherSteps))+1;
+      }else{
+        group.fatherSteps=Math.max(...current.map(item=>item.fatherSteps))+1;
+      }
+      current.push(group);
+      syncLineageSelection(id);
+      invalidateCalculation();
+      renderLineageDetails();
+      updateCaseSummary();
+    });
+    editor.appendChild(add);
+    container.appendChild(editor);
+  }
+}
+
 function renderHeirs(){
   const g=document.getElementById("hgrid");
   const groupIds={
@@ -327,6 +467,11 @@ function renderHeirs(){
     if(h.max===1) card.addEventListener("click",()=>{
         if(card.classList.contains("blocked")) return;
         sel[h.id]=sel[h.id]?0:1;
+        if(LINEAGE_UI_IDS.has(h.id)){
+          if(sel[h.id]) ensureLineageGroups(h.id);
+          else delete lineageGroups[h.id];
+          syncLineageSelection(h.id);
+        }
         invalidateCalculation();
         card.classList.toggle("sel",!!sel[h.id]);
         card.setAttribute("aria-pressed",!!sel[h.id]);
@@ -343,13 +488,15 @@ function renderHeirs(){
     const card = document.getElementById("hc-" + id);
     if(card.classList.contains("blocked")) return;
     const d=parseInt(btn.dataset.d), h=HEIRS.find(x=>x.id===id);
-    sel[id]=Math.max(0,Math.min(h.max,(sel[id]||0)+d));
+    if(LINEAGE_UI_IDS.has(id)) adjustPrimaryLineageGroup(id,d,h.max);
+    else sel[id]=Math.max(0,Math.min(h.max,(sel[id]||0)+d));
     invalidateCalculation();
     card.classList.toggle("sel",sel[id]>0);
     const cn=document.getElementById("cn-"+id); if(cn) cn.textContent=sel[id]||"";
     updateDynamicUI();
     updateCaseSummary();
   }));
+  renderLineageDetails();
   updateDynamicUI();
   updateCaseSummary();
 }
@@ -450,9 +597,37 @@ function exactEstateInput(){
 }
 
 function selectedCaseHeirs(){
-  return HEIRS.filter(heir=>(sel[heir.id]||0)>0).map(heir=>({
-    heirId:heir.id,type:UI_HEIR_TYPES[heir.id],count:sel[heir.id]
-  }));
+  return HEIRS.filter(heir=>(sel[heir.id]||0)>0).flatMap(heir=>{
+    if(!LINEAGE_UI_IDS.has(heir.id)){
+      return [{heirId:heir.id,type:UI_HEIR_TYPES[heir.id],count:sel[heir.id]}];
+    }
+    return ensureLineageGroups(heir.id).map((group,index)=>{
+      if(DESCENDANT_LINEAGE_IDS.has(heir.id)){
+        const finalStep=heir.id==="ibn_ibn"?"SON":"DAUGHTER";
+        return {
+          heirId:`${heir.id}-${index+1}`,
+          type:UI_HEIR_TYPES[heir.id],
+          count:group.count,
+          lineage:{
+            kind:"SON_LINE_DESCENDANT",
+            path:[...Array.from({length:group.generation},()=>"SON"),finalStep]
+          }
+        };
+      }
+      return {
+        heirId:`${heir.id}-${index+1}`,
+        type:UI_HEIR_TYPES[heir.id],
+        count:1,
+        lineage:{
+          kind:"GRANDMOTHER",
+          path:[
+            ...Array.from({length:group.fatherSteps},()=>"FATHER"),
+            ...Array.from({length:group.motherSteps},()=>"MOTHER")
+          ]
+        }
+      };
+    });
+  });
 }
 
 function coverageInput(){
@@ -468,6 +643,11 @@ function coverageInput(){
 function coverageReasonText(reason){
   if(reason==="UNCERTAIN_DEATH_ORDER_REQUIRES_REVIEW") return getPrimaryText("uncertain_death_order_review",lang).text;
   if(reason==="MULTIPLE_EMANCIPATORS_NOT_ADMITTED") return getPrimaryText("multiple_emancipators_review",lang).text;
+  if(reason==="DESCENDANT_LINEAGE_INVALID") return getPrimaryText("descendant_lineage_invalid",lang).text;
+  if(reason==="DESCENDANT_LINEAGE_AMBIGUOUS") return getPrimaryText("descendant_lineage_ambiguous",lang).text;
+  if(reason==="GRANDMOTHER_LINEAGE_INVALID") return getPrimaryText("grandmother_lineage_invalid",lang).text;
+  if(reason==="GRANDMOTHER_LINEAGE_AMBIGUOUS") return getPrimaryText("grandmother_lineage_ambiguous",lang).text;
+  if(reason==="DESCENDANT_MULTILEVEL_FEMALE_FIXED_SHARES_NOT_ADMITTED") return getPrimaryText("descendant_hierarchy_review",lang).text;
   return reason;
 }
 

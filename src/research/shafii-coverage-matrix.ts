@@ -139,10 +139,11 @@ export const SHAFII_COVERAGE_MATRIX = [
     sourceGap:
       "Female Mu‘adda is admitted only for two exact worked compositions; other pluralities and fixed-share interactions remain unadmitted.",
   }),
-  heir("MATERNAL_GRANDMOTHER", "Immediate grandmother", {
+  heir("MATERNAL_GRANDMOTHER", "Maternal-line grandmother", {
     fixedShareModes: ["Eligible grandmother group 1/6"],
-    blockingReceived: ["Mother"],
-    collectiveHandling: "Eligible immediate grandmothers share 1/6 equally.",
+    blockingReceived: ["Mother", "nearer same-side grandmother"],
+    blockingCaused: ["Farther maternal grandmother", "farther paternal grandmother"],
+    collectiveHandling: "Eligible grandmothers share 1/6 equally after lineage priority.",
     specialCaseInteractions: ["Canonical Mushtaraka ascendant alternative"],
     sourceRecordIds: ["KZ-FR-017", "KZ-FR-018"],
     productionRuleIds: rules("KZ-FR-017-", "KZ-FR-018-"),
@@ -150,10 +151,16 @@ export const SHAFII_COVERAGE_MATRIX = [
     unsupportedReason: null,
     sourceGap: null,
   }),
-  heir("PATERNAL_GRANDMOTHER", "Immediate grandmother", {
+  heir("PATERNAL_GRANDMOTHER", "Paternal-line grandmother", {
     fixedShareModes: ["Eligible grandmother group 1/6"],
-    blockingReceived: ["Mother", "Father"],
-    collectiveHandling: "Eligible immediate grandmothers share 1/6 equally.",
+    blockingReceived: [
+      "Mother",
+      "the male ascendant through whom she connects",
+      "nearer same-side grandmother",
+      "nearer maternal grandmother",
+    ],
+    blockingCaused: ["Farther paternal grandmother"],
+    collectiveHandling: "Eligible grandmothers share 1/6 equally after lineage priority.",
     specialCaseInteractions: ["Canonical Mushtaraka ascendant alternative"],
     sourceRecordIds: ["KZ-FR-017", "KZ-FR-018"],
     productionRuleIds: rules("KZ-FR-017-", "KZ-FR-018-"),
@@ -179,24 +186,35 @@ export const SHAFII_COVERAGE_MATRIX = [
     status: "PRODUCTION_SUPPORTED",
     unsupportedReason: null,
   }),
-  heir("SONS_SON", "First son-line generation", {
-    residuaryModes: ["Residuary group", "With son's daughters at 2:1"],
-    blockingReceived: ["Direct son"],
-    blockingCaused: ["Ordinary sibling classes"],
+  heir("SONS_SON", "Male son-line descendant", {
+    residuaryModes: ["Nearest male-line residuary group", "With corresponding females at 2:1"],
+    blockingReceived: ["Direct son", "nearer male son-line descendant"],
+    blockingCaused: ["Farther son-line descendants", "ordinary sibling classes"],
     sourceRecordIds: ["KZ-FR-011", "KZ-FR-013", "KZ-FR-019"],
     productionRuleIds: rules(
       "KZ-FR-011-SON-BLOCKS-SONS-SON",
       "KZ-FR-013-SONS-SON",
+      "KZ-FR-013-DEEPER",
+      "KZ-FR-013-LINEAGE",
+      "KZ-FR-013-NEARER",
       "KZ-FR-019-SONS-SON",
     ),
     status: "PRODUCTION_SUPPORTED",
     unsupportedReason: null,
     sourceGap: null,
   }),
-  heir("SONS_DAUGHTER", "First son-line generation", {
-    fixedShareModes: ["1/2", "2/3 collectively", "1/6 complement with one daughter"],
-    residuaryModes: ["With son's sons at 2:1"],
-    blockingReceived: ["Direct son", "two-or-more direct daughters without a son's son"],
+  heir("SONS_DAUGHTER", "Female son-line descendant", {
+    fixedShareModes: [
+      "Nearest eligible level 1/2",
+      "nearest eligible group 2/3 collectively",
+      "1/6 complement across admitted generations",
+    ],
+    residuaryModes: ["With a source-defined corresponding or rescuing male descendant at 2:1"],
+    blockingReceived: [
+      "Direct son",
+      "nearer male son-line descendant",
+      "female-descendant two-thirds ceiling without a rescuing male",
+    ],
     blockingCaused: ["Uterine siblings"],
     sourceRecordIds: ["KZ-FR-005", "KZ-FR-008", "KZ-FR-010", "KZ-FR-013", "KZ-FR-019"],
     productionRuleIds: rules(
@@ -410,18 +428,24 @@ export const SHAFII_COVERAGE_MATRIX = [
   }),
   topic("DESCENDANTS:DEEPER_SON_LINE", "Deeper son-line descendants", {
     sourceRecordIds: ["KZ-FR-013"],
-    status: "INPUT_MODEL_LIMITATION",
-    unsupportedReason: "DEEPER_DESCENDANT_GENERATION_NOT_REPRESENTABLE",
+    productionRuleIds: rules(
+      "KZ-FR-013-DEEPER",
+      "KZ-FR-013-DIRECT-SON-BLOCKS-SON-LINE",
+      "KZ-FR-013-LINEAGE",
+      "KZ-FR-013-NEARER",
+    ),
+    status: "PARTIALLY_SUPPORTED",
+    unsupportedReason: "DESCENDANT_MULTILEVEL_FEMALE_FIXED_SHARES_NOT_ADMITTED",
     sourceGap:
-      "Requires generation depth and an explicit male-line lineage path; the current SONS_SON/SONS_DAUGHTER types encode only one normalized generation.",
+      "The lineage model now represents every male-line generation. A case requiring different fixed allocations for two distinct female son-line levels remains separately unadmitted.",
   }),
   topic("ASCENDANTS:FARTHER_GRANDMOTHERS", "Farther grandmothers", {
     fixedShareModes: ["Collective 1/6 where eligible"],
     sourceRecordIds: ["KZ-FR-017"],
-    status: "INPUT_MODEL_LIMITATION",
-    unsupportedReason: "FARTHER_GRANDMOTHER_LINEAGE_NOT_REPRESENTABLE",
-    sourceGap:
-      "Requires valid lineage path, maternal/paternal side, and degree to apply same-side and cross-side priority safely.",
+    productionRuleIds: rules("KZ-FR-017-"),
+    status: "PRODUCTION_SUPPORTED",
+    unsupportedReason: null,
+    sourceGap: null,
   }),
   topic("SPECIAL:UMARIYYATAYN", "Umariyyatayn", {
     sourceRecordIds: ["KZ-FR-015"],

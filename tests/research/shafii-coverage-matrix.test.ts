@@ -26,11 +26,11 @@ describe("TECHNICAL_TEST: machine-readable Shafi‘i coverage inventory", () => 
     );
     expect(SHAFII_COVERAGE_MATRIX).toHaveLength(45);
     expect(counts).toEqual({
-      PRODUCTION_SUPPORTED: 24,
-      PARTIALLY_SUPPORTED: 12,
+      PRODUCTION_SUPPORTED: 25,
+      PARTIALLY_SUPPORTED: 13,
       SOURCE_CORROBORATED_NOT_ADMITTED: 1,
       EXTRACTED_NOT_VERIFIED: 6,
-      INPUT_MODEL_LIMITATION: 2,
+      INPUT_MODEL_LIMITATION: 0,
       NOT_IMPLEMENTED: 0,
     });
   });

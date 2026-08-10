@@ -995,6 +995,46 @@ body::before {
   gap: 14px;
 }
 
+.lineage-details {
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  background: var(--card2);
+}
+
+.lineage-editor {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.lineage-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(90px, 0.45fr) auto;
+  gap: 8px;
+  align-items: end;
+}
+
+.lineage-row .field {
+  margin: 0;
+}
+
+.lineage-remove,
+.lineage-add {
+  min-height: 42px;
+}
+
+@media (max-width: 520px) {
+  .lineage-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .lineage-remove {
+    grid-column: 1 / -1;
+  }
+}
+
 .heir-group {
   min-width: 0;
 }

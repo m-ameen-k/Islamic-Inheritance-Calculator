@@ -157,6 +157,11 @@ Object.assign(T.en, {
   ,uncertain_death_order_help:"This requires separate estate review; the calculator will not assume an order."
   ,uncertain_death_order_review:"Uncertain death order requires separate estate review."
   ,multiple_emancipators_review:"Multiple emancipators are not supported by the admitted source rule yet."
+  ,lineage_details:"Relationship details",lineage_details_help:"Add each distinct generation or grandmother route separately."
+  ,descendant_generation:"Son-line generation",grandmother_degree:"Ancestry steps",paternal_links:"Father-line steps",maternal_links:"Mother-line steps",lineage_count:"Number",add_relationship:"Add relationship",remove_relationship:"Remove"
+  ,descendant_lineage_invalid:"The descendant relationship is not a valid male-line route.",descendant_lineage_ambiguous:"The descendant relationship needs clarification."
+  ,grandmother_lineage_invalid:"This ancestry route is not an eligible grandmother route.",grandmother_lineage_ambiguous:"The grandmother relationship needs clarification."
+  ,descendant_hierarchy_review:"This unequal-generation descendant combination requires a separately admitted rule."
 });
 Object.assign(T.ar, {
   page_intro:"تتوفر الآن مسائل الأسرة المباشرة العادية على المذهب الشافعي، وتتوقف المسائل غير المدعومة قبل الحساب.",
@@ -177,6 +182,11 @@ Object.assign(T.ar, {
   ,uncertain_death_order_help:"تحتاج هذه الحالة إلى مراجعة تركات منفصلة، ولن تفترض الحاسبة ترتيبًا للوفاة."
   ,uncertain_death_order_review:"يحتاج ترتيب الوفاة غير المعلوم إلى مراجعة تركات منفصلة."
   ,multiple_emancipators_review:"لا تدعم القاعدة المصدرية المعتمدة تعدد المعتقين بعد."
+  ,lineage_details:"تفاصيل صلة القرابة",lineage_details_help:"أضف كل جيل أو طريق جدة مختلف على حدة."
+  ,descendant_generation:"جيل ذرية الابن",grandmother_degree:"درجات النسب",paternal_links:"درجات جهة الأب",maternal_links:"درجات جهة الأم",lineage_count:"العدد",add_relationship:"أضف صلة",remove_relationship:"حذف"
+  ,descendant_lineage_invalid:"صلة الذرية ليست طريقًا صحيحًا من جهة الذكور.",descendant_lineage_ambiguous:"تحتاج صلة الذرية إلى توضيح."
+  ,grandmother_lineage_invalid:"طريق النسب هذا ليس طريق جدة مستحقة.",grandmother_lineage_ambiguous:"تحتاج صلة الجدة إلى توضيح."
+  ,descendant_hierarchy_review:"تحتاج هذه التركيبة بين أجيال مختلفة إلى قاعدة معتمدة مستقلة."
 });
 Object.assign(T.ml, {
   page_intro:"സാധാരണ നേരിട്ടുള്ള കുടുംബ ശാഫിഈ കേസുകൾ ഇപ്പോൾ ലഭ്യമാണ്. പിന്തുണയില്ലാത്ത കേസുകൾ കണക്കിന് മുമ്പ് നിർത്തും.",
@@ -197,6 +207,11 @@ Object.assign(T.ml, {
   ,uncertain_death_order_help:"ഇതിന് വേർതിരിച്ച സ്വത്ത് പരിശോധന വേണം; കാൽക്കുലേറ്റർ മരണക്രമം അനുമാനിക്കില്ല."
   ,uncertain_death_order_review:"ഉറപ്പില്ലാത്ത മരണക്രമത്തിന് വേർതിരിച്ച സ്വത്ത് പരിശോധന ആവശ്യമാണ്."
   ,multiple_emancipators_review:"ഒന്നിലധികം മോചകരുടെ കേസ് അംഗീകരിച്ച സ്രോതസ്സ് നിയമം ഇതുവരെ പിന്തുണയ്ക്കുന്നില്ല."
+  ,lineage_details:"ബന്ധത്തിന്റെ വിശദാംശങ്ങൾ",lineage_details_help:"വ്യത്യസ്തമായ ഓരോ തലമുറയും മുത്തശ്ശി വഴിയും പ്രത്യേകം ചേർക്കുക."
+  ,descendant_generation:"മകൻവഴി തലമുറ",grandmother_degree:"വംശബന്ധ ഘട്ടങ്ങൾ",paternal_links:"പിതൃവഴി ഘട്ടങ്ങൾ",maternal_links:"മാതൃവഴി ഘട്ടങ്ങൾ",lineage_count:"എണ്ണം",add_relationship:"ബന്ധം ചേർക്കുക",remove_relationship:"നീക്കുക"
+  ,descendant_lineage_invalid:"ഈ സന്തതി ബന്ധം സാധുവായ പുരുഷവഴിയല്ല.",descendant_lineage_ambiguous:"സന്തതി ബന്ധം കൂടുതൽ വ്യക്തമാക്കണം."
+  ,grandmother_lineage_invalid:"ഈ വംശവഴി അർഹയായ മുത്തശ്ശിയുടെ വഴിയല്ല.",grandmother_lineage_ambiguous:"മുത്തശ്ശി ബന്ധം കൂടുതൽ വ്യക്തമാക്കണം."
+  ,descendant_hierarchy_review:"ഈ അസമതലമുറ സന്തതി കൂട്ടത്തിന് പ്രത്യേകം അംഗീകരിച്ച നിയമം വേണം."
 });
 
 const LANGUAGE_PAIRS = Object.freeze({

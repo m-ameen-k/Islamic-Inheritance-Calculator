@@ -93,6 +93,112 @@
 		return fractions.reduce((total, fraction) => total.add(fraction), Fraction.ZERO);
 	}
 	//#endregion
+	//#region src/domain/lineage.ts
+	var SON_LINE_TYPES = /* @__PURE__ */ new Set(["SONS_SON", "SONS_DAUGHTER"]);
+	var GRANDMOTHER_TYPES = /* @__PURE__ */ new Set(["MATERNAL_GRANDMOTHER", "PATERNAL_GRANDMOTHER"]);
+	var legacyLineage = (type) => {
+		if (type === "SONS_SON") return {
+			kind: "SON_LINE_DESCENDANT",
+			path: ["SON", "SON"]
+		};
+		if (type === "SONS_DAUGHTER") return {
+			kind: "SON_LINE_DESCENDANT",
+			path: ["SON", "DAUGHTER"]
+		};
+		if (type === "MATERNAL_GRANDMOTHER") return {
+			kind: "GRANDMOTHER",
+			path: ["MOTHER", "MOTHER"]
+		};
+		if (type === "PATERNAL_GRANDMOTHER") return {
+			kind: "GRANDMOTHER",
+			path: ["FATHER", "MOTHER"]
+		};
+	};
+	var isSonLineStep = (value) => value === "SON" || value === "DAUGHTER";
+	var isGrandmotherStep = (value) => value === "FATHER" || value === "MOTHER";
+	function normalizeSonLine(type, raw) {
+		if (raw === void 0) return { lineage: legacyLineage(type) };
+		if (raw === null || typeof raw !== "object") return { issue: "DESCENDANT_LINEAGE_AMBIGUOUS" };
+		const candidate = raw;
+		if (candidate.kind !== "SON_LINE_DESCENDANT" || !Array.isArray(candidate.path)) return { issue: "DESCENDANT_LINEAGE_AMBIGUOUS" };
+		const path = candidate.path;
+		if (path.length < 2 || !path.every(isSonLineStep) || path.slice(0, -1).some((step) => step !== "SON") || type === "SONS_SON" && path.at(-1) !== "SON" || type === "SONS_DAUGHTER" && path.at(-1) !== "DAUGHTER") return { issue: "DESCENDANT_LINEAGE_INVALID" };
+		return { lineage: {
+			kind: "SON_LINE_DESCENDANT",
+			path: [...path]
+		} };
+	}
+	function normalizeGrandmother(type, raw) {
+		if (raw === void 0) return { lineage: legacyLineage(type) };
+		if (raw === null || typeof raw !== "object") return { issue: "GRANDMOTHER_LINEAGE_AMBIGUOUS" };
+		const candidate = raw;
+		if (candidate.kind !== "GRANDMOTHER" || !Array.isArray(candidate.path)) return { issue: "GRANDMOTHER_LINEAGE_AMBIGUOUS" };
+		const path = candidate.path;
+		const firstMother = path.indexOf("MOTHER");
+		const validRoute = path.length >= 2 && path.every(isGrandmotherStep) && path.at(-1) === "MOTHER" && firstMother >= 0 && path.slice(firstMother).every((step) => step === "MOTHER");
+		const expectedFirst = type === "MATERNAL_GRANDMOTHER" ? "MOTHER" : "FATHER";
+		if (!validRoute || path[0] !== expectedFirst) return { issue: "GRANDMOTHER_LINEAGE_INVALID" };
+		return { lineage: {
+			kind: "GRANDMOTHER",
+			path: [...path]
+		} };
+	}
+	function lineageKey(heir) {
+		if (heir.lineage === void 0) return heir.type;
+		return `${heir.type}:${heir.lineage.path.join(">")}`;
+	}
+	function descendantGeneration(heir) {
+		return heir.lineage?.kind === "SON_LINE_DESCENDANT" ? heir.lineage.path.length - 1 : null;
+	}
+	function grandmotherDegree(heir) {
+		return heir.lineage?.kind === "GRANDMOTHER" ? heir.lineage.path.length : null;
+	}
+	function lineageDescription(heir) {
+		if (heir.lineage?.kind === "SON_LINE_DESCENDANT") {
+			const generation = heir.lineage.path.length - 1;
+			return `${heir.type === "SONS_SON" ? "male" : "female"} son-line descendant, generation ${generation}`;
+		}
+		if (heir.lineage?.kind === "GRANDMOTHER") return `${heir.type === "MATERNAL_GRANDMOTHER" ? "maternal" : "paternal"} grandmother, degree ${heir.lineage.path.length}`;
+		return heir.type;
+	}
+	/** Pure, deterministic normalization. It never infers an invalid ancestry route. */
+	function normalizeLineageAwareHeirs(input) {
+		const issues = [];
+		const groups = /* @__PURE__ */ new Map();
+		input.forEach((heir, index) => {
+			let lineage;
+			let issue;
+			if (SON_LINE_TYPES.has(heir.type)) ({lineage, issue} = normalizeSonLine(heir.type, heir.lineage));
+			else if (GRANDMOTHER_TYPES.has(heir.type)) ({lineage, issue} = normalizeGrandmother(heir.type, heir.lineage));
+			else if (heir.lineage !== void 0) issue = "DESCENDANT_LINEAGE_INVALID";
+			if (issue !== void 0) {
+				issues.push({
+					index,
+					heirId: heir.heirId.trim(),
+					code: issue
+				});
+				return;
+			}
+			const normalized = {
+				heirId: heir.heirId.trim(),
+				type: heir.type,
+				count: heir.count,
+				...lineage === void 0 ? {} : { lineage }
+			};
+			const key = lineageKey(normalized);
+			const current = groups.get(key);
+			groups.set(key, {
+				...normalized,
+				heirId: key.toLowerCase().replaceAll(">", "-"),
+				count: (current?.count ?? 0) + heir.count
+			});
+		});
+		return {
+			heirs: [...groups.values()].filter(({ count }) => count > 0).sort((left, right) => lineageKey(left).localeCompare(lineageKey(right))),
+			issues
+		};
+	}
+	//#endregion
 	//#region src/domain/money.ts
 	/**
 	* Reconciles exact shares to integer minor currency units using the largest
@@ -146,7 +252,7 @@
 	//#region src/engine/exact-case-bases.ts
 	var ORIGINAL_ASL_RULE_ID = "KZ-FR-027-ORIGINAL-ASL";
 	var AWL_RULE_ID = "KZ-FR-028-AWL-ADJUSTMENT";
-	function productionRule$97(rules, ruleId) {
+	function productionRule$110(rules, ruleId) {
 		return rules.find((rule) => rule.ruleId === ruleId && rule.lifecycleStatus === "PRODUCTION" && rule.executable);
 	}
 	function stringArray(value) {
@@ -160,7 +266,7 @@
 		return fixedShares.reduce((origin, share) => leastCommonMultiple(origin, share.denominator), 1n);
 	}
 	function isOriginalAslAdmitted(originalAsl, rules) {
-		const rule = productionRule$97(rules, ORIGINAL_ASL_RULE_ID);
+		const rule = productionRule$110(rules, ORIGINAL_ASL_RULE_ID);
 		if (rule === void 0) return false;
 		const specification = executionSpecification(rule);
 		if (originalAsl === 1n) return specification.noFixedShareIdentity === "1";
@@ -175,7 +281,7 @@
 		return sum > originalAsl ? sum : null;
 	}
 	function isAwlEndpointAdmitted(originalAsl, awlDenominator, rules) {
-		const rule = productionRule$97(rules, AWL_RULE_ID);
+		const rule = productionRule$110(rules, AWL_RULE_ID);
 		if (rule === void 0) return false;
 		const endpoints = executionSpecification(rule).allowedEndpoints;
 		if (endpoints === null || typeof endpoints !== "object" || Array.isArray(endpoints)) return false;
@@ -491,10 +597,10 @@
 	}
 	//#endregion
 	//#region src/rules/production/KZ-FR-002-EMANCIPATOR-RESIDUARY.ts
-	var productionRule$96 = defineExtendedResiduaryProductionRule("KZ-FR-002-EMANCIPATOR-RESIDUARY");
+	var productionRule$109 = defineExtendedResiduaryProductionRule("KZ-FR-002-EMANCIPATOR-RESIDUARY");
 	//#endregion
 	//#region src/rules/production/KZ-FR-002-NASAB-ASABAH-BLOCKS-EMANCIPATOR.ts
-	var productionRule$95 = defineExtendedResiduaryProductionRule("KZ-FR-002-NASAB-ASABAH-BLOCKS-EMANCIPATOR");
+	var productionRule$108 = defineExtendedResiduaryProductionRule("KZ-FR-002-NASAB-ASABAH-BLOCKS-EMANCIPATOR");
 	//#endregion
 	//#region src/rules/direct-family-production.ts
 	var LOCATORS = {
@@ -588,7 +694,7 @@
 	}
 	//#endregion
 	//#region src/rules/production/KZ-FR-004-FUNCTIONING-BAYT-AL-MAL-RESIDUE.ts
-	var productionRule$94 = defineDirectFamilyProductionRule({
+	var productionRule$107 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-004-FUNCTIONING-BAYT-AL-MAL-RESIDUE",
 		parentResearchRuleId: "KZ-FR-004",
 		atomicRuleKind: "REMAINDER_POLICY",
@@ -608,7 +714,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-004-NO-FUNCTIONING-BAYT-AL-MAL-RADD.ts
-	var productionRule$93 = defineDirectFamilyProductionRule({
+	var productionRule$106 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-004-NO-FUNCTIONING-BAYT-AL-MAL-RADD",
 		parentResearchRuleId: "KZ-FR-004",
 		atomicRuleKind: "REMAINDER_POLICY",
@@ -637,7 +743,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-005-HUSBAND-ONE-HALF.ts
-	var productionRule$92 = defineProductionSpouseRule({
+	var productionRule$105 = defineProductionSpouseRule({
 		ruleId: "KZ-FR-005-HUSBAND-ONE-HALF",
 		parentResearchRuleId: "KZ-FR-005",
 		lifecycleStatus: "PRODUCTION",
@@ -675,7 +781,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-005-ONE-FULL-SISTER-ONE-HALF.ts
-	var productionRule$91 = defineDirectFamilyProductionRule({
+	var productionRule$104 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-005-ONE-FULL-SISTER-ONE-HALF",
 		parentResearchRuleId: "KZ-FR-005",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
@@ -699,7 +805,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-005-ONE-PATERNAL-SISTER-ONE-HALF.ts
-	var productionRule$90 = defineDirectFamilyProductionRule({
+	var productionRule$103 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-005-ONE-PATERNAL-SISTER-ONE-HALF",
 		parentResearchRuleId: "KZ-FR-005",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
@@ -723,7 +829,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-005-ONE-SONS-DAUGHTER-ONE-HALF.ts
-	var productionRule$89 = defineDirectFamilyProductionRule({
+	var productionRule$102 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-005-ONE-SONS-DAUGHTER-ONE-HALF",
 		parentResearchRuleId: "KZ-FR-005",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
@@ -747,7 +853,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-006-HUSBAND-ONE-QUARTER.ts
-	var productionRule$88 = defineProductionSpouseRule({
+	var productionRule$101 = defineProductionSpouseRule({
 		ruleId: "KZ-FR-006-HUSBAND-ONE-QUARTER",
 		parentResearchRuleId: "KZ-FR-006",
 		lifecycleStatus: "PRODUCTION",
@@ -785,7 +891,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-006-WIVES-ONE-QUARTER.ts
-	var productionRule$87 = defineProductionSpouseRule({
+	var productionRule$100 = defineProductionSpouseRule({
 		ruleId: "KZ-FR-006-WIVES-ONE-QUARTER",
 		parentResearchRuleId: "KZ-FR-006",
 		lifecycleStatus: "PRODUCTION",
@@ -824,7 +930,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-007-WIVES-ONE-EIGHTH.ts
-	var productionRule$86 = defineProductionSpouseRule({
+	var productionRule$99 = defineProductionSpouseRule({
 		ruleId: "KZ-FR-007-WIVES-ONE-EIGHTH",
 		parentResearchRuleId: "KZ-FR-007",
 		lifecycleStatus: "PRODUCTION",
@@ -863,7 +969,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-008-FULL-SISTER-GROUP-TWO-THIRDS.ts
-	var productionRule$85 = defineDirectFamilyProductionRule({
+	var productionRule$98 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-008-FULL-SISTER-GROUP-TWO-THIRDS",
 		parentResearchRuleId: "KZ-FR-008",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
@@ -887,7 +993,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-008-PATERNAL-SISTER-GROUP-TWO-THIRDS.ts
-	var productionRule$84 = defineDirectFamilyProductionRule({
+	var productionRule$97 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-008-PATERNAL-SISTER-GROUP-TWO-THIRDS",
 		parentResearchRuleId: "KZ-FR-008",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
@@ -911,7 +1017,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-008-SONS-DAUGHTER-GROUP-TWO-THIRDS.ts
-	var productionRule$83 = defineDirectFamilyProductionRule({
+	var productionRule$96 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-008-SONS-DAUGHTER-GROUP-TWO-THIRDS",
 		parentResearchRuleId: "KZ-FR-008",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
@@ -935,7 +1041,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-009-MOTHER-ONE-THIRD.ts
-	var productionRule$82 = defineDirectFamilyProductionRule({
+	var productionRule$95 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-009-MOTHER-ONE-THIRD",
 		parentResearchRuleId: "KZ-FR-009",
 		atomicRuleKind: "PARENT_FIXED_SHARE",
@@ -967,7 +1073,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-009-UTERINE-SIBLING-GROUP-ONE-THIRD.ts
-	var productionRule$81 = defineDirectFamilyProductionRule({
+	var productionRule$94 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-009-UTERINE-SIBLING-GROUP-ONE-THIRD",
 		parentResearchRuleId: "KZ-FR-009",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
@@ -991,7 +1097,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-010-MOTHER-ONE-SIXTH-DESCENDANT.ts
-	var productionRule$80 = defineDirectFamilyProductionRule({
+	var productionRule$93 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-010-MOTHER-ONE-SIXTH-DESCENDANT",
 		parentResearchRuleId: "KZ-FR-010",
 		atomicRuleKind: "PARENT_FIXED_SHARE",
@@ -1015,7 +1121,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS.ts
-	var productionRule$79 = defineDirectFamilyProductionRule({
+	var productionRule$92 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS",
 		parentResearchRuleId: "KZ-FR-010",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-KZ-FR-010-MOTHER-SIBLINGS-UNBLOCKED-SUBSET",
@@ -1040,7 +1146,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-010-ONE-PATERNAL-SISTER-WITH-FULL-SISTER-ONE-SIXTH.ts
-	var productionRule$78 = defineDirectFamilyProductionRule({
+	var productionRule$91 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-010-ONE-PATERNAL-SISTER-WITH-FULL-SISTER-ONE-SIXTH",
 		parentResearchRuleId: "KZ-FR-010",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
@@ -1064,7 +1170,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-010-ONE-SONS-DAUGHTER-WITH-DAUGHTER-ONE-SIXTH.ts
-	var productionRule$77 = defineDirectFamilyProductionRule({
+	var productionRule$90 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-010-ONE-SONS-DAUGHTER-WITH-DAUGHTER-ONE-SIXTH",
 		parentResearchRuleId: "KZ-FR-010",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
@@ -1088,7 +1194,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-010-ONE-UTERINE-SIBLING-ONE-SIXTH.ts
-	var productionRule$76 = defineDirectFamilyProductionRule({
+	var productionRule$89 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-010-ONE-UTERINE-SIBLING-ONE-SIXTH",
 		parentResearchRuleId: "KZ-FR-010",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
@@ -1112,7 +1218,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-011-FATHER-BLOCKS-FULL-BROTHER.ts
-	var productionRule$75 = defineDirectFamilyProductionRule({
+	var productionRule$88 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-011-FATHER-BLOCKS-FULL-BROTHER",
 		parentResearchRuleId: "KZ-FR-011",
 		atomicRuleKind: "TOTAL_BLOCKING_RELATIONSHIP",
@@ -1133,7 +1239,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-011-FATHER-BLOCKS-MATERNAL-BROTHER.ts
-	var productionRule$74 = defineDirectFamilyProductionRule({
+	var productionRule$87 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-011-FATHER-BLOCKS-MATERNAL-BROTHER",
 		parentResearchRuleId: "KZ-FR-011",
 		atomicRuleKind: "TOTAL_BLOCKING_RELATIONSHIP",
@@ -1154,7 +1260,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-011-FATHER-BLOCKS-PATERNAL-BROTHER.ts
-	var productionRule$73 = defineDirectFamilyProductionRule({
+	var productionRule$86 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-011-FATHER-BLOCKS-PATERNAL-BROTHER",
 		parentResearchRuleId: "KZ-FR-011",
 		atomicRuleKind: "TOTAL_BLOCKING_RELATIONSHIP",
@@ -1175,7 +1281,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-011-FATHER-BLOCKS-PATERNAL-GRANDFATHER.ts
-	var productionRule$72 = defineDirectFamilyProductionRule({
+	var productionRule$85 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-011-FATHER-BLOCKS-PATERNAL-GRANDFATHER",
 		parentResearchRuleId: "KZ-FR-011",
 		atomicRuleKind: "TOTAL_BLOCKING_RELATIONSHIP",
@@ -1196,7 +1302,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-011-SON-BLOCKS-FULL-BROTHER.ts
-	var productionRule$71 = defineDirectFamilyProductionRule({
+	var productionRule$84 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-011-SON-BLOCKS-FULL-BROTHER",
 		parentResearchRuleId: "KZ-FR-011",
 		atomicRuleKind: "TOTAL_BLOCKING_RELATIONSHIP",
@@ -1217,7 +1323,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-011-SON-BLOCKS-MATERNAL-BROTHER.ts
-	var productionRule$70 = defineDirectFamilyProductionRule({
+	var productionRule$83 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-011-SON-BLOCKS-MATERNAL-BROTHER",
 		parentResearchRuleId: "KZ-FR-011",
 		atomicRuleKind: "TOTAL_BLOCKING_RELATIONSHIP",
@@ -1238,7 +1344,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-011-SON-BLOCKS-PATERNAL-BROTHER.ts
-	var productionRule$69 = defineDirectFamilyProductionRule({
+	var productionRule$82 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-011-SON-BLOCKS-PATERNAL-BROTHER",
 		parentResearchRuleId: "KZ-FR-011",
 		atomicRuleKind: "TOTAL_BLOCKING_RELATIONSHIP",
@@ -1259,7 +1365,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-011-SON-BLOCKS-SONS-SON.ts
-	var productionRule$68 = defineDirectFamilyProductionRule({
+	var productionRule$81 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-011-SON-BLOCKS-SONS-SON",
 		parentResearchRuleId: "KZ-FR-011",
 		atomicRuleKind: "TOTAL_BLOCKING_RELATIONSHIP",
@@ -1280,7 +1386,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-012-DAUGHTER-GROUP-TWO-THIRDS.ts
-	var productionRule$67 = defineDirectFamilyProductionRule({
+	var productionRule$80 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-012-DAUGHTER-GROUP-TWO-THIRDS",
 		parentResearchRuleId: "KZ-FR-012",
 		atomicRuleKind: "DESCENDANT_FIXED_SHARE",
@@ -1304,7 +1410,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-012-ONE-DAUGHTER-ONE-HALF.ts
-	var productionRule$66 = defineDirectFamilyProductionRule({
+	var productionRule$79 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-012-ONE-DAUGHTER-ONE-HALF",
 		parentResearchRuleId: "KZ-FR-012",
 		atomicRuleKind: "DESCENDANT_FIXED_SHARE",
@@ -1328,7 +1434,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-012-SON-GROUP-RESIDUARY.ts
-	var productionRule$65 = defineDirectFamilyProductionRule({
+	var productionRule$78 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-012-SON-GROUP-RESIDUARY",
 		parentResearchRuleId: "KZ-FR-012",
 		atomicRuleKind: "DESCENDANT_RESIDUARY",
@@ -1348,7 +1454,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-012-SONS-AND-DAUGHTERS-TWO-TO-ONE.ts
-	var productionRule$64 = defineDirectFamilyProductionRule({
+	var productionRule$77 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-012-SONS-AND-DAUGHTERS-TWO-TO-ONE",
 		parentResearchRuleId: "KZ-FR-012",
 		atomicRuleKind: "DESCENDANT_RESIDUARY",
@@ -1645,22 +1751,338 @@
 	}
 	//#endregion
 	//#region src/rules/production/KZ-FR-013-DAUGHTER-GROUP-BLOCKS-SONS-DAUGHTER.ts
-	var productionRule$63 = defineRemainingOrdinaryProductionRule("KZ-FR-013-DAUGHTER-GROUP-BLOCKS-SONS-DAUGHTER");
+	var productionRule$76 = defineRemainingOrdinaryProductionRule("KZ-FR-013-DAUGHTER-GROUP-BLOCKS-SONS-DAUGHTER");
+	//#endregion
+	//#region src/rules/lineage-hierarchy.ts
+	var LINEAGE_RULE_IDS = {
+		directSonBlocks: "KZ-FR-013-DIRECT-SON-BLOCKS-SON-LINE-DESCENDANTS",
+		nearerMaleBlocks: "KZ-FR-013-NEARER-MALE-DESCENDANT-BLOCKS-FARTHER",
+		nearerFemaleBlocks: "KZ-FR-013-NEARER-FEMALE-DESCENDANT-BLOCKS-FARTHER",
+		deeperMaleResidue: "KZ-FR-013-DEEPER-MALE-DESCENDANT-RESIDUARY",
+		deeperFemaleHalf: "KZ-FR-013-DEEPER-FEMALE-DESCENDANT-ONE-HALF",
+		deeperFemaleTwoThirds: "KZ-FR-013-DEEPER-FEMALE-DESCENDANT-GROUP-TWO-THIRDS",
+		deeperFemaleComplement: "KZ-FR-013-DEEPER-FEMALE-DESCENDANT-COMPLEMENT-ONE-SIXTH",
+		descendantTwoToOne: "KZ-FR-013-LINEAGE-DESCENDANTS-TWO-TO-ONE",
+		grandmotherShare: "KZ-FR-017-LINEAGE-GRANDMOTHER-GROUP-ONE-SIXTH",
+		motherBlocksGrandmothers: "KZ-FR-017-MOTHER-BLOCKS-LINEAGE-GRANDMOTHERS",
+		nearerGrandmotherBlocks: "KZ-FR-017-NEARER-GRANDMOTHER-BLOCKS-FARTHER",
+		maternalGrandmotherPriority: "KZ-FR-017-NEARER-MATERNAL-GRANDMOTHER-BLOCKS-FARTHER-PATERNAL",
+		maleAscendantBlocksOwnMother: "KZ-FR-017-MALE-ASCENDANT-BLOCKS-OWN-MOTHER"
+	};
+	var count = (heirs, type) => heirs.filter((heir) => heir.type === type).reduce((total, heir) => total + heir.count, 0);
+	var requiredDescendantGeneration = (heir) => {
+		const generation = descendantGeneration(heir);
+		if (generation === null) throw new Error("Expected a normalized son-line descendant.");
+		return generation;
+	};
+	var requiredGrandmotherDegree = (heir) => {
+		const degree = grandmotherDegree(heir);
+		if (degree === null) throw new Error("Expected a normalized grandmother lineage.");
+		return degree;
+	};
+	var block = (blocked, blocker, blockee, ruleId, reason) => {
+		blocked.push({
+			blockedHeirId: blockee.heirId,
+			type: blockee.type,
+			count: blockee.count,
+			blockerHeirId: blocker.heirId,
+			blockerType: blocker.type,
+			ruleId,
+			reason,
+			partialLineageBlock: true
+		});
+	};
+	function resolveDescendants(heirs) {
+		const directSon = heirs.find((heir) => heir.type === "SON");
+		const descendants = heirs.filter((heir) => descendantGeneration(heir) !== null);
+		if (descendants.length === 0) return {
+			normalizedHeirs: heirs,
+			blockedHeirs: [],
+			requiredRuleIds: [],
+			unsupportedReasons: []
+		};
+		const blocked = [];
+		const required = /* @__PURE__ */ new Set();
+		const blockedKeys = /* @__PURE__ */ new Set();
+		if (directSon !== void 0) {
+			for (const descendant of descendants) {
+				blockedKeys.add(lineageKey(descendant));
+				const ruleId = requiredDescendantGeneration(descendant) > 1 ? LINEAGE_RULE_IDS.directSonBlocks : descendant.type === "SONS_SON" ? "KZ-FR-011-SON-BLOCKS-SONS-SON" : "KZ-FR-013-SON-BLOCKS-SONS-DAUGHTER";
+				block(blocked, directSon, descendant, ruleId, `The direct son blocks the ${lineageDescription(descendant)}.`);
+				required.add(ruleId);
+			}
+			return {
+				normalizedHeirs: heirs.filter((heir) => !blockedKeys.has(lineageKey(heir))),
+				blockedHeirs: blocked,
+				requiredRuleIds: [...required],
+				unsupportedReasons: []
+			};
+		}
+		const males = descendants.filter((heir) => heir.type === "SONS_SON");
+		const females = descendants.filter((heir) => heir.type === "SONS_DAUGHTER");
+		const nearestMaleGeneration = males.reduce((nearest, heir) => {
+			const generation = requiredDescendantGeneration(heir);
+			return nearest === null || generation < nearest ? generation : nearest;
+		}, null);
+		if (nearestMaleGeneration !== null) {
+			const nearestMale = males.find((heir) => requiredDescendantGeneration(heir) === nearestMaleGeneration);
+			if (nearestMale === void 0) throw new Error("Nearest male descendant was not retained.");
+			for (const descendant of descendants) {
+				if (requiredDescendantGeneration(descendant) <= nearestMaleGeneration) continue;
+				blockedKeys.add(lineageKey(descendant));
+				block(blocked, nearestMale, descendant, LINEAGE_RULE_IDS.nearerMaleBlocks, `${lineageDescription(nearestMale)} is nearer and blocks ${lineageDescription(descendant)}.`);
+			}
+			if (blockedKeys.size > 0) required.add(LINEAGE_RULE_IDS.nearerMaleBlocks);
+		}
+		const remainingFemales = females.filter((heir) => !blockedKeys.has(lineageKey(heir)));
+		const directDaughters = count(heirs, "DAUGHTER");
+		if (!(nearestMaleGeneration !== null && directDaughters >= 2 && remainingFemales.some((heir) => requiredDescendantGeneration(heir) <= nearestMaleGeneration)) && (nearestMaleGeneration === null || remainingFemales.every((heir) => requiredDescendantGeneration(heir) < nearestMaleGeneration))) {
+			const orderedGenerations = [...new Set(remainingFemales.map(requiredDescendantGeneration))].sort((left, right) => left - right);
+			const keep = /* @__PURE__ */ new Set();
+			if (orderedGenerations.length > 0 && directDaughters < 2) {
+				const firstGeneration = orderedGenerations[0];
+				if (firstGeneration === void 0) throw new Error("Expected a first female generation.");
+				keep.add(firstGeneration);
+				const firstCount = remainingFemales.filter((heir) => descendantGeneration(heir) === orderedGenerations[0]).reduce((total, heir) => total + heir.count, 0);
+				if (directDaughters === 0 && firstCount === 1 && orderedGenerations[1] !== void 0) keep.add(orderedGenerations[1]);
+			}
+			for (const female of remainingFemales) {
+				const generation = requiredDescendantGeneration(female);
+				if (keep.has(generation)) continue;
+				const blocker = directDaughters >= 2 ? heirs.find((heir) => heir.type === "DAUGHTER") : remainingFemales.find((heir) => keep.has(requiredDescendantGeneration(heir)));
+				if (blocker === void 0) continue;
+				blockedKeys.add(lineageKey(female));
+				block(blocked, blocker, female, LINEAGE_RULE_IDS.nearerFemaleBlocks, `${lineageDescription(female)} is excluded after the nearer female-descendant entitlement reaches the source-defined ceiling.`);
+			}
+			if (blocked.some(({ ruleId }) => ruleId === LINEAGE_RULE_IDS.nearerFemaleBlocks)) required.add(LINEAGE_RULE_IDS.nearerFemaleBlocks);
+		}
+		const effective = heirs.filter((heir) => !blockedKeys.has(lineageKey(heir)));
+		const effectiveFemaleGenerations = [...new Set(effective.filter((heir) => heir.type === "SONS_DAUGHTER").map(requiredDescendantGeneration))];
+		const hasMale = effective.some((heir) => heir.type === "SONS_SON");
+		const multipleFemaleFixedLevels = effectiveFemaleGenerations.length > 1 && !(hasMale && directDaughters >= 2);
+		return {
+			normalizedHeirs: effective,
+			blockedHeirs: blocked,
+			requiredRuleIds: [...required],
+			unsupportedReasons: multipleFemaleFixedLevels ? ["DESCENDANT_MULTILEVEL_FEMALE_FIXED_SHARES_NOT_ADMITTED"] : []
+		};
+	}
+	function resolveGrandmothers(heirs) {
+		const grandmothers = heirs.filter((heir) => grandmotherDegree(heir) !== null);
+		if (grandmothers.length === 0) return {
+			normalizedHeirs: heirs,
+			blockedHeirs: [],
+			requiredRuleIds: [],
+			unsupportedReasons: []
+		};
+		const blocked = [];
+		const required = /* @__PURE__ */ new Set();
+		const blockedKeys = /* @__PURE__ */ new Set();
+		const mother = heirs.find((heir) => heir.type === "MOTHER");
+		if (mother !== void 0) for (const grandmother of grandmothers) {
+			const ruleId = requiredGrandmotherDegree(grandmother) === 2 ? "KZ-FR-017-MOTHER-BLOCKS-GRANDMOTHER-GROUP" : LINEAGE_RULE_IDS.motherBlocksGrandmothers;
+			blockedKeys.add(lineageKey(grandmother));
+			block(blocked, mother, grandmother, ruleId, `The mother blocks ${lineageDescription(grandmother)}.`);
+			required.add(ruleId);
+		}
+		const father = heirs.find((heir) => heir.type === "FATHER");
+		const grandfather = heirs.find((heir) => heir.type === "PATERNAL_GRANDFATHER");
+		for (const [ascendant, ownMotherPath] of [[father, "FATHER>MOTHER"], [grandfather, "FATHER>FATHER>MOTHER"]]) {
+			if (ascendant === void 0) continue;
+			for (const grandmother of grandmothers) {
+				if (grandmother.lineage?.path.join(">") !== ownMotherPath) continue;
+				blockedKeys.add(lineageKey(grandmother));
+				const ruleId = ascendant.type === "FATHER" && grandmotherDegree(grandmother) === 2 ? "KZ-FR-017-FATHER-BLOCKS-PATERNAL-GRANDMOTHER" : LINEAGE_RULE_IDS.maleAscendantBlocksOwnMother;
+				block(blocked, ascendant, grandmother, ruleId, `${ascendant.type} blocks his own mother in the represented lineage.`);
+				required.add(ruleId);
+			}
+		}
+		const available = grandmothers.filter((heir) => !blockedKeys.has(lineageKey(heir)));
+		for (const type of ["MATERNAL_GRANDMOTHER", "PATERNAL_GRANDMOTHER"]) {
+			const side = available.filter((heir) => heir.type === type);
+			const nearest = side.reduce((degree, heir) => {
+				const current = requiredGrandmotherDegree(heir);
+				return degree === null || current < degree ? current : degree;
+			}, null);
+			if (nearest === null) continue;
+			const blocker = side.find((heir) => requiredGrandmotherDegree(heir) === nearest);
+			if (blocker === void 0) throw new Error("Nearest grandmother was not retained.");
+			for (const grandmother of side) {
+				if (grandmotherDegree(grandmother) === nearest) continue;
+				blockedKeys.add(lineageKey(grandmother));
+				block(blocked, blocker, grandmother, LINEAGE_RULE_IDS.nearerGrandmotherBlocks, `${lineageDescription(blocker)} is nearer on the same side and blocks ${lineageDescription(grandmother)}.`);
+				required.add(LINEAGE_RULE_IDS.nearerGrandmotherBlocks);
+			}
+		}
+		const afterSameSide = grandmothers.filter((heir) => !blockedKeys.has(lineageKey(heir)));
+		const nearestMaternal = afterSameSide.find((heir) => heir.type === "MATERNAL_GRANDMOTHER");
+		if (nearestMaternal !== void 0) for (const paternal of afterSameSide.filter((heir) => heir.type === "PATERNAL_GRANDMOTHER")) {
+			if (requiredGrandmotherDegree(nearestMaternal) >= requiredGrandmotherDegree(paternal)) continue;
+			blockedKeys.add(lineageKey(paternal));
+			block(blocked, nearestMaternal, paternal, LINEAGE_RULE_IDS.maternalGrandmotherPriority, `${lineageDescription(nearestMaternal)} is nearer from the maternal side and blocks ${lineageDescription(paternal)}.`);
+			required.add(LINEAGE_RULE_IDS.maternalGrandmotherPriority);
+		}
+		return {
+			normalizedHeirs: heirs.filter((heir) => !blockedKeys.has(lineageKey(heir))),
+			blockedHeirs: blocked,
+			requiredRuleIds: [...required],
+			unsupportedReasons: []
+		};
+	}
+	function resolveLineageHierarchy(input) {
+		const normalized = normalizeLineageAwareHeirs(input);
+		if (normalized.issues.length > 0) return {
+			normalizedHeirs: [],
+			blockedHeirs: [],
+			requiredRuleIds: [],
+			issues: normalized.issues.map(({ code }) => code),
+			unsupportedReasons: []
+		};
+		const descendants = resolveDescendants(normalized.heirs);
+		const grandmothers = resolveGrandmothers(descendants.normalizedHeirs);
+		return {
+			normalizedHeirs: grandmothers.normalizedHeirs,
+			blockedHeirs: [...descendants.blockedHeirs, ...grandmothers.blockedHeirs],
+			requiredRuleIds: [.../* @__PURE__ */ new Set([...descendants.requiredRuleIds, ...grandmothers.requiredRuleIds])],
+			issues: [],
+			unsupportedReasons: [...descendants.unsupportedReasons, ...grandmothers.unsupportedReasons]
+		};
+	}
+	//#endregion
+	//#region src/rules/lineage-aware-rules.ts
+	var DESCENDANT_LINEAGE_COMPARISON_ID = "SOURCE-COMPARISON-20260810-DESCENDANT-LINEAGE-HIERARCHY";
+	var GRANDMOTHER_LINEAGE_COMPARISON_ID = "SOURCE-COMPARISON-20260810-GRANDMOTHER-LINEAGE-HIERARCHY";
+	var descendant = (ruleId, atomicRuleKind, conditions, exclusions, outcomeSpecification) => ({
+		ruleId,
+		parentResearchRuleId: "KZ-FR-013",
+		atomicRuleKind,
+		conditions,
+		exclusions,
+		priority: {
+			value: 35,
+			rationale: "Resolve explicit descendant generation before shares."
+		},
+		interactionsOrBlockers: ["Only a path whose intermediate persons are sons is a valid son-line descendant path."],
+		outcomeSpecification,
+		executionSpecification: {
+			arithmetic: "EXACT",
+			lineageRequired: "true"
+		},
+		fixtureIds: [`${ruleId}-POS`, `${ruleId}-NEG`]
+	});
+	var grandmother = (ruleId, atomicRuleKind, conditions, exclusions, outcomeSpecification) => ({
+		ruleId,
+		parentResearchRuleId: "KZ-FR-017",
+		atomicRuleKind,
+		conditions,
+		exclusions,
+		priority: {
+			value: 36,
+			rationale: "Resolve valid lineage and grandmother priority before 1/6."
+		},
+		interactionsOrBlockers: ["Only a source-valid path of paternal steps followed by maternal steps is eligible."],
+		outcomeSpecification,
+		executionSpecification: {
+			arithmetic: "EXACT",
+			lineageRequired: "true"
+		},
+		fixtureIds: [`${ruleId}-POS`, `${ruleId}-NEG`]
+	});
+	var LINEAGE_RULE_DEFINITIONS = [
+		descendant(LINEAGE_RULE_IDS.directSonBlocks, "TOTAL_BLOCKING_RELATIONSHIP", ["A direct son and one or more valid farther son-line descendants are present."], ["No arbitrary descendant through a daughter is normalized into this category."], "The direct son totally excludes every farther son-line descendant."),
+		descendant(LINEAGE_RULE_IDS.nearerMaleBlocks, "GENERATION_BLOCKING", ["Valid male son-line descendants occur at different generations."], ["Female descendants above the nearer male are resolved by their separate fixed/rescue rules."], "The nearest eligible male generation excludes all farther son-line descendants."),
+		descendant(LINEAGE_RULE_IDS.nearerFemaleBlocks, "GENERATION_BLOCKING", ["A nearer female-descendant entitlement has reached the two-thirds ceiling."], ["A source-qualifying lower male rescue uses the separate 2:1 atom."], "Farther female son-line descendants receive zero after the nearer entitlement ceiling."),
+		descendant(LINEAGE_RULE_IDS.deeperMaleResidue, "DESCENDANT_RESIDUARY", ["The nearest eligible valid son-line descendant generation contains males."], ["A direct son and every nearer eligible male generation are absent."], "The nearest eligible male son-line group receives the residue."),
+		descendant(LINEAGE_RULE_IDS.deeperFemaleHalf, "DESCENDANT_FIXED_SHARE", ["Exactly one female is in the nearest eligible son-line generation."], ["No direct child or converting male descendant is present."], "The female descendant receives 1/2."),
+		descendant(LINEAGE_RULE_IDS.deeperFemaleTwoThirds, "DESCENDANT_FIXED_SHARE", ["Two or more females are in the nearest eligible son-line generation."], ["No direct child or converting male descendant is present."], "The female-descendant group receives 2/3 collectively."),
+		descendant(LINEAGE_RULE_IDS.deeperFemaleComplement, "DESCENDANT_FIXED_SHARE", ["One direct daughter and a nearest eligible farther female son-line group are present."], ["No eligible male descendant converts the female group to residuary status."], "The farther female-descendant group receives the complementary 1/6 collectively."),
+		descendant(LINEAGE_RULE_IDS.descendantTwoToOne, "DESCENDANT_RESIDUARY", ["An eligible male son-line descendant is present with females at his generation or source-qualified females above him who received none of the two-thirds ceiling."], ["Females below the nearest eligible male generation are excluded."], "The eligible descendant residue is divided with two units per male and one per female."),
+		grandmother(LINEAGE_RULE_IDS.grandmotherShare, "GRANDMOTHER_SHARE", ["One or more source-valid, unblocked lineage-aware grandmothers are present."], ["Invalid ancestry routes and every grandmother blocked by a nearer eligible relation are excluded."], "Eligible grandmothers share 1/6 collectively and equally."),
+		grandmother(LINEAGE_RULE_IDS.motherBlocksGrandmothers, "TOTAL_BLOCKING_RELATIONSHIP", ["The mother and any valid grandmother lineage are present."], [], "The mother totally excludes every grandmother."),
+		grandmother(LINEAGE_RULE_IDS.nearerGrandmotherBlocks, "GENERATION_BLOCKING", ["Two valid grandmothers are on the same side at different degrees."], ["Equal-degree eligible grandmothers share under the collective-share atom."], "The nearer grandmother on a side totally excludes the farther grandmother on that side."),
+		grandmother(LINEAGE_RULE_IDS.maternalGrandmotherPriority, "GENERATION_BLOCKING", ["A maternal-side grandmother is nearer than an otherwise eligible paternal-side grandmother."], ["A nearer paternal grandmother does not exclude a farther maternal grandmother under the admitted view."], "The nearer maternal-side grandmother excludes the farther paternal-side grandmother."),
+		grandmother(LINEAGE_RULE_IDS.maleAscendantBlocksOwnMother, "TOTAL_BLOCKING_RELATIONSHIP", ["The father or paternal grandfather and his own mother are present."], ["The male ascendant does not block a grandmother whose lineage does not pass through him."], "The living male ascendant excludes his own mother.")
+	];
+	var descendantSources = [{
+		sourceId: "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+		evidenceRecordId: "MANUAL-20260810-KZ-FR-013-LINEAGE-HIERARCHY",
+		locator: "Printed pages 140–141; all son-line levels, lower-male rescue, and nearer blocking."
+	}, {
+		sourceId: "KHULASAT_AL_FIQH_AL_ISLAMI",
+		evidenceRecordId: DESCENDANT_LINEAGE_COMPARISON_ID,
+		locator: "Printed page 277 and footnotes 2–5; all son-line levels and unequal-generation examples."
+	}];
+	var grandmotherSources = [{
+		sourceId: "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+		evidenceRecordId: "MANUAL-20260810-KZ-FR-017-LINEAGE-HIERARCHY",
+		locator: "Printed pages 139 and 142; valid routes, degree, side priority, and ascendant blockers."
+	}, {
+		sourceId: "KHULASAT_AL_FIQH_AL_ISLAMI",
+		evidenceRecordId: GRANDMOTHER_LINEAGE_COMPARISON_ID,
+		locator: "Printed page 276 and footnote 2; grandmother blocker table and asymmetric side priority."
+	}];
+	var lineageAwareCandidates = LINEAGE_RULE_DEFINITIONS.map((definition) => ({
+		...definition,
+		sourceComparisonId: definition.parentResearchRuleId === "KZ-FR-013" ? DESCENDANT_LINEAGE_COMPARISON_ID : GRANDMOTHER_LINEAGE_COMPARISON_ID,
+		lifecycleStatus: "SOURCE_CORROBORATED",
+		executable: false,
+		sourceReferences: definition.parentResearchRuleId === "KZ-FR-013" ? descendantSources : grandmotherSources,
+		unresolvedQuestions: [],
+		implementationReadiness: "ADMITTED_CALCULATION_READY",
+		admissionRecordId: null
+	}));
+	function defineLineageAwareCandidate(ruleId) {
+		const found = lineageAwareCandidates.find((candidate) => candidate.ruleId === ruleId);
+		if (found === void 0) throw new Error(`Missing lineage-aware candidate: ${ruleId}`);
+		return found;
+	}
+	function defineLineageAwareProductionRule(ruleId) {
+		return defineProductionRule({
+			...defineLineageAwareCandidate(ruleId),
+			lifecycleStatus: "PRODUCTION",
+			executable: true,
+			admissionRecordId: `ADMISSION-20260810-${ruleId}`
+		});
+	}
+	//#endregion
+	//#region src/rules/production/KZ-FR-013-DEEPER-FEMALE-DESCENDANT-COMPLEMENT-ONE-SIXTH.ts
+	var productionRule$75 = defineLineageAwareProductionRule("KZ-FR-013-DEEPER-FEMALE-DESCENDANT-COMPLEMENT-ONE-SIXTH");
+	//#endregion
+	//#region src/rules/production/KZ-FR-013-DEEPER-FEMALE-DESCENDANT-GROUP-TWO-THIRDS.ts
+	var productionRule$74 = defineLineageAwareProductionRule("KZ-FR-013-DEEPER-FEMALE-DESCENDANT-GROUP-TWO-THIRDS");
+	//#endregion
+	//#region src/rules/production/KZ-FR-013-DEEPER-FEMALE-DESCENDANT-ONE-HALF.ts
+	var productionRule$73 = defineLineageAwareProductionRule("KZ-FR-013-DEEPER-FEMALE-DESCENDANT-ONE-HALF");
+	//#endregion
+	//#region src/rules/production/KZ-FR-013-DEEPER-MALE-DESCENDANT-RESIDUARY.ts
+	var productionRule$72 = defineLineageAwareProductionRule("KZ-FR-013-DEEPER-MALE-DESCENDANT-RESIDUARY");
+	//#endregion
+	//#region src/rules/production/KZ-FR-013-DIRECT-SON-BLOCKS-SON-LINE-DESCENDANTS.ts
+	var productionRule$71 = defineLineageAwareProductionRule("KZ-FR-013-DIRECT-SON-BLOCKS-SON-LINE-DESCENDANTS");
+	//#endregion
+	//#region src/rules/production/KZ-FR-013-LINEAGE-DESCENDANTS-TWO-TO-ONE.ts
+	var productionRule$70 = defineLineageAwareProductionRule("KZ-FR-013-LINEAGE-DESCENDANTS-TWO-TO-ONE");
+	//#endregion
+	//#region src/rules/production/KZ-FR-013-NEARER-FEMALE-DESCENDANT-BLOCKS-FARTHER.ts
+	var productionRule$69 = defineLineageAwareProductionRule("KZ-FR-013-NEARER-FEMALE-DESCENDANT-BLOCKS-FARTHER");
+	//#endregion
+	//#region src/rules/production/KZ-FR-013-NEARER-MALE-DESCENDANT-BLOCKS-FARTHER.ts
+	var productionRule$68 = defineLineageAwareProductionRule("KZ-FR-013-NEARER-MALE-DESCENDANT-BLOCKS-FARTHER");
 	//#endregion
 	//#region src/rules/production/KZ-FR-013-SON-BLOCKS-SONS-DAUGHTER.ts
-	var productionRule$62 = defineRemainingOrdinaryProductionRule("KZ-FR-013-SON-BLOCKS-SONS-DAUGHTER");
+	var productionRule$67 = defineRemainingOrdinaryProductionRule("KZ-FR-013-SON-BLOCKS-SONS-DAUGHTER");
 	//#endregion
 	//#region src/rules/production/KZ-FR-013-SONS-DAUGHTER-GROUP-WITH-DAUGHTER-ONE-SIXTH.ts
-	var productionRule$61 = defineRemainingOrdinaryProductionRule("KZ-FR-013-SONS-DAUGHTER-GROUP-WITH-DAUGHTER-ONE-SIXTH");
+	var productionRule$66 = defineRemainingOrdinaryProductionRule("KZ-FR-013-SONS-DAUGHTER-GROUP-WITH-DAUGHTER-ONE-SIXTH");
 	//#endregion
 	//#region src/rules/production/KZ-FR-013-SONS-SON-GROUP-RESIDUARY.ts
-	var productionRule$60 = defineRemainingOrdinaryProductionRule("KZ-FR-013-SONS-SON-GROUP-RESIDUARY");
+	var productionRule$65 = defineRemainingOrdinaryProductionRule("KZ-FR-013-SONS-SON-GROUP-RESIDUARY");
 	//#endregion
 	//#region src/rules/production/KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE.ts
-	var productionRule$59 = defineRemainingOrdinaryProductionRule("KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE");
+	var productionRule$64 = defineRemainingOrdinaryProductionRule("KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE");
 	//#endregion
 	//#region src/rules/production/KZ-FR-014-FATHER-ONE-SIXTH.ts
-	var productionRule$58 = defineDirectFamilyProductionRule({
+	var productionRule$63 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-014-FATHER-ONE-SIXTH",
 		parentResearchRuleId: "KZ-FR-014",
 		atomicRuleKind: "FATHER_MODE",
@@ -1684,7 +2106,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE.ts
-	var productionRule$57 = defineDirectFamilyProductionRule({
+	var productionRule$62 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE",
 		parentResearchRuleId: "KZ-FR-014",
 		atomicRuleKind: "FATHER_MODE",
@@ -1712,7 +2134,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-014-FATHER-RESIDUARY.ts
-	var productionRule$56 = defineDirectFamilyProductionRule({
+	var productionRule$61 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-014-FATHER-RESIDUARY",
 		parentResearchRuleId: "KZ-FR-014",
 		atomicRuleKind: "FATHER_MODE",
@@ -1736,7 +2158,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-015-HUSBAND-MOTHER-FATHER.ts
-	var productionRule$55 = defineDirectFamilyProductionRule({
+	var productionRule$60 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-015-HUSBAND-MOTHER-FATHER",
 		parentResearchRuleId: "KZ-FR-015",
 		atomicRuleKind: "UMARIYYATAYN",
@@ -1767,7 +2189,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER.ts
-	var productionRule$54 = defineDirectFamilyProductionRule({
+	var productionRule$59 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER",
 		parentResearchRuleId: "KZ-FR-015",
 		sourceComparisonId: "SOURCE-COMPARISON-20260809-KZ-FR-015-MULTIPLE-WIVES-UMARIYYATAYN",
@@ -1811,7 +2233,7 @@
 	});
 	//#endregion
 	//#region src/rules/production/KZ-FR-015-WIFE-MOTHER-FATHER.ts
-	var productionRule$53 = defineDirectFamilyProductionRule({
+	var productionRule$58 = defineDirectFamilyProductionRule({
 		ruleId: "KZ-FR-015-WIFE-MOTHER-FATHER",
 		parentResearchRuleId: "KZ-FR-015",
 		atomicRuleKind: "UMARIYYATAYN",
@@ -1994,6 +2416,19 @@
 	//#endregion
 	//#region src/rules/generated/production-registry.ts
 	var PRODUCTION_RULES = [
+		productionRule$109,
+		productionRule$108,
+		productionRule$107,
+		productionRule$106,
+		productionRule$105,
+		productionRule$104,
+		productionRule$103,
+		productionRule$102,
+		productionRule$101,
+		productionRule$100,
+		productionRule$99,
+		productionRule$98,
+		productionRule$97,
 		productionRule$96,
 		productionRule$95,
 		productionRule$94,
@@ -2033,18 +2468,18 @@
 		productionRule$60,
 		productionRule$59,
 		productionRule$58,
-		productionRule$57,
-		productionRule$56,
-		productionRule$55,
-		productionRule$54,
-		productionRule$53,
 		defineAdvancedProductionRule("KZ-FR-016-PATERNAL-GRANDFATHER-BLOCKS-UTERINE-SIBLING-GROUP"),
 		defineAdvancedProductionRule("KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH"),
 		defineAdvancedProductionRule("KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS-RESIDUE"),
 		defineAdvancedProductionRule("KZ-FR-016-PATERNAL-GRANDFATHER-RESIDUARY"),
 		defineRemainingOrdinaryProductionRule("KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH"),
 		defineRemainingOrdinaryProductionRule("KZ-FR-017-FATHER-BLOCKS-PATERNAL-GRANDMOTHER"),
+		defineLineageAwareProductionRule("KZ-FR-017-LINEAGE-GRANDMOTHER-GROUP-ONE-SIXTH"),
+		defineLineageAwareProductionRule("KZ-FR-017-MALE-ASCENDANT-BLOCKS-OWN-MOTHER"),
 		defineRemainingOrdinaryProductionRule("KZ-FR-017-MOTHER-BLOCKS-GRANDMOTHER-GROUP"),
+		defineLineageAwareProductionRule("KZ-FR-017-MOTHER-BLOCKS-LINEAGE-GRANDMOTHERS"),
+		defineLineageAwareProductionRule("KZ-FR-017-NEARER-GRANDMOTHER-BLOCKS-FARTHER"),
+		defineLineageAwareProductionRule("KZ-FR-017-NEARER-MATERNAL-GRANDMOTHER-BLOCKS-FARTHER-PATERNAL"),
 		defineAdvancedProductionRule("KZ-FR-018-MUSHTARAKA-CANONICAL"),
 		defineRemainingOrdinaryProductionRule("KZ-FR-019-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP"),
 		defineRemainingOrdinaryProductionRule("KZ-FR-019-FATHER-BLOCKS-MATERNAL-SISTER"),
@@ -2254,27 +2689,24 @@
 			...options
 		};
 	}
-	function normalizedWholeCaseHeirs(heirs) {
-		const counts = /* @__PURE__ */ new Map();
-		for (const heir of heirs) counts.set(heir.type, (counts.get(heir.type) ?? 0) + heir.count);
-		return [...counts.entries()].filter(([, count]) => count > 0).sort(([left], [right]) => left.localeCompare(right)).map(([type, count]) => ({
-			heirId: type.toLowerCase(),
-			type,
-			count
-		}));
-	}
 	/** Pure whole-case gate. Every required atom must exist in the generated production registry. */
 	function evaluateWholeCaseCoverage(input, corpus = DEFAULT_PRODUCTION_CORPUS) {
 		const invalidFields = [];
 		for (const [index, heir] of input.heirs.entries()) if (!heirTypeSet.has(heir.type) || !Number.isInteger(heir.count) || heir.count < 0) invalidFields.push(`heirs[${index}]`);
-		const normalizedHeirs = invalidFields.length === 0 ? normalizedWholeCaseHeirs(input.heirs) : [];
-		const selectedCount = (type) => normalizedHeirs.find((heir) => heir.type === type)?.count ?? 0;
+		const lineageResolution = invalidFields.length === 0 ? resolveLineageHierarchy(input.heirs) : {
+			normalizedHeirs: [],
+			blockedHeirs: [],
+			requiredRuleIds: [],
+			issues: [],
+			unsupportedReasons: []
+		};
+		const normalizedHeirs = lineageResolution.normalizedHeirs;
+		const selectedCount = (type) => normalizedHeirs.filter((heir) => heir.type === type).reduce((total, heir) => total + heir.count, 0);
 		if (selectedCount("HUSBAND") > 1) invalidFields.push("heirs.HUSBAND");
 		if (selectedCount("WIFE") > 4) invalidFields.push("heirs.WIFE");
 		if (selectedCount("FATHER") > 1) invalidFields.push("heirs.FATHER");
 		if (selectedCount("MOTHER") > 1) invalidFields.push("heirs.MOTHER");
-		if (selectedCount("MATERNAL_GRANDMOTHER") > 1) invalidFields.push("heirs.MATERNAL_GRANDMOTHER");
-		if (selectedCount("PATERNAL_GRANDMOTHER") > 1) invalidFields.push("heirs.PATERNAL_GRANDMOTHER");
+		for (const heir of normalizedHeirs.filter(({ type }) => type === "MATERNAL_GRANDMOTHER" || type === "PATERNAL_GRANDMOTHER")) if (heir.count > 1) invalidFields.push(`heirs.${heir.heirId}`);
 		if (selectedCount("HUSBAND") > 0 && selectedCount("WIFE") > 0) invalidFields.push("heirs.spouse");
 		if (input.deceasedSex === "MALE" && selectedCount("HUSBAND") > 0) invalidFields.push("heirs.HUSBAND");
 		if (input.deceasedSex === "FEMALE" && selectedCount("WIFE") > 0) invalidFields.push("heirs.WIFE");
@@ -2285,10 +2717,15 @@
 			missingFields: [],
 			invalidFields,
 			unsupportedHeirs: [],
-			blockedHeirs: [],
+			blockedHeirs: [...lineageResolution.blockedHeirs],
 			requiresAwl: false,
 			advancedCase: null
 		};
+		if (lineageResolution.issues.length > 0) return wholeCaseResult("INVALID_INPUT", normalizedHeirs, {
+			...base,
+			invalidFields: lineageResolution.issues.map((issue) => `heirs.lineage:${issue}`),
+			reasons: [...new Set(lineageResolution.issues)]
+		});
 		if (invalidFields.length > 0) return wholeCaseResult("INVALID_INPUT", normalizedHeirs, base);
 		if (normalizedHeirs.length === 0) return wholeCaseResult("MISSING_INFORMATION", normalizedHeirs, {
 			...base,
@@ -2296,6 +2733,11 @@
 			reasons: ["NO_HEIRS_SELECTED"]
 		});
 		const productionIds = new Set(corpus.rules.map((rule) => rule.ruleId));
+		if (lineageResolution.unsupportedReasons.length > 0) return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
+			...base,
+			reasons: lineageResolution.unsupportedReasons,
+			requiredRuleIds: lineageResolution.requiredRuleIds
+		});
 		if (input.uncertainDeathOrder === true) {
 			const safetyRuleId = "KZ-FR-024-UNCERTAIN-DEATH-ORDER-SAFETY-GATE";
 			const admitted = productionIds.has(safetyRuleId);
@@ -2352,7 +2794,7 @@
 		const siblingCount = [...SIBLING_TYPES].reduce((total, type) => total + selectedCount(type), 0);
 		const hasGrandfather = selectedCount("PATERNAL_GRANDFATHER") > 0;
 		const grandfatherSiblingCase = advancedCase?.kind === "GRANDFATHER_WITH_SIBLINGS" || advancedCase?.kind === "MUADDA";
-		const blockedHeirs = [
+		const blockerPairs = [
 			[
 				"FATHER",
 				"PATERNAL_GRANDFATHER",
@@ -2397,21 +2839,6 @@
 				"SON",
 				"MATERNAL_BROTHER",
 				"KZ-FR-011-SON-BLOCKS-MATERNAL-BROTHER"
-			],
-			[
-				"MOTHER",
-				"MATERNAL_GRANDMOTHER",
-				"KZ-FR-017-MOTHER-BLOCKS-GRANDMOTHER-GROUP"
-			],
-			[
-				"MOTHER",
-				"PATERNAL_GRANDMOTHER",
-				"KZ-FR-017-MOTHER-BLOCKS-GRANDMOTHER-GROUP"
-			],
-			[
-				"FATHER",
-				"PATERNAL_GRANDMOTHER",
-				"KZ-FR-017-FATHER-BLOCKS-PATERNAL-GRANDMOTHER"
 			],
 			[
 				"FATHER",
@@ -2473,7 +2900,8 @@
 				"MATERNAL_SISTER",
 				"KZ-FR-019-SONS-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP"
 			]
-		].flatMap(([blockerType, type, ruleId]) => {
+		];
+		const blockedHeirs = [...lineageResolution.blockedHeirs, ...blockerPairs.flatMap(([blockerType, type, ruleId]) => {
 			const blockedCount = selectedCount(type);
 			return selectedCount(blockerType) > 0 && blockedCount > 0 && productionIds.has(ruleId) ? [{
 				type,
@@ -2482,7 +2910,7 @@
 				ruleId,
 				reason: `${type} is totally excluded by ${blockerType}.`
 			}] : [];
-		});
+		})];
 		const addBlocked = (blockerType, type, ruleId, applies) => {
 			if (!applies || selectedCount(type) === 0 || !productionIds.has(ruleId)) return;
 			if (blockedHeirs.some((heir) => heir.type === type)) return;
@@ -2539,7 +2967,7 @@
 			if (advancedCase.mode === "FULL_MALE_LINE") for (const type of ["PATERNAL_BROTHER", "PATERNAL_SISTER"]) addBlocked("FULL_BROTHER", type, advancedCase.ruleId, selectedCount(type) > 0);
 			else if (advancedCase.mode === "TWO_FULL_SISTERS_WORKED_BRANCH") addBlocked("FULL_SISTER", "PATERNAL_BROTHER", advancedCase.ruleId, selectedCount("PATERNAL_BROTHER") > 0);
 		}
-		const blockedTypes = new Set(blockedHeirs.map((heir) => heir.type));
+		const blockedTypes = new Set(blockedHeirs.filter((heir) => heir.partialLineageBlock !== true).map((heir) => heir.type));
 		const selectedHasDescendant = selectedCount("SON") + selectedCount("DAUGHTER") + selectedCount("SONS_SON") + selectedCount("SONS_DAUGHTER") > 0;
 		if (selectedCount("MOTHER") > 0 && !selectedHasDescendant && siblingCount >= 2 && blockedHeirs.some((heir) => SIBLING_TYPES.has(heir.type))) return wholeCaseResult("UNSUPPORTED_RULE", normalizedHeirs, {
 			...base,
@@ -2563,7 +2991,7 @@
 			reasons: unsupportedHeirs.map((heir) => heir.type === "SONS_SON" ? "SONS_SON_POSITIVE_SHARE_NOT_ADMITTED" : heir.type === "PATERNAL_GRANDMOTHER" || heir.type === "MATERNAL_GRANDMOTHER" ? `GRANDMOTHER_HIERARCHY_NOT_ADMITTED:${heir.type}` : `UNSUPPORTED_HEIR_CATEGORY:${heir.type}`)
 		});
 		const eligibleHeirs = normalizedHeirs.filter((heir) => !blockedTypes.has(heir.type));
-		const count = (type) => eligibleHeirs.find((heir) => heir.type === type)?.count ?? 0;
+		const count = (type) => eligibleHeirs.filter((heir) => heir.type === type).reduce((total, heir) => total + heir.count, 0);
 		const hasDescendant = count("SON") + count("DAUGHTER") + count("SONS_SON") + count("SONS_DAUGHTER") > 0;
 		const hasFemaleDescendant = count("DAUGHTER") + count("SONS_DAUGHTER") > 0;
 		const uterineCount = count("MATERNAL_BROTHER") + count("MATERNAL_SISTER");
@@ -2582,7 +3010,7 @@
 		const hasSon = count("SON") > 0;
 		const hasMaleDescendant = hasSon || count("SONS_SON") > 0;
 		const hasDaughter = hasFemaleDescendant;
-		const activeTypes = eligibleHeirs.map((heir) => heir.type);
+		const activeTypes = [...new Set(eligibleHeirs.map((heir) => heir.type))];
 		const exactly = (...types) => activeTypes.length === types.length && types.every((type) => activeTypes.includes(type));
 		const husbandUmari = exactly("HUSBAND", "MOTHER", "FATHER");
 		const wifeUmari = exactly("WIFE", "MOTHER", "FATHER");
@@ -2643,23 +3071,41 @@
 				requiredRuleIds.push("KZ-FR-012-DAUGHTER-GROUP-TWO-THIRDS");
 				fixedShares.push(new Fraction(2n, 3n));
 			}
+			const sonLineHeirs = eligibleHeirs.filter((heir) => descendantGeneration(heir) !== null);
+			const deeperSonLine = sonLineHeirs.some((heir) => (descendantGeneration(heir) ?? 0) > 1);
+			const nearestSonLineMaleGeneration = sonLineHeirs.filter((heir) => heir.type === "SONS_SON").reduce((nearest, heir) => {
+				const generation = descendantGeneration(heir);
+				if (generation === null) return nearest;
+				return nearest === null || generation < nearest ? generation : nearest;
+			}, null);
+			const femaleJoinsSonLineResidue = nearestSonLineMaleGeneration !== null && (count("DAUGHTER") >= 2 || sonLineHeirs.some((heir) => heir.type === "SONS_DAUGHTER" && descendantGeneration(heir) === nearestSonLineMaleGeneration));
 			if (count("SONS_SON") > 0 && count("SONS_DAUGHTER") > 0) {
-				requiredRuleIds.push("KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE");
+				if (femaleJoinsSonLineResidue) requiredRuleIds.push(deeperSonLine || count("DAUGHTER") >= 2 ? LINEAGE_RULE_IDS.descendantTwoToOne : "KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE");
+				else {
+					requiredRuleIds.push(deeperSonLine ? LINEAGE_RULE_IDS.deeperMaleResidue : "KZ-FR-013-SONS-SON-GROUP-RESIDUARY");
+					if (count("DAUGHTER") === 0) {
+						requiredRuleIds.push(count("SONS_DAUGHTER") === 1 ? LINEAGE_RULE_IDS.deeperFemaleHalf : LINEAGE_RULE_IDS.deeperFemaleTwoThirds);
+						fixedShares.push(count("SONS_DAUGHTER") === 1 ? new Fraction(1n, 2n) : new Fraction(2n, 3n));
+					} else if (count("DAUGHTER") === 1) {
+						requiredRuleIds.push(LINEAGE_RULE_IDS.deeperFemaleComplement);
+						fixedShares.push(new Fraction(1n, 6n));
+					}
+				}
 				hasResiduary = true;
 			} else if (count("SONS_SON") > 0) {
-				requiredRuleIds.push("KZ-FR-013-SONS-SON-GROUP-RESIDUARY");
+				requiredRuleIds.push(deeperSonLine ? LINEAGE_RULE_IDS.deeperMaleResidue : "KZ-FR-013-SONS-SON-GROUP-RESIDUARY");
 				hasResiduary = true;
 			} else if (count("SONS_DAUGHTER") === 1 && count("DAUGHTER") === 0) {
-				requiredRuleIds.push("KZ-FR-005-ONE-SONS-DAUGHTER-ONE-HALF");
+				requiredRuleIds.push(deeperSonLine ? LINEAGE_RULE_IDS.deeperFemaleHalf : "KZ-FR-005-ONE-SONS-DAUGHTER-ONE-HALF");
 				fixedShares.push(new Fraction(1n, 2n));
 			} else if (count("SONS_DAUGHTER") >= 2 && count("DAUGHTER") === 0) {
-				requiredRuleIds.push("KZ-FR-008-SONS-DAUGHTER-GROUP-TWO-THIRDS");
+				requiredRuleIds.push(deeperSonLine ? LINEAGE_RULE_IDS.deeperFemaleTwoThirds : "KZ-FR-008-SONS-DAUGHTER-GROUP-TWO-THIRDS");
 				fixedShares.push(new Fraction(2n, 3n));
 			} else if (count("SONS_DAUGHTER") === 1 && count("DAUGHTER") === 1) {
-				requiredRuleIds.push("KZ-FR-010-ONE-SONS-DAUGHTER-WITH-DAUGHTER-ONE-SIXTH");
+				requiredRuleIds.push(deeperSonLine ? LINEAGE_RULE_IDS.deeperFemaleComplement : "KZ-FR-010-ONE-SONS-DAUGHTER-WITH-DAUGHTER-ONE-SIXTH");
 				fixedShares.push(new Fraction(1n, 6n));
 			} else if (count("SONS_DAUGHTER") >= 2 && count("DAUGHTER") === 1) {
-				requiredRuleIds.push("KZ-FR-013-SONS-DAUGHTER-GROUP-WITH-DAUGHTER-ONE-SIXTH");
+				requiredRuleIds.push(deeperSonLine ? LINEAGE_RULE_IDS.deeperFemaleComplement : "KZ-FR-013-SONS-DAUGHTER-GROUP-WITH-DAUGHTER-ONE-SIXTH");
 				fixedShares.push(new Fraction(1n, 6n));
 			}
 			if (uterineCount === 1) {
@@ -2704,7 +3150,8 @@
 				fixedShares.push(new Fraction(1n, 6n));
 			}
 			if (count("MATERNAL_GRANDMOTHER") + count("PATERNAL_GRANDMOTHER") > 0) {
-				requiredRuleIds.push("KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH");
+				const hasFartherGrandmother = eligibleHeirs.some((heir) => (grandmotherDegree(heir) ?? 0) > 2);
+				requiredRuleIds.push(hasFartherGrandmother ? LINEAGE_RULE_IDS.grandmotherShare : "KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH");
 				fixedShares.push(new Fraction(1n, 6n));
 			}
 			if (grandfatherSiblingCase) {
@@ -2883,6 +3330,10 @@
 		if (ruleId.includes("FATHER-ONE-SIXTH-PLUS")) return "Female descendants are present without a male descendant.";
 		if (ruleId.includes("FATHER-ONE-SIXTH")) return "A qualifying male descendant is present.";
 		if (ruleId.includes("SONS-DAUGHTER") && ruleId.includes("ONE-SIXTH")) return "One direct daughter is present, so the son's daughter receives the complementary 1/6.";
+		if (ruleId.includes("DEEPER-FEMALE-DESCENDANT") && ruleId.includes("COMPLEMENT")) return "The nearest eligible farther female son-line descendants complete the two-thirds ceiling with 1/6.";
+		if (ruleId.includes("DEEPER-FEMALE-DESCENDANT")) return "The nearest eligible female son-line descendant generation takes the admitted fixed share.";
+		if (ruleId.includes("LINEAGE-DESCENDANTS-TWO-TO-ONE")) return "The source-admitted corresponding or rescuing male-line descendant makes the eligible group residuary at 2:1.";
+		if (ruleId.includes("LINEAGE-GRANDMOTHER-GROUP")) return "Eligible grandmothers share the collective 1/6 equally after lineage and degree priority.";
 		if (ruleId.includes("GRANDMOTHER-GROUP")) return "Eligible immediate grandmothers share the collective 1/6 equally.";
 		if (ruleId.includes("MIXED-UTERINE")) return "Eligible uterine brothers and sisters share the collective 1/3 equally.";
 		if (ruleId.includes("SONS-DAUGHTER")) return "The admitted son's-daughter fixed-share conditions are satisfied.";
@@ -2895,7 +3346,9 @@
 		const workingDenominator = admittedCaseBase ?? assignments.reduce((denominator, assignment) => leastCommonMultiple(denominator, assignment.fraction.denominator), 1n);
 		const groupedRules = /* @__PURE__ */ new Map([
 			["KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE", "TWO_TO_ONE"],
+			["KZ-FR-013-LINEAGE-DESCENDANTS-TWO-TO-ONE", "TWO_TO_ONE"],
 			["KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH", "EQUAL"],
+			["KZ-FR-017-LINEAGE-GRANDMOTHER-GROUP-ONE-SIXTH", "EQUAL"],
 			["KZ-FR-019-FULL-SIBLINGS-TWO-TO-ONE", "TWO_TO_ONE"],
 			["KZ-FR-019-PATERNAL-SIBLINGS-TWO-TO-ONE", "TWO_TO_ONE"],
 			["KZ-FR-019-MIXED-UTERINE-SIBLING-GROUP-ONE-THIRD-EQUAL", "EQUAL"],
@@ -2966,10 +3419,10 @@
 		if (estateIssues.length > 0 || coverage.status !== "SUPPORTED") throw new UnsupportedInheritanceCaseError(coverage, estateIssues);
 		const netEstate = afterDeductions - bequest;
 		const selected = coverage.normalizedHeirs;
-		const blockedTypes = new Set(coverage.blockedHeirs.map((heir) => heir.type));
+		const blockedTypes = new Set(coverage.blockedHeirs.filter((heir) => heir.partialLineageBlock !== true).map((heir) => heir.type));
 		const eligible = selected.filter((heir) => !blockedTypes.has(heir.type));
-		const count = (type) => eligible.find((heir) => heir.type === type)?.count ?? 0;
-		const selectedCount = (type) => selected.find((heir) => heir.type === type)?.count ?? 0;
+		const count = (type) => eligible.filter((heir) => heir.type === type).reduce((total, heir) => total + heir.count, 0);
+		const selectedCount = (type) => selected.filter((heir) => heir.type === type).reduce((total, heir) => total + heir.count, 0);
 		const required = new Set(coverage.requiredRuleIds);
 		const assignments = /* @__PURE__ */ new Map();
 		const fixedShareAssignments = [];
@@ -3069,6 +3522,21 @@
 					new Fraction(1n, 6n)
 				],
 				[
+					"SONS_DAUGHTER",
+					"KZ-FR-013-DEEPER-FEMALE-DESCENDANT-ONE-HALF",
+					new Fraction(1n, 2n)
+				],
+				[
+					"SONS_DAUGHTER",
+					"KZ-FR-013-DEEPER-FEMALE-DESCENDANT-GROUP-TWO-THIRDS",
+					new Fraction(2n, 3n)
+				],
+				[
+					"SONS_DAUGHTER",
+					"KZ-FR-013-DEEPER-FEMALE-DESCENDANT-COMPLEMENT-ONE-SIXTH",
+					new Fraction(1n, 6n)
+				],
+				[
 					"FULL_SISTER",
 					"KZ-FR-005-ONE-FULL-SISTER-ONE-HALF",
 					new Fraction(1n, 2n)
@@ -3097,6 +3565,7 @@
 			const uterineRuleId = required.has("KZ-FR-010-ONE-UTERINE-SIBLING-ONE-SIXTH") ? "KZ-FR-010-ONE-UTERINE-SIBLING-ONE-SIXTH" : required.has("KZ-FR-019-MIXED-UTERINE-SIBLING-GROUP-ONE-THIRD-EQUAL") ? "KZ-FR-019-MIXED-UTERINE-SIBLING-GROUP-ONE-THIRD-EQUAL" : required.has("KZ-FR-009-UTERINE-SIBLING-GROUP-ONE-THIRD") ? "KZ-FR-009-UTERINE-SIBLING-GROUP-ONE-THIRD" : null;
 			if (uterineRuleId !== null) addFixedGroup(["MATERNAL_BROTHER", "MATERNAL_SISTER"], uterineRuleId.includes("ONE-SIXTH") ? new Fraction(1n, 6n) : new Fraction(1n, 3n), uterineRuleId);
 			if (required.has("KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH")) addFixedGroup(["MATERNAL_GRANDMOTHER", "PATERNAL_GRANDMOTHER"], new Fraction(1n, 6n), "KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH");
+			if (required.has("KZ-FR-017-LINEAGE-GRANDMOTHER-GROUP-ONE-SIXTH")) addFixedGroup(["MATERNAL_GRANDMOTHER", "PATERNAL_GRANDMOTHER"], new Fraction(1n, 6n), "KZ-FR-017-LINEAGE-GRANDMOTHER-GROUP-ONE-SIXTH");
 		}
 		const originalFixedTotal = sumFractions(fixedShareGroups.map((group) => group.fraction));
 		const originalAsl = deriveOriginalAsl(fixedShareGroups.map((group) => group.fraction));
@@ -3287,7 +3756,9 @@
 			};
 		}
 		if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-013-SONS-SON-GROUP-RESIDUARY")) addResidue("SONS_SON", "KZ-FR-013-SONS-SON-GROUP-RESIDUARY");
+		if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-013-DEEPER-MALE-DESCENDANT-RESIDUARY")) addResidue("SONS_SON", "KZ-FR-013-DEEPER-MALE-DESCENDANT-RESIDUARY");
 		if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE")) addWeightedResidue("SONS_SON", "SONS_DAUGHTER", "KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE");
+		if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-013-LINEAGE-DESCENDANTS-TWO-TO-ONE")) addWeightedResidue("SONS_SON", "SONS_DAUGHTER", "KZ-FR-013-LINEAGE-DESCENDANTS-TWO-TO-ONE");
 		if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-019-FULL-BROTHER-RESIDUARY")) addResidue("FULL_BROTHER", "KZ-FR-019-FULL-BROTHER-RESIDUARY");
 		if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-019-FULL-SIBLINGS-TWO-TO-ONE")) addWeightedResidue("FULL_BROTHER", "FULL_SISTER", "KZ-FR-019-FULL-SIBLINGS-TWO-TO-ONE");
 		if (residue.compare(Fraction.ZERO) > 0 && required.has("KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY")) addResidue("FULL_SISTER", "KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY");
@@ -3369,7 +3840,7 @@
 			{
 				kind: "HEIRS",
 				title: "Eligible heirs",
-				summary: selected.map((heir) => `${heir.type} × ${heir.count}`).join(", "),
+				summary: selected.map((heir) => `${lineageDescription(heir)} × ${heir.count}`).join(", "),
 				ruleIds: [],
 				sourceReferences: []
 			},
