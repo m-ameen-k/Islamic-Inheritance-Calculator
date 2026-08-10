@@ -2,7 +2,8 @@
 
 Source ID: KHULASAT_AL_FIQH_AL_ISLAMI
 
-Source file: `references/source-notes/khulasa/khulasa-full.pdf`
+Local-only source file (ignored by Git):
+`references/source-notes/khulasa/khulasa-full.pdf`
 
 ## Relevant printed pages
 
@@ -13,4 +14,4 @@ Source file: `references/source-notes/khulasa/khulasa-full.pdf`
 - Printed page 294: the canonical Akdariyya redistribution and correction to 27.
 
 These locators record short structured paraphrases only. The source PDF is not
-copied into production data.
+part of the tracked repository or production data.

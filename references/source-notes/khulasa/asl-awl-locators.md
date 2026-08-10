@@ -2,7 +2,8 @@
 
 Source ID: KHULASAT_AL_FIQH_AL_ISLAMI
 
-Source file: `references/source-notes/khulasa/khulasa-full.pdf`
+Local-only source file (ignored by Git):
+`references/source-notes/khulasa/khulasa-full.pdf`
 
 ## Printed page 279 — أصل المسألة
 
@@ -28,4 +29,3 @@ worked examples:
 
 The tables preserve the original saham and replace the case denominator with
 their exact sum. This note is a short structured paraphrase, not a quotation.
-
