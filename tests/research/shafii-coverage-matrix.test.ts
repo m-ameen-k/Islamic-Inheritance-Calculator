@@ -7,6 +7,7 @@ import { ADVANCED_SPECIAL_DETECTOR_RULE_IDS } from "../../src/engine/advanced-ca
 import { SHAFII_COVERAGE_MATRIX } from "../../src/research/shafii-coverage-matrix";
 import { evaluateWholeCaseCoverage } from "../../src/rules/case-coverage-evaluator";
 import { PRODUCTION_RULES } from "../../src/rules/generated/production-registry";
+import { createShafiiSourceCatalog } from "../../src/sources/shafii";
 import { ADVANCED_PRODUCTION_FIXTURES } from "../fixtures/production/advanced-shafii.fixtures";
 
 describe("TECHNICAL_TEST: machine-readable Shafi‘i coverage inventory", () => {
@@ -55,6 +56,23 @@ describe("TECHNICAL_TEST: machine-readable Shafi‘i coverage inventory", () => 
     );
     expect([...productionIds].filter((ruleId) => !inventoriedIds.has(ruleId))).toEqual([]);
     expect([...inventoriedIds].filter((ruleId) => !productionIds.has(ruleId))).toEqual([]);
+  });
+
+  it("keeps every executable rule traceable to catalogued sources, locators, and fixtures", () => {
+    const sourceCatalog = createShafiiSourceCatalog();
+    for (const rule of PRODUCTION_RULES) {
+      expect(rule.fixtureIds.length, rule.ruleId).toBeGreaterThan(0);
+      expect(rule.admissionRecordId.length, rule.ruleId).toBeGreaterThan(0);
+      expect(rule.sourceReferences.length, rule.ruleId).toBeGreaterThan(0);
+      for (const reference of rule.sourceReferences) {
+        expect(
+          sourceCatalog.getById(reference.sourceId),
+          `${rule.ruleId}:${reference.sourceId}`,
+        ).toBeDefined();
+        expect(reference.evidenceRecordId.trim().length, rule.ruleId).toBeGreaterThan(0);
+        expect(reference.locator.trim().length, rule.ruleId).toBeGreaterThan(0);
+      }
+    }
   });
 
   it("returns a typed reason for every UI heir category with no admitted positive mode", () => {

@@ -24,12 +24,16 @@ describe("TECHNICAL_TEST: functional public calculator wiring", () => {
     expect(app).toContain("calculateSupportedInheritance(calculationInput())");
     expect(html).toContain('id="uncertainDeathOrder"');
     expect(app).toContain("uncertainDeathOrder:document.getElementById");
+    expect(html).toContain('id="estateFactsConfirmed"');
+    expect(app).toContain('["ESTATE_FACTS_REVIEW_REQUIRED"]');
   });
 
   it("contains no inheritance share or blocking table in UI JavaScript", () => {
     expect(app).not.toContain("dynBlocked");
     expect(app).not.toContain("primaryMales");
     expect(app).not.toMatch(/new Fraction|fixedShare|ONE_SIXTH|TWO_THIRDS/);
+    expect(app).not.toContain("parseFloat");
+    expect(app).toContain("BigInt");
   });
 
   it("passes progressive lineage details to the typed engine without calculating shares in UI", () => {
@@ -49,5 +53,23 @@ describe("TECHNICAL_TEST: functional public calculator wiring", () => {
     expect(app).toContain("invalidateCalculation();");
     expect(html).toContain('id="calculationExplanation"');
     expect(html).toContain('data-i="how_calculated"');
+    expect(app).toContain("sort((left,right)=>right.length-left.length)");
+  });
+
+  it("uses semantic, keyboard-operable result tabs and a live readiness status", () => {
+    expect(html).toContain('role="tablist"');
+    expect(html.match(/role="tab"/g)).toHaveLength(5);
+    expect(html.match(/role="tabpanel"/g)).toHaveLength(5);
+    expect(html).toContain('id="calculationDisabledReason"');
+    expect(html).toContain('role="status"');
+    expect(app).toContain('tab.addEventListener("keydown"');
+    expect(app).toContain('t.setAttribute("aria-selected",String(active))');
+    expect(app).toContain('Number(btn.dataset.d)>0?"add_heir":"remove_heir"');
+  });
+
+  it("contains no dead legacy residuary modal or browser inheritance fallback", () => {
+    expect(html).not.toContain("asabaModal");
+    expect(app).not.toContain("showAsaba");
+    expect(app).not.toContain("js/engine.js");
   });
 });

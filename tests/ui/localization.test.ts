@@ -183,6 +183,14 @@ describe("TECHNICAL_TEST: deterministic bilingual UI localization", () => {
     expect(APP_SOURCE).toContain('getPrimaryText("case_not_supported",lang)');
   });
 
+  it("marks untranslated engine explanations as an explicit English fallback", () => {
+    expect(APP_SOURCE).toContain('card.lang="en"');
+    expect(APP_SOURCE).toContain('card.dir="ltr"');
+    expect(APP_SOURCE).toContain('getPrimaryText("explanation_english_fallback",lang)');
+    expect(localization.getPrimaryText("explanation_english_fallback", "ar").text).not.toBe("");
+    expect(localization.getPrimaryText("explanation_english_fallback", "ml").text).not.toBe("");
+  });
+
   it("preserves the permanent brand lockup without localization markers", () => {
     expect(HTML_SOURCE).toContain(
       '<div class="logo-main">علم الفرائض <span>Islamic Inheritance Calculator</span></div>',
