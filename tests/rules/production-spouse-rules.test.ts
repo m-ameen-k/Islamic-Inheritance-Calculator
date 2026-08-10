@@ -27,7 +27,7 @@ describe("TECHNICAL_TEST: admitted spouse production rules", () => {
 
   it("gives every production rule sources, fixtures, and one matching admission", async () => {
     const verified = await verifyProductionManifest();
-    expect(verified).toHaveLength(41);
+    expect(verified).toHaveLength(68);
     for (const entry of verified) {
       expect(entry.rule.sourceReferences.length).toBeGreaterThan(0);
       expect(entry.rule.fixtureIds.length).toBeGreaterThan(0);
@@ -55,7 +55,7 @@ describe("TECHNICAL_TEST: admitted spouse production rules", () => {
     const manifest = JSON.parse(
       readFileSync(new URL("../../src/rules/production-manifest.json", import.meta.url), "utf8"),
     ) as { readonly rules: readonly { readonly productionFile: string }[] };
-    expect(manifest.rules).toHaveLength(41);
+    expect(manifest.rules).toHaveLength(68);
     for (const entry of manifest.rules) {
       expect(entry.productionFile).toMatch(/^src\/rules\/production\//);
       expect(entry.productionFile).not.toContain("/candidates/");

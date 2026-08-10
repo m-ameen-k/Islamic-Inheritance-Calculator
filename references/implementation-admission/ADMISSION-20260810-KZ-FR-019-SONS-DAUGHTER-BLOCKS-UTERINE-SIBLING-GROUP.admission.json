@@ -1,0 +1,27 @@
+{
+  "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-SONS-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP",
+  "ruleId": "KZ-FR-019-SONS-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+  "reviewRecordIds": [
+    "MANUAL-20260810-KZ-FR-013",
+    "MANUAL-20260810-KZ-FR-017",
+    "MANUAL-20260810-KZ-FR-019",
+    "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS"
+  ],
+  "fixtureIds": [
+    "KZ-FR-019-SONS-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP-POS",
+    "KZ-FR-019-SONS-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP-NEG"
+  ],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "Admitted only for the atomic normalized-generation or ordinary-heir conditions; unresolved hierarchy and special cases fail closed."
+}

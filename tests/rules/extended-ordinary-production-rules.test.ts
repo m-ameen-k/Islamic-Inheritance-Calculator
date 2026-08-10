@@ -19,10 +19,10 @@ describe("SOURCE_DERIVED_TEST: narrow extended ordinary admissions", () => {
     }
   });
 
-  it("does not promote incomplete positive-share rules", () => {
+  it("promotes later ordinary atoms only through their separate source comparison", () => {
     const ids = new Set<string>(PRODUCTION_RULES.map((rule) => rule.ruleId));
-    expect(ids.has("KZ-FR-013-SONS-SON-RESIDUARY")).toBe(false);
-    expect(ids.has("KZ-FR-017-GRANDMOTHER-ONE-SIXTH")).toBe(false);
-    expect(ids.has("KZ-FR-019-FULL-SISTER-WITH-DAUGHTER-RESIDUARY")).toBe(false);
+    expect(ids.has("KZ-FR-013-SONS-SON-GROUP-RESIDUARY")).toBe(true);
+    expect(ids.has("KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH")).toBe(true);
+    expect(ids.has("KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY")).toBe(true);
   });
 });

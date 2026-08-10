@@ -20,6 +20,9 @@ export type FunctionalMvpParentRuleId =
   | "KZ-FR-008"
   | "KZ-FR-009"
   | "KZ-FR-010"
+  | "KZ-FR-013"
+  | "KZ-FR-017"
+  | "KZ-FR-019"
   | "KZ-FR-027"
   | "KZ-FR-028";
 
@@ -33,6 +36,8 @@ export const FUNCTIONAL_MVP_ATOMIC_RULE_KINDS = [
   "CASE_CORRECTION",
   "PARENT_FIXED_SHARE",
   "EXTENDED_FIXED_SHARE",
+  "EXTENDED_RESIDUARY",
+  "GRANDMOTHER_SHARE",
   "CASE_ORIGIN",
   "AWL_ADJUSTMENT",
 ] as const;
@@ -73,6 +78,8 @@ interface CandidateDefinition {
   readonly unresolvedQuestions?: readonly string[];
   readonly sourceComparisonId?: string;
   readonly additionalSourceReferences?: readonly RuleSourceReference[];
+  readonly fixtureIds?: readonly string[];
+  readonly implementationReadiness?: CandidateImplementationReadinessState;
 }
 
 const SOURCE_LOCATORS: Readonly<
@@ -115,6 +122,11 @@ const SOURCE_LOCATORS: Readonly<
     khulasa:
       "references/source-notes/khulasa/khulasa-full.pdf; printed pages 270 and 277–278; fixed-share summary, residuary order, and worked combinations",
   },
+  "KZ-FR-013": {
+    kanz: "references/extracted/kanz-faraid-extracted-rules-v0.1.json; printed pages 140–141; local PDF pages 11–12",
+    khulasa:
+      "references/source-notes/khulasa/khulasa-full.pdf; printed pages 271 and 277–278; son's-descendant conditions and residuary order",
+  },
   "KZ-FR-014": {
     kanz: "references/extracted/kanz-faraid-extracted-rules-v0.1.json; printed page 141; local PDF page 12",
     khulasa:
@@ -124,6 +136,16 @@ const SOURCE_LOCATORS: Readonly<
     kanz: "references/extracted/kanz-faraid-extracted-rules-v0.1.json; printed page 142; local PDF page 13",
     khulasa:
       "references/source-notes/khulasa/khulasa-full.pdf; printed page 270; mother with one spouse and both parents, including footnote 10",
+  },
+  "KZ-FR-017": {
+    kanz: "references/extracted/kanz-faraid-extracted-rules-v0.1.json; printed pages 139 and 142; local PDF pages 10 and 13",
+    khulasa:
+      "references/source-notes/khulasa/khulasa-full.pdf; printed pages 272 and 276; eligible grandmothers and blocking table",
+  },
+  "KZ-FR-019": {
+    kanz: "references/extracted/kanz-faraid-extracted-rules-v0.1.json; printed pages 143–145; local PDF pages 14–16",
+    khulasa:
+      "references/source-notes/khulasa/khulasa-full.pdf; printed pages 271, 275–278; sibling shares, blockers, and residuary order",
   },
   "KZ-FR-029": {
     kanz: "references/extracted/kanz-faraid-extracted-rules-v0.1.json; printed pages 154–156; local PDF pages 25–27",
@@ -190,9 +212,9 @@ export function defineFunctionalMvpCandidate<const Definition extends CandidateD
       sourceComparisonId,
       definition.additionalSourceReferences ?? [],
     ),
-    fixtureIds: [],
+    fixtureIds: definition.fixtureIds ?? [],
     unresolvedQuestions: definition.unresolvedQuestions ?? [],
-    implementationReadiness: "INCOMPLETE",
+    implementationReadiness: definition.implementationReadiness ?? "INCOMPLETE",
     admissionRecordId: null,
   };
 }

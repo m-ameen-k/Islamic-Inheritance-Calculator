@@ -9,8 +9,11 @@ export type DirectFamilyParentRuleId =
   | "KZ-FR-010"
   | "KZ-FR-011"
   | "KZ-FR-012"
+  | "KZ-FR-013"
   | "KZ-FR-014"
   | "KZ-FR-015"
+  | "KZ-FR-017"
+  | "KZ-FR-019"
   | "KZ-FR-027"
   | "KZ-FR-028"
   | "KZ-FR-029";
@@ -22,6 +25,8 @@ interface Definition {
     | "REMAINDER_POLICY"
     | "PARENT_FIXED_SHARE"
     | "EXTENDED_FIXED_SHARE"
+    | "EXTENDED_RESIDUARY"
+    | "GRANDMOTHER_SHARE"
     | "TOTAL_BLOCKING_RELATIONSHIP"
     | "DESCENDANT_FIXED_SHARE"
     | "DESCENDANT_RESIDUARY"
@@ -43,6 +48,7 @@ interface Definition {
     readonly evidenceRecordId: string;
     readonly locator: string;
   }[];
+  readonly admissionRecordId?: string;
 }
 
 const LOCATORS: Readonly<Record<DirectFamilyParentRuleId, { kanz: string; khulasa: string }>> = {
@@ -74,6 +80,10 @@ const LOCATORS: Readonly<Record<DirectFamilyParentRuleId, { kanz: string; khulas
     kanz: "Printed page 140; local PDF page 11.",
     khulasa: "Printed pages 270 and 277–278.",
   },
+  "KZ-FR-013": {
+    kanz: "Printed pages 140–141; local PDF pages 11–12.",
+    khulasa: "Printed pages 271 and 277–278; son's-descendant conditions and residuary order.",
+  },
   "KZ-FR-014": {
     kanz: "Printed page 141; local PDF page 12.",
     khulasa: "Printed pages 270, 272, and 277–278.",
@@ -81,6 +91,14 @@ const LOCATORS: Readonly<Record<DirectFamilyParentRuleId, { kanz: string; khulas
   "KZ-FR-015": {
     kanz: "Printed page 142; local PDF page 13.",
     khulasa: "Printed page 270, including footnote 10.",
+  },
+  "KZ-FR-017": {
+    kanz: "Printed pages 139 and 142; local PDF pages 10 and 13.",
+    khulasa: "Printed pages 272 and 276; eligible grandmothers and blocking table.",
+  },
+  "KZ-FR-019": {
+    kanz: "Printed pages 143–145; local PDF pages 14–16.",
+    khulasa: "Printed pages 271, 275–278; sibling shares, blockers, and residuary order.",
   },
   "KZ-FR-027": {
     kanz: "Printed pages 152–153; local PDF pages 23–24.",
@@ -105,7 +123,7 @@ export function sourceComparisonId(parentRuleId: DirectFamilyParentRuleId): stri
 export function defineDirectFamilyProductionRule<const Rule extends Definition>(rule: Rule) {
   const comparisonId = rule.sourceComparisonId ?? sourceComparisonId(rule.parentResearchRuleId);
   const locators = LOCATORS[rule.parentResearchRuleId];
-  const { additionalSourceReferences = [], ...definition } = rule;
+  const { additionalSourceReferences = [], admissionRecordId, ...definition } = rule;
 
   return defineProductionRule({
     ...definition,
@@ -124,6 +142,6 @@ export function defineDirectFamilyProductionRule<const Rule extends Definition>(
       },
       ...additionalSourceReferences,
     ],
-    admissionRecordId: `ADMISSION-20260809-${rule.ruleId}`,
+    admissionRecordId: admissionRecordId ?? `ADMISSION-20260809-${rule.ruleId}`,
   });
 }
