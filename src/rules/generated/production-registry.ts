@@ -76,12 +76,14 @@ import { productionRule as RULE_0071 } from "../production/KZ-FR-020-GRANDFATHER
 import { productionRule as RULE_0072 } from "../production/KZ-FR-020-GRANDFATHER-SIBLINGS-WITH-FIXED-SHARE-COMPARISON";
 import { productionRule as RULE_0073 } from "../production/KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION";
 import { productionRule as RULE_0074 } from "../production/KZ-FR-022-MUADDA-FULL-MALE-LINE";
-import { productionRule as RULE_0075 } from "../production/KZ-FR-023-AKDARIYYA-FULL-SISTER";
-import { productionRule as RULE_0076 } from "../production/KZ-FR-023-AKDARIYYA-PATERNAL-SISTER";
-import { productionRule as RULE_0077 } from "../production/KZ-FR-027-ORIGINAL-ASL";
-import { productionRule as RULE_0078 } from "../production/KZ-FR-028-AWL-ADJUSTMENT";
-import { productionRule as RULE_0079 } from "../production/KZ-FR-029-MULTIPLE-CLASS-CORRECTION";
-import { productionRule as RULE_0080 } from "../production/KZ-FR-029-SINGLE-CLASS-CORRECTION";
+import { productionRule as RULE_0075 } from "../production/KZ-FR-022-MUADDA-ONE-FULL-SISTER-WORKED-BRANCH";
+import { productionRule as RULE_0076 } from "../production/KZ-FR-022-MUADDA-TWO-FULL-SISTERS-WORKED-BRANCH";
+import { productionRule as RULE_0077 } from "../production/KZ-FR-023-AKDARIYYA-FULL-SISTER";
+import { productionRule as RULE_0078 } from "../production/KZ-FR-023-AKDARIYYA-PATERNAL-SISTER";
+import { productionRule as RULE_0079 } from "../production/KZ-FR-027-ORIGINAL-ASL";
+import { productionRule as RULE_0080 } from "../production/KZ-FR-028-AWL-ADJUSTMENT";
+import { productionRule as RULE_0081 } from "../production/KZ-FR-029-MULTIPLE-CLASS-CORRECTION";
+import { productionRule as RULE_0082 } from "../production/KZ-FR-029-SINGLE-CLASS-CORRECTION";
 
 export const PRODUCTION_RULES = [
   RULE_0001,
@@ -164,4 +166,6 @@ export const PRODUCTION_RULES = [
   RULE_0078,
   RULE_0079,
   RULE_0080,
+  RULE_0081,
+  RULE_0082,
 ] as const satisfies readonly ProductionRuleFile[];

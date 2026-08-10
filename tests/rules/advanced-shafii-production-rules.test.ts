@@ -24,19 +24,38 @@ describe("SOURCE_DERIVED_TEST: advanced Shafi‘i production admissions", () => 
         "utf8",
       ),
     ) as { readyAtomicRuleIds: string[]; unresolvedQuestions: string[] };
-    expect(comparison.readyAtomicRuleIds).toEqual(ADVANCED_RULE_IDS);
+    expect(comparison.readyAtomicRuleIds).toEqual(
+      ADVANCED_RULE_IDS.filter((ruleId) => !ruleId.includes("WORKED-BRANCH")),
+    );
     expect(comparison.unresolvedQuestions.join(" ")).toContain("Female-only Mu‘adda");
     expect(comparison.unresolvedQuestions.join(" ")).toContain("Broader Mushtaraka");
   });
   it("keeps every advanced parent atomically split with positive and negative fixtures", () => {
-    expect(ADVANCED_RULE_DEFINITIONS).toHaveLength(12);
-    expect(new Set(ADVANCED_RULE_IDS).size).toBe(12);
-    expect(ADVANCED_PRODUCTION_FIXTURES).toHaveLength(24);
+    expect(ADVANCED_RULE_DEFINITIONS).toHaveLength(14);
+    expect(new Set(ADVANCED_RULE_IDS).size).toBe(14);
+    expect(ADVANCED_PRODUCTION_FIXTURES).toHaveLength(28);
     for (const ruleId of ADVANCED_RULE_IDS) {
       expect(
         ADVANCED_PRODUCTION_FIXTURES.filter((fixture) => fixture.ruleId === ruleId),
       ).toHaveLength(2);
     }
+  });
+
+  it("records the exact female Mu‘adda worked branches without widening unresolved variants", () => {
+    const comparison = JSON.parse(
+      readFileSync(
+        "references/review/source-corroborated/SOURCE-COMPARISON-20260810-REMAINING-SHAFII-GAPS.comparison.json",
+        "utf8",
+      ),
+    ) as { readyAtomicRuleIds: string[]; unresolvedQuestions: string[] };
+    expect(comparison.readyAtomicRuleIds).toEqual([
+      "KZ-FR-022-MUADDA-ONE-FULL-SISTER-WORKED-BRANCH",
+      "KZ-FR-022-MUADDA-TWO-FULL-SISTERS-WORKED-BRANCH",
+    ]);
+    expect(comparison.unresolvedQuestions.join(" ")).toContain("MUSHTARAKA_VARIANT_NOT_ADMITTED");
+    expect(comparison.unresolvedQuestions.join(" ")).toContain(
+      "MOTHER_BLOCKED_SIBLING_COUNT_NOT_ADMITTED",
+    );
   });
 
   it("loads only the individually admitted advanced atoms with exact source locators", () => {

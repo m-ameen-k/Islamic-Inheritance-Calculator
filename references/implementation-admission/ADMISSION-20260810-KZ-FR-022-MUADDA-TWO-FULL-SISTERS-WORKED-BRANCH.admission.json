@@ -1,0 +1,25 @@
+{
+  "admissionRecordId": "ADMISSION-20260810-KZ-FR-022-MUADDA-TWO-FULL-SISTERS-WORKED-BRANCH",
+  "ruleId": "KZ-FR-022-MUADDA-TWO-FULL-SISTERS-WORKED-BRANCH",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-SHAFII-GAPS",
+  "reviewRecordIds": [
+    "MANUAL-20260810-KZ-FR-022",
+    "SOURCE-COMPARISON-20260810-REMAINING-SHAFII-GAPS"
+  ],
+  "fixtureIds": [
+    "KZ-FR-022-MUADDA-TWO-FULL-SISTERS-WORKED-BRANCH-POS",
+    "KZ-FR-022-MUADDA-TWO-FULL-SISTERS-WORKED-BRANCH-NEG"
+  ],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "Admitted only for the exact grandfather, two-full-sisters, one-paternal-brother worked example. Other female Mu‘adda compositions retain typed coverage rejection."
+}

@@ -7,6 +7,8 @@ import {
 
 export const ADVANCED_SOURCE_COMPARISON_ID =
   "SOURCE-COMPARISON-20260810-ADVANCED-SHAFII-INHERITANCE" as const;
+export const REMAINING_GAPS_SOURCE_COMPARISON_ID =
+  "SOURCE-COMPARISON-20260810-REMAINING-SHAFII-GAPS" as const;
 
 export type AdvancedParentRuleId =
   "KZ-FR-016" | "KZ-FR-018" | "KZ-FR-020" | "KZ-FR-021" | "KZ-FR-022" | "KZ-FR-023";
@@ -185,6 +187,62 @@ export const ADVANCED_RULE_DEFINITIONS = [
     },
   ),
   definition(
+    "KZ-FR-022-MUADDA-ONE-FULL-SISTER-WORKED-BRANCH",
+    "KZ-FR-022",
+    "MUADDA",
+    [
+      "Exactly one paternal grandfather, one full sister, one paternal brother, and one paternal sister are present.",
+      "No other heir is present.",
+      "Both sibling lines count in the grandfather comparison.",
+    ],
+    [
+      "Any additional or missing heir is outside this exact worked branch.",
+      "Cases with another fixed-share heir remain unsupported.",
+    ],
+    "The grandfather receives 1/3, the full sister completes to 1/2, and the remaining 1/6 passes to the paternal brother and sister at 2:1.",
+    {
+      exactComposition: {
+        PATERNAL_GRANDFATHER: 1,
+        FULL_SISTER: 1,
+        PATERNAL_BROTHER: 1,
+        PATERNAL_SISTER: 1,
+      },
+      finalShares: {
+        PATERNAL_GRANDFATHER: "1/3",
+        FULL_SISTER: "1/2",
+        PATERNAL_BROTHER: "1/9",
+        PATERNAL_SISTER: "1/18",
+      },
+    },
+  ),
+  definition(
+    "KZ-FR-022-MUADDA-TWO-FULL-SISTERS-WORKED-BRANCH",
+    "KZ-FR-022",
+    "MUADDA",
+    [
+      "Exactly one paternal grandfather, two full sisters, and one paternal brother are present.",
+      "No other heir is present.",
+      "Both sibling lines count in the grandfather comparison.",
+    ],
+    [
+      "Any additional or missing heir is outside this exact worked branch.",
+      "Cases with another fixed-share heir remain unsupported.",
+    ],
+    "The grandfather receives 1/3, the two full sisters receive 2/3 collectively, and the paternal brother receives zero.",
+    {
+      exactComposition: {
+        PATERNAL_GRANDFATHER: 1,
+        FULL_SISTER: 2,
+        PATERNAL_BROTHER: 1,
+      },
+      finalShares: {
+        PATERNAL_GRANDFATHER: "1/3",
+        FULL_SISTER: "2/3",
+        PATERNAL_BROTHER: "0",
+      },
+    },
+  ),
+  definition(
     "KZ-FR-023-AKDARIYYA-FULL-SISTER",
     "KZ-FR-023",
     "AKDARIYYA",
@@ -243,7 +301,9 @@ const sourceReferences = (definition: AdvancedRuleDefinition) =>
     },
     {
       sourceId: "KHULASAT_AL_FIQH_AL_ISLAMI",
-      evidenceRecordId: ADVANCED_SOURCE_COMPARISON_ID,
+      evidenceRecordId: definition.ruleId.includes("WORKED-BRANCH")
+        ? REMAINING_GAPS_SOURCE_COMPARISON_ID
+        : ADVANCED_SOURCE_COMPARISON_ID,
       locator:
         definition.parentResearchRuleId === "KZ-FR-018"
           ? "Printed page 274, footnote 1."
@@ -260,7 +320,9 @@ export function defineAdvancedCandidate(ruleId: string) {
   return {
     ...item,
     parentResearchRecordRole: "RESEARCH_UMBRELLA_NOT_DIRECTLY_EXECUTABLE" as const,
-    sourceComparisonId: ADVANCED_SOURCE_COMPARISON_ID,
+    sourceComparisonId: item.ruleId.includes("WORKED-BRANCH")
+      ? REMAINING_GAPS_SOURCE_COMPARISON_ID
+      : ADVANCED_SOURCE_COMPARISON_ID,
     lifecycleStatus: "SOURCE_CORROBORATED" as const,
     executable: false as const,
     sourceReferences: sourceReferences(item),
