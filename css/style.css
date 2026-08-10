@@ -1162,7 +1162,7 @@ body::before {
 .cb:disabled:hover { transform: none; box-shadow: none; }
 
 .heir-status {
-  display: block;
+  display: inline-flex;
   margin-top: 8px;
   color: var(--danger);
   font-size: 11px;
@@ -1375,18 +1375,31 @@ body::before {
   color: var(--txt);
 }
 
-.rname strong,
-.share-classification { display: block; }
+.rname strong { display: block; }
 
-.share-classification {
-  margin-top: 3px;
-  color: var(--txt3);
+.fiqh-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: 4px;
+  padding: 3px 9px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
   font-family: 'Amiri', 'DM Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
 }
 
-.blocked-result { opacity: 0.72; }
+.fiqh-badge-fixed { color: var(--pri); background: var(--pribg); }
+.fiqh-badge-asabah { color: var(--male); background: var(--malebg); }
+.fiqh-badge-fixed-asabah { color: var(--fem); background: var(--fembg); }
+.fiqh-badge-blocked { color: var(--danger); background: var(--dangerbg); }
+.fiqh-badge-awl { color: var(--warn); background: var(--warnbg); }
+.fiqh-badge-radd { color: var(--fem); background: var(--fembg); }
+.fiqh-badge-bayt { color: var(--gold); background: var(--goldbg); }
+.fiqh-badge-special,
+.fiqh-badge-case { color: var(--txt2); background: var(--bg2); }
 
 .rar2 {
   font-family: 'Amiri', serif;
@@ -1415,13 +1428,15 @@ body::before {
   color: var(--pri);
 }
 
-.per-person-amounts {
-  display: block;
-  margin-top: 3px;
+.allocation-details {
+  flex-basis: 100%;
   color: var(--txt3);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
 }
+
+.allocation-details summary { width: fit-content; cursor: pointer; color: var(--pri); font-weight: 700; }
+.allocation-details p { margin-top: 4px; }
 
 .pbar {
   height: 6px;
@@ -1492,11 +1507,25 @@ body::before {
   padding-block: 10px;
 }
 
+.learn-overview {
+  margin-bottom: 14px;
+  padding: 16px;
+  border: 1px solid var(--border2);
+  border-radius: var(--r2);
+  background: var(--pribg);
+  color: var(--txt2);
+}
+
+.learn-overview h3,
+.learn-section-title { color: var(--txt); font-size: 16px; margin-bottom: 4px; }
+.learn-section-title { margin-top: 16px; }
+
 .learn-step:first-child,
 .calculation-section:first-child { border-top: 0; }
 
 .learn-step-summary,
-.technical-details > summary {
+.technical-details > summary,
+.learn-sources > summary {
   min-height: 44px;
   cursor: pointer;
   font-weight: 700;
@@ -1516,16 +1545,18 @@ body::before {
 
 .human-rule-name { color: var(--pri); font-size: 13px; font-weight: 700; }
 
-.learn-sources h3,
 .calculation-section h3 {
   color: var(--pri);
   font-family: 'Amiri', serif;
   margin-bottom: 6px;
 }
 
+.learn-sources > summary { color: var(--txt); }
 .source-group { margin-top: 12px; }
 .source-group h4 { color: var(--txt); font-size: 14px; }
 .technical-details { margin-top: 12px; color: var(--txt3); }
+.technical-content h4 { margin-top: 10px; color: var(--txt2); font-size: 13px; }
+.technical-list { padding-inline-start: 1.25rem; }
 
 .learn-card h3 {
   font-family: 'Amiri', serif;

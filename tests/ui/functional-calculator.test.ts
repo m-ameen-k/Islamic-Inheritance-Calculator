@@ -49,7 +49,7 @@ describe("TECHNICAL_TEST: functional public calculator wiring", () => {
 
   it("renders learning content from the same structured result and invalidates stale results", () => {
     expect(app).toContain("result.explanationSteps");
-    expect(app).toContain("result.blockedHeirs");
+    expect(app).not.toContain("result.blockedHeirs");
     expect(app).toContain("renderCalculationResult(result)");
     expect(app).toContain("invalidateCalculation();");
     expect(html).toContain('id="tcLearn"');
@@ -60,8 +60,8 @@ describe("TECHNICAL_TEST: functional public calculator wiring", () => {
 
   it("uses semantic, keyboard-operable result tabs and a live readiness status", () => {
     expect(html).toContain('role="tablist"');
-    expect(html.match(/role="tab"/g)).toHaveLength(4);
-    expect(html.match(/role="tabpanel"/g)).toHaveLength(4);
+    expect(html.match(/role="tab"/g)).toHaveLength(3);
+    expect(html.match(/role="tabpanel"/g)).toHaveLength(3);
     expect(html).toContain('id="primaryCaseStatus"');
     expect(html).toContain('role="status"');
     expect(app).toContain('tab.addEventListener("keydown"');
@@ -102,10 +102,16 @@ describe("TECHNICAL_TEST: functional public calculator wiring", () => {
     expect(html).toContain('data-tab="Calculation"');
     expect(html).not.toContain('data-tab="Assets"');
     expect(app).toContain("allocation.shareClassification");
-    expect(app).toContain('getPrimaryText("share_blocked",lang)');
+    expect(html).not.toContain('data-tab="Hajb"');
+    expect(app).not.toContain('uiElement("div","rrow blocked-result")');
     expect(app).toContain('uiElement("details","technical-details")');
     expect(app).toContain("printedLocator(source.locator)");
-    expect(app).toContain("Kanz al-Rāghibīn (al-Maḥallī)");
+    expect(app).toContain("Kanz al-Raghibin (al-Mahalli)");
+    expect(app).toContain("Khulasat al-Fiqh al-Islami");
+    expect(app).toContain("Fath al-Mu'in");
+    expect(app).toContain("item.dataset.sourceId=source.sourceId");
+    expect(app).toContain('uiElement("section","learn-overview")');
+    expect(css).toContain(".fiqh-badge-blocked");
     expect(app).toContain("أصل المسألة");
     expect(app).toContain("التصحيح");
     expect(app).toContain("الأكدرية");

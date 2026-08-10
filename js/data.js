@@ -254,8 +254,9 @@ Object.assign(T.ml, {
 Object.assign(T.en, {
   complete_highlighted:"Complete the highlighted fields to calculate.",case_needs_review:"This case needs additional review before calculation.",
   group_immediate:"Immediate family",show_advanced_heirs:"Show advanced heirs",group_descendants:"Descendants",group_grandparents:"Grandparents",group_siblings:"Siblings",group_extended:"Extended residuaries / walā’",
-  blocked_by:"Blocked by {heir}",blocked_receives_zero:"Blocked — receives 0",why:"Why?",tab_hj:"Blocked",tab_calculation:"Calculation",tab_learn:"Learn",
-  technical_details:"Technical details",sources:"Sources",reviewed_source:"Reviewed source",estate_calculation:"Estate",correction_factor:"Correction factor",remainder:"Residue",residuary_distribution:"Residuary distribution",
+  blocked_by:"محجوب — Blocked by {heir}",blocked_receives_zero:"محجوب — Blocked, receives 0",why:"Why?",tab_hj:"Blocked",tab_calculation:"Calculation",tab_learn:"Learn",
+  technical_details:"Technical details",sources:"Sources",reviewed_source:"Reviewed source",estate_calculation:"Estate",correction_factor:"Correction factor",remainder:"Residue",residuary_distribution:"Residuary distribution",bayt_residue:"بيت المال — Bayt al-Mal residue",
+  learn_summary_title:"In brief",learn_summary:"This is a {case} calculation. {count} heir group(s) receive a share of the net estate. Open an explanation below to learn why.",rule_explanations:"Why these shares apply",more_details:"More details",reviewed_passage:"Reviewed passage",
   case_ordinary:"Ordinary",case_awl:"Awl",case_radd:"Radd",case_umariyyatayn:"Umariyyatayn",case_akdariyya:"Akdariyya",case_mushtaraka:"Mushtaraka",case_muadda:"Mu‘adda",case_grandfather_siblings:"Grandfather with siblings",
   share_fixed:"فرض — Fixed share",share_asabah:"عصبة — Residuary",share_asabah_bi_nafsihi:"عصبة بالنفس — Residuary in their own right",share_asabah_bil_ghayr:"عصبة بالغير — Residuary through another",share_asabah_ma_al_ghayr:"عصبة مع الغير — Residuary with another",share_fixed_plus_asabah:"فرض + عصبة — Fixed share plus residue",share_special_case:"حساب خاص — Special-case share",share_blocked:"محجوب — Blocked by"
 });
@@ -263,7 +264,8 @@ Object.assign(T.ar, {
   complete_highlighted:"أكمل الحقول المميزة لإجراء الحساب.",case_needs_review:"تحتاج هذه المسألة إلى مراجعة إضافية قبل الحساب.",
   group_immediate:"الأسرة المباشرة",show_advanced_heirs:"إظهار الورثة المتقدمين",group_descendants:"ذرية الابن",group_grandparents:"الأجداد والجدات",group_siblings:"الإخوة والأخوات",group_extended:"العصبات الأبعد والولاء",
   blocked_by:"محجوب بـ {heir}",blocked_receives_zero:"محجوب — نصيبه صفر",why:"لماذا؟",tab_hj:"المحجوبون",tab_calculation:"الحساب",tab_learn:"تعلّم",
-  technical_details:"التفاصيل التقنية",sources:"المصادر",reviewed_source:"مصدر مراجع",estate_calculation:"التركة",correction_factor:"معامل التصحيح",remainder:"الباقي",residuary_distribution:"توزيع العصبة",
+  technical_details:"التفاصيل التقنية",sources:"المصادر",reviewed_source:"مصدر مراجع",estate_calculation:"التركة",correction_factor:"معامل التصحيح",remainder:"الباقي",residuary_distribution:"توزيع العصبة",bayt_residue:"بيت المال — الباقي",
+  learn_summary_title:"الخلاصة",learn_summary:"هذه مسألة من نوع {case}. تستحق {count} فئة من الورثة نصيبًا من صافي التركة. افتح أحد الشروح أدناه لمعرفة السبب.",rule_explanations:"سبب استحقاق هذه الأنصبة",more_details:"تفاصيل إضافية",reviewed_passage:"موضع مراجع",
   case_ordinary:"عادية",case_awl:"العول",case_radd:"الرد",case_umariyyatayn:"العمريتان",case_akdariyya:"الأكدرية",case_mushtaraka:"المشتركة",case_muadda:"المعادة",case_grandfather_siblings:"الجد مع الإخوة",
   share_fixed:"فرض",share_asabah:"عصبة",share_asabah_bi_nafsihi:"عصبة بالنفس",share_asabah_bil_ghayr:"عصبة بالغير",share_asabah_ma_al_ghayr:"عصبة مع الغير",share_fixed_plus_asabah:"فرض + عصبة",share_special_case:"حساب خاص",share_blocked:"محجوب بـ"
 });
@@ -271,7 +273,8 @@ Object.assign(T.ml, {
   complete_highlighted:"കണക്കാക്കാൻ മുൻപ് അടയാളപ്പെടുത്തിയ ഫീൽഡുകൾ പൂരിപ്പിക്കുക.",case_needs_review:"കണക്കാക്കുന്നതിന് മുമ്പ് ഈ കേസിന് കൂടുതൽ പരിശോധന വേണം.",
   group_immediate:"അടുത്ത കുടുംബം",show_advanced_heirs:"മറ്റ് അവകാശികളെ കാണിക്കുക",group_descendants:"മകൻവഴി സന്തതികൾ",group_grandparents:"മുത്തശ്ശനും മുത്തശ്ശിമാരും",group_siblings:"സഹോദരങ്ങൾ",group_extended:"ദൂരബന്ധു അസബകളും വലാഉം",
   blocked_by:"{heir} മൂലം മഹ്ജൂബ്",blocked_receives_zero:"محجوب — ഓഹരി 0",why:"എന്തുകൊണ്ട്?",tab_hj:"മഹ്ജൂബ്",tab_calculation:"കണക്ക്",tab_learn:"പഠനം",
-  technical_details:"സാങ്കേതിക വിശദാംശങ്ങൾ",sources:"സ്രോതസ്സുകൾ",reviewed_source:"പരിശോധിച്ച സ്രോതസ്സ്",estate_calculation:"സ്വത്ത്",correction_factor:"തിരുത്തൽ ഘടകം",remainder:"ബാക്കി",residuary_distribution:"ശിഷ്ടാവകാശ വിതരണം",
+  technical_details:"സാങ്കേതിക വിശദാംശങ്ങൾ",sources:"സ്രോതസ്സുകൾ",reviewed_source:"പരിശോധിച്ച സ്രോതസ്സ്",estate_calculation:"സ്വത്ത്",correction_factor:"തിരുത്തൽ ഘടകം",remainder:"ബാക്കി",residuary_distribution:"ശിഷ്ടാവകാശ വിതരണം",bayt_residue:"بيت المال — ബൈത്തുൽ മാൽ ബാക്കി",
+  learn_summary_title:"ചുരുക്കത്തിൽ",learn_summary:"ഇത് {case} കണക്കാണ്. അറ്റ സ്വത്തിൽ നിന്ന് {count} അവകാശി വിഭാഗത്തിന് ഓഹരി ലഭിക്കുന്നു. കാരണം അറിയാൻ താഴെയുള്ള വിശദീകരണം തുറക്കുക.",rule_explanations:"ഈ ഓഹരികൾ ലഭിക്കുന്നതിന്റെ കാരണം",more_details:"കൂടുതൽ വിവരങ്ങൾ",reviewed_passage:"പരിശോധിച്ച ഭാഗം",
   case_ordinary:"സാധാരണ",case_awl:"അൗൽ",case_radd:"റദ്ദ്",case_umariyyatayn:"ഉമറിയ്യതൈൻ",case_akdariyya:"അക്ദരിയ്യ",case_mushtaraka:"മുശ്തറക",case_muadda:"മുആദ്ദ",case_grandfather_siblings:"മുത്തശ്ശനും സഹോദരങ്ങളും",
   share_fixed:"فرض — നിശ്ചിത ഓഹരി",share_asabah:"عصبة — ശിഷ്ടാവകാശി",share_asabah_bi_nafsihi:"عصبة بالنفس — സ്വന്തം അസബ",share_asabah_bil_ghayr:"عصبة بالغير — മറ്റൊരാളിലൂടെ അസബ",share_asabah_ma_al_ghayr:"عصبة مع الغير — മറ്റൊരാളോടൊപ്പം അസബ",share_fixed_plus_asabah:"فرض + عصبة — നിശ്ചിത ഓഹരി + ശിഷ്ടം",share_special_case:"حساب خاص — പ്രത്യേക കണക്ക്",share_blocked:"محجوب — തടയുന്നത്"
 });

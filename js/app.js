@@ -297,7 +297,7 @@ function updateDynamicUI(){
     const wrapper=card.closest(".heir-card-wrap");
     wrapper?.querySelector(".heir-guidance")?.remove();
     if(blocked){
-      const status=uiElement("span","heir-status");
+      const status=uiElement("span","heir-status fiqh-badge fiqh-badge-blocked");
       const blocker=heirLabel(blocked.blockerType);
       applyResolvedText(
         status,
@@ -833,15 +833,15 @@ function presentableEngineText(value){
 }
 
 function sourceLabel(sourceId){
-  if(sourceId.includes("KANZ")||sourceId.includes("MAHALLI")) return "Kanz al-Rāghibīn (al-Maḥallī)";
-  if(sourceId.includes("KHULASA")) return "Khulāṣat al-Fiqh al-Islāmī";
-  if(sourceId.includes("FATH")) return "Fatḥ al-Mu‘īn";
+  if(sourceId.includes("KANZ")||sourceId.includes("MAHALLI")) return "Kanz al-Raghibin (al-Mahalli)";
+  if(sourceId.includes("KHULASA")) return "Khulasat al-Fiqh al-Islami";
+  if(sourceId.includes("FATH")) return "Fath al-Mu'in";
   return getPrimaryText("reviewed_source",lang).text;
 }
 
 function printedLocator(locator){
   const printed=locator.split(";").find(part=>/printed/i.test(part));
-  return (printed||locator).trim().replace(/\.$/,"");
+  return printed?printed.trim().replace(/\.$/,""):getPrimaryText("reviewed_passage",lang).text;
 }
 
 function humanRuleName(ruleId){
@@ -863,23 +863,56 @@ function humanRuleName(ruleId){
     .replace(/^./,letter=>letter.toUpperCase());
 }
 
+function fiqhBadge(text,kind){
+  return uiElement("span",`fiqh-badge fiqh-badge-${kind}`,text);
+}
+
+function fiqhKindForText(text){
+  if(text.includes("محجوب")) return "blocked";
+  if(text.includes("العول")) return "awl";
+  if(text.includes("الرد")||/^Radd\b/i.test(text)) return "radd";
+  if(text.includes("بيت المال")||/Bayt al-Mal/i.test(text)) return "bayt";
+  if(text.includes("عصبة")) return "asabah";
+  if(text.includes("فرض")) return "fixed";
+  return null;
+}
+
+function appendFiqhHeading(container,text){
+  const kind=fiqhKindForText(text);
+  container.appendChild(kind?fiqhBadge(text,kind):document.createTextNode(text));
+}
+
 function appendTechnicalDetails(container,result,ruleIds=result.appliedProductionRuleIds,sources=result.sourceReferences){
   const details=uiElement("details","technical-details");
   details.appendChild(uiElement("summary","",getPrimaryText("technical_details",lang).text));
   const content=uiElement("div","technical-content");
-  content.appendChild(uiElement("p","code-like",`${getPrimaryText("rules_used",lang).text}: ${[...new Set(ruleIds)].join(", ")}`));
+  const rules=uiElement("ul","technical-list");
+  for(const ruleId of [...new Set(ruleIds)]){
+    const item=uiElement("li","",humanRuleName(ruleId));
+    item.dataset.ruleId=ruleId;
+    rules.appendChild(item);
+  }
+  if(rules.childElementCount){
+    content.append(uiElement("h4","",getPrimaryText("rules_used",lang).text),rules);
+  }
   if(sources.length){
-    const ids=uiElement("ul","source-list code-like");
-    for(const source of sources) ids.appendChild(uiElement("li","",`${source.sourceId} — ${source.evidenceRecordId}`));
-    content.appendChild(ids);
+    const references=uiElement("ul","source-list technical-list");
+    for(const source of sources){
+      const item=uiElement("li","",`${sourceLabel(source.sourceId)} — ${printedLocator(source.locator)}`);
+      item.dataset.sourceId=source.sourceId;
+      item.dataset.evidenceRecordId=source.evidenceRecordId;
+      item.dataset.locator=source.locator;
+      references.appendChild(item);
+    }
+    content.append(uiElement("h4","",getPrimaryText("sources",lang).text),references);
   }
   details.appendChild(content);
   container.appendChild(details);
 }
 
 function renderGroupedSources(container,result){
-  const section=uiElement("section","learn-sources");
-  section.appendChild(uiElement("h3","",getPrimaryText("sources",lang).text));
+  const section=uiElement("details","learn-sources");
+  section.appendChild(uiElement("summary","",getPrimaryText("sources",lang).text));
   const groups=new Map();
   for(const step of result.explanationSteps){
     for(const source of step.sourceReferences){
@@ -906,19 +939,31 @@ function renderGroupedSources(container,result){
 
 function renderExplanationInto(container,result){
   container.replaceChildren();
+  const [,caseMeaning]=caseTypePresentation(result);
+  const overview=uiElement("section","learn-overview");
+  overview.appendChild(uiElement("h3","",getPrimaryText("learn_summary_title",lang).text));
+  const overviewText=uiElement("p");
+  applyResolvedText(overviewText,getPrimaryText("learn_summary",lang),{
+    case:caseMeaning,
+    count:String(result.allocations.length)
+  });
+  overview.appendChild(overviewText);
+  container.appendChild(overview);
   if(lang!=="en"){
     const note=uiElement("p","translation-fallback-note");
     applyResolvedText(note,getPrimaryText("explanation_english_fallback",lang));
     container.appendChild(note);
   }
-  const steps=result.explanationSteps.filter(step=>step.kind!=="RULES"&&step.kind!=="SOURCES");
-  for(const [index,step] of steps.entries()){
+  const steps=result.explanationSteps.filter(step=>!["ESTATE","DEDUCTIONS","HEIRS","BLOCKING","ASL","AMOUNTS","RULES","SOURCES"].includes(step.kind));
+  if(steps.length) container.appendChild(uiElement("h3","learn-section-title",getPrimaryText("rule_explanations",lang).text));
+  for(const step of steps){
     const card=uiElement("details","learn-step");
     card.lang="en";
     card.dir="ltr";
-    if(index===0) card.open=true;
     const summary=uiElement("summary","learn-step-summary");
-    summary.appendChild(uiElement("span","",presentableEngineText(step.title)));
+    const title=uiElement("span");
+    appendFiqhHeading(title,presentableEngineText(step.title));
+    summary.appendChild(title);
     if(step.fraction) summary.appendChild(uiElement("strong","rsh",fractionText(step.fraction)));
     card.append(summary,uiElement("p","learn-step-body",presentableEngineText(step.summary)));
     if(step.ruleIds.length) card.appendChild(uiElement("p","human-rule-name",humanRuleName(step.ruleIds[0])));
@@ -956,10 +1001,18 @@ function shareClassificationText(classification){
   return getPrimaryText(key,lang).text;
 }
 
+function shareClassificationKind(classification){
+  if(classification==="FIXED") return "fixed";
+  if(classification==="FIXED_PLUS_ASABAH") return "fixed-asabah";
+  return classification.startsWith("ASABAH")?"asabah":"special";
+}
+
 function appendCalculationSection(container,title,lines){
   if(lines.length===0) return;
   const section=uiElement("section","calculation-section");
-  section.appendChild(uiElement("h3","",title));
+  const heading=uiElement("h3");
+  appendFiqhHeading(heading,title);
+  section.appendChild(heading);
   for(const line of lines) section.appendChild(uiElement("p","numeric-value",line));
   container.appendChild(section);
 }
@@ -972,7 +1025,8 @@ function renderCalculationResult(result){
   document.querySelector(".case-sidebar")?.classList.add("result-ready");
   updateProgress("ready");
   const [arabicCase,caseMeaning]=caseTypePresentation(result);
-  document.getElementById("ctag").replaceChildren(uiElement("span","ctag tnorm",`${arabicCase} — ${caseMeaning}`));
+  const caseBadgeKind=fiqhKindForText(arabicCase)||"case";
+  document.getElementById("ctag").replaceChildren(fiqhBadge(`${arabicCase} — ${caseMeaning}`,caseBadgeKind));
   const metrics=document.getElementById("metrics");
   metrics.replaceChildren();
   const resultMetrics=[
@@ -986,40 +1040,21 @@ function renderCalculationResult(result){
   for(const allocation of result.allocations){
     const row=uiElement("div","rrow");
     const name=uiElement("div","rname");
-    name.append(uiElement("strong","",`${heirLabel(allocation.heirType)} × ${allocation.count}`),uiElement("span","share-classification",shareClassificationText(allocation.shareClassification)));
+    name.append(uiElement("strong","",`${heirLabel(allocation.heirType)} × ${allocation.count}`),fiqhBadge(shareClassificationText(allocation.shareClassification),shareClassificationKind(allocation.shareClassification)));
     const share=uiElement("div","rsh",fractionText(allocation.collectiveFraction));
-    share.appendChild(uiElement("div","ramt",`${getPrimaryText("per_person_share",lang).text}: ${fractionText(allocation.perPersonFraction)} · ${percentageText(allocation.collectiveFraction)}`));
     const amount=uiElement("div","ramtv",formatMinorUnits(allocation.exactAmountMinorUnits));
-    if(allocation.count>1) amount.appendChild(uiElement("span","per-person-amounts",`${getPrimaryText("per_person_share",lang).text}: ${allocation.perPersonAmountsMinorUnits.map(formatMinorUnits).join(", ")}`));
-    row.append(name,share,amount);sharesList.appendChild(row);
+    const more=uiElement("details","allocation-details");
+    more.appendChild(uiElement("summary","",getPrimaryText("more_details",lang).text));
+    more.appendChild(uiElement("p","",`${getPrimaryText("per_person_share",lang).text}: ${fractionText(allocation.perPersonFraction)} · ${percentageText(allocation.collectiveFraction)}`));
+    if(allocation.count>1) more.appendChild(uiElement("p","",`${getPrimaryText("per_person_share",lang).text}: ${allocation.perPersonAmountsMinorUnits.map(formatMinorUnits).join(", ")}`));
+    row.append(name,share,amount,more);sharesList.appendChild(row);
   }
   if(result.baytAlMalResidue){
     const row=uiElement("div","rrow");
-    row.append(uiElement("div","rname",getPrimaryText("bayt_residue",lang).text),uiElement("div","rsh",fractionText(result.baytAlMalResidue.fraction)),uiElement("div","ramtv",formatMinorUnits(result.baytAlMalResidue.exactAmountMinorUnits)));
-    sharesList.appendChild(row);
-  }
-  for(const blocked of result.blockedHeirs){
-    const row=uiElement("div","rrow blocked-result");
     const name=uiElement("div","rname");
-    name.append(uiElement("strong","",`${heirLabel(blocked.type)} × ${blocked.count}`),uiElement("span","share-classification",`${getPrimaryText("share_blocked",lang).text} ${heirLabel(blocked.blockerType)}`));
-    row.append(name,uiElement("div","rsh","0"),uiElement("div","ramtv",formatMinorUnits("0")));
+    name.appendChild(fiqhBadge(getPrimaryText("bayt_residue",lang).text,"bayt"));
+    row.append(name,uiElement("div","rsh",fractionText(result.baytAlMalResidue.fraction)),uiElement("div","ramtv",formatMinorUnits(result.baytAlMalResidue.exactAmountMinorUnits)));
     sharesList.appendChild(row);
-  }
-  const hajb=document.getElementById("hajbList");
-  hajb.replaceChildren();
-  if(result.blockedHeirs.length===0){
-    hajb.appendChild(uiElement("p","learn-card",getPrimaryText("no_blk",lang).text));
-  }else{
-    for(const blocked of result.blockedHeirs){
-      const card=uiElement("div","learn-card");
-      card.append(
-        uiElement("h3","",`${heirLabel(blocked.type)} × ${blocked.count}`),
-        uiElement("p","share-classification",`${getPrimaryText("share_blocked",lang).text} ${heirLabel(blocked.blockerType)}`),
-        uiElement("p","",presentableEngineText(blocked.reason))
-      );
-      appendTechnicalDetails(card,result,[blocked.ruleId],result.sourceReferences.filter(source=>result.explanationSteps.some(step=>step.ruleIds.includes(blocked.ruleId)&&step.sourceReferences.includes(source))));
-      hajb.appendChild(card);
-    }
   }
   const calculation=document.getElementById("calculationDetail");calculation.replaceChildren();
   appendCalculationSection(calculation,getPrimaryText("estate_calculation",lang).text,[

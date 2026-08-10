@@ -178,10 +178,13 @@ describe("TECHNICAL_TEST: deterministic bilingual UI localization", () => {
       expect(localization.getPrimaryText("show_advanced_heirs", language).text).not.toBe("");
       expect(localization.getPrimaryText("tab_calculation", language).text).not.toBe("");
       expect(localization.getPrimaryText("technical_details", language).text).not.toBe("");
+      expect(localization.getPrimaryText("learn_summary_title", language).text).not.toBe("");
+      expect(localization.getPrimaryText("more_details", language).text).not.toBe("");
       expect(localization.getPrimaryText("share_asabah_bi_nafsihi", language).text).toContain(
         "عصبة بالنفس",
       );
       expect(localization.getPrimaryText("share_blocked", language).text).toContain("محجوب");
+      expect(localization.getPrimaryText("bayt_residue", language).text).toContain("بيت المال");
     }
   });
 
