@@ -93,7 +93,7 @@ body {
 }
 
 :where(button, input, select, summary, a):focus-visible {
-  outline: 2px solid var(--pri);
+  outline: 3px solid var(--pri);
   outline-offset: 2px;
 }
 
@@ -532,6 +532,8 @@ body::before {
 .calculation-status-unsupported { border-color: var(--border2); background: var(--bg2); color: var(--txt2); }
 .calculation-status-invalid { border-color: var(--danger); background: var(--dangerbg); color: var(--danger); }
 
+.card.needs-attention,
+.estate-safety-confirmation.needs-attention,
 .inp.needs-attention {
   border-color: var(--warn);
   box-shadow: 0 0 0 2px rgba(180, 83, 9, 0.16);
@@ -1118,8 +1120,7 @@ body::before {
   justify-content: space-between;
   width: 100%;
   min-width: 0;
-  min-height: 86px;
-  height: 86px; /* FIXED UNIFORM COMPONENT HEIGHT */
+  min-height: 76px;
   color: inherit;
   font: inherit;
   text-align: start;
@@ -1532,6 +1533,7 @@ body::before {
 }
 
 .learn-step,
+.calculation-section,
 .learn-sources,
 .technical-details {
   border-top: 1px solid var(--border);
@@ -1552,6 +1554,8 @@ body::before {
 .learn-section-title { margin-top: 16px; }
 
 .learn-step:first-child,
+.calculation-section:first-child { border-top: 0; }
+
 .learn-step-summary,
 .technical-details > summary,
 .learn-sources > summary {
@@ -1573,6 +1577,12 @@ body::before {
 .technical-content { margin-top: 8px; color: var(--txt2); }
 
 .human-rule-name { color: var(--pri); font-size: 13px; font-weight: 700; }
+
+.calculation-section h3 {
+  color: var(--pri);
+  font-family: 'Amiri', serif;
+  margin-bottom: 6px;
+}
 
 .learn-sources > summary { color: var(--txt); }
 .source-group { margin-top: 12px; }
@@ -1702,10 +1712,6 @@ body::before {
    would otherwise beat the browser's default [hidden] behavior.
    ========================================================================== */
 [hidden] {
-  display: none !important;
-}
-
-.card-summary-bar[hidden] {
   display: none !important;
 }
 
@@ -1892,7 +1898,6 @@ body::before {
 }
 
 .heir-control-zone {
-  height: 34px;
   min-height: 34px;
   display: flex;
   align-items: center;
@@ -1909,12 +1914,6 @@ body::before {
   width: 28px;
   height: 28px;
   font-size: 14px;
-}
-
-.hcard .cb-minus::before {
-  content: "";
-  width: 28px;
-  display: block;
 }
 
 .heir-blocked-badge {
@@ -2384,31 +2383,14 @@ body::before {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 22%, transparent);
 }
 
-@keyframes invalid-guidance-pulse {
+@keyframes invalid-pulse {
   0%, 100% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 22%, transparent); }
   50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--danger) 32%, transparent); }
 }
 
 .invalid-guidance-pulse {
-  animation: invalid-guidance-pulse 0.55s ease-in-out 2;
+  animation: invalid-pulse 0.85s ease-in-out 2;
 }
-
-.checkbox-row input.invalid-guidance + label {
-  outline: 2px solid var(--danger);
-  outline-offset: 2px;
-}
-
-.invalid-guidance:focus-visible {
-  outline: 2px solid var(--danger);
-  outline-offset: 2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .invalid-guidance-pulse {
-    animation: none;
-  }
-}
-
 
 /* ==========================================================================
    Animations & Responsive Breakpoints
@@ -2423,12 +2405,6 @@ body::before {
 
 
 @media(max-width:768px) {
-
-  #deceasedCard { order: 1; }
-  #estateCard { order: 2; }
-  #heirsCard { order: 3; }
-  .case-sidebar { order: 4; }
-
   .workspace-layout {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -2576,17 +2552,17 @@ body::before {
   }
 }
 
+#asabaModal button {
+  min-width: 44px;
+  min-height: 44px;
+}
+
 svg,
 img {
   max-width: 100%;
 }
 
 @media print {
-
-  .app > :not(.workspace-layout) { display: none !important; }
-  .main-workspace > :not(#resSec) { display: none !important; }
-  #resSec > :not(.print-report) { display: none !important; }
-
   body::before,
   .fab-group,
   .case-sidebar,
