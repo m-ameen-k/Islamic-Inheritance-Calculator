@@ -21,7 +21,8 @@ describe("TECHNICAL_TEST: functional public calculator wiring", () => {
 
   it("uses whole-case coverage to control the public button", () => {
     expect(app).toContain("evaluateWholeCaseCoverage(coverageInput())");
-    expect(app).toContain('button.disabled=kind!=="ready"');
+    expect(app).toContain('button.setAttribute("aria-disabled",String(kind!=="ready"))');
+    expect(app).toContain("if(focusFirstInvalid()) return");
     expect(app).toContain("calculateSupportedInheritance(calculationInput())");
     expect(html).toContain('id="uncertainDeathOrder"');
     expect(app).toContain("uncertainDeathOrder:document.getElementById");
@@ -49,24 +50,25 @@ describe("TECHNICAL_TEST: functional public calculator wiring", () => {
 
   it("renders learning content from the same structured result and invalidates stale results", () => {
     expect(app).toContain("result.explanationSteps");
-    expect(app).not.toContain("result.blockedHeirs");
+    expect(app).toContain("result.blockedHeirs");
     expect(app).toContain("renderCalculationResult(result)");
     expect(app).toContain("invalidateCalculation();");
     expect(html).toContain('id="tcLearn"');
     expect(app).toContain("renderGroupedSources(container,result)");
-    expect(app).toContain("appendTechnicalDetails(container,result)");
-    expect(app).toContain("sort((left,right)=>right.length-left.length)");
+    expect(app).toContain("shareExplanationKey(allocation.shareClassification)");
+    expect(app).not.toContain("appendTechnicalDetails");
+    expect(app).not.toContain("evidenceRecordId");
   });
 
   it("uses semantic, keyboard-operable result tabs and a live readiness status", () => {
     expect(html).toContain('role="tablist"');
-    expect(html.match(/role="tab"/g)).toHaveLength(3);
-    expect(html.match(/role="tabpanel"/g)).toHaveLength(3);
+    expect(html.match(/role="tab"/g)).toHaveLength(2);
+    expect(html.match(/role="tabpanel"/g)).toHaveLength(2);
     expect(html).toContain('id="primaryCaseStatus"');
     expect(html).toContain('role="status"');
     expect(app).toContain('tab.addEventListener("keydown"');
     expect(app).toContain('t.setAttribute("aria-selected",String(active))');
-    expect(app).toContain('Number(btn.dataset.d)>0?"add_heir":"remove_heir"');
+    expect(app).toContain('applyLocalizedAttribute(minus,"aria-label","remove_heir"');
   });
 
   it("contains no dead legacy residuary modal or browser inheritance fallback", () => {
@@ -90,37 +92,38 @@ describe("TECHNICAL_TEST: functional public calculator wiring", () => {
   it("renders progressive heir groups and engine-derived live blocking without deleting selections", () => {
     expect(html).toContain('id="hgrid-immediate"');
     expect(html).toContain('id="advancedHeirs"');
-    expect(html).toContain('data-i="show_advanced_heirs"');
+    expect(html).toContain('data-i="more_relatives"');
     expect(app).toContain("evaluateWholeCaseCoverage({");
-    expect(app).toContain("coverage?.blockedHeirs.find");
+    expect(app).toContain("coverage?.blockedHeirs.filter");
     expect(app).toContain("card.dataset.heirState=state");
-    expect(app).toContain('if(card.classList.contains("blocked")&&d>0) return');
+    expect(app).toContain('card.classList.toggle("blocked",Boolean(blocked))');
     expect(app).not.toMatch(/sel\[[^\]]+\]\s*=\s*0[^\n]*blocked/);
+    expect(html).not.toContain("bulkBlockedContainer");
+    expect(app).not.toContain("allUnselectedBlocked");
   });
 
-  it("separates ordinary shares, student calculation, and collapsed technical metadata", () => {
-    expect(html).toContain('data-tab="Calculation"');
+  it("separates ordinary shares and public learning while preserving internal trace data", () => {
+    expect(html).toContain('data-tab="Shares"');
+    expect(html).toContain('data-tab="Learn"');
+    expect(html).not.toContain('data-tab="Calculation"');
     expect(html).not.toContain('data-tab="Assets"');
     expect(app).toContain("allocation.shareClassification");
     expect(html).not.toContain('data-tab="Hajb"');
     expect(app).not.toContain('uiElement("div","rrow blocked-result")');
-    expect(app).toContain('uiElement("details","technical-details")');
+    expect(app).not.toContain('uiElement("details","technical-details")');
     expect(app).toContain("printedLocator(source.locator)");
-    expect(app).toContain("Kanz al-Raghibin (al-Mahalli)");
-    expect(app).toContain("Khulasat al-Fiqh al-Islami");
-    expect(app).toContain("Fath al-Mu'in");
-    expect(app).toContain("item.dataset.sourceId=source.sourceId");
+    expect(app).toContain("Kanz al-Rāghibīn (al-Maḥallī)");
+    expect(app).toContain("Khulāṣat al-Fiqh al-Islāmī");
+    expect(app).toContain("Fatḥ al-Mu‘īn");
+    expect(app).not.toContain("dataset.evidenceRecordId");
     expect(app).toContain('uiElement("section","learn-overview")');
     expect(css).toContain(".fiqh-badge-blocked");
-    expect(app).toContain("أصل المسألة");
-    expect(app).toContain("التصحيح");
     expect(app).toContain("الأكدرية");
   });
 
   it("keeps inheritance conditions out of browser JavaScript", () => {
     expect(app).not.toContain("blockerPairs");
     expect(app).not.toContain("fixedShares");
-    expect(app).toContain("result.residuaryAssignments.map");
     expect(app).not.toMatch(/new Fraction|ONE_SIXTH|TWO_THIRDS/);
   });
 
@@ -130,6 +133,8 @@ describe("TECHNICAL_TEST: functional public calculator wiring", () => {
     expect(css).toMatch(
       /@media\(max-width:768px\)[\s\S]*\.case-sidebar\s*\{[\s\S]*position: static/,
     );
-    expect(css).toMatch(/@media print[\s\S]*\.fab-group[\s\S]*display: none !important/);
+    expect(css).toMatch(
+      /@media print[\s\S]*\.app > :not\(\.workspace-layout\)[\s\S]*display: none !important/,
+    );
   });
 });

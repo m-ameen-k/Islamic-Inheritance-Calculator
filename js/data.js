@@ -30,6 +30,7 @@ Object.assign(T.en, {
   page_title:"Islamic Inheritance Calculator",
   page_intro:"Calculation is unavailable while the Shafi‘i rules are undergoing scholarly verification.",
   total_estate:"Total estate amount",
+  enter_amount:"Enter amount",
   estate_help:"Enter the full amount if known. Leave this empty to build the total from assets.",
   build_assets:"Build total from assets",
   optional:"optional",
@@ -66,7 +67,7 @@ Object.assign(T.en, {
   detailed_verification:"Detailed verification explanation",
   detailed_verification_text:"This case-preparation interface remains available for review, but no result may be calculated or used to distribute an estate until the Shafi‘i rule set completes scholarly verification.",
   support_project:"Support This Project",
-  payment_soon:"Payment links will be configured soon.",
+  payment_soon:"",
   calculator_status:"Calculator status: unavailable",
   none_selected:"None selected",
   case_entered:"Case information entered.",
@@ -106,6 +107,7 @@ Object.assign(T.en, {
 Object.assign(T.ar, {
   page_intro:T.ar.calc_disabled,
   total_estate:"إجمالي التركة",
+  enter_amount:"أدخل المبلغ",
   estate_help:"أدخل المبلغ الكامل إن كان معروفًا، أو اتركه فارغًا لإجمالي الأصول أدناه.",
   build_assets:"إنشاء الإجمالي من الأصول", optional:"اختياري",
   build_assets_help:"استخدم هذا التفصيل فقط إذا لم تدخل إجمالي التركة أعلاه.",
@@ -128,7 +130,8 @@ Object.assign(T.ar, {
 
 Object.assign(T.ml, {
   page_intro:T.ml.calc_disabled,
-  total_estate:"ആകെ സ്വത്ത് തുക", estate_help:"അറിയാമെങ്കിൽ മുഴുവൻ തുകയും നൽകുക; ആസ്തികളിൽ നിന്ന് ആകെ കണക്കാക്കാൻ ഇത് ഒഴിച്ചിടുക.", build_assets:"ആസ്തികളിൽ നിന്ന് ആകെ തുക കണക്കാക്കുക", optional:"ഐച്ഛികം", build_assets_help:"മുകളിൽ ആകെ സ്വത്ത് തുക നൽകുന്നില്ലെങ്കിൽ മാത്രം ഈ വിശദാംശങ്ങൾ ഉപയോഗിക്കുക.", calculate_weight_rate:"ഭാരവും നിരക്കും ഉപയോഗിച്ച് കണക്കാക്കുക", calculate_property_area:"വിസ്തീർണ്ണത്തിൽ നിന്ന് വസ്തുവില കണക്കാക്കുക", debts_zakat:"കടങ്ങളും നൽകാത്ത സകാത്തും", unsupported_funeral:"ശവസംസ്കാര, ഒരുക്കച്ചെലവുകൾ ഇവിടെ നൽകുന്നില്ല; നിലവിലെ പ്രവർത്തനക്രമത്തിൽ അവ സുരക്ഷിതമായി പ്രയോഗിക്കാൻ കഴിയില്ല.", bequest_details:"വസിയ്യത്ത് വിശദാംശങ്ങൾ", shafii_name:"ശാഫിഈ", hanafi_name:"ഹനഫി", maliki_name:"മാലികി", hanbali_name:"ഹൻബലി", other_madhabs:"മറ്റ് മദ്ഹബുകൾ (നടപ്പിലാക്കിയിട്ടില്ല)", not_implemented:"നടപ്പിലാക്കിയിട്ടില്ല", verification_progress:"പരിശോധന പുരോഗമിക്കുന്നു.", group_spouse:"ഭാര്യ / ഭർത്താവ്", group_descendants:"മക്കളും പൗത്രന്മാരും", group_parents:"മാതാപിതാക്കളും മുത്തശ്ശന്മാരും", group_siblings:"സഹോദരങ്ങൾ", group_extended:"മറ്റു ബന്ധുക്കൾ", review:"അവലോകനം", gross_estate:"ആകെ സ്വത്ത്", supported_deductions:"പിന്തുണയ്ക്കുന്ന കിഴിവുകൾ", current_net:"നിലവിലെ അറ്റ തുക", selected_heirs:"തിരഞ്ഞെടുത്ത അവകാശികൾ", incomplete_information:"അപൂർണ്ണമായ വിവരങ്ങൾ", verification_status:"പരിശോധനാ നില", under_verification:"പരിശോധനയിലാണ്", report_options:"റിപ്പോർട്ട് ഓപ്ഷനുകൾ", amount_symbol:"തുകയുടെ ചിഹ്നം", amount_symbol_help:"പ്രദർശിപ്പിക്കുന്ന തുകകൾ രൂപപ്പെടുത്താൻ മാത്രം; മൂല്യം മാറ്റില്ല.", detailed_verification:"വിശദ പരിശോധനാ വിശദീകരണം", detailed_verification_text:"കേസ് തയ്യാറാക്കൽ ഇന്റർഫേസ് അവലോകനത്തിനായി ലഭ്യമാണ്, എന്നാൽ ശാഫിഈ നിയമസമുച്ചയത്തിന്റെ പണ്ഡിതപരിശോധന പൂർത്തിയാകുന്നതുവരെ ഫലം കണക്കാക്കാനോ സ്വത്ത് വിതരണം ചെയ്യാൻ ഉപയോഗിക്കാനോ പാടില്ല.", support_project:"ഈ പദ്ധതിയെ പിന്തുണയ്ക്കുക", payment_soon:"പേയ്മെന്റ് ലിങ്കുകൾ ഉടൻ ക്രമീകരിക്കും.", calculator_status:"കാൽക്കുലേറ്റർ നില: ലഭ്യമല്ല", none_selected:"ഒന്നും തിരഞ്ഞെടുത്തിട്ടില്ല", case_entered:"കേസ് വിവരങ്ങൾ നൽകി.", add_missing:"{items} ചേർക്കുക.", missing_gender:"മരിച്ചയാൾ", missing_estate:"സ്വത്ത്", missing_heirs:"അവകാശികൾ", total_gold_value:"ആകെ സ്വർണ വില", total_silver_value:"ആകെ വെള്ളി വില", total_property_value:"ആകെ വസ്തു വില", weight:"ഭാരം", manual_rate:"യൂണിറ്റിന് മാനുവൽ നിരക്ക്", area:"വിസ്തീർണ്ണം", value:"മൂല്യം", other_asset_value:"മറ്റ് ആസ്തികളുടെ മൂല്യം", gold_weight:"സ്വർണ ഭാരം", silver_weight:"വെള്ളി ഭാരം", gold_weight_unit:"സ്വർണ ഭാര യൂണിറ്റ്", silver_weight_unit:"വെള്ളി ഭാര യൂണിറ്റ്", gold_rate_unit:"യൂണിറ്റിന് സ്വർണ നിരക്ക്", silver_rate_unit:"യൂണിറ്റിന് വെള്ളി നിരക്ക്", property_area:"വസ്തു വിസ്തീർണ്ണം", property_area_unit:"വിസ്തീർണ്ണ യൂണിറ്റ്", property_rate_unit:"യൂണിറ്റിന് വസ്തു നിരക്ക്", wasiyyah_bequest:"വസിയ്യത്ത് തുക", scroll_top:"മുകളിലേക്ക് സ്ക്രോൾ ചെയ്യുക", scroll_bottom:"താഴേക്ക് സ്ക്രോൾ ചെയ്യുക", close_dialog:"ഡയലോഗ് അടയ്ക്കുക", theme_system_label:"തീം: സിസ്റ്റം. ലൈറ്റ് തീമിന് സജീവമാക്കുക.", theme_light_label:"തീം: ലൈറ്റ്. ഡാർക്ക് തീമിന് സജീവമാക്കുക.", theme_dark_label:"തീം: ഡാർക്ക്. സിസ്റ്റം തീമിന് സജീവമാക്കുക.", theme_system_title:"സിസ്റ്റം തീം പിന്തുടരുക", theme_light_title:"ലൈറ്റ് തീം ഉപയോഗിക്കുക", theme_dark_title:"ഡാർക്ക് തീം ഉപയോഗിക്കുക"
+  enter_amount:"തുക നൽകുക",
+  total_estate:"ആകെ സ്വത്ത് തുക", estate_help:"അറിയാമെങ്കിൽ മുഴുവൻ തുകയും നൽകുക; ആസ്തികളിൽ നിന്ന് ആകെ കണക്കാക്കാൻ ഇത് ഒഴിച്ചിടുക.", build_assets:"ആസ്തികളിൽ നിന്ന് ആകെ തുക കണക്കാക്കുക", optional:"ഐച്ഛികം", build_assets_help:"മുകളിൽ ആകെ സ്വത്ത് തുക നൽകുന്നില്ലെങ്കിൽ മാത്രം ഈ വിശദാംശങ്ങൾ ഉപയോഗിക്കുക.", calculate_weight_rate:"ഭാരവും നിരക്കും ഉപയോഗിച്ച് കണക്കാക്കുക", calculate_property_area:"വിസ്തീർണ്ണത്തിൽ നിന്ന് വസ്തുവില കണക്കാക്കുക", debts_zakat:"കടങ്ങളും നൽകാത്ത സകാത്തും", unsupported_funeral:"മയ്യിത്ത്സംസ്കാര, ഒരുക്കച്ചെലവുകൾ ഇവിടെ നൽകുന്നില്ല; നിലവിലെ പ്രവർത്തനക്രമത്തിൽ അവ സുരക്ഷിതമായി പ്രയോഗിക്കാൻ കഴിയില്ല.", bequest_details:"വസിയ്യത്ത് വിശദാംശങ്ങൾ", shafii_name:"ശാഫിഈ", hanafi_name:"ഹനഫി", maliki_name:"മാലികി", hanbali_name:"ഹൻബലി", other_madhabs:"മറ്റ് മദ്ഹബുകൾ (നടപ്പിലാക്കിയിട്ടില്ല)", not_implemented:"നടപ്പിലാക്കിയിട്ടില്ല", verification_progress:"പരിശോധന പുരോഗമിക്കുന്നു.", group_spouse:"ഭാര്യ / ഭർത്താവ്", group_descendants:"മക്കളും പൗത്രന്മാരും", group_parents:"മാതാപിതാക്കളും മുത്തശ്ശന്മാരും", group_siblings:"സഹോദരങ്ങൾ", group_extended:"മറ്റു ബന്ധുക്കൾ", review:"അവലോകനം", gross_estate:"ആകെ സ്വത്ത്", supported_deductions:"പിന്തുണയ്ക്കുന്ന കിഴിവുകൾ", current_net:"നിലവിലെ അറ്റ തുക", selected_heirs:"തിരഞ്ഞെടുത്ത അവകാശികൾ", incomplete_information:"അപൂർണ്ണമായ വിവരങ്ങൾ", verification_status:"പരിശോധനാ നില", under_verification:"പരിശോധനയിലാണ്", report_options:"റിപ്പോർട്ട് ഓപ്ഷനുകൾ", amount_symbol:"തുകയുടെ ചിഹ്നം", amount_symbol_help:"പ്രദർശിപ്പിക്കുന്ന തുകകൾ രൂപപ്പെടുത്താൻ മാത്രം; മൂല്യം മാറ്റില്ല.", detailed_verification:"വിശദ പരിശോധനാ വിശദീകരണം", detailed_verification_text:"കേസ് തയ്യാറാക്കൽ ഇന്റർഫേസ് അവലോകനത്തിനായി ലഭ്യമാണ്, എന്നാൽ ശാഫിഈ നിയമസമുച്ചയത്തിന്റെ പണ്ഡിതപരിശോധന പൂർത്തിയാകുന്നതുവരെ ഫലം കണക്കാക്കാനോ സ്വത്ത് വിതരണം ചെയ്യാൻ ഉപയോഗിക്കാനോ പാടില്ല.", support_project:"ഈ പദ്ധതിയെ പിന്തുണയ്ക്കുക", payment_soon:"പേയ്മെന്റ് ലിങ്കുകൾ ഉടൻ ക്രമീകരിക്കും.", calculator_status:"കാൽക്കുലേറ്റർ നില: ലഭ്യമല്ല", none_selected:"ഒന്നും തിരഞ്ഞെടുത്തിട്ടില്ല", case_entered:"കേസ് വിവരങ്ങൾ നൽകി.", add_missing:"{items} ചേർക്കുക.", missing_gender:"മരിച്ചയാൾ", missing_estate:"സ്വത്ത്", missing_heirs:"അവകാശികൾ", total_gold_value:"ആകെ സ്വർണ വില", total_silver_value:"ആകെ വെള്ളി വില", total_property_value:"ആകെ വസ്തു വില", weight:"ഭാരം", manual_rate:"യൂണിറ്റിന് മാനുവൽ നിരക്ക്", area:"വിസ്തീർണ്ണം", value:"മൂല്യം", other_asset_value:"മറ്റ് ആസ്തികളുടെ മൂല്യം", gold_weight:"സ്വർണ ഭാരം", silver_weight:"വെള്ളി ഭാരം", gold_weight_unit:"സ്വർണ ഭാര യൂണിറ്റ്", silver_weight_unit:"വെള്ളി ഭാര യൂണിറ്റ്", gold_rate_unit:"യൂണിറ്റിന് സ്വർണ നിരക്ക്", silver_rate_unit:"യൂണിറ്റിന് വെള്ളി നിരക്ക്", property_area:"വസ്തു വിസ്തീർണ്ണം", property_area_unit:"വിസ്തീർണ്ണ യൂണിറ്റ്", property_rate_unit:"യൂണിറ്റിന് വസ്തു നിരക്ക്", wasiyyah_bequest:"വസിയ്യത്ത് തുക", scroll_top:"മുകളിലേക്ക് സ്ക്രോൾ ചെയ്യുക", scroll_bottom:"താഴേക്ക് സ്ക്രോൾ ചെയ്യുക", close_dialog:"ഡയലോഗ് അടയ്ക്കുക", theme_system_label:"തീം: സിസ്റ്റം. ലൈറ്റ് തീമിന് സജീവമാക്കുക.", theme_light_label:"തീം: ലൈറ്റ്. ഡാർക്ക് തീമിന് സജീവമാക്കുക.", theme_dark_label:"തീം: ഡാർക്ക്. സിസ്റ്റം തീമിന് സജീവമാക്കുക.", theme_system_title:"സിസ്റ്റം തീം പിന്തുടരുക", theme_light_title:"ലൈറ്റ് തീം ഉപയോഗിക്കുക", theme_dark_title:"ഡാർക്ക് തീം ഉപയോഗിക്കുക"
 });
 
 // Remove bilingual text embedded inside a single translation value. Visible
@@ -139,7 +142,41 @@ Object.assign(T.en, {
 });
 
 Object.assign(T.en, {
-  page_intro:"Source-corroborated Shafi‘i calculations are available for the declared supported scope. Unsupported cases stop before calculation.",
+  // Step collapse summaries
+  step_summary_deceased_m:"Deceased — Male",
+  step_summary_deceased_f:"Deceased — Female",
+  step_edit:"Edit",
+  step_summary_estate:"Net estate: {amount}",
+  step_summary_heirs:"{count} eligible heir(s)",
+  // Madhhab badge
+  madhab_badge:"المذهب الشافعي",
+  madhab_badge_sub:"Shafi'i",
+  madhab_badge_tooltip:"Other madhabs (not implemented)",
+  madhab_other_note:"Only the Shafi'i rule set is currently implemented. Hanafi, Maliki, and Hanbali will not calculate.",
+  // Heir grouping
+  more_relatives:"More relatives",
+  shafii_popover_text:"Currently supports the Shafi‘i school. Broad ordinary coverage with selected advanced cases. Unsupported cases stop safely instead of being guessed.",
+  // Result / post-calc
+  edit_calculation:"Edit calculation",
+  copy_summary:"📋 Copy summary",
+  print_report:"🖨️ Print / Save PDF",
+  copied_to_clipboard:"Copied to clipboard!",
+  copy_failed:"Failed to copy to clipboard",
+  result_net_estate:"Net estate",
+  // Estate safety details toggle
+  what_must_confirm:"What should be settled before calculation?",
+  // Footer
+  support_project_toggle:"Support this project",
+  // Learn sections
+  learn_why_shares:"Why each heir receives this share",
+  learn_calc_steps:"How the calculation works",
+  learn_special_rules:"Special rule used",
+  reference_pages:"Reference pages",
+  used_for:"Used for:",
+  corroborates_rules:"Corroborates these rules",
+  // Percentage label
+  percentage_label:"({pct})",
+  page_intro:"Source-corroborated Shafi'i calculations are available for the declared supported scope. Unsupported cases stop before calculation.",
   ready_calculate:"Ready to calculate", case_not_supported:"This combination is not supported yet.",
   missing_information:"Missing information", remainder_policy:"Remainder policy",
   remainder_unsure:"Unsure", remainder_bayt:"Functioning Bayt al-Mal",
@@ -154,7 +191,7 @@ Object.assign(T.en, {
   ,bequest_unresolved:"A bequest above one third needs explicit valid consent before calculation."
   ,limited_scope_note:"Broad ordinary Shafi‘i coverage with selected advanced cases; unsupported combinations stop before calculation.",source_supported_scope:"Source-corroborated supported scope"
   ,uncertain_death_order:"The death order of potential mutual heirs is uncertain"
-  ,uncertain_death_order_help:"This requires separate estate review; the calculator will not assume an order."
+  ,special_circumstances:"Special circumstances",uncertain_death_order_help:"This requires separate estate review; the calculator will not assume an order."
   ,uncertain_death_order_review:"Uncertain death order requires separate estate review."
   ,multiple_emancipators_review:"Multiple emancipators are not supported by the admitted source rule yet."
   ,lineage_details:"Relationship details",lineage_details_help:"Add each distinct generation or grandmother route separately."
@@ -162,7 +199,7 @@ Object.assign(T.en, {
   ,descendant_lineage_invalid:"The descendant relationship is not a valid male-line route.",descendant_lineage_ambiguous:"The descendant relationship needs clarification."
   ,grandmother_lineage_invalid:"This ancestry route is not an eligible grandmother route.",grandmother_lineage_ambiguous:"The grandmother relationship needs clarification."
   ,descendant_hierarchy_review:"This unequal-generation descendant combination requires a separately admitted rule."
-  ,estate_facts_confirmed:"The estate values entered here are settled and ready for calculation."
+  ,estate_facts_confirmed:"I confirm the estate figures are final."
   ,estate_facts_help:"Resolve funeral costs, ownership, joint property, unpaid mahr, debts, gifts, and bequest validity with qualified scholarly or legal review before confirming."
   ,estate_facts_review_required:"Confirm that the entered estate values are settled; unresolved estate facts require qualified review."
   ,mother_blocked_siblings_review:"The mother-and-blocked-siblings branch needs further source review."
@@ -204,7 +241,7 @@ Object.assign(T.ar, {
   ,bequest_unresolved:"تحتاج الوصية التي تتجاوز الثلث إلى موافقة صحيحة وصريحة قبل الحساب."
   ,limited_scope_note:"تغطية واسعة للمسائل الشافعية العادية مع مسائل متقدمة مختارة؛ وتتوقف التركيبات غير المدعومة قبل الحساب.",source_supported_scope:"نطاق مدعوم بأدلة مصدرية متوافقة"
   ,uncertain_death_order:"ترتيب وفاة من قد يتوارثون غير معلوم"
-  ,uncertain_death_order_help:"تحتاج هذه الحالة إلى مراجعة تركات منفصلة، ولن تفترض الحاسبة ترتيبًا للوفاة."
+  ,special_circumstances:"ظروف خاصة",uncertain_death_order_help:"تحتاج هذه الحالة إلى مراجعة تركات منفصلة، ولن تفترض الحاسبة ترتيبًا للوفاة."
   ,uncertain_death_order_review:"يحتاج ترتيب الوفاة غير المعلوم إلى مراجعة تركات منفصلة."
   ,multiple_emancipators_review:"لا تدعم القاعدة المصدرية المعتمدة تعدد المعتقين بعد."
   ,lineage_details:"تفاصيل صلة القرابة",lineage_details_help:"أضف كل جيل أو طريق جدة مختلف على حدة."
@@ -212,13 +249,42 @@ Object.assign(T.ar, {
   ,descendant_lineage_invalid:"صلة الذرية ليست طريقًا صحيحًا من جهة الذكور.",descendant_lineage_ambiguous:"تحتاج صلة الذرية إلى توضيح."
   ,grandmother_lineage_invalid:"طريق النسب هذا ليس طريق جدة مستحقة.",grandmother_lineage_ambiguous:"تحتاج صلة الجدة إلى توضيح."
   ,descendant_hierarchy_review:"تحتاج هذه التركيبة بين أجيال مختلفة إلى قاعدة معتمدة مستقلة."
-  ,estate_facts_confirmed:"قيم التركة المدخلة مستقرة وجاهزة للحساب."
+  ,estate_facts_confirmed:"أؤكد أن أرقام التركة نهائية."
   ,estate_facts_help:"يجب حسم تكاليف التجهيز، والملكية، والمال المشترك، والمهر غير المدفوع، والديون، والهبات، وصحة الوصية بمراجعة شرعية أو قانونية مؤهلة قبل التأكيد."
   ,estate_facts_review_required:"أكّد أن قيم التركة المدخلة مستقرة؛ فالوقائع غير المحسومة تحتاج إلى مراجعة مؤهلة."
   ,explanation_english_fallback:"لا تتوفر بعد ترجمة مراجعة لشرح القواعد المفصل؛ ولذلك يظهر الشرح الآتي بالإنجليزية."
   ,result_views:"عروض النتيجة"
+  ,step_summary_deceased_m:"المتوفى — ذكر"
+  ,step_summary_deceased_f:"المتوفى — أنثى"
+  ,step_edit:"تعديل"
+  ,step_summary_estate:"صافي التركة: {amount}"
+  ,step_summary_heirs:"{count} وارث مؤهل"
+  ,madhab_badge:"المذهب الشافعي"
+  ,madhab_badge_sub:"شافعي"
+  ,madhab_badge_tooltip:"مذاهب أخرى (غير مطبقة)"
+  ,madhab_other_note:"نظام القواعد الشافعية هو الوحيد المطبق حاليًا."
+  ,more_relatives:"مزيد من الأقارب"
+  ,shafii_popover_text:"يدعم حاليًا المذهب الشافعي. تغطية واسعة للمسائل العادية مع مسائل متقدمة مختارة. تتوقف الحالات غير المدعومة بأمان دون تخمين."
+  ,edit_calculation:"تعديل الحساب"
+  ,copy_summary:"📋 نسخ الملخص"
+  ,print_report:"🖨️ طباعة / حفظ PDF"
+  ,copied_to_clipboard:"تم النسخ إلى الحافظة!"
+  ,copy_failed:"فشل النسخ إلى الحافظة"
+  ,result_net_estate:"صافي التركة"
+  ,what_must_confirm:"ما الذي يجب تأكيده؟"
+  ,support_project_toggle:"ادعم هذا المشروع"
+  ,learn_why_shares:"لماذا يستحق كل وارث هذا النصيب"
+  ,learn_calc_steps:"خطوات الحساب"
+  ,learn_special_rules:"القاعدة الخاصة المستخدمة"
+  ,percentage_label:"({pct})"
 });
 Object.assign(T.ml, {
+  step_summary_heirs:"{count} അർഹ അവകാശി(കൾ)",
+  copy_summary:"📋 സംഗ്രഹം പകർപ്പെയടുക്കുക",
+  print_report:"🖨️ പ്രിന്റ് / PDF ആക്കുക",
+  copied_to_clipboard:"ക്ലിപ്ബോർഡിലേക്ക് പകർത്തി!",
+  copy_failed:"പകർപ്പെയടുക്കാനായില്ല",
+  shafii_popover_text:"നിലവിൽ ശാഫിഈ മദ്ഹബ് പിന്തുണയ്ക്കുന്നു. സാധാരണ കേസുകളുടെ വിശാലമായ പരിധിയും തിരഞ്ഞെടുത്ത ഉന്നത കേസുകളും. പിന്തുണയില്ലാത്തവ അനുമാനിക്കാതെ സുരക്ഷിതമായി നിർത്തും.",
   page_intro:"പ്രഖ്യാപിത പിന്തുണാ പരിധിയിൽ ഉറവിടങ്ങളാൽ സ്ഥിരീകരിച്ച ശാഫിഈ കണക്കുകൾ ലഭ്യമാണ്. പിന്തുണയില്ലാത്ത കേസുകൾ കണക്കിന് മുമ്പ് നിർത്തും.",
   ready_calculate:"കണക്കാക്കാൻ തയ്യാറാണ്", case_not_supported:"ഈ കേസ് ഇതുവരെ പിന്തുണയ്ക്കുന്നില്ല.",
   missing_information:"വിവരങ്ങൾ അപൂർണ്ണമാണ്", remainder_policy:"ബാക്കി വിതരണ നയം",
@@ -234,7 +300,7 @@ Object.assign(T.ml, {
   ,bequest_unresolved:"മൂന്നിലൊന്നിൽ കൂടുതലുള്ള വസിയ്യത്തിന് കണക്കിന് മുമ്പ് വ്യക്തമായ സാധുവായ സമ്മതം വേണം."
   ,limited_scope_note:"വിശാലമായ സാധാരണ ശാഫിഈ പരിധിയും തിരഞ്ഞെടുത്ത ഉന്നത കേസുകളും; പിന്തുണയില്ലാത്തവ കണക്കിന് മുമ്പ് നിർത്തും.",source_supported_scope:"സ്രോതസ്സുകളാൽ സ്ഥിരീകരിച്ച പിന്തുണാ പരിധി"
   ,uncertain_death_order:"പരസ്പരം അവകാശികളാകാവുന്നവരുടെ മരണക്രമം ഉറപ്പില്ല"
-  ,uncertain_death_order_help:"ഇതിന് വേർതിരിച്ച സ്വത്ത് പരിശോധന വേണം; കാൽക്കുലേറ്റർ മരണക്രമം അനുമാനിക്കില്ല."
+  ,special_circumstances:"പ്രത്യേക സാഹചര്യങ്ങൾ",uncertain_death_order_help:"ഇതിന് വേർതിരിച്ച സ്വത്ത് പരിശോധന വേണം; കാൽക്കുലേറ്റർ മരണക്രമം അനുമാനിക്കില്ല."
   ,uncertain_death_order_review:"ഉറപ്പില്ലാത്ത മരണക്രമത്തിന് വേർതിരിച്ച സ്വത്ത് പരിശോധന ആവശ്യമാണ്."
   ,multiple_emancipators_review:"ഒന്നിലധികം മോചകരുടെ കേസ് അംഗീകരിച്ച സ്രോതസ്സ് നിയമം ഇതുവരെ പിന്തുണയ്ക്കുന്നില്ല."
   ,lineage_details:"ബന്ധത്തിന്റെ വിശദാംശങ്ങൾ",lineage_details_help:"വ്യത്യസ്തമായ ഓരോ തലമുറയും മുത്തശ്ശി വഴിയും പ്രത്യേകം ചേർക്കുക."
@@ -242,7 +308,7 @@ Object.assign(T.ml, {
   ,descendant_lineage_invalid:"ഈ സന്തതി ബന്ധം സാധുവായ പുരുഷവഴിയല്ല.",descendant_lineage_ambiguous:"സന്തതി ബന്ധം കൂടുതൽ വ്യക്തമാക്കണം."
   ,grandmother_lineage_invalid:"ഈ വംശവഴി അർഹയായ മുത്തശ്ശിയുടെ വഴിയല്ല.",grandmother_lineage_ambiguous:"മുത്തശ്ശി ബന്ധം കൂടുതൽ വ്യക്തമാക്കണം."
   ,descendant_hierarchy_review:"ഈ അസമതലമുറ സന്തതി കൂട്ടത്തിന് പ്രത്യേകം അംഗീകരിച്ച നിയമം വേണം."
-  ,estate_facts_confirmed:"ഇവിടെ ചേർത്ത സ്വത്ത് മൂല്യങ്ങൾ തീർച്ചയാക്കിയതും കണക്കിന് തയ്യാറായതുമാണ്."
+  ,estate_facts_confirmed:"സ്വത്ത് കണക്കുകൾ അന്തിമമാണെന്ന് ഞാൻ സ്ഥിരീകരിക്കുന്നു."
   ,estate_facts_help:"ശവസംസ്കാരച്ചെലവ്, ഉടമസ്ഥത, സംയുക്ത സ്വത്ത്, നൽകാത്ത മഹർ, കടങ്ങൾ, സമ്മാനങ്ങൾ, വസിയ്യത്തിന്റെ സാധുത എന്നിവ യോഗ്യമായ പണ്ഡിത/നിയമ പരിശോധനയിലൂടെ തീർച്ചപ്പെടുത്തിയശേഷം സ്ഥിരീകരിക്കുക."
   ,estate_facts_review_required:"ചേർത്ത സ്വത്ത് മൂല്യങ്ങൾ തീർച്ചയാക്കിയതാണെന്ന് സ്ഥിരീകരിക്കുക; അനിശ്ചിത വസ്തുതകൾക്ക് യോഗ്യമായ പരിശോധന വേണം."
   ,explanation_english_fallback:"വിശദമായ നിയമ വിശദീകരണത്തിന്റെ പരിശോധിച്ച തർജ്ജമ ഇതുവരെ ലഭ്യമല്ല; താഴെയുള്ള വിശദീകരണം ഇംഗ്ലീഷിലാണ്."
@@ -252,31 +318,110 @@ Object.assign(T.ml, {
 // Progressive V1 presentation. Classical farāʾid terms remain visible
 // beside the selected-language meaning when they teach a juridical share type.
 Object.assign(T.en, {
-  complete_highlighted:"Complete the highlighted fields to calculate.",case_needs_review:"This case needs additional review before calculation.",
+  complete_highlighted:"Complete the highlighted fields to calculate.",calculation_complete:"✓ Calculation complete",case_needs_review:"This case needs additional review before calculation.",
   group_immediate:"Immediate family",show_advanced_heirs:"Show advanced heirs",group_descendants:"Descendants",group_grandparents:"Grandparents",group_siblings:"Siblings",group_extended:"Extended residuaries / walā’",
-  blocked_by:"محجوب — Blocked by {heir}",blocked_receives_zero:"محجوب — Blocked, receives 0",why:"Why?",tab_hj:"Blocked",tab_calculation:"Calculation",tab_learn:"Learn",
+  blocked_by:"محجوب — Blocked by {heir}",why:"Why?",tab_hj:"Blocked",tab_learn:"Learn",
   technical_details:"Technical details",sources:"Sources",reviewed_source:"Reviewed source",estate_calculation:"Estate",correction_factor:"Correction factor",remainder:"Residue",residuary_distribution:"Residuary distribution",bayt_residue:"بيت المال — Bayt al-Mal residue",
-  learn_summary_title:"In brief",learn_summary:"This is a {case} calculation. {count} heir group(s) receive a share of the net estate. Open an explanation below to learn why.",rule_explanations:"Why these shares apply",more_details:"More details",reviewed_passage:"Reviewed passage",
+  learn_summary_title:"In brief",learn_summary_one:"This is a {case} calculation. 1 heir group receives a share from the net estate.",learn_summary_many:"This is a {case} calculation. {count} heir groups receive shares from the net estate.",rule_explanations:"Why these shares apply",more_details:"More details",reviewed_passage:"Reviewed passage",
   case_ordinary:"Ordinary",case_awl:"Awl",case_radd:"Radd",case_umariyyatayn:"Umariyyatayn",case_akdariyya:"Akdariyya",case_mushtaraka:"Mushtaraka",case_muadda:"Mu‘adda",case_grandfather_siblings:"Grandfather with siblings",
   share_fixed:"فرض — Fixed share",share_asabah:"عصبة — Residuary",share_asabah_bi_nafsihi:"عصبة بالنفس — Residuary in their own right",share_asabah_bil_ghayr:"عصبة بالغير — Residuary through another",share_asabah_ma_al_ghayr:"عصبة مع الغير — Residuary with another",share_fixed_plus_asabah:"فرض + عصبة — Fixed share plus residue",share_special_case:"حساب خاص — Special-case share",share_blocked:"محجوب — Blocked by"
 });
 Object.assign(T.ar, {
-  complete_highlighted:"أكمل الحقول المميزة لإجراء الحساب.",case_needs_review:"تحتاج هذه المسألة إلى مراجعة إضافية قبل الحساب.",
+  complete_highlighted:"أكمل الحقول المميزة لإجراء الحساب.",calculation_complete:"✓ تم الحساب بنجاح",case_needs_review:"تحتاج هذه المسألة إلى مراجعة إضافية قبل الحساب.",
   group_immediate:"الأسرة المباشرة",show_advanced_heirs:"إظهار الورثة المتقدمين",group_descendants:"ذرية الابن",group_grandparents:"الأجداد والجدات",group_siblings:"الإخوة والأخوات",group_extended:"العصبات الأبعد والولاء",
-  blocked_by:"محجوب بـ {heir}",blocked_receives_zero:"محجوب — نصيبه صفر",why:"لماذا؟",tab_hj:"المحجوبون",tab_calculation:"الحساب",tab_learn:"تعلّم",
+  blocked_by:"محجوب بـ {heir}",why:"لماذا؟",tab_hj:"المحجوبون",tab_learn:"تعلّم",
   technical_details:"التفاصيل التقنية",sources:"المصادر",reviewed_source:"مصدر مراجع",estate_calculation:"التركة",correction_factor:"معامل التصحيح",remainder:"الباقي",residuary_distribution:"توزيع العصبة",bayt_residue:"بيت المال — الباقي",
-  learn_summary_title:"الخلاصة",learn_summary:"هذه مسألة من نوع {case}. تستحق {count} فئة من الورثة نصيبًا من صافي التركة. افتح أحد الشروح أدناه لمعرفة السبب.",rule_explanations:"سبب استحقاق هذه الأنصبة",more_details:"تفاصيل إضافية",reviewed_passage:"موضع مراجع",
+  learn_summary_title:"الخلاصة",learn_summary_one:"هذه مسألة من نوع {case}. تستحق فئة واحدة من الورثة نصيبًا من صافي التركة.",learn_summary_many:"هذه مسألة من نوع {case}. تستحق {count} فئات من الورثة أنصبة من صافي التركة.",rule_explanations:"سبب استحقاق هذه الأنصبة",more_details:"تفاصيل إضافية",reviewed_passage:"موضع مراجع",
   case_ordinary:"عادية",case_awl:"العول",case_radd:"الرد",case_umariyyatayn:"العمريتان",case_akdariyya:"الأكدرية",case_mushtaraka:"المشتركة",case_muadda:"المعادة",case_grandfather_siblings:"الجد مع الإخوة",
   share_fixed:"فرض",share_asabah:"عصبة",share_asabah_bi_nafsihi:"عصبة بالنفس",share_asabah_bil_ghayr:"عصبة بالغير",share_asabah_ma_al_ghayr:"عصبة مع الغير",share_fixed_plus_asabah:"فرض + عصبة",share_special_case:"حساب خاص",share_blocked:"محجوب بـ"
 });
 Object.assign(T.ml, {
-  complete_highlighted:"കണക്കാക്കാൻ മുൻപ് അടയാളപ്പെടുത്തിയ ഫീൽഡുകൾ പൂരിപ്പിക്കുക.",case_needs_review:"കണക്കാക്കുന്നതിന് മുമ്പ് ഈ കേസിന് കൂടുതൽ പരിശോധന വേണം.",
+  complete_highlighted:"കണക്കാക്കാൻ മുൻപ് അടയാളപ്പെടുത്തിയ ഫീൽഡുകൾ പൂരിപ്പിക്കുക.",calculation_complete:"✓ കണക്കുകൂട്ടൽ പൂർത്തിയായി",case_needs_review:"കണക്കാക്കുന്നതിന് മുമ്പ് ഈ കേസിന് കൂടുതൽ പരിശോധന വേണം.",
   group_immediate:"അടുത്ത കുടുംബം",show_advanced_heirs:"മറ്റ് അവകാശികളെ കാണിക്കുക",group_descendants:"മകൻവഴി സന്തതികൾ",group_grandparents:"മുത്തശ്ശനും മുത്തശ്ശിമാരും",group_siblings:"സഹോദരങ്ങൾ",group_extended:"ദൂരബന്ധു അസബകളും വലാഉം",
-  blocked_by:"{heir} മൂലം മഹ്ജൂബ്",blocked_receives_zero:"محجوب — ഓഹരി 0",why:"എന്തുകൊണ്ട്?",tab_hj:"മഹ്ജൂബ്",tab_calculation:"കണക്ക്",tab_learn:"പഠനം",
+  blocked_by:"{heir} മൂലം മഹ്ജൂബ്",why:"എന്തുകൊണ്ട്?",tab_hj:"മഹ്جൂബ്",tab_learn:"പഠനം",
   technical_details:"സാങ്കേതിക വിശദാംശങ്ങൾ",sources:"സ്രോതസ്സുകൾ",reviewed_source:"പരിശോധിച്ച സ്രോതസ്സ്",estate_calculation:"സ്വത്ത്",correction_factor:"തിരുത്തൽ ഘടകം",remainder:"ബാക്കി",residuary_distribution:"ശിഷ്ടാവകാശ വിതരണം",bayt_residue:"بيت المال — ബൈത്തുൽ മാൽ ബാക്കി",
-  learn_summary_title:"ചുരുക്കത്തിൽ",learn_summary:"ഇത് {case} കണക്കാണ്. അറ്റ സ്വത്തിൽ നിന്ന് {count} അവകാശി വിഭാഗത്തിന് ഓഹരി ലഭിക്കുന്നു. കാരണം അറിയാൻ താഴെയുള്ള വിശദീകരണം തുറക്കുക.",rule_explanations:"ഈ ഓഹരികൾ ലഭിക്കുന്നതിന്റെ കാരണം",more_details:"കൂടുതൽ വിവരങ്ങൾ",reviewed_passage:"പരിശോധിച്ച ഭാഗം",
+  learn_summary_title:"ചുരുക്കത്തിൽ",learn_summary_one:"ഇത് {case} കണക്കാണ്. അറ്റ സ്വത്തിൽ നിന്ന് 1 അവകാശി വിഭാഗത്തിന് ഓഹരി ലഭിക്കുന്നു.",learn_summary_many:"ഇത് {case} കണക്കാണ്. അറ്റ സ്വത്തിൽ നിന്ന് {count} അവകാശി വിഭാഗങ്ങൾക്ക് ഓഹരികൾ ലഭിക്കുന്നു.",rule_explanations:"ഈ ഓഹരികൾ ലഭിക്കുന്നതിന്റെ കാരണം",more_details:"കൂടുതൽ വിവരങ്ങൾ",reviewed_passage:"പരിശോധിച്ച ഭാഗം",
   case_ordinary:"സാധാരണ",case_awl:"അൗൽ",case_radd:"റദ്ദ്",case_umariyyatayn:"ഉമറിയ്യതൈൻ",case_akdariyya:"അക്ദരിയ്യ",case_mushtaraka:"മുശ്തറക",case_muadda:"മുആദ്ദ",case_grandfather_siblings:"മുത്തശ്ശനും സഹോദരങ്ങളും",
   share_fixed:"فرض — നിശ്ചിത ഓഹരി",share_asabah:"عصبة — ശിഷ്ടാവകാശി",share_asabah_bi_nafsihi:"عصبة بالنفس — സ്വന്തം അസബ",share_asabah_bil_ghayr:"عصبة بالغير — മറ്റൊരാളിലൂടെ അസബ",share_asabah_ma_al_ghayr:"عصبة مع الغير — മറ്റൊരാളോടൊപ്പം അസബ",share_fixed_plus_asabah:"فرض + عصبة — നിശ്ചിത ഓഹരി + ശിഷ്ടം",share_special_case:"حساب خاص — പ്രത്യേക കണക്ക്",share_blocked:"محجوب — തടയുന്നത്"
+});
+
+Object.assign(T.en, {
+  countable_heir_action:"{heir}, {count} selected. Activate to add one.",
+  copy_summary:"Copy",
+  print_report:"Print",
+  per_person_distribution:"Each person: {fraction} · {amount}",
+  learn_why_fixed:"{heir} receives a prescribed share for this family combination under the Shafi‘i rules.",
+  learn_why_asabah_self:"{heir} receives the estate left after the prescribed shares as a residuary heir.",
+  learn_why_asabah_through:"{heir} shares the residue as a residuary through the accompanying male heir.",
+  learn_why_asabah_with:"{heir} receives the residue as a residuary alongside the accompanying female descendant.",
+  learn_why_fixed_plus:"{heir} receives a prescribed share first and also takes the qualifying residue.",
+  learn_why_special:"{heir} receives a share through the special calculation that applies to this family combination.",
+  learn_calc_net:"The distributable estate is {amount}, after the entered deductions and valid bequest.",
+  learn_calc_entitlements:"The calculator identified {count} eligible heir groups and applied their Shafi‘i entitlements.",
+  learn_calc_special:"Because this is a {case} case, its specific adjustment was applied before the final distribution.",
+  learn_calc_distribution:"The final estate amount was then divided between the eligible heirs without rounding the shares.",
+  copy_summary_title:"Islamic inheritance calculation — Shafi‘i",
+  copy_allocations_heading:"Shares and allocations",
+  copy_blocked_heading:"Selected blocked heirs",
+  copy_disclaimer:"For supported Shafi‘i cases only. Review the case facts and result with a qualified scholar before distribution.",
+  print_deceased:"Deceased",
+  print_sources:"Concise sources",
+  male_short:"Male",
+  female_short:"Female"
+});
+Object.assign(T.ar, {
+  countable_heir_action:"{heir}، العدد المختار {count}. فعّل لإضافة واحد.",
+  remove_heir:"حذف {heir}",
+  copy_summary:"نسخ",
+  print_report:"طباعة",
+  learn_calc_steps:"كيف يجري الحساب",
+  per_person_distribution:"لكل شخص: {fraction} · {amount}",
+  learn_why_fixed:"يستحق {heir} فرضًا مقدّرًا لهذه التركيبة من الورثة في المذهب الشافعي.",
+  learn_why_asabah_self:"يستحق {heir} ما بقي بعد الفروض بصفته عصبة بنفسه.",
+  learn_why_asabah_through:"يشارك {heir} في الباقي عصبةً بالغير مع الوارث الذكر المصاحب.",
+  learn_why_asabah_with:"يستحق {heir} الباقي عصبةً مع الوارثة من ذرية المتوفى.",
+  learn_why_fixed_plus:"يستحق {heir} فرضه أولًا، ثم يأخذ الباقي الذي يستحقه.",
+  learn_why_special:"يستحق {heir} نصيبه بالحساب الخاص المطبّق على هذه المسألة.",
+  learn_calc_net:"صافي التركة القابل للتوزيع هو {amount}، بعد الخصومات المدخلة والوصية الصحيحة.",
+  learn_calc_entitlements:"حددت الحاسبة {count} فئات مستحقة من الورثة، ثم طبقت أحكام استحقاقهم في المذهب الشافعي.",
+  learn_calc_special:"لأن هذه مسألة {case}، طُبّق عليها تعديلها الخاص قبل التوزيع النهائي.",
+  learn_calc_distribution:"ثم وُزّع المبلغ النهائي بين الورثة المستحقين مع الحفاظ على الأنصبة الدقيقة.",
+  copy_summary_title:"حساب الميراث — المذهب الشافعي",
+  copy_allocations_heading:"الأنصبة والمستحقون",
+  copy_blocked_heading:"الورثة المختارون المحجوبون",
+  copy_disclaimer:"للمسائل الشافعية المدعومة فقط. راجع وقائع المسألة والنتيجة مع عالم مؤهل قبل التوزيع.",
+  print_deceased:"المتوفى",
+  print_sources:"مصادر مختصرة",
+  male_short:"ذكر",
+  female_short:"أنثى"
+});
+Object.assign(T.ml, {
+  countable_heir_action:"{heir}, {count} പേരെ തിരഞ്ഞെടുത്തു. ഒരാളെ ചേർക്കാൻ സജീവമാക്കുക.",
+  remove_heir:"{heir} നീക്കം ചെയ്യുക",
+  edit_calculation:"കണക്ക് തിരുത്തുക",
+  copy_summary:"പകർത്തുക",
+  print_report:"പ്രിന്റ്",
+  learn_why_shares:"ഓരോ അവകാശിക്കും ഈ ഓഹരി ലഭിക്കുന്നത് എന്തുകൊണ്ട്",
+  learn_calc_steps:"കണക്ക് എങ്ങനെ പ്രവർത്തിക്കുന്നു",
+  per_person_distribution:"ഓരോരുത്തർക്കും: {fraction} · {amount}",
+  learn_why_fixed:"{heir}-ന് ഈ അവകാശികളുടെ സാന്നിധ്യത്തിൽ ശാഫിഈ നിയമം നിശ്ചയിച്ച ഓഹരി നൽകുന്നു.",
+  learn_why_asabah_self:"നിശ്ചിത ഓഹരികൾ നൽകിയശേഷം ബാക്കിയുള്ളത് {heir}-ന് സ്വന്തം അസബ എന്ന നിലയിൽ ലഭിക്കുന്നു.",
+  learn_why_asabah_through:"{heir} കൂടെയുള്ള പുരുഷ അവകാശിയിലൂടെ അസബയായി ബാക്കി ഓഹരിയിൽ പങ്കുചേരുന്നു.",
+  learn_why_asabah_with:"{heir} മരിച്ചയാളുടെ സ്ത്രീവഴിയിലുള്ള അവകാശിയോടൊപ്പം അസബയായി ബാക്കി ലഭിക്കുന്നു.",
+  learn_why_fixed_plus:"{heir} ആദ്യം നിശ്ചിത ഓഹരിയും തുടർന്ന് അർഹമായ ബാക്കിയും ലഭിക്കുന്നു.",
+  learn_why_special:"{heir}-ന് ഈ അവകാശിക സാഹചര്യത്തിന് ബാധകമായ പ്രത്യേക കണക്കിലൂടെ ഓഹരി ലഭിക്കുന്നു.",
+  learn_calc_net:"നൽകിയ കിഴിവുകളും സാധുവായ വസിയ്യത്തും കഴിച്ച് വിതരണം ചെയ്യാവുന്ന അറ്റ സ്വത്ത് {amount} ആണ്.",
+  learn_calc_entitlements:"കാൽക്കുലേറ്റർ {count} അർഹ അവകാശി വിഭാഗങ്ങളെ കണ്ടെത്തി അവരുടെ ശാഫിഈ അർഹതകൾ പ്രയോഗിച്ചു.",
+  learn_calc_special:"ഇത് {case} കേസായതിനാൽ അന്തിമ വിതരണത്തിനുമുമ്പ് അതിന്റെ പ്രത്യേക ക്രമീകരണം പ്രയോഗിച്ചു.",
+  learn_calc_distribution:"അന്തിമ സ്വത്ത് തുക ഓഹരികൾ വട്ടമില്ലാതെ അർഹരായ അവകാശികൾക്കിടയിൽ വീതിച്ചു.",
+  copy_summary_title:"ഇസ്‌ലാമിക അനന്തരാവകാശ കണക്ക് — ശാഫിഈ",
+  copy_allocations_heading:"ഓഹരികളും അവകാശികളും",
+  copy_blocked_heading:"മഹ്ജൂബ് ആയ തിരഞ്ഞെടുത്ത അവകാശികൾ",
+  copy_disclaimer:"പിന്തുണയ്ക്കുന്ന ശാഫിഈ കേസുകൾക്ക് മാത്രം. വിതരണത്തിന് മുമ്പ് കേസ് വിവരങ്ങളും ഫലവും യോഗ്യനായ പണ്ഡിതനുമായി പരിശോധിക്കുക.",
+  print_deceased:"മരിച്ചയാൾ",
+  print_sources:"ചുരുക്ക സ്രോതസ്സുകൾ",
+  male_short:"പുരുഷൻ",
+  female_short:"സ്ത്രീ"
 });
 
 const LANGUAGE_PAIRS = Object.freeze({
@@ -343,30 +488,32 @@ function saveMainLanguage(storage,mainLanguage){
 }
 
 // FULL 25 HEIRS LIST
+const COUNTABLE_HEIR_MAX=Number.MAX_SAFE_INTEGER;
+
 const HEIRS=[
   {id:"zawj",   en:"Husband",                    ar:"الزوج",            ml:"ഭർത്താവ്",             max:1, dec:"f"},
   {id:"zawja",  en:"Wife",                       ar:"الزوجة",           ml:"ഭാര്യ",                max:4, dec:"m"},
   {id:"ab",     en:"Father",                     ar:"الأب",             ml:"പിതാവ്",              max:1, dec:"b"},
   {id:"umm",    en:"Mother",                     ar:"الأم",             ml:"മാതാവ്",              max:1, dec:"b"},
-  {id:"ibn",    en:"Son",                        ar:"الابن",            ml:"മകൻ",                 max:10,dec:"b"},
-  {id:"bint",   en:"Daughter",                   ar:"البنت",            ml:"മകൾ",                 max:10,dec:"b"},
-  {id:"ibn_ibn",en:"Grandson (son's son)",        ar:"ابن الابن",        ml:"പൗത്രൻ",              max:10,dec:"b"},
-  {id:"bint_ibn",en:"Granddaughter (son's dau)", ar:"بنت الابن",        ml:"പൗത്രി",              max:10,dec:"b"},
+  {id:"ibn",    en:"Son",                        ar:"الابن",            ml:"മകൻ",                 max:COUNTABLE_HEIR_MAX,dec:"b"},
+  {id:"bint",   en:"Daughter",                   ar:"البنت",            ml:"മകൾ",                 max:COUNTABLE_HEIR_MAX,dec:"b"},
+  {id:"ibn_ibn",en:"Grandson (son's son)",        ar:"ابن الابن",        ml:"പൗത്രൻ",              max:COUNTABLE_HEIR_MAX,dec:"b"},
+  {id:"bint_ibn",en:"Granddaughter (son's dau)", ar:"بنت الابن",        ml:"പൗത്രി",              max:COUNTABLE_HEIR_MAX,dec:"b"},
   {id:"jadd",   en:"Paternal Grandfather",       ar:"الجد",             ml:"പിതാമഹൻ",             max:1, dec:"b"},
   {id:"jadda_ab",en:"Paternal Grandmother",      ar:"الجدة لأب",        ml:"പിതൃമാതാമഹി",         max:1, dec:"b"},
   {id:"jadda_umm",en:"Maternal Grandmother",     ar:"الجدة لأم",        ml:"മാതൃമാതാമഹി",         max:1, dec:"b"},
-  {id:"akh_sh", en:"Full Brother",               ar:"الأخ الشقيق",      ml:"സഹോദരൻ (ശഖീഖ്)",     max:10,dec:"b"},
-  {id:"akh_ab", en:"Paternal Brother",           ar:"الأخ لأب",         ml:"സഹോദരൻ (ലിആബ്)",     max:10,dec:"b"},
-  {id:"akh_um", en:"Maternal Brother",           ar:"الأخ لأم",         ml:"സഹോദരൻ (ലിഉമ്മ്)",   max:10,dec:"b"},
-  {id:"ukht_sh",en:"Full Sister",                ar:"الأخت الشقيقة",    ml:"സഹോദരി (ശഖീഖ)",      max:10,dec:"b"},
-  {id:"ukht_ab",en:"Paternal Sister",            ar:"الأخت لأب",        ml:"സഹോദരി (ലിആബ്)",     max:10,dec:"b"},
-  {id:"ukht_um",en:"Maternal Sister",            ar:"الأخت لأم",        ml:"സഹോദരി (ലിഉമ്മ്)",   max:10,dec:"b"},
-  {id:"ibn_akh_sh",en:"Full Brother's Son",      ar:"ابن الأخ الشقيق",  ml:"ശഖീഖ് സഹോദരൻ്റെ മകൻ",max:10,dec:"b"},
-  {id:"ibn_akh_ab",en:"Paternal Brother's Son",  ar:"ابن الأخ لأب",     ml:"ലിആബ് സഹോദരൻ്റെ മകൻ",max:10,dec:"b"},
-  {id:"amm_sh", en:"Full Paternal Uncle",        ar:"العم الشقيق",      ml:"ശഖീഖ് പിതൃവ്യൻ",      max:10,dec:"b"},
-  {id:"amm_ab", en:"Paternal Uncle (lil-ab)",    ar:"العم لأب",         ml:"ലിആബ് പിതൃവ്യൻ",      max:10,dec:"b"},
-  {id:"ibn_amm_sh",en:"Full Uncle's Son",        ar:"ابن العم الشقيق",  ml:"ശഖീഖ് പിതൃവ്യൻ്റെ മകൻ",max:10,dec:"b"},
-  {id:"ibn_amm_ab",en:"Paternal Uncle's Son",    ar:"ابن العم لأب",     ml:"ലിആബ് പിതൃവ്യൻ്റെ മകൻ",max:10,dec:"b"},
+  {id:"akh_sh", en:"Full Brother",               ar:"الأخ الشقيق",      ml:"സഹോദരൻ (ശഖീഖ്)",     max:COUNTABLE_HEIR_MAX,dec:"b"},
+  {id:"akh_ab", en:"Paternal Brother",           ar:"الأخ لأب",         ml:"സഹോദരൻ (ലിആബ്)",     max:COUNTABLE_HEIR_MAX,dec:"b"},
+  {id:"akh_um", en:"Maternal Brother",           ar:"الأخ لأم",         ml:"സഹോദരൻ (ലിഉമ്മ്)",   max:COUNTABLE_HEIR_MAX,dec:"b"},
+  {id:"ukht_sh",en:"Full Sister",                ar:"الأخت الشقيقة",    ml:"സഹോദരി (ശഖീഖ)",      max:COUNTABLE_HEIR_MAX,dec:"b"},
+  {id:"ukht_ab",en:"Paternal Sister",            ar:"الأخت لأب",        ml:"സഹോദരി (ലിആബ്)",     max:COUNTABLE_HEIR_MAX,dec:"b"},
+  {id:"ukht_um",en:"Maternal Sister",            ar:"الأخت لأم",        ml:"സഹോദരി (ലിഉമ്മ്)",   max:COUNTABLE_HEIR_MAX,dec:"b"},
+  {id:"ibn_akh_sh",en:"Full Brother's Son",      ar:"ابن الأخ الشقيق",  ml:"ശഖീഖ് സഹോദരൻ്റെ മകൻ",max:COUNTABLE_HEIR_MAX,dec:"b"},
+  {id:"ibn_akh_ab",en:"Paternal Brother's Son",  ar:"ابن الأخ لأب",     ml:"ലിആബ് സഹോദരൻ്റെ മകൻ",max:COUNTABLE_HEIR_MAX,dec:"b"},
+  {id:"amm_sh", en:"Full Paternal Uncle",        ar:"العم الشقيق",      ml:"ശഖീഖ് പിതൃവ്യൻ",      max:COUNTABLE_HEIR_MAX,dec:"b"},
+  {id:"amm_ab", en:"Paternal Uncle (lil-ab)",    ar:"العم لأب",         ml:"ലിആബ് പിതൃവ്യൻ",      max:COUNTABLE_HEIR_MAX,dec:"b"},
+  {id:"ibn_amm_sh",en:"Full Uncle's Son",        ar:"ابن العم الشقيق",  ml:"ശഖീഖ് പിതൃവ്യൻ്റെ മകൻ",max:COUNTABLE_HEIR_MAX,dec:"b"},
+  {id:"ibn_amm_ab",en:"Paternal Uncle's Son",    ar:"ابن العم لأب",     ml:"ലിആബ് പിതൃവ്യൻ്റെ മകൻ",max:COUNTABLE_HEIR_MAX,dec:"b"},
   {id:"mutiq",  en:"Male Emancipator",           ar:"المُعتِق",         ml:"അടിമയെ മോചിപ്പിച്ച പുരുഷൻ", max:1, dec:"b"},
   {id:"mutiqah",en:"Female Emancipator",         ar:"المُعتِقَة",       ml:"അടിമയെ മോചിപ്പിച്ച സ്ത്രീ", max:1, dec:"b"},
 ];

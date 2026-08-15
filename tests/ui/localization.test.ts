@@ -140,7 +140,7 @@ describe("TECHNICAL_TEST: deterministic bilingual UI localization", () => {
     const bilingualKeys = [...HTML_SOURCE.matchAll(/data-bilingual="([^"]+)"/g)].map(
       (match) => match[1],
     );
-    expect(bilingualKeys).toEqual(["s_dec", "s_est", "s_mad", "s_heir", "s_res"]);
+    expect(bilingualKeys).toEqual(["s_dec", "s_est", "s_heir", "s_res"]);
     expect(HTML_SOURCE).not.toMatch(
       /data-bilingual="(?:gross_estate|calc_disabled|payment_soon|support_project)"/,
     );
@@ -176,9 +176,12 @@ describe("TECHNICAL_TEST: deterministic bilingual UI localization", () => {
     for (const language of ["en", "ar", "ml"]) {
       expect(localization.getPrimaryText("complete_highlighted", language).text).not.toBe("");
       expect(localization.getPrimaryText("show_advanced_heirs", language).text).not.toBe("");
-      expect(localization.getPrimaryText("tab_calculation", language).text).not.toBe("");
-      expect(localization.getPrimaryText("technical_details", language).text).not.toBe("");
       expect(localization.getPrimaryText("learn_summary_title", language).text).not.toBe("");
+      expect(localization.getPrimaryText("learn_why_shares", language).fallbackUsed).toBe(false);
+      expect(localization.getPrimaryText("learn_calc_steps", language).fallbackUsed).toBe(false);
+      expect(localization.getPrimaryText("learn_calc_distribution", language).fallbackUsed).toBe(
+        false,
+      );
       expect(localization.getPrimaryText("more_details", language).text).not.toBe("");
       expect(localization.getPrimaryText("share_asabah_bi_nafsihi", language).text).toContain(
         "عصبة بالنفس",
@@ -188,12 +191,13 @@ describe("TECHNICAL_TEST: deterministic bilingual UI localization", () => {
     }
   });
 
-  it("marks untranslated engine explanations as an explicit English fallback", () => {
-    expect(APP_SOURCE).toContain('card.lang="en"');
-    expect(APP_SOURCE).toContain('card.dir="ltr"');
-    expect(APP_SOURCE).toContain('getPrimaryText("explanation_english_fallback",lang)');
-    expect(localization.getPrimaryText("explanation_english_fallback", "ar").text).not.toBe("");
-    expect(localization.getPrimaryText("explanation_english_fallback", "ml").text).not.toBe("");
+  it("uses localized, presentation-safe explanations instead of raw engine wording", () => {
+    expect(APP_SOURCE).toContain("shareExplanationKey(allocation.shareClassification)");
+    expect(APP_SOURCE).not.toContain('card.lang="en"');
+    expect(APP_SOURCE).not.toContain('card.dir="ltr"');
+    for (const language of ["en", "ar", "ml"]) {
+      expect(localization.getPrimaryText("learn_why_fixed", language).fallbackUsed).toBe(false);
+    }
   });
 
   it("preserves the permanent brand lockup without localization markers", () => {
