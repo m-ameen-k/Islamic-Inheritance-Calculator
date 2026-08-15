@@ -1,0 +1,34 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260810-GRANDMOTHER-LINEAGE-HIERARCHY",
+  "parentRuleIds": ["KZ-FR-017"],
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_LINEAGE_HIERARCHY",
+  "executable": false,
+  "kanzAlMahalliRecord": {
+    "locator": "Printed pages 139 and 142.",
+    "scope": "Valid grandmother routes, degree, same-side blocking, asymmetric cross-side priority, and male-ascendant effect."
+  },
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locator": "Printed page 276 and footnote 2.",
+    "scope": "Maternal/paternal grandmother blocker table and the same cross-side priority rule."
+  },
+  "sourceAgreement": {
+    "agrees": true,
+    "detail": "Both sources agree on collective 1/6, valid sides, nearer hierarchy, and the admitted asymmetric cross-side rule."
+  },
+  "conditions": [
+    "A valid route is zero or more paternal steps followed by one or more maternal steps, with at least two total steps.",
+    "Equal-degree eligible grandmothers coexist and share the collective 1/6 equally."
+  ],
+  "exclusions": ["Invalid or ambiguous ancestry paths stop before eligibility."],
+  "unresolvedQuestions": [],
+  "readyForAdmission": true,
+  "readyAtomicRuleIds": [
+    "KZ-FR-017-LINEAGE-GRANDMOTHER-GROUP-ONE-SIXTH",
+    "KZ-FR-017-MOTHER-BLOCKS-LINEAGE-GRANDMOTHERS",
+    "KZ-FR-017-NEARER-GRANDMOTHER-BLOCKS-FARTHER",
+    "KZ-FR-017-NEARER-MATERNAL-GRANDMOTHER-BLOCKS-FARTHER-PATERNAL",
+    "KZ-FR-017-MALE-ASCENDANT-BLOCKS-OWN-MOTHER"
+  ]
+}

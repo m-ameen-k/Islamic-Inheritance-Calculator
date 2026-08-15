@@ -1,0 +1,37 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Manual scan comparison only; this record is not independently executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-018",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "printedPages": [143, 144],
+    "localPdfPages": [14, 15],
+    "sourceSummary": "The named Mushtaraka joins one full brother to the canonical uterine-sibling one-third group."
+  },
+  "review": {
+    "reviewId": "MANUAL-20260810-KZ-FR-018",
+    "extractedRuleId": "KZ-FR-018",
+    "reviewStatus": "MANUALLY_CHECKED",
+    "exactArabicChecked": true,
+    "printedPageChecked": true,
+    "localPdfPageChecked": true,
+    "explicitConditions": [
+      "Husband.",
+      "Mother or one eligible grandmother.",
+      "Exactly two uterine siblings in the admitted canonical atom.",
+      "Exactly one full brother."
+    ],
+    "explicitExclusions": [
+      "A paternal brother does not substitute for the full brother.",
+      "Broader full-sibling and uterine-sibling pluralities remain outside the narrow atom."
+    ],
+    "unresolvedWords": [],
+    "conflictingSources": [],
+    "reviewerName": "OpenAI Codex",
+    "reviewerRole": "AI visual transcription assistant; not a qualified Shafi'i scholar",
+    "reviewDate": "2026-08-10",
+    "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED"
+  }
+}

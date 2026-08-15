@@ -1,0 +1,38 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260810-DESCENDANT-LINEAGE-HIERARCHY",
+  "parentRuleIds": ["KZ-FR-013"],
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_LINEAGE_HIERARCHY",
+  "executable": false,
+  "kanzAlMahalliRecord": {
+    "locator": "Printed pages 140–141.",
+    "scope": "All son-line levels, nearer-male blocking, lower-male rescue, fixed ceilings, and 2:1 residue."
+  },
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locator": "Printed page 277 and footnotes 2–5.",
+    "scope": "All son-line levels and examples including daughter, son's daughter, and son's son's son."
+  },
+  "sourceAgreement": {
+    "agrees": true,
+    "detail": "Both Shafi'i sources state the same generation hierarchy and lower-male rescue boundary."
+  },
+  "conditions": [
+    "Only an unbroken male line before the final male/female descendant is valid.",
+    "Nearer male descendants exclude lower descendant levels.",
+    "The rescuing male gives two units per eligible male and one per eligible female."
+  ],
+  "exclusions": ["Multiple unequal female fixed-share levels are not generalized in this admission pass."],
+  "unresolvedQuestions": [],
+  "readyForAdmission": true,
+  "readyAtomicRuleIds": [
+    "KZ-FR-013-DIRECT-SON-BLOCKS-SON-LINE-DESCENDANTS",
+    "KZ-FR-013-NEARER-MALE-DESCENDANT-BLOCKS-FARTHER",
+    "KZ-FR-013-NEARER-FEMALE-DESCENDANT-BLOCKS-FARTHER",
+    "KZ-FR-013-DEEPER-MALE-DESCENDANT-RESIDUARY",
+    "KZ-FR-013-DEEPER-FEMALE-DESCENDANT-ONE-HALF",
+    "KZ-FR-013-DEEPER-FEMALE-DESCENDANT-GROUP-TWO-THIRDS",
+    "KZ-FR-013-DEEPER-FEMALE-DESCENDANT-COMPLEMENT-ONE-SIXTH",
+    "KZ-FR-013-LINEAGE-DESCENDANTS-TWO-TO-ONE"
+  ]
+}

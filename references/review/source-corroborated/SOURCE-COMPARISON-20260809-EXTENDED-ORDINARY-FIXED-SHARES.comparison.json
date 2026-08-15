@@ -1,0 +1,49 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
+  "parentRuleIds": ["KZ-FR-005", "KZ-FR-008", "KZ-FR-009", "KZ-FR-010"],
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_NARROW_ATOMIC_SUBSETS_ONLY",
+  "executable": false,
+  "kanzAlMahalliRecords": [
+    { "ruleId": "KZ-FR-005", "locator": "Printed page 136; local PDF page 7.", "scope": "One son's daughter, one full sister, or one paternal sister receives 1/2 subject to category conditions." },
+    { "ruleId": "KZ-FR-008", "locator": "Printed page 137; local PDF page 8.", "scope": "Two or more son's daughters, full sisters, or paternal sisters receive 2/3 collectively subject to category conditions." },
+    { "ruleId": "KZ-FR-009", "locator": "Printed page 137; local PDF page 8.", "scope": "Two or more uterine siblings receive 1/3 collectively." },
+    { "ruleId": "KZ-FR-010", "locator": "Printed page 138; local PDF page 9.", "scope": "One uterine sibling receives 1/6; one son's daughter with one direct daughter receives the complementary 1/6." }
+  ],
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locator": "references/source-notes/khulasa/fixed-share-locators.md; printed pages 271–276.",
+    "scope": "The fixed-share, decrement, and exclusion tables corroborate the same fractions and category conditions."
+  },
+  "sourceAgreement": {
+    "agrees": true,
+    "detail": "The two Shafi‘i sources agree on the listed fixed shares. Admission is limited to atoms whose unresolved residuary, generation, and special-case interactions are explicitly excluded."
+  },
+  "readyAtomicRuleIds": [
+    "KZ-FR-005-ONE-SONS-DAUGHTER-ONE-HALF",
+    "KZ-FR-008-SONS-DAUGHTER-GROUP-TWO-THIRDS",
+    "KZ-FR-010-ONE-SONS-DAUGHTER-WITH-DAUGHTER-ONE-SIXTH",
+    "KZ-FR-010-ONE-UTERINE-SIBLING-ONE-SIXTH",
+    "KZ-FR-009-UTERINE-SIBLING-GROUP-ONE-THIRD",
+    "KZ-FR-005-ONE-FULL-SISTER-ONE-HALF",
+    "KZ-FR-008-FULL-SISTER-GROUP-TWO-THIRDS",
+    "KZ-FR-005-ONE-PATERNAL-SISTER-ONE-HALF",
+    "KZ-FR-008-PATERNAL-SISTER-GROUP-TWO-THIRDS",
+    "KZ-FR-010-ONE-PATERNAL-SISTER-WITH-FULL-SISTER-ONE-SIXTH"
+  ],
+  "atomicExclusions": [
+    "No atom supplies a son's-son positive residuary share.",
+    "Son's-daughter atoms are limited to the repository's single normalized son's-descendant generation and exclude a son's son, a direct son, and unresolved rescue or nearer-generation questions.",
+    "Full- and paternal-sister fixed-share atoms exclude descendants, ascendants, corresponding brothers, and asabah ma‘a al-ghayr.",
+    "The paternal-sister complement atom is limited to exactly one full sister and one paternal sister.",
+    "The uterine group atom excludes mixed male/female group division, Mushtaraka, ascendants, and descendants."
+  ],
+  "unresolvedQuestions": [
+    "Positive son's-son residuary rules remain only extracted and are not manually checked/source-corroborated.",
+    "The complete grandmother hierarchy remains absent from the corroborated Kanz record.",
+    "Sisters as residuaries with daughters remain extracted but not source-corroborated.",
+    "Full- and paternal-brother positive residuary modes remain outside the corroborated atomic corpus."
+  ],
+  "readyForAdmission": true,
+  "readinessBoundary": "Only the named fixed-share atoms are ready; every unresolved interaction must fail whole-case coverage."
+}

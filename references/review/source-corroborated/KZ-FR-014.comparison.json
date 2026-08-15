@@ -1,0 +1,58 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-014",
+  "ruleId": "KZ-FR-014",
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_ATOMIC_SPLIT_REQUIRED",
+  "executable": false,
+  "kanzAlMahalliRecord": {
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "evidenceRecordIds": ["KZ-FR-014"],
+    "locator": "Printed page 141; local PDF page 12.",
+    "statement": "The record separates the father's fixed one-sixth with a male descendant, pure residuary mode without descendants, and one-sixth plus residue with a female descendant."
+  },
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locator": "references/source-notes/khulasa/khulasa-full.pdf; printed pages 270, 272, and 277–278; father fixed share, residuary order, and worked combinations.",
+    "printedPages": [270, 272, 277, 278],
+    "visuallyConfirmed": true,
+    "statement": "The fixed-share table gives the father one sixth with a descendant, while the residuary order and examples distinguish the remaining father branches."
+  },
+  "supportingSourceStatus": "No project-local Fath al-Mu‘in locator was available, so none is asserted.",
+  "ruleSummary": "Select exactly one father mode from the descendant facts: fixed one-sixth, residuary, or one-sixth plus residue.",
+  "conditions": [
+    "With a son or qualifying son's-line male descendant, the father receives a fixed one sixth.",
+    "With no child or qualifying son's-line descendant, the father is residuary after prior fixed shares.",
+    "With a daughter or qualifying son's-line female descendant and no male descendant, the father receives one sixth plus any residue."
+  ],
+  "exclusions": [
+    "The pure residuary atom does not apply when any qualifying descendant exists.",
+    "The one-sixth-plus-residue atom does not apply when a qualifying male descendant exists.",
+    "Grandfather substitution and grandfather-with-siblings cases are outside these father atoms."
+  ],
+  "blockingAndPriorityInteractions": [
+    "The three father modes are mutually exclusive.",
+    "Fixed shares are assigned before calculating any father residue.",
+    "A male descendant prevents the father from taking the descendant residue; a female descendant leaves the father eligible for residue after fixed shares."
+  ],
+  "sourceAgreement": {
+    "agrees": true,
+    "detail": "Mahalli states the three modes directly; Khulasa corroborates them through its fixed-share table, residuary ordering, and worked combinations without conflict."
+  },
+  "unresolvedQuestions": [
+    "Deeper son's-line generation normalization remains outside the direct-family MVP input model."
+  ],
+  "atomicCandidateAssessment": {
+    "ready": true,
+    "candidateRuleIds": [
+      "KZ-FR-014-FATHER-ONE-SIXTH",
+      "KZ-FR-014-FATHER-RESIDUARY",
+      "KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE"
+    ],
+    "rationale": "Each father mode has a different descendant condition and outcome."
+  },
+  "sourceCorroborationComplete": true,
+  "implementationAdmissionBlocked": true,
+  "admissionBlockers": [
+    "Exact boundary fixtures and a separate calculation-readiness admission remain required."
+  ]
+}

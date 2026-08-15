@@ -185,7 +185,7 @@ describe("TECHNICAL_TEST: Stage 4B-2A atomic spouse candidates", () => {
     );
 
     expect(manifest.rules.map((entry) => entry.ruleId)).toEqual(
-      ATOMIC_CANDIDATES.map((candidate) => candidate.ruleId),
+      expect.arrayContaining(ATOMIC_CANDIDATES.map((candidate) => candidate.ruleId)),
     );
     for (const candidate of ATOMIC_CANDIDATES) {
       const entry = manifest.rules.find(({ ruleId }) => ruleId === candidate.ruleId);

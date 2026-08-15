@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import { verifyProductionManifest } from "../../scripts/verify-production-manifest";
 import { PRODUCTION_RULES } from "../../src/rules/generated/production-registry";
 import { evaluateSpouseRule } from "../../src/rules/spouse-rule-evaluator";
-import type { ProductionSpouseRuleFile } from "../../src/rules/rule-file";
+import type { ProductionRuleFile, ProductionSpouseRuleFile } from "../../src/rules/rule-file";
 
 const EXPECTED_RULE_IDS = [
   "KZ-FR-005-HUSBAND-ONE-HALF",
@@ -14,21 +14,20 @@ const EXPECTED_RULE_IDS = [
   "KZ-FR-007-WIVES-ONE-EIGHTH",
 ] as const;
 
-const PRODUCTION_SPOUSE_RULES = PRODUCTION_RULES as readonly ProductionSpouseRuleFile[];
+const PRODUCTION_SPOUSE_RULES = (PRODUCTION_RULES as readonly ProductionRuleFile[]).filter(
+  (rule): rule is ProductionSpouseRuleFile => "spouseCategory" in rule,
+);
 
 describe("TECHNICAL_TEST: admitted spouse production rules", () => {
-  it("contains only the four explicitly admitted spouse rules", () => {
+  it("retains exactly the four explicitly admitted spouse rules", () => {
     expect(PRODUCTION_SPOUSE_RULES.map((rule) => rule.ruleId)).toEqual(EXPECTED_RULE_IDS);
-    expect(
-      readdirSync(new URL("../../src/rules/production", import.meta.url))
-        .filter((name) => name.endsWith(".ts"))
-        .sort(),
-    ).toEqual(EXPECTED_RULE_IDS.map((ruleId) => `${ruleId}.ts`));
+    const files = readdirSync(new URL("../../src/rules/production", import.meta.url));
+    for (const ruleId of EXPECTED_RULE_IDS) expect(files).toContain(`${ruleId}.ts`);
   });
 
   it("gives every production rule sources, fixtures, and one matching admission", async () => {
     const verified = await verifyProductionManifest();
-    expect(verified).toHaveLength(4);
+    expect(verified).toHaveLength(110);
     for (const entry of verified) {
       expect(entry.rule.sourceReferences.length).toBeGreaterThan(0);
       expect(entry.rule.fixtureIds.length).toBeGreaterThan(0);
@@ -56,7 +55,7 @@ describe("TECHNICAL_TEST: admitted spouse production rules", () => {
     const manifest = JSON.parse(
       readFileSync(new URL("../../src/rules/production-manifest.json", import.meta.url), "utf8"),
     ) as { readonly rules: readonly { readonly productionFile: string }[] };
-    expect(manifest.rules).toHaveLength(4);
+    expect(manifest.rules).toHaveLength(110);
     for (const entry of manifest.rules) {
       expect(entry.productionFile).toMatch(/^src\/rules\/production\//);
       expect(entry.productionFile).not.toContain("/candidates/");

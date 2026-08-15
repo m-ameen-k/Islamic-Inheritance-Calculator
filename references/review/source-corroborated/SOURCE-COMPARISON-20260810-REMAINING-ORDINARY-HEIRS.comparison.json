@@ -1,0 +1,78 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+  "parentRuleIds": ["KZ-FR-011", "KZ-FR-013", "KZ-FR-017", "KZ-FR-019"],
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_NARROW_ATOMIC_SUBSETS_ONLY",
+  "executable": false,
+  "kanzAlMahalliRecords": [
+    {
+      "ruleId": "KZ-FR-013",
+      "locator": "Printed pages 140–141; local PDF pages 11–12.",
+      "scope": "First normalized son's-descendant generation: direct-son blocking, complement, residue, and mixed 2:1 modes."
+    },
+    {
+      "ruleId": "KZ-FR-017",
+      "locator": "Printed pages 139 and 142; local PDF pages 10 and 13.",
+      "scope": "Eligible grandmother collective 1/6 and distinct mother/father blockers."
+    },
+    {
+      "ruleId": "KZ-FR-019",
+      "locator": "Printed pages 143–145; local PDF pages 14–16.",
+      "scope": "Ordinary full/paternal sibling residue, mixed 2:1, sisters with female descendants, priorities, and equal uterine sharing."
+    },
+    {
+      "ruleId": "KZ-FR-011",
+      "locator": "Printed pages 138–140; local PDF pages 9–11.",
+      "scope": "Named total-exclusion relationships used by the admitted atoms."
+    }
+  ],
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locator": "references/source-notes/khulasa/khulasa-full.pdf; printed pages 271–278.",
+    "scope": "Fixed-share conditions, male and female blocker tables, residuary order, descendant interactions, and worked female-descendant/full-sister example."
+  },
+  "sourceAgreement": {
+    "agrees": true,
+    "detail": "The two Shafi'i sources agree for the named normalized-generation and ordinary sibling/grandmother atoms."
+  },
+  "readyAtomicRuleIds": [
+    "KZ-FR-013-SONS-SON-GROUP-RESIDUARY",
+    "KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE",
+    "KZ-FR-013-SON-BLOCKS-SONS-DAUGHTER",
+    "KZ-FR-013-DAUGHTER-GROUP-BLOCKS-SONS-DAUGHTER",
+    "KZ-FR-013-SONS-DAUGHTER-GROUP-WITH-DAUGHTER-ONE-SIXTH",
+    "KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH",
+    "KZ-FR-017-MOTHER-BLOCKS-GRANDMOTHER-GROUP",
+    "KZ-FR-017-FATHER-BLOCKS-PATERNAL-GRANDMOTHER",
+    "KZ-FR-019-FULL-BROTHER-RESIDUARY",
+    "KZ-FR-019-FULL-SIBLINGS-TWO-TO-ONE",
+    "KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY",
+    "KZ-FR-019-PATERNAL-BROTHER-RESIDUARY",
+    "KZ-FR-019-PATERNAL-SIBLINGS-TWO-TO-ONE",
+    "KZ-FR-019-PATERNAL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY",
+    "KZ-FR-019-FATHER-BLOCKS-SISTER-GROUP",
+    "KZ-FR-019-SON-BLOCKS-SISTER-GROUP",
+    "KZ-FR-019-SONS-SON-BLOCKS-FULL-PATERNAL-SIBLINGS",
+    "KZ-FR-019-FULL-BROTHER-BLOCKS-PATERNAL-SIBLING-GROUP",
+    "KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-BLOCKS-PATERNAL-SIBLINGS",
+    "KZ-FR-019-FULL-SISTER-GROUP-BLOCKS-PATERNAL-SISTER",
+    "KZ-FR-019-PATERNAL-SISTER-GROUP-WITH-FULL-SISTER-ONE-SIXTH",
+    "KZ-FR-019-MIXED-UTERINE-SIBLING-GROUP-ONE-THIRD-EQUAL",
+    "KZ-FR-019-FATHER-BLOCKS-MATERNAL-SISTER",
+    "KZ-FR-019-SON-BLOCKS-MATERNAL-SISTER",
+    "KZ-FR-019-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP",
+    "KZ-FR-019-SONS-SON-BLOCKS-UTERINE-SIBLING-GROUP",
+    "KZ-FR-019-SONS-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP"
+  ],
+  "atomicExclusions": [
+    "Only the one normalized son's-descendant generation executes.",
+    "Grandmother atoms cover only the two immediate named UI categories.",
+    "All named special cases remain rejected."
+  ],
+  "unresolvedQuestions": [
+    "Whether otherwise blocked siblings count toward the mother's sibling-triggered 1/6 remains unresolved and is not admitted.",
+    "Farther grandmother and unequal descendant generation hierarchies require richer input."
+  ],
+  "readyForAdmission": true,
+  "readinessBoundary": "Only the listed atomic rules are ready; unresolved generation and special-case branches fail closed."
+}

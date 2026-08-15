@@ -1,0 +1,25 @@
+{
+  "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-PATERNAL-SISTER-GROUP-WITH-FULL-SISTER-ONE-SIXTH",
+  "ruleId": "KZ-FR-019-PATERNAL-SISTER-GROUP-WITH-FULL-SISTER-ONE-SIXTH",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+  "reviewRecordIds": [
+    "MANUAL-20260810-KZ-FR-019",
+    "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS"
+  ],
+  "fixtureIds": [
+    "KZ-FR-019-PATERNAL-SISTER-GROUP-WITH-FULL-SISTER-ONE-SIXTH-POS",
+    "KZ-FR-019-PATERNAL-SISTER-GROUP-WITH-FULL-SISTER-ONE-SIXTH-NEG"
+  ],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "Admitted for the exact full/paternal-sister plurality interaction on Kanz printed page 144 and Khulasa printed pages 271 and 276."
+}

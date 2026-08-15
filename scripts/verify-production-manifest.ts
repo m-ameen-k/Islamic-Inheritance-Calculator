@@ -207,12 +207,29 @@ function loadAdmission(projectRoot: string, entry: ProductionManifestEntry): Rul
     throw new Error(`${entry.ruleId} admission record does not match its manifest entry.`);
   }
 
-  const comparisonPath = resolve(
+  const comparisonDirectory = resolve(projectRoot, "references/review/source-corroborated");
+  const directComparisonPath = resolve(
     projectRoot,
     "references/review/source-corroborated",
     `${entry.sourceComparisonId}.comparison.json`,
   );
-  if (!existsSync(comparisonPath)) {
+  const comparisonExists =
+    existsSync(directComparisonPath) ||
+    (existsSync(comparisonDirectory) &&
+      readdirSync(comparisonDirectory, { withFileTypes: true })
+        .filter((candidate) => candidate.isFile() && candidate.name.endsWith(".comparison.json"))
+        .some((candidate) => {
+          const contents: unknown = JSON.parse(
+            readFileSync(join(comparisonDirectory, candidate.name), "utf8"),
+          );
+          return (
+            typeof contents === "object" &&
+            contents !== null &&
+            !Array.isArray(contents) &&
+            (contents as Record<string, unknown>).comparisonId === entry.sourceComparisonId
+          );
+        }));
+  if (!comparisonExists) {
     throw new Error(`${entry.ruleId} source-comparison record is missing.`);
   }
   return value;

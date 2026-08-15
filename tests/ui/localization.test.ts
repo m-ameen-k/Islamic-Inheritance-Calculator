@@ -140,18 +140,7 @@ describe("TECHNICAL_TEST: deterministic bilingual UI localization", () => {
     const bilingualKeys = [...HTML_SOURCE.matchAll(/data-bilingual="([^"]+)"/g)].map(
       (match) => match[1],
     );
-    expect(bilingualKeys).toEqual([
-      "s_dec",
-      "s_est",
-      "s_mad",
-      "s_heir",
-      "s_res",
-      "group_spouse",
-      "group_descendants",
-      "group_parents",
-      "group_siblings",
-      "group_extended",
-    ]);
+    expect(bilingualKeys).toEqual(["s_dec", "s_est", "s_heir", "s_res"]);
     expect(HTML_SOURCE).not.toMatch(
       /data-bilingual="(?:gross_estate|calc_disabled|payment_soon|support_project)"/,
     );
@@ -175,10 +164,40 @@ describe("TECHNICAL_TEST: deterministic bilingual UI localization", () => {
     expect(APP_SOURCE).toContain('input[type="number"],.numeric-value,.code-like');
   });
 
-  it("keeps the calculation action disabled while localizing its visible status", () => {
+  it("starts disabled and exposes localized dynamic coverage status", () => {
     expect(HTML_SOURCE).toMatch(/<button[^>]*id="calcBtn"[^>]*\bdisabled\b/);
-    expect(HTML_SOURCE).toContain('data-i="calc_disabled"');
-    expect(HTML_SOURCE).toContain('data-i="calc_disabled_reason"');
+    expect(HTML_SOURCE).toContain('data-i="calc_btn"');
+    expect(HTML_SOURCE).toContain('id="primaryCaseStatus"');
+    expect(APP_SOURCE).toContain('getPrimaryText("ready_calculate",lang)');
+    expect(APP_SOURCE).toContain('getPrimaryText("case_not_supported",lang)');
+  });
+
+  it("localizes simplified status, navigation, and classical share classifications", () => {
+    for (const language of ["en", "ar", "ml"]) {
+      expect(localization.getPrimaryText("complete_highlighted", language).text).not.toBe("");
+      expect(localization.getPrimaryText("show_advanced_heirs", language).text).not.toBe("");
+      expect(localization.getPrimaryText("learn_summary_title", language).text).not.toBe("");
+      expect(localization.getPrimaryText("learn_why_shares", language).fallbackUsed).toBe(false);
+      expect(localization.getPrimaryText("learn_calc_steps", language).fallbackUsed).toBe(false);
+      expect(localization.getPrimaryText("learn_calc_distribution", language).fallbackUsed).toBe(
+        false,
+      );
+      expect(localization.getPrimaryText("more_details", language).text).not.toBe("");
+      expect(localization.getPrimaryText("share_asabah_bi_nafsihi", language).text).toContain(
+        "عصبة بالنفس",
+      );
+      expect(localization.getPrimaryText("share_blocked", language).text).toContain("محجوب");
+      expect(localization.getPrimaryText("bayt_residue", language).text).toContain("بيت المال");
+    }
+  });
+
+  it("uses localized, presentation-safe explanations instead of raw engine wording", () => {
+    expect(APP_SOURCE).toContain("shareExplanationKey(allocation.shareClassification)");
+    expect(APP_SOURCE).not.toContain('card.lang="en"');
+    expect(APP_SOURCE).not.toContain('card.dir="ltr"');
+    for (const language of ["en", "ar", "ml"]) {
+      expect(localization.getPrimaryText("learn_why_fixed", language).fallbackUsed).toBe(false);
+    }
   });
 
   it("preserves the permanent brand lockup without localization markers", () => {

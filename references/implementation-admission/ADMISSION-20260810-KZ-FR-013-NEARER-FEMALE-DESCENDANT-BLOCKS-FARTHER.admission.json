@@ -1,0 +1,19 @@
+{
+  "admissionRecordId": "ADMISSION-20260810-KZ-FR-013-NEARER-FEMALE-DESCENDANT-BLOCKS-FARTHER",
+  "ruleId": "KZ-FR-013-NEARER-FEMALE-DESCENDANT-BLOCKS-FARTHER",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260810-DESCENDANT-LINEAGE-HIERARCHY",
+  "reviewRecordIds": ["MANUAL-20260810-KZ-FR-013-LINEAGE-HIERARCHY", "SOURCE-COMPARISON-20260810-DESCENDANT-LINEAGE-HIERARCHY"],
+  "fixtureIds": ["KZ-FR-013-NEARER-FEMALE-DESCENDANT-BLOCKS-FARTHER-POS", "KZ-FR-013-NEARER-FEMALE-DESCENDANT-BLOCKS-FARTHER-NEG"],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "Admitted only for explicit, normalized source-valid lineage paths; invalid and unresolved branches fail closed."
+}

@@ -1,0 +1,25 @@
+{
+  "admissionRecordId": "ADMISSION-20260810-KZ-FR-024-UNCERTAIN-DEATH-ORDER-SAFETY-GATE",
+  "ruleId": "KZ-FR-024-UNCERTAIN-DEATH-ORDER-SAFETY-GATE",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260810-KZ-FR-024-UNCERTAIN-DEATH-ORDER",
+  "reviewRecordIds": [
+    "MANUAL-20260810-KZ-FR-024-UNCERTAIN-DEATH-ORDER",
+    "SOURCE-COMPARISON-20260810-KZ-FR-024-UNCERTAIN-DEATH-ORDER"
+  ],
+  "fixtureIds": [
+    "KZ-FR-024-UNCERTAIN-DEATH-ORDER-SAFETY-GATE-POS",
+    "KZ-FR-024-UNCERTAIN-DEATH-ORDER-SAFETY-GATE-NEG"
+  ],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "Admitted only as a fail-closed pre-calculation safety gate; the single-estate model does not fabricate linked-estate shares."
+}

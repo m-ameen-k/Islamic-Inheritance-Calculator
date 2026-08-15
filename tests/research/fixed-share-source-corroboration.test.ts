@@ -101,7 +101,7 @@ function loadComparison(ruleId: string): FixedShareComparison {
 describe("TECHNICAL_TEST: Stage 4B-1 fixed-share source comparisons", () => {
   it("contains one comparison record for each named rule", () => {
     const files = readdirSync(COMPARISON_DIRECTORY)
-      .filter((file) => /^KZ-FR-\d{3}\.comparison\.json$/.test(file))
+      .filter((file) => RULE_IDS.some((ruleId) => file === `${ruleId}.comparison.json`))
       .sort();
 
     expect(files).toEqual(RULE_IDS.map((ruleId) => `${ruleId}.comparison.json`));

@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "A Shafi'i inheritance case-preparation tool under technical and scholarly validation.",
+  "description": "A source-corroborated Shafi'i inheritance calculator with broad ordinary coverage and selected advanced cases.",
   "license": "MIT",
   "scripts": {
     "generate:production-registry": "node scripts/generate-production-registry.ts",
+    "build:calculator": "vite build --config vite.calculator.config.ts",
     "verify:production-manifest": "node scripts/verify-production-manifest.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
@@ -22,8 +23,10 @@
     "@vitest/coverage-v8": "^4.1.10",
     "eslint": "^10.7.0",
     "prettier": "^3.9.6",
+    "sharp": "^0.35.3",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.65.0",
+    "vite": "^8.1.5",
     "vitest": "^4.1.10"
   }
 }

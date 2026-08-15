@@ -1,0 +1,55 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-029",
+  "ruleId": "KZ-FR-029",
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_ATOMIC_SPLIT_REQUIRED",
+  "executable": false,
+  "kanzAlMahalliRecord": {
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "evidenceRecordIds": ["KZ-FR-029"],
+    "locator": "Printed pages 154–156; local PDF pages 25–27.",
+    "statement": "The record scales the original or awl-adjusted case when one or more class shares do not divide exactly over their person counts."
+  },
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locator": "references/source-notes/khulasa/khulasa-full.pdf; printed pages 284–288; case correction for one or multiple broken classes.",
+    "printedPages": [284, 285, 286, 287, 288],
+    "visuallyConfirmed": true,
+    "statement": "The tashih section gives exact single-class and multi-class correction using divisibility, compatibility, coprimality, and the relations among correction factors."
+  },
+  "supportingSourceStatus": "No project-local Fath al-Mu‘in locator was available, so none is asserted.",
+  "ruleSummary": "Correct a case entirely with integer arithmetic so every class's sahm divides exactly among its members.",
+  "conditions": [
+    "The original or awl-adjusted integer case has already been derived.",
+    "At least one collective class has integer sahm that do not divide evenly by its person count.",
+    "For each broken class, derive its exact correction factor from the class count and class sahm."
+  ],
+  "exclusions": [
+    "No correction is applied when every class already divides exactly.",
+    "Tashih does not decide heir eligibility, fixed shares, blocking, residuary priority, awl, or radd.",
+    "Floating point, decimal approximations, and rounded fractions are not valid sources of the correction factor."
+  ],
+  "blockingAndPriorityInteractions": [
+    "Run only after fixed-share, residuary, and awl decisions have produced integer class sahm.",
+    "For one broken class, use the whole count under coprimality or the compatible quotient under compatibility.",
+    "For multiple broken classes, combine their exact factors using equality, containment, compatibility, or coprimality before scaling every sahm."
+  ],
+  "sourceAgreement": {
+    "agrees": true,
+    "detail": "Both sources describe the same exact integer correction behavior; Khulasa supplies explicit one-class and multi-class examples."
+  },
+  "unresolvedQuestions": [],
+  "atomicCandidateAssessment": {
+    "ready": true,
+    "candidateRuleIds": [
+      "KZ-FR-029-SINGLE-CLASS-CORRECTION",
+      "KZ-FR-029-MULTIPLE-CLASS-CORRECTION"
+    ],
+    "rationale": "Single-class and multi-class correction have different factor-combination steps and should be tested independently."
+  },
+  "sourceCorroborationComplete": true,
+  "implementationAdmissionBlocked": true,
+  "admissionBlockers": [
+    "Exact examples must become source-derived fixtures before calculation-readiness admission."
+  ]
+}

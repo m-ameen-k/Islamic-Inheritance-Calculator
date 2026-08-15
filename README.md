@@ -1,123 +1,70 @@
 # علم الفرائض
+
 # Islamic Inheritance Calculator
 
-## Purpose
+A source-corroborated Shafi‘i inheritance calculator with broad ordinary coverage and selected advanced cases.
 
-This project is a source-corroborated Shafi‘i inheritance-calculator system under active technical development. It focuses on translating classical Shafi‘i jurisprudence into verifiable, exact computational rules backed by formal source comparison and automated regression tests.
+The public calculator is functional for cases that pass its whole-case coverage gate. It uses exact `bigint` rational arithmetic, executes only individually admitted production rules, and generates its learning explanation from the same structured calculation result. It is not complete classical Shafi‘i coverage, a scholar certification, or legal authority.
 
-This project is an educational and research-oriented software implementation. It is not complete, legally authoritative, scholar-certified, or ready for final estate distribution.
+## V1 scope
 
-## Current Status
+The admitted corpus covers broad ordinary combinations of:
 
-- **Protected rule-corpus architecture:** Implemented with strict boundaries separating evidence, candidates, and production code.
-- **Evidence separation:** Research evidence, source extractions, and comparison records are isolated from executable production rules.
-- **Admitted production rules:** Four atomic spouse-share rules are currently admitted to the production manifest and registry.
-- **Exact rational arithmetic:** Built using BigInt rational arithmetic to prevent floating-point rounding errors.
-- **Domain models:** Qualifying-descendant and wife-group domain models are fully implemented.
-- **Coverage evaluation:** Spouse-scope coverage evaluation is implemented to gate engine execution safely.
-- **Public calculator UI:** Remains disabled while supported-case execution is being completed.
-- **Isolated legacy engine:** The legacy JavaScript engine (`js/engine.js`) is isolated and must not be used as the trusted calculator.
+- husband and wife groups;
+- father, mother, paternal grandfather, and eligible grandmother lineages;
+- sons, daughters, and explicit male-line descendant generations;
+- uterine, full, and consanguine siblings;
+- the six modeled brother’s-son and paternal-uncle residuary classes;
+- one direct male or female emancipator.
 
-## Currently Admitted Spouse Rules
+Supported calculation paths include exact aṣl al-masʾalah, admitted `awl` endpoints, tashih/correction, radd or functioning Bayt al-Mal residue, both Umariyyatayn, paternal-grandfather comparisons with siblings, canonical Akdariyya, canonical Mushtaraka, and the admitted Mu‘adda branches.
 
-The production registry currently admits exactly four atomic spouse-share rules derived from *Kanz al-Raghibin*:
+The complete audited inventory and exact boundaries are in [Shafi‘i coverage status](docs/shafii-coverage-status.md).
 
-- **Husband (1/2):** Husband receives a 1/2 share when there is no qualifying descendant.
-- **Husband (1/4):** Husband receives a 1/4 share when there is a qualifying descendant.
-- **Wife Group (1/4):** Wife group collectively receives a 1/4 share when there is no qualifying descendant.
-- **Wife Group (1/8):** Wife group collectively receives a 1/8 share when there is a qualifying descendant.
+## Safety boundaries
 
-Eligible wives (1–4) share their collective fraction (1/4 or 1/8) equally.
+- A case calculates only when every required rule is in the production manifest.
+- Unsupported, ambiguous, invalid, or unresolved input stops before execution; the calculator never presents a partial distribution as final.
+- Users must explicitly confirm that estate facts are settled. Funeral costs, disputed ownership, joint property, unpaid mahr, contested debts, unclear gifts, and uncertain or invalid bequests require qualified review outside the calculator.
+- `UNSURE` never silently selects a remainder policy. An ordinary charity is not automatically treated as Bayt al-Mal.
+- Uncertain death order stops the single-estate workflow instead of assuming an order.
+- Actual estate administration should be reviewed by a qualified Shafi‘i farāʾiḍ scholar and the relevant legal professionals before distribution.
 
-Non-spouse rules (including descendants, parents, grandparents, siblings, residuary/‘asabah shares, *‘awl*, *radd*, and *Bayt al-Mal*) are not yet admitted to production.
+Known source or admission gaps include the mother’s reduction where siblings are themselves blocked, broader Mushtaraka variants, unworked Mu‘adda variants, multiple emancipators and emancipator agnates, one multilevel female-descendant allocation branch, and executable dhawū al-arḥām distribution. Missing-person, pregnancy, intersex, impediment, and successive-estate branching are not implemented.
 
-## Source Policy
+## Source and execution architecture
 
-Source roles within the repository:
+Source roles are explicit:
 
-- **Kanz al-Raghibin / al-Mahalli:** Primary detailed Shafi‘i computational source.
-- **Khulasat al-Fiqh al-Islami:** Trusted Shafi‘i corroborating instructional source.
-- **Fath al-Mu‘in:** Supporting Shafi‘i source.
-- **Singapore MUIS / Syariah Court brochure:** Educational and jurisdictional context only.
+- **Kanz al-Raghibin / al-Mahalli:** primary detailed Shafi‘i computational authority.
+- **Khulasat al-Fiqh al-Islami:** corroborating Shafi‘i source for conditions, tables, and worked examples.
+- **Fath al-Mu‘in:** supporting source only where an exact project locator exists.
+- **Singapore MUIS / Syariah Court brochure:** educational or jurisdictional context, not detailed computational authority.
 
-Trusted books may be authoritative, while extraction, domain structuring, software implementation, and engine behavior still require checking.
+Research evidence and candidate rules are non-executable. A rule must pass manual review, source corroboration, exact fixtures, and implementation admission before it can be listed in `src/rules/production-manifest.json`. The generated production registry is the executor’s only rule corpus. `js/engine.js` remains isolated and is not loaded by the public calculator.
 
-## Safety Architecture
+## Exact results and learning mode
 
-The safety architecture enforces strict governance:
+Fractions and monetary apportionment use integer/rational arithmetic; floating point is limited to secondary percentage display. For a resolved remainder policy, allocated minor units equal the net distributable estate deterministically.
 
-- **One rule per file:** Each candidate and production rule exists in its own isolated file.
-- **Candidate and production separation:** Non-production candidate rules in `src/rules/candidates/` cannot be executed by the production engine.
-- **Explicit production manifest:** `src/rules/production-manifest.json` defines the sole allow-list of admitted production rules.
-- **Generated production registry:** `src/rules/generated/production-registry.ts` is mechanically generated from the manifest.
-- **Integrity hashes:** Production rule files are validated via SHA-256 byte hashes in the manifest.
-- **Exact fixtures:** Each admitted rule must pass source-derived positive, negative, and boundary test fixtures.
-- **Coverage gating:** Engine execution fails safely if a case requires rules outside the admitted production set.
-- **No implicit candidate execution:** Candidate rules are never executed implicitly.
+“How was this calculated?” presents the actual engine events: estate and deductions, selected and eligible heirs, blocking, fixed and residuary shares, aṣl, `awl`, correction, remainder handling, advanced-case steps, final fractions and amounts, production rule IDs, and source locators. Detailed engine explanations currently fall back explicitly to English where reviewed Arabic or Malayalam translations are unavailable.
 
-## Languages
+## Languages and accessibility
 
-The interface supports three main languages with bilingual primary/secondary pairings:
+The interface supports English, Arabic, and Malayalam while preserving the permanent branding `علم الفرائض — Islamic Inheritance Calculator`. Major headings use the project’s bilingual pairing; ordinary controls remain single-language. The result view uses semantic keyboard-operable tabs, live readiness status, labeled progressive lineage controls, and an expandable explanation.
 
-- **English main → Arabic secondary** on major bilingual headings.
-- **Arabic main → English secondary** on major bilingual headings.
-- **Malayalam main → Arabic secondary** on major bilingual headings.
-- **Permanent branding:** `علم الفرائض — Islamic Inheritance Calculator` remains fixed across all languages.
-
-Normal helper text and controls remain single-language.
-
-## Development Commands
-
-All development commands correspond directly to `package.json` scripts:
+## Development
 
 ```bash
-# Install dependencies
 npm install
-
-# Run complete verification suite
 npm run check
-
-# Run tests via Vitest
-npm run test
-
-# Type-check TypeScript files
-npm run typecheck
-
-# Lint source files
-npm run lint
-
-# Verify production manifest integrity and file hashes
 npm run verify:production-manifest
-
-# Generate production registry from manifest
 npm run generate:production-registry
+npm run build:calculator
 ```
 
-## Repository Structure
-
-```text
-Islamic-Inheritance-Calculator/
-├── docs/                 # Architectural governance, admission policy, and roadmap docs
-├── references/           # Immutable source extractions, manual reviews, and comparison records
-├── scripts/              # Manifest verification and registry generation scripts
-├── src/
-│   ├── rules/
-│   │   ├── candidates/   # Candidate rules under development
-│   │   ├── production/   # Admitted production rules (one rule per file)
-│   │   └── generated/    # Mechanically generated production registry
-│   ├── domain/           # Core domain models (fractions, heirs, case coverage)
-│   └── engine/           # Execution engine pipeline and verification
-├── tests/                # Unit tests, rule fixtures, and architecture safety tests
-├── index.html            # Calculator web interface structure
-├── css/                  # Interface styles
-└── js/                   # Frontend UI logic and isolated legacy engine
-```
-
-## Limitations
-
-- The public calculator UI is intentionally disabled while supported-case execution is being completed.
-- Unsupported or disputed cases must not produce guessed results.
+Corpus changes must follow [Protected rule-corpus maintenance](docs/rule-corpus-maintenance.md). Do not edit production rules without explicit rule IDs and the required admission lifecycle.
 
 ## Disclaimer
 
-This project is an educational and research-oriented implementation of Shafi‘i inheritance rules. It is not a replacement for qualified scholarly or legal review in actual estate administration.
+This is educational and case-preparation software for its declared Shafi‘i scope. Source corroboration and automated testing reduce implementation risk but do not determine disputed facts, replace a qualified scholar, satisfy local probate law, or authorize distribution of a real estate.

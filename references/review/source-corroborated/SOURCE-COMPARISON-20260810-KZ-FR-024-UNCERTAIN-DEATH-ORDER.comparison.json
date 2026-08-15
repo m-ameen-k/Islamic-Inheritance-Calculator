@@ -1,0 +1,30 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260810-KZ-FR-024-UNCERTAIN-DEATH-ORDER",
+  "parentRuleIds": ["KZ-FR-024"],
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_SAFETY_GATE_READY",
+  "executable": false,
+  "kanzAlMahalliRecord": {
+    "ruleId": "KZ-FR-024",
+    "locator": "Printed page 148; local PDF page 19.",
+    "scope": "Simultaneous death or unknown order prevents mutual inheritance; each estate goes to the decedent's other heirs."
+  },
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locator": "references/source-notes/khulasa/khulasa-full.pdf; printed page 268.",
+    "scope": "Survival after the decedent is a condition; the same simultaneous/unknown-order case has no mutual inheritance."
+  },
+  "shortParaphrase": "A calculator must not silently choose a death order for potential mutual heirs; when order is simultaneous or unknown, they do not inherit from each other.",
+  "conditions": ["The people could inherit from one another and their death order is simultaneous or unknown."],
+  "exclusions": ["Known sequential deaths are not covered by this gate."],
+  "blockingAndPriorityInteractions": ["This safety gate precedes all ordinary and special-case calculations."],
+  "sourceAgreement": {
+    "agrees": true,
+    "detail": "Both Shafi'i sources state the same survival condition and no-mutual-inheritance result."
+  },
+  "unresolvedQuestions": [
+    "The current single-estate model cannot construct both separate estates and both remaining-heir snapshots."
+  ],
+  "readyForAdmission": true,
+  "readyAtomicRuleIds": ["KZ-FR-024-UNCERTAIN-DEATH-ORDER-SAFETY-GATE"]
+}

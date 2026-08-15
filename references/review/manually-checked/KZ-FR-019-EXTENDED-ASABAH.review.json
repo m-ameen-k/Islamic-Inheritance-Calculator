@@ -1,0 +1,45 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Manual scan comparison only; this record is not independently executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-019",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "chapter": "كتاب الفرائض",
+    "printedPages": [144, 145],
+    "localPdfPages": [15, 16],
+    "sourceSummary": "The named brother's-son and paternal-uncle lines are nasab residuaries; the nearer full line has priority over the corresponding paternal line, and the ordered class receives the residue."
+  },
+  "review": {
+    "reviewId": "MANUAL-20260810-KZ-FR-019-EXTENDED-ASABAH",
+    "extractedRuleId": "KZ-FR-019",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "reviewStatus": "MANUALLY_CHECKED",
+    "statusHistory": ["EXTRACTED_NOT_VERIFIED", "MANUAL_SCAN_CHECK_PENDING", "MANUALLY_CHECKED"],
+    "exactArabicChecked": true,
+    "printedPageChecked": true,
+    "localPdfPageChecked": true,
+    "chapterChecked": true,
+    "arabicCorrections": [],
+    "unresolvedWords": [],
+    "explicitConditions": [
+      "Full brother's son precedes consanguine brother's son.",
+      "The uncle lines and their sons follow the brother's-son lines in the visibly stated nasab-residuary sequence.",
+      "The nearer full relationship precedes its corresponding consanguine relationship."
+    ],
+    "explicitExclusions": ["No unmodeled farther degree or lineage is inferred."],
+    "explicitOutcome": ["The first eligible named class receives the residue and excludes lower named classes."],
+    "reviewExplanation": "The extended nasab-residuary paragraph was visually checked on the trusted local Kanz/al-Mahalli scan.",
+    "inferredDetails": ["None beyond splitting the exact finite priority list into atomic eligibility and blocking rules."],
+    "missingInformation": [],
+    "conflictingSources": [],
+    "reviewerName": "OpenAI Codex",
+    "reviewerRole": "AI visual transcription assistant; manual scan comparison only; not a qualified Shafi'i scholar",
+    "reviewDate": "2026-08-10",
+    "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED",
+    "approvedCaseIds": [],
+    "implementationSpecification": null,
+    "notes": "Only the six relationship categories already present in the UI/domain model were checked."
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "auditId": "EXTENDED-ORDINARY-HEIR-AUDIT-20260809",
+  "basis": "Existing structured project research only; no new raw-PDF review.",
+  "classifications": {
+    "motherSiblingTriggeredOneSixth": "SOURCE_CORROBORATED; ready only for cases where all counted siblings are unblocked",
+    "sonsSon": "EXTRACTED_NOT_VERIFIED; positive residuary conditions not admission-ready",
+    "sonsDaughter": "SOURCE_CORROBORATED fixed-share subsets ready; residuary and deeper-generation modes incomplete",
+    "grandmothers": "EXTRACTED_NOT_VERIFIED; exact hierarchy incomplete",
+    "uterineSiblings": "SOURCE_CORROBORATED fixed-share subsets ready; mixed group and Mushtaraka excluded",
+    "fullSiblings": "SOURCE_CORROBORATED sister fixed-share subsets ready; brother residuary and sister-with-daughter modes incomplete",
+    "consanguineSiblings": "SOURCE_CORROBORATED sister fixed-share subsets ready; brother residuary and complex priority modes incomplete"
+  },
+  "mandatoryUnsupportedBoundaries": [
+    "GRANDFATHER_WITH_SIBLINGS_NOT_ADMITTED",
+    "AKDARIYYA_NOT_ADMITTED",
+    "MUSHTARAKA_NOT_ADMITTED",
+    "MUADDA_NOT_ADMITTED"
+  ]
+}

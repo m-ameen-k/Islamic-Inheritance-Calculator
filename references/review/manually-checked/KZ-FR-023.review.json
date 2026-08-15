@@ -1,0 +1,33 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Manual scan comparison only; this record is not independently executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-023",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "printedPages": [147],
+    "localPdfPages": [18],
+    "sourceSummary": "The Akdariyya is exactly husband, mother, paternal grandfather, and one full or paternal sister; initial shares awl, then the grandfather and sister combine and divide two to one."
+  },
+  "review": {
+    "reviewId": "MANUAL-20260810-KZ-FR-023",
+    "extractedRuleId": "KZ-FR-023",
+    "reviewStatus": "MANUALLY_CHECKED",
+    "exactArabicChecked": true,
+    "printedPageChecked": true,
+    "localPdfPageChecked": true,
+    "explicitConditions": [
+      "Exactly husband, mother, paternal grandfather, and one full or one paternal sister."
+    ],
+    "explicitExclusions": [
+      "A brother, two sisters, a missing named heir, or an extra heir does not trigger this atom."
+    ],
+    "unresolvedWords": [],
+    "conflictingSources": [],
+    "reviewerName": "OpenAI Codex",
+    "reviewerRole": "AI visual transcription assistant; not a qualified Shafi'i scholar",
+    "reviewDate": "2026-08-10",
+    "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED"
+  }
+}

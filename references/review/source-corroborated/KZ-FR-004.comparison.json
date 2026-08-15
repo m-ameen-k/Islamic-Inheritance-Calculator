@@ -1,0 +1,59 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-004",
+  "ruleId": "KZ-FR-004",
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_ATOMIC_SPLIT_REQUIRED",
+  "executable": false,
+  "kanzAlMahalliRecord": {
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "evidenceRecordIds": ["KZ-FR-004"],
+    "locator": "Printed pages 134–135; local PDF pages 5–6.",
+    "statement": "The record distinguishes residue passing to a functioning Bayt al-Mal from proportional radd to fixed-share heirs other than spouses when Bayt al-Mal is not properly functioning."
+  },
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locator": "references/source-notes/khulasa/khulasa-full.pdf; printed page 269; residue, Bayt al-Mal, and radd paragraph.",
+    "printedPages": [269],
+    "visuallyConfirmed": true,
+    "statement": "A functioning Bayt al-Mal receives an unallocated estate or residue; when it is not functioning properly, surplus is returned proportionally to fixed-share heirs other than the spouses."
+  },
+  "supportingSourceStatus": "No project-local Fath al-Mu‘in locator was available, so none is asserted.",
+  "ruleSummary": "Resolve qualifying residue by an explicitly selected Bayt al-Mal policy; never infer the policy from an ordinary charity.",
+  "conditions": [
+    "A positive residue remains after valid fixed shares.",
+    "No eligible residuary has a prior claim to that residue.",
+    "The remainder-policy input is explicitly FUNCTIONING_BAYT_AL_MAL or NO_FUNCTIONING_BAYT_AL_MAL_RADD."
+  ],
+  "exclusions": [
+    "Spouses do not receive radd under the no-functioning-Bayt-al-Mal branch.",
+    "UNSURE is not a fiqh outcome and must stop calculation without selecting either branch.",
+    "An ordinary charity is not established by either source as equivalent to Bayt al-Mal.",
+    "Dhawu al-arham treatment after absence of eligible fixed-share heirs is outside the functional MVP."
+  ],
+  "blockingAndPriorityInteractions": [
+    "Apply fixed shares and every eligible residuary before this rule.",
+    "The two policy branches are mutually exclusive.",
+    "For radd, remove spouse shares from the proportional redistribution base."
+  ],
+  "sourceAgreement": {
+    "agrees": true,
+    "detail": "Both Shafi‘i sources preserve the functioning-Bayt-al-Mal rule and the no-functioning-Bayt-al-Mal radd branch, including spouse exclusion from radd."
+  },
+  "unresolvedQuestions": [
+    "Dhawu al-arham sequencing is not admitted in this MVP.",
+    "Institutional criteria for deciding whether a Bayt al-Mal is functioning remain an external case fact."
+  ],
+  "atomicCandidateAssessment": {
+    "ready": true,
+    "candidateRuleIds": [
+      "KZ-FR-004-FUNCTIONING-BAYT-AL-MAL-RESIDUE",
+      "KZ-FR-004-NO-FUNCTIONING-BAYT-AL-MAL-RADD"
+    ],
+    "rationale": "The two source-supported branches have distinct conditions and outcomes and must remain separate atoms."
+  },
+  "sourceCorroborationComplete": true,
+  "implementationAdmissionBlocked": true,
+  "admissionBlockers": [
+    "Exact fixtures, interaction tests, and a separate calculation-readiness admission are still required."
+  ]
+}

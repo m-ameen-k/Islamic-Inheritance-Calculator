@@ -28,20 +28,16 @@ function importedSpecifiers(source: string): readonly string[] {
 }
 
 describe("TECHNICAL_TEST: protected rule corpus boundaries", () => {
-  it("loads only the explicitly admitted atomic spouse production rules", () => {
+  it("loads only explicitly manifest-listed production rules", () => {
     const manifest = JSON.parse(
       readFileSync(join(SRC_ROOT, "rules/production-manifest.json"), "utf8"),
     ) as { readonly rules: readonly { readonly ruleId: string }[] };
     const registry = readFileSync(join(SRC_ROOT, "rules/generated/production-registry.ts"), "utf8");
 
-    expect(manifest.rules.map(({ ruleId }) => ruleId)).toEqual([
-      "KZ-FR-005-HUSBAND-ONE-HALF",
-      "KZ-FR-006-HUSBAND-ONE-QUARTER",
-      "KZ-FR-006-WIVES-ONE-QUARTER",
-      "KZ-FR-007-WIVES-ONE-EIGHTH",
-    ]);
+    expect(manifest.rules).toHaveLength(110);
+    expect(manifest.rules.map(({ ruleId }) => ruleId)).toContain("KZ-FR-015-WIFE-MOTHER-FATHER");
     expect(registry).toContain("Generated file. Do not edit manually.");
-    expect(registry.match(/from ["']\.\.\/production\//g)).toHaveLength(4);
+    expect(registry.match(/from ["']\.\.\/production\//g)).toHaveLength(manifest.rules.length);
     expect(registry).not.toMatch(/from ["']\.\.\/candidates\//);
   });
 
@@ -89,7 +85,7 @@ describe("TECHNICAL_TEST: protected rule corpus boundaries", () => {
     }
   });
 
-  it("keeps the existing visible calculator disabled", () => {
+  it("starts disabled until whole-case coverage enables the calculator", () => {
     const html = readFileSync(join(PROJECT_ROOT, "index.html"), "utf8");
     expect(html).toMatch(/<button[^>]*id="calcBtn"[^>]*\bdisabled\b[^>]*>/);
   });

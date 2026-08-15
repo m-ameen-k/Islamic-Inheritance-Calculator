@@ -1,0 +1,20 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Focused manual scan comparison only; not independently executable.",
+  "executable": false,
+  "reviewId": "MANUAL-20260810-KZ-FR-017-LINEAGE-HIERARCHY",
+  "parentRuleId": "KZ-FR-017",
+  "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+  "reviewStatus": "MANUALLY_CHECKED",
+  "locator": "Printed pages 139 and 142 in the trusted Dar al-Minhaj volume-2 scan.",
+  "shortParaphrase": "Eligible grandmother paths consist of paternal ascent followed by maternal ascent; nearer same-side grandmothers block farther ones, and maternal-side nearness has the source-stated cross-side priority.",
+  "conditions": [
+    "The complete ancestry path, side, and degree are explicit.",
+    "The mother blocks all grandmothers.",
+    "A father or paternal grandfather blocks his own mother but not a grandmother whose path does not pass through him."
+  ],
+  "exclusions": ["A route containing a paternal step after a maternal step is invalid."],
+  "unresolvedQuestions": [],
+  "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED",
+  "notes": "The admitted view preserves the primary text's asymmetric maternal/paternal priority."
+}

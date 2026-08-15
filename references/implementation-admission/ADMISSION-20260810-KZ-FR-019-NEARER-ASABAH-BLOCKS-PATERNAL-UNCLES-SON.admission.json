@@ -1,0 +1,25 @@
+{
+  "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-UNCLES-SON",
+  "ruleId": "KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-UNCLES-SON",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260810-EXTENDED-RESIDUARY-PRIORITY",
+  "reviewRecordIds": [
+    "MANUAL-20260810-KZ-FR-019-EXTENDED-ASABAH",
+    "SOURCE-COMPARISON-20260810-EXTENDED-RESIDUARY-PRIORITY"
+  ],
+  "fixtureIds": [
+    "KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-UNCLES-SON-POS",
+    "KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-UNCLES-SON-NEG"
+  ],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "Admitted only for the exact finite UI-modeled relationship, priority, blocker, and plurality conditions."
+}

@@ -1,0 +1,25 @@
+{
+  "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-PATERNAL-UNCLES-SON-RESIDUARY",
+  "ruleId": "KZ-FR-019-PATERNAL-UNCLES-SON-RESIDUARY",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260810-EXTENDED-RESIDUARY-PRIORITY",
+  "reviewRecordIds": [
+    "MANUAL-20260810-KZ-FR-019-EXTENDED-ASABAH",
+    "SOURCE-COMPARISON-20260810-EXTENDED-RESIDUARY-PRIORITY"
+  ],
+  "fixtureIds": [
+    "KZ-FR-019-PATERNAL-UNCLES-SON-RESIDUARY-POS",
+    "KZ-FR-019-PATERNAL-UNCLES-SON-RESIDUARY-NEG"
+  ],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "Admitted only for the exact finite UI-modeled relationship, priority, blocker, and plurality conditions."
+}

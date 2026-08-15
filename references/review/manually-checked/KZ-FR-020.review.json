@@ -1,0 +1,36 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Manual scan comparison only; this record is not independently executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-020",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "printedPages": [146],
+    "localPdfPages": [17],
+    "sourceSummary": "Without another fixed-share heir the grandfather receives the greater of one third of the estate or muqasama; with fixed shares he receives the greatest of one sixth of the estate, one third of the remainder, or muqasama of the remainder."
+  },
+  "review": {
+    "reviewId": "MANUAL-20260810-KZ-FR-020",
+    "extractedRuleId": "KZ-FR-020",
+    "reviewStatus": "MANUALLY_CHECKED",
+    "exactArabicChecked": true,
+    "printedPageChecked": true,
+    "localPdfPageChecked": true,
+    "explicitConditions": [
+      "Father and male descendants absent.",
+      "Only eligible full and paternal siblings compete.",
+      "Muqasama treats the grandfather as one male sibling."
+    ],
+    "explicitExclusions": [
+      "Akdariyya and Mu‘adda use their dedicated paths.",
+      "Exhaustion at or below one sixth uses KZ-FR-021."
+    ],
+    "unresolvedWords": [],
+    "conflictingSources": [],
+    "reviewerName": "OpenAI Codex",
+    "reviewerRole": "AI visual transcription assistant; not a qualified Shafi'i scholar",
+    "reviewDate": "2026-08-10",
+    "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED"
+  }
+}

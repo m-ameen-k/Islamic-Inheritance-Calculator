@@ -36,10 +36,28 @@ export const HEIR_TYPES = [
 
 export type HeirType = (typeof HEIR_TYPES)[number];
 
+export type SonLineStep = "SON" | "DAUGHTER";
+export type GrandmotherLineageStep = "FATHER" | "MOTHER";
+
+export interface SonLineDescendantLineage {
+  readonly kind: "SON_LINE_DESCENDANT";
+  /** Complete path from the deceased. Every non-final step must be SON. */
+  readonly path: readonly SonLineStep[];
+}
+
+export interface GrandmotherLineage {
+  readonly kind: "GRANDMOTHER";
+  /** Complete ancestry path from the deceased; the final person is MOTHER. */
+  readonly path: readonly GrandmotherLineageStep[];
+}
+
+export type HeirLineage = SonLineDescendantLineage | GrandmotherLineage;
+
 export interface HeirInput {
   readonly heirId: string;
   readonly type: HeirType;
   readonly count: number;
+  readonly lineage?: HeirLineage;
 }
 
 export type HeirOutcomeStatus = "RECEIVES_SHARE" | "ZERO" | "BLOCKED" | "PENDING";

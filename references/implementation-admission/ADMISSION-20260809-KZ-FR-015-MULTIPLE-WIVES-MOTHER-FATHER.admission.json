@@ -1,0 +1,28 @@
+{
+  "admissionRecordId": "ADMISSION-20260809-KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER",
+  "ruleId": "KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-015-MULTIPLE-WIVES-UMARIYYATAYN",
+  "reviewRecordIds": [
+    "SOURCE-COMPARISON-20260809-KZ-FR-015",
+    "SOURCE-COMPARISON-20260803-KZ-FR-006-WIVES-ONE-QUARTER",
+    "SOURCE-COMPARISON-20260809-KZ-FR-015-MULTIPLE-WIVES-UMARIYYATAYN"
+  ],
+  "fixtureIds": [
+    "KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER-POS-TWO-WIVES",
+    "KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER-POS-FOUR-WIVES",
+    "KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER-NEG-ONE-WIFE",
+    "KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER-NEG-ADDITIONAL-HEIR"
+  ],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "Admitted as the exact interaction of the corroborated wife-and-parents remainder-third with the already admitted collective wife-group quarter."
+}

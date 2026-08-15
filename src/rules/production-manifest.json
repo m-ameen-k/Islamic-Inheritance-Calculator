@@ -2,6 +2,28 @@
   "schemaVersion": 1,
   "rules": [
     {
+      "ruleId": "KZ-FR-004-FUNCTIONING-BAYT-AL-MAL-RESIDUE",
+      "productionFile": "src/rules/production/KZ-FR-004-FUNCTIONING-BAYT-AL-MAL-RESIDUE.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-004-FUNCTIONING-BAYT-AL-MAL-RESIDUE",
+      "fixtureIds": [
+        "KZ-FR-004-FUNCTIONING-BAYT-AL-MAL-RESIDUE-POS",
+        "KZ-FR-004-FUNCTIONING-BAYT-AL-MAL-RESIDUE-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-004",
+      "sha256": "67e26dde62f6bd8ef2a68eb1df83252e1b79f4ab1b335abca6d142eefde2d208"
+    },
+    {
+      "ruleId": "KZ-FR-004-NO-FUNCTIONING-BAYT-AL-MAL-RADD",
+      "productionFile": "src/rules/production/KZ-FR-004-NO-FUNCTIONING-BAYT-AL-MAL-RADD.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-004-NO-FUNCTIONING-BAYT-AL-MAL-RADD",
+      "fixtureIds": [
+        "KZ-FR-004-NO-FUNCTIONING-BAYT-AL-MAL-RADD-POS",
+        "KZ-FR-004-NO-FUNCTIONING-BAYT-AL-MAL-RADD-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-004",
+      "sha256": "dd0f5b09937001f89fff2689829ea56403734c455481aa04c1d4f02f203d3750"
+    },
+    {
       "ruleId": "KZ-FR-005-HUSBAND-ONE-HALF",
       "productionFile": "src/rules/production/KZ-FR-005-HUSBAND-ONE-HALF.ts",
       "admissionRecordId": "ADMISSION-20260803-KZ-FR-005-HUSBAND-ONE-HALF",
@@ -50,6 +72,1126 @@
       ],
       "sourceComparisonId": "SOURCE-COMPARISON-20260803-KZ-FR-007-WIVES-ONE-EIGHTH",
       "sha256": "c58f47ee5a0d60905c568512d0d8c50c7a8db36f5f84e75e53debe595cfa96bc"
+    },
+    {
+      "ruleId": "KZ-FR-009-MOTHER-ONE-THIRD",
+      "productionFile": "src/rules/production/KZ-FR-009-MOTHER-ONE-THIRD.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-009-MOTHER-ONE-THIRD",
+      "fixtureIds": ["KZ-FR-009-MOTHER-ONE-THIRD-POS", "KZ-FR-009-MOTHER-ONE-THIRD-NEG"],
+      "sourceComparisonId": "KZ-FR-009",
+      "sha256": "2f0c43881f214115bea9576a5e9b7826bf0fe9cae92355dda7ed50ace93616c2"
+    },
+    {
+      "ruleId": "KZ-FR-010-MOTHER-ONE-SIXTH-DESCENDANT",
+      "productionFile": "src/rules/production/KZ-FR-010-MOTHER-ONE-SIXTH-DESCENDANT.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-010-MOTHER-ONE-SIXTH-DESCENDANT",
+      "fixtureIds": [
+        "KZ-FR-010-MOTHER-ONE-SIXTH-DESCENDANT-POS",
+        "KZ-FR-010-MOTHER-ONE-SIXTH-DESCENDANT-NEG"
+      ],
+      "sourceComparisonId": "KZ-FR-010",
+      "sha256": "d5477d8a9c35441fb090f6514543d96aebf909b918124025b4f1d677e6ecac93"
+    },
+    {
+      "ruleId": "KZ-FR-012-DAUGHTER-GROUP-TWO-THIRDS",
+      "productionFile": "src/rules/production/KZ-FR-012-DAUGHTER-GROUP-TWO-THIRDS.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-012-DAUGHTER-GROUP-TWO-THIRDS",
+      "fixtureIds": [
+        "KZ-FR-012-DAUGHTER-GROUP-TWO-THIRDS-POS",
+        "KZ-FR-012-DAUGHTER-GROUP-TWO-THIRDS-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-012",
+      "sha256": "d592a53c94b9efaa3f5c10bec8422cef8be661470cade6bab060c9b12d8832e0"
+    },
+    {
+      "ruleId": "KZ-FR-012-ONE-DAUGHTER-ONE-HALF",
+      "productionFile": "src/rules/production/KZ-FR-012-ONE-DAUGHTER-ONE-HALF.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-012-ONE-DAUGHTER-ONE-HALF",
+      "fixtureIds": ["KZ-FR-012-ONE-DAUGHTER-ONE-HALF-POS", "KZ-FR-012-ONE-DAUGHTER-ONE-HALF-NEG"],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-012",
+      "sha256": "3da5cc43ceb42944705702fcf4a3ac30279c222833c63749cc5f744a2e83ac25"
+    },
+    {
+      "ruleId": "KZ-FR-012-SON-GROUP-RESIDUARY",
+      "productionFile": "src/rules/production/KZ-FR-012-SON-GROUP-RESIDUARY.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-012-SON-GROUP-RESIDUARY",
+      "fixtureIds": ["KZ-FR-012-SON-GROUP-RESIDUARY-POS", "KZ-FR-012-SON-GROUP-RESIDUARY-NEG"],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-012",
+      "sha256": "1a64e507a44cf31c0597f5d27b7f9b343cb4ecc1916c44add7dffd97f860b6a7"
+    },
+    {
+      "ruleId": "KZ-FR-012-SONS-AND-DAUGHTERS-TWO-TO-ONE",
+      "productionFile": "src/rules/production/KZ-FR-012-SONS-AND-DAUGHTERS-TWO-TO-ONE.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-012-SONS-AND-DAUGHTERS-TWO-TO-ONE",
+      "fixtureIds": [
+        "KZ-FR-012-SONS-AND-DAUGHTERS-TWO-TO-ONE-POS",
+        "KZ-FR-012-SONS-AND-DAUGHTERS-TWO-TO-ONE-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-012",
+      "sha256": "2f636551e5418bf6aee3e83fcac2d367e452162f65b694b4cada8762e10a2341"
+    },
+    {
+      "ruleId": "KZ-FR-014-FATHER-ONE-SIXTH",
+      "productionFile": "src/rules/production/KZ-FR-014-FATHER-ONE-SIXTH.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-014-FATHER-ONE-SIXTH",
+      "fixtureIds": ["KZ-FR-014-FATHER-ONE-SIXTH-POS", "KZ-FR-014-FATHER-ONE-SIXTH-NEG"],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-014",
+      "sha256": "f9cf1593d5cd06990ac7b39cbcdc4e012a2632f8204b67add1ab1ffa3414916f"
+    },
+    {
+      "ruleId": "KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE",
+      "productionFile": "src/rules/production/KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE",
+      "fixtureIds": [
+        "KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE-POS",
+        "KZ-FR-014-FATHER-ONE-SIXTH-PLUS-RESIDUE-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-014",
+      "sha256": "1213465ddda46fcc52e5937b9ce7d4ac12e27dee55d4de5227db15de18d97120"
+    },
+    {
+      "ruleId": "KZ-FR-014-FATHER-RESIDUARY",
+      "productionFile": "src/rules/production/KZ-FR-014-FATHER-RESIDUARY.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-014-FATHER-RESIDUARY",
+      "fixtureIds": ["KZ-FR-014-FATHER-RESIDUARY-POS", "KZ-FR-014-FATHER-RESIDUARY-NEG"],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-014",
+      "sha256": "3e4143745eab8d5c965609e9dbb997a666a219bca724e535a07eebcf62cc95a5"
+    },
+    {
+      "ruleId": "KZ-FR-015-HUSBAND-MOTHER-FATHER",
+      "productionFile": "src/rules/production/KZ-FR-015-HUSBAND-MOTHER-FATHER.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-015-HUSBAND-MOTHER-FATHER",
+      "fixtureIds": ["KZ-FR-015-HUSBAND-MOTHER-FATHER-POS", "KZ-FR-015-HUSBAND-MOTHER-FATHER-NEG"],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-015",
+      "sha256": "e92fa224fe366d0875f8438a289463da41a410641cbe08fa39b0804e9c96b006"
+    },
+    {
+      "ruleId": "KZ-FR-015-WIFE-MOTHER-FATHER",
+      "productionFile": "src/rules/production/KZ-FR-015-WIFE-MOTHER-FATHER.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-015-WIFE-MOTHER-FATHER",
+      "fixtureIds": ["KZ-FR-015-WIFE-MOTHER-FATHER-POS", "KZ-FR-015-WIFE-MOTHER-FATHER-NEG"],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-015",
+      "sha256": "f0c94d06dd2d17b0fae5be15e59194ac70ed9d0c76f1a4767193202aca82b172"
+    },
+    {
+      "ruleId": "KZ-FR-011-FATHER-BLOCKS-FULL-BROTHER",
+      "productionFile": "src/rules/production/KZ-FR-011-FATHER-BLOCKS-FULL-BROTHER.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-011-FATHER-BLOCKS-FULL-BROTHER",
+      "fixtureIds": [
+        "KZ-FR-011-FATHER-BLOCKS-FULL-BROTHER-POS",
+        "KZ-FR-011-FATHER-BLOCKS-FULL-BROTHER-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-011",
+      "sha256": "5d9b4e270e9b39cac3d63d09f64a78010a416ad3af762528df868e5e54f3b973"
+    },
+    {
+      "ruleId": "KZ-FR-011-FATHER-BLOCKS-MATERNAL-BROTHER",
+      "productionFile": "src/rules/production/KZ-FR-011-FATHER-BLOCKS-MATERNAL-BROTHER.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-011-FATHER-BLOCKS-MATERNAL-BROTHER",
+      "fixtureIds": [
+        "KZ-FR-011-FATHER-BLOCKS-MATERNAL-BROTHER-POS",
+        "KZ-FR-011-FATHER-BLOCKS-MATERNAL-BROTHER-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-011",
+      "sha256": "a0a4800fd50043b3aade78548b084ac68e2fa6a064ee1ba4fe3945b296e54c4b"
+    },
+    {
+      "ruleId": "KZ-FR-011-FATHER-BLOCKS-PATERNAL-BROTHER",
+      "productionFile": "src/rules/production/KZ-FR-011-FATHER-BLOCKS-PATERNAL-BROTHER.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-011-FATHER-BLOCKS-PATERNAL-BROTHER",
+      "fixtureIds": [
+        "KZ-FR-011-FATHER-BLOCKS-PATERNAL-BROTHER-POS",
+        "KZ-FR-011-FATHER-BLOCKS-PATERNAL-BROTHER-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-011",
+      "sha256": "b7f16534ca18acd3d27d1a09f2d877e493e4cf789d0a8f36ba756205386ad475"
+    },
+    {
+      "ruleId": "KZ-FR-011-FATHER-BLOCKS-PATERNAL-GRANDFATHER",
+      "productionFile": "src/rules/production/KZ-FR-011-FATHER-BLOCKS-PATERNAL-GRANDFATHER.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-011-FATHER-BLOCKS-PATERNAL-GRANDFATHER",
+      "fixtureIds": [
+        "KZ-FR-011-FATHER-BLOCKS-PATERNAL-GRANDFATHER-POS",
+        "KZ-FR-011-FATHER-BLOCKS-PATERNAL-GRANDFATHER-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-011",
+      "sha256": "f65675777cdb1543612d7474d629ba6d572cda1e81c8c7bdbf98a06839902264"
+    },
+    {
+      "ruleId": "KZ-FR-011-SON-BLOCKS-FULL-BROTHER",
+      "productionFile": "src/rules/production/KZ-FR-011-SON-BLOCKS-FULL-BROTHER.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-011-SON-BLOCKS-FULL-BROTHER",
+      "fixtureIds": [
+        "KZ-FR-011-SON-BLOCKS-FULL-BROTHER-POS",
+        "KZ-FR-011-SON-BLOCKS-FULL-BROTHER-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-011",
+      "sha256": "9361a02258d04f5933e4eabca057337320029d87186a1fde913da441bf047f6f"
+    },
+    {
+      "ruleId": "KZ-FR-011-SON-BLOCKS-MATERNAL-BROTHER",
+      "productionFile": "src/rules/production/KZ-FR-011-SON-BLOCKS-MATERNAL-BROTHER.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-011-SON-BLOCKS-MATERNAL-BROTHER",
+      "fixtureIds": [
+        "KZ-FR-011-SON-BLOCKS-MATERNAL-BROTHER-POS",
+        "KZ-FR-011-SON-BLOCKS-MATERNAL-BROTHER-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-011",
+      "sha256": "27d372c17e6918550d39df5936356b8f2a8f3216b633e260867659b15b9c0c5b"
+    },
+    {
+      "ruleId": "KZ-FR-011-SON-BLOCKS-PATERNAL-BROTHER",
+      "productionFile": "src/rules/production/KZ-FR-011-SON-BLOCKS-PATERNAL-BROTHER.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-011-SON-BLOCKS-PATERNAL-BROTHER",
+      "fixtureIds": [
+        "KZ-FR-011-SON-BLOCKS-PATERNAL-BROTHER-POS",
+        "KZ-FR-011-SON-BLOCKS-PATERNAL-BROTHER-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-011",
+      "sha256": "6359e002a5fd40a0d69b4801e16d14056798769ff4b15fa69d94b82e2c14bc0a"
+    },
+    {
+      "ruleId": "KZ-FR-011-SON-BLOCKS-SONS-SON",
+      "productionFile": "src/rules/production/KZ-FR-011-SON-BLOCKS-SONS-SON.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-011-SON-BLOCKS-SONS-SON",
+      "fixtureIds": ["KZ-FR-011-SON-BLOCKS-SONS-SON-POS", "KZ-FR-011-SON-BLOCKS-SONS-SON-NEG"],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-011",
+      "sha256": "816cb37e87d6b67aa545ffbaf50d3b2fbcbc8d79c40a3aac35cd8b075f85fd19"
+    },
+    {
+      "ruleId": "KZ-FR-029-MULTIPLE-CLASS-CORRECTION",
+      "productionFile": "src/rules/production/KZ-FR-029-MULTIPLE-CLASS-CORRECTION.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-029-MULTIPLE-CLASS-CORRECTION",
+      "fixtureIds": [
+        "KZ-FR-029-MULTIPLE-CLASS-CORRECTION-POS",
+        "KZ-FR-029-MULTIPLE-CLASS-CORRECTION-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-029",
+      "sha256": "95de05dd17925116c4b3a1a6f3068e5bc322868ab75d25262072dcce2f40eae8"
+    },
+    {
+      "ruleId": "KZ-FR-029-SINGLE-CLASS-CORRECTION",
+      "productionFile": "src/rules/production/KZ-FR-029-SINGLE-CLASS-CORRECTION.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-029-SINGLE-CLASS-CORRECTION",
+      "fixtureIds": [
+        "KZ-FR-029-SINGLE-CLASS-CORRECTION-POS",
+        "KZ-FR-029-SINGLE-CLASS-CORRECTION-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-029",
+      "sha256": "35bc51c887d495d5b3db76a20fc014eac357822d774188df30ec8c0dd8265c82"
+    },
+    {
+      "ruleId": "KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER",
+      "productionFile": "src/rules/production/KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER",
+      "fixtureIds": [
+        "KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER-POS-TWO-WIVES",
+        "KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER-POS-FOUR-WIVES",
+        "KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER-NEG-ONE-WIFE",
+        "KZ-FR-015-MULTIPLE-WIVES-MOTHER-FATHER-NEG-ADDITIONAL-HEIR"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-015-MULTIPLE-WIVES-UMARIYYATAYN",
+      "sha256": "a5636e21319f33f666c9df6278c82191aca1accac41490fca1c2e0a59cc964bf"
+    },
+    {
+      "ruleId": "KZ-FR-027-ORIGINAL-ASL",
+      "productionFile": "src/rules/production/KZ-FR-027-ORIGINAL-ASL.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-027-ORIGINAL-ASL",
+      "fixtureIds": [
+        "KZ-FR-027-ORIGINAL-ASL-SOURCE-SEVEN-ORIGINS",
+        "KZ-FR-027-ORIGINAL-ASL-POS-LCM-SIX",
+        "KZ-FR-027-ORIGINAL-ASL-POS-LCM-TWENTY-FOUR",
+        "KZ-FR-027-ORIGINAL-ASL-NEG-UNLISTED-FIVE"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-027",
+      "sha256": "40a388bcc5caad08e76456f0f0911b96736d2b11eab5e62257632a9bc7f890af"
+    },
+    {
+      "ruleId": "KZ-FR-028-AWL-ADJUSTMENT",
+      "productionFile": "src/rules/production/KZ-FR-028-AWL-ADJUSTMENT.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-028-AWL-ADJUSTMENT",
+      "fixtureIds": [
+        "KZ-FR-028-AWL-ADJUSTMENT-SOURCE-6-TO-7",
+        "KZ-FR-028-AWL-ADJUSTMENT-SOURCE-6-TO-8",
+        "KZ-FR-028-AWL-ADJUSTMENT-SOURCE-6-TO-9",
+        "KZ-FR-028-AWL-ADJUSTMENT-SOURCE-6-TO-10",
+        "KZ-FR-028-AWL-ADJUSTMENT-SOURCE-12-TO-13",
+        "KZ-FR-028-AWL-ADJUSTMENT-SOURCE-12-TO-15",
+        "KZ-FR-028-AWL-ADJUSTMENT-SOURCE-12-TO-17",
+        "KZ-FR-028-AWL-ADJUSTMENT-SOURCE-24-TO-27",
+        "KZ-FR-028-AWL-ADJUSTMENT-NEG-NO-EXCESS",
+        "KZ-FR-028-AWL-ADJUSTMENT-NEG-UNLISTED-ENDPOINT"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-028",
+      "sha256": "24059bb35dbf62c8b58968f023328439e9fd630102bdc59ccd2d57a5c344a371"
+    },
+    {
+      "ruleId": "KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS",
+      "productionFile": "src/rules/production/KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS",
+      "fixtureIds": [
+        "KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS-POS",
+        "KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-010-MOTHER-SIBLINGS-UNBLOCKED-SUBSET",
+      "sha256": "c36b6028bf76dec67bf44b7d3b0bc706c630fe0fe7f52a6bb2e6c8751926e654"
+    },
+    {
+      "ruleId": "KZ-FR-005-ONE-SONS-DAUGHTER-ONE-HALF",
+      "productionFile": "src/rules/production/KZ-FR-005-ONE-SONS-DAUGHTER-ONE-HALF.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-005-ONE-SONS-DAUGHTER-ONE-HALF",
+      "fixtureIds": [
+        "KZ-FR-005-ONE-SONS-DAUGHTER-ONE-HALF-POS",
+        "KZ-FR-005-ONE-SONS-DAUGHTER-ONE-HALF-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
+      "sha256": "9257fd4eb39ee041747ec67cfe60a6096a1eb3c2b90151b4a65a3382fef80d08"
+    },
+    {
+      "ruleId": "KZ-FR-008-SONS-DAUGHTER-GROUP-TWO-THIRDS",
+      "productionFile": "src/rules/production/KZ-FR-008-SONS-DAUGHTER-GROUP-TWO-THIRDS.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-008-SONS-DAUGHTER-GROUP-TWO-THIRDS",
+      "fixtureIds": [
+        "KZ-FR-008-SONS-DAUGHTER-GROUP-TWO-THIRDS-POS",
+        "KZ-FR-008-SONS-DAUGHTER-GROUP-TWO-THIRDS-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
+      "sha256": "994e1190c2d09b176bb1abea823c886ae14c24baf5b1c72669930fd3905d1f62"
+    },
+    {
+      "ruleId": "KZ-FR-010-ONE-SONS-DAUGHTER-WITH-DAUGHTER-ONE-SIXTH",
+      "productionFile": "src/rules/production/KZ-FR-010-ONE-SONS-DAUGHTER-WITH-DAUGHTER-ONE-SIXTH.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-010-ONE-SONS-DAUGHTER-WITH-DAUGHTER-ONE-SIXTH",
+      "fixtureIds": [
+        "KZ-FR-010-ONE-SONS-DAUGHTER-WITH-DAUGHTER-ONE-SIXTH-POS",
+        "KZ-FR-010-ONE-SONS-DAUGHTER-WITH-DAUGHTER-ONE-SIXTH-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
+      "sha256": "c0617009bf9f988ef19fdd155f3e2c10ba8e13ca119ce1c4040a96bcb15db475"
+    },
+    {
+      "ruleId": "KZ-FR-010-ONE-UTERINE-SIBLING-ONE-SIXTH",
+      "productionFile": "src/rules/production/KZ-FR-010-ONE-UTERINE-SIBLING-ONE-SIXTH.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-010-ONE-UTERINE-SIBLING-ONE-SIXTH",
+      "fixtureIds": [
+        "KZ-FR-010-ONE-UTERINE-SIBLING-ONE-SIXTH-POS",
+        "KZ-FR-010-ONE-UTERINE-SIBLING-ONE-SIXTH-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
+      "sha256": "cbdd3d671b6748f389ab6d5447753050bc547cc69490aefcf081368db4cf38ca"
+    },
+    {
+      "ruleId": "KZ-FR-009-UTERINE-SIBLING-GROUP-ONE-THIRD",
+      "productionFile": "src/rules/production/KZ-FR-009-UTERINE-SIBLING-GROUP-ONE-THIRD.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-009-UTERINE-SIBLING-GROUP-ONE-THIRD",
+      "fixtureIds": [
+        "KZ-FR-009-UTERINE-SIBLING-GROUP-ONE-THIRD-POS",
+        "KZ-FR-009-UTERINE-SIBLING-GROUP-ONE-THIRD-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
+      "sha256": "d4da96197aa54e6bb710648bd589858a3b28f1ce4d54c56eb9fcc14e9bf1b00b"
+    },
+    {
+      "ruleId": "KZ-FR-005-ONE-FULL-SISTER-ONE-HALF",
+      "productionFile": "src/rules/production/KZ-FR-005-ONE-FULL-SISTER-ONE-HALF.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-005-ONE-FULL-SISTER-ONE-HALF",
+      "fixtureIds": [
+        "KZ-FR-005-ONE-FULL-SISTER-ONE-HALF-POS",
+        "KZ-FR-005-ONE-FULL-SISTER-ONE-HALF-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
+      "sha256": "5604ae86d362e37d33fcd0c1bc08b7d336a9b83e68980f54bb86a50fbb0dfb13"
+    },
+    {
+      "ruleId": "KZ-FR-008-FULL-SISTER-GROUP-TWO-THIRDS",
+      "productionFile": "src/rules/production/KZ-FR-008-FULL-SISTER-GROUP-TWO-THIRDS.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-008-FULL-SISTER-GROUP-TWO-THIRDS",
+      "fixtureIds": [
+        "KZ-FR-008-FULL-SISTER-GROUP-TWO-THIRDS-POS",
+        "KZ-FR-008-FULL-SISTER-GROUP-TWO-THIRDS-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
+      "sha256": "ca911091a597cf89ddc42da2d9ae290141c8bc05e6eae6915e92ca79566eff8e"
+    },
+    {
+      "ruleId": "KZ-FR-005-ONE-PATERNAL-SISTER-ONE-HALF",
+      "productionFile": "src/rules/production/KZ-FR-005-ONE-PATERNAL-SISTER-ONE-HALF.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-005-ONE-PATERNAL-SISTER-ONE-HALF",
+      "fixtureIds": [
+        "KZ-FR-005-ONE-PATERNAL-SISTER-ONE-HALF-POS",
+        "KZ-FR-005-ONE-PATERNAL-SISTER-ONE-HALF-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
+      "sha256": "3e0e14fb173eec9f8c98ce9f16a11c583d97fa249795df13befa7485906e350c"
+    },
+    {
+      "ruleId": "KZ-FR-008-PATERNAL-SISTER-GROUP-TWO-THIRDS",
+      "productionFile": "src/rules/production/KZ-FR-008-PATERNAL-SISTER-GROUP-TWO-THIRDS.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-008-PATERNAL-SISTER-GROUP-TWO-THIRDS",
+      "fixtureIds": [
+        "KZ-FR-008-PATERNAL-SISTER-GROUP-TWO-THIRDS-POS",
+        "KZ-FR-008-PATERNAL-SISTER-GROUP-TWO-THIRDS-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
+      "sha256": "5a0238715f68ddafcc643b444422f345fe457d696529b97848a670e77fe66950"
+    },
+    {
+      "ruleId": "KZ-FR-010-ONE-PATERNAL-SISTER-WITH-FULL-SISTER-ONE-SIXTH",
+      "productionFile": "src/rules/production/KZ-FR-010-ONE-PATERNAL-SISTER-WITH-FULL-SISTER-ONE-SIXTH.ts",
+      "admissionRecordId": "ADMISSION-20260809-KZ-FR-010-ONE-PATERNAL-SISTER-WITH-FULL-SISTER-ONE-SIXTH",
+      "fixtureIds": [
+        "KZ-FR-010-ONE-PATERNAL-SISTER-WITH-FULL-SISTER-ONE-SIXTH-POS",
+        "KZ-FR-010-ONE-PATERNAL-SISTER-WITH-FULL-SISTER-ONE-SIXTH-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260809-EXTENDED-ORDINARY-FIXED-SHARES",
+      "sha256": "d63c501d51c64f0f9484e3932748951c57dd27f75f8586a479d16af4588f79b9"
+    },
+    {
+      "ruleId": "KZ-FR-013-DAUGHTER-GROUP-BLOCKS-SONS-DAUGHTER",
+      "productionFile": "src/rules/production/KZ-FR-013-DAUGHTER-GROUP-BLOCKS-SONS-DAUGHTER.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-013-DAUGHTER-GROUP-BLOCKS-SONS-DAUGHTER",
+      "fixtureIds": [
+        "KZ-FR-013-DAUGHTER-GROUP-BLOCKS-SONS-DAUGHTER-POS",
+        "KZ-FR-013-DAUGHTER-GROUP-BLOCKS-SONS-DAUGHTER-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "11105a13e4176a453feb512a5c27eaa63404e0a27282402bdb7f595c1ed5f3ba"
+    },
+    {
+      "ruleId": "KZ-FR-013-SON-BLOCKS-SONS-DAUGHTER",
+      "productionFile": "src/rules/production/KZ-FR-013-SON-BLOCKS-SONS-DAUGHTER.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-013-SON-BLOCKS-SONS-DAUGHTER",
+      "fixtureIds": [
+        "KZ-FR-013-SON-BLOCKS-SONS-DAUGHTER-POS",
+        "KZ-FR-013-SON-BLOCKS-SONS-DAUGHTER-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "b167b2e3ac802f530058af9fa178bda4d9da0f63566703a26b02a9b2e9ddbbd1"
+    },
+    {
+      "ruleId": "KZ-FR-013-SONS-DAUGHTER-GROUP-WITH-DAUGHTER-ONE-SIXTH",
+      "productionFile": "src/rules/production/KZ-FR-013-SONS-DAUGHTER-GROUP-WITH-DAUGHTER-ONE-SIXTH.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-013-SONS-DAUGHTER-GROUP-WITH-DAUGHTER-ONE-SIXTH",
+      "fixtureIds": [
+        "KZ-FR-013-SONS-DAUGHTER-GROUP-WITH-DAUGHTER-ONE-SIXTH-POS",
+        "KZ-FR-013-SONS-DAUGHTER-GROUP-WITH-DAUGHTER-ONE-SIXTH-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "dd65ff2575202fb03d8e6e61d67ec33dcc266a39757aede6c82ca75ff566031b"
+    },
+    {
+      "ruleId": "KZ-FR-013-SONS-SON-GROUP-RESIDUARY",
+      "productionFile": "src/rules/production/KZ-FR-013-SONS-SON-GROUP-RESIDUARY.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-013-SONS-SON-GROUP-RESIDUARY",
+      "fixtureIds": [
+        "KZ-FR-013-SONS-SON-GROUP-RESIDUARY-POS",
+        "KZ-FR-013-SONS-SON-GROUP-RESIDUARY-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "e1ba7ab76bb76bb70abd1388a1e0b46bf4555072ceb6e39bfd3faca4627568dd"
+    },
+    {
+      "ruleId": "KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE",
+      "productionFile": "src/rules/production/KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE",
+      "fixtureIds": [
+        "KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE-POS",
+        "KZ-FR-013-SONS-SONS-AND-DAUGHTERS-TWO-TO-ONE-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "9e54383b3a6d531e82795bb0112ee6ff677a730496b90337200c4d0ea4b4ce48"
+    },
+    {
+      "ruleId": "KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH",
+      "productionFile": "src/rules/production/KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH",
+      "fixtureIds": [
+        "KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH-POS",
+        "KZ-FR-017-ELIGIBLE-GRANDMOTHER-GROUP-ONE-SIXTH-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "f41b77f554f321881fe44de9f47977739f1aee3cb3b051c12b7c45800b3b6b0b"
+    },
+    {
+      "ruleId": "KZ-FR-017-FATHER-BLOCKS-PATERNAL-GRANDMOTHER",
+      "productionFile": "src/rules/production/KZ-FR-017-FATHER-BLOCKS-PATERNAL-GRANDMOTHER.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-017-FATHER-BLOCKS-PATERNAL-GRANDMOTHER",
+      "fixtureIds": [
+        "KZ-FR-017-FATHER-BLOCKS-PATERNAL-GRANDMOTHER-POS",
+        "KZ-FR-017-FATHER-BLOCKS-PATERNAL-GRANDMOTHER-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "fd6bdf19769a8066e9c4ee0b2b4ce519645e18fd172e52257d0700b5069f5142"
+    },
+    {
+      "ruleId": "KZ-FR-017-MOTHER-BLOCKS-GRANDMOTHER-GROUP",
+      "productionFile": "src/rules/production/KZ-FR-017-MOTHER-BLOCKS-GRANDMOTHER-GROUP.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-017-MOTHER-BLOCKS-GRANDMOTHER-GROUP",
+      "fixtureIds": [
+        "KZ-FR-017-MOTHER-BLOCKS-GRANDMOTHER-GROUP-POS",
+        "KZ-FR-017-MOTHER-BLOCKS-GRANDMOTHER-GROUP-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "723fa01d8432a479c0f73395b20dde6de0716c708bd1204e436fe3ba7a0d2f8a"
+    },
+    {
+      "ruleId": "KZ-FR-019-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP",
+      "productionFile": "src/rules/production/KZ-FR-019-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP",
+      "fixtureIds": [
+        "KZ-FR-019-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP-POS",
+        "KZ-FR-019-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "abd513fcd4f9f278bb3538bd2f4fad1ca51a5c6a3796b1cb27f8ab0d3093c2d7"
+    },
+    {
+      "ruleId": "KZ-FR-019-FATHER-BLOCKS-MATERNAL-SISTER",
+      "productionFile": "src/rules/production/KZ-FR-019-FATHER-BLOCKS-MATERNAL-SISTER.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-FATHER-BLOCKS-MATERNAL-SISTER",
+      "fixtureIds": [
+        "KZ-FR-019-FATHER-BLOCKS-MATERNAL-SISTER-POS",
+        "KZ-FR-019-FATHER-BLOCKS-MATERNAL-SISTER-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "5746a1c52c133ba0b33156ae49e9a8ae8b1f6c2c72d4a8db3f84ef2bfb001efd"
+    },
+    {
+      "ruleId": "KZ-FR-019-FATHER-BLOCKS-SISTER-GROUP",
+      "productionFile": "src/rules/production/KZ-FR-019-FATHER-BLOCKS-SISTER-GROUP.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-FATHER-BLOCKS-SISTER-GROUP",
+      "fixtureIds": [
+        "KZ-FR-019-FATHER-BLOCKS-SISTER-GROUP-POS",
+        "KZ-FR-019-FATHER-BLOCKS-SISTER-GROUP-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "80a2c5940a23920c70c0c463e920cf02105c91981aacf4d9f77c58e7b7a80658"
+    },
+    {
+      "ruleId": "KZ-FR-019-FULL-BROTHER-BLOCKS-PATERNAL-SIBLING-GROUP",
+      "productionFile": "src/rules/production/KZ-FR-019-FULL-BROTHER-BLOCKS-PATERNAL-SIBLING-GROUP.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-FULL-BROTHER-BLOCKS-PATERNAL-SIBLING-GROUP",
+      "fixtureIds": [
+        "KZ-FR-019-FULL-BROTHER-BLOCKS-PATERNAL-SIBLING-GROUP-POS",
+        "KZ-FR-019-FULL-BROTHER-BLOCKS-PATERNAL-SIBLING-GROUP-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "796e36f02b2e82f555f46f2ee26a217527ef07d934baa2183a552ef87fa18efb"
+    },
+    {
+      "ruleId": "KZ-FR-019-FULL-BROTHER-RESIDUARY",
+      "productionFile": "src/rules/production/KZ-FR-019-FULL-BROTHER-RESIDUARY.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-FULL-BROTHER-RESIDUARY",
+      "fixtureIds": [
+        "KZ-FR-019-FULL-BROTHER-RESIDUARY-POS",
+        "KZ-FR-019-FULL-BROTHER-RESIDUARY-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "b4b05b23c11e6cd5b2fa8ebeec5ec4380000665c1956121f195d463790f34e6b"
+    },
+    {
+      "ruleId": "KZ-FR-019-FULL-SIBLINGS-TWO-TO-ONE",
+      "productionFile": "src/rules/production/KZ-FR-019-FULL-SIBLINGS-TWO-TO-ONE.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-FULL-SIBLINGS-TWO-TO-ONE",
+      "fixtureIds": [
+        "KZ-FR-019-FULL-SIBLINGS-TWO-TO-ONE-POS",
+        "KZ-FR-019-FULL-SIBLINGS-TWO-TO-ONE-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "7b69e4e7d12863050b5e01daee959ce3a11ef6cbf036f25c8a683265637fc409"
+    },
+    {
+      "ruleId": "KZ-FR-019-FULL-SISTER-GROUP-BLOCKS-PATERNAL-SISTER",
+      "productionFile": "src/rules/production/KZ-FR-019-FULL-SISTER-GROUP-BLOCKS-PATERNAL-SISTER.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-FULL-SISTER-GROUP-BLOCKS-PATERNAL-SISTER",
+      "fixtureIds": [
+        "KZ-FR-019-FULL-SISTER-GROUP-BLOCKS-PATERNAL-SISTER-POS",
+        "KZ-FR-019-FULL-SISTER-GROUP-BLOCKS-PATERNAL-SISTER-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "80ab94a0625ff8809cc559e7439b1ef06a742d55b632744b62aba69788551026"
+    },
+    {
+      "ruleId": "KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-BLOCKS-PATERNAL-SIBLINGS",
+      "productionFile": "src/rules/production/KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-BLOCKS-PATERNAL-SIBLINGS.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-BLOCKS-PATERNAL-SIBLINGS",
+      "fixtureIds": [
+        "KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-BLOCKS-PATERNAL-SIBLINGS-POS",
+        "KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-BLOCKS-PATERNAL-SIBLINGS-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "9820ac19e51b3cb611838676d922052d175788e5a241a1b02a6075b00ca8c22b"
+    },
+    {
+      "ruleId": "KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY",
+      "productionFile": "src/rules/production/KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY",
+      "fixtureIds": [
+        "KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY-POS",
+        "KZ-FR-019-FULL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "f985630a71091d02d9f29d0f7a30e901ff17285943351e290eab87ac681eb6ac"
+    },
+    {
+      "ruleId": "KZ-FR-019-MIXED-UTERINE-SIBLING-GROUP-ONE-THIRD-EQUAL",
+      "productionFile": "src/rules/production/KZ-FR-019-MIXED-UTERINE-SIBLING-GROUP-ONE-THIRD-EQUAL.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-MIXED-UTERINE-SIBLING-GROUP-ONE-THIRD-EQUAL",
+      "fixtureIds": [
+        "KZ-FR-019-MIXED-UTERINE-SIBLING-GROUP-ONE-THIRD-EQUAL-POS",
+        "KZ-FR-019-MIXED-UTERINE-SIBLING-GROUP-ONE-THIRD-EQUAL-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "08c3b9fbaaeee2ac07ca645b831b62c6c087cdb3200929b287cbc2d4425f2048"
+    },
+    {
+      "ruleId": "KZ-FR-019-PATERNAL-BROTHER-RESIDUARY",
+      "productionFile": "src/rules/production/KZ-FR-019-PATERNAL-BROTHER-RESIDUARY.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-PATERNAL-BROTHER-RESIDUARY",
+      "fixtureIds": [
+        "KZ-FR-019-PATERNAL-BROTHER-RESIDUARY-POS",
+        "KZ-FR-019-PATERNAL-BROTHER-RESIDUARY-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "fee100e2261a75f462ddced931c5dbfb5bdf1dedeaa1ef53e670b5a34782e320"
+    },
+    {
+      "ruleId": "KZ-FR-019-PATERNAL-SIBLINGS-TWO-TO-ONE",
+      "productionFile": "src/rules/production/KZ-FR-019-PATERNAL-SIBLINGS-TWO-TO-ONE.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-PATERNAL-SIBLINGS-TWO-TO-ONE",
+      "fixtureIds": [
+        "KZ-FR-019-PATERNAL-SIBLINGS-TWO-TO-ONE-POS",
+        "KZ-FR-019-PATERNAL-SIBLINGS-TWO-TO-ONE-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "ea51e7609e10b401042889d7a4c361db8667fc0c24a549ef7380537bdcf855ce"
+    },
+    {
+      "ruleId": "KZ-FR-019-PATERNAL-SISTER-GROUP-WITH-FULL-SISTER-ONE-SIXTH",
+      "productionFile": "src/rules/production/KZ-FR-019-PATERNAL-SISTER-GROUP-WITH-FULL-SISTER-ONE-SIXTH.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-PATERNAL-SISTER-GROUP-WITH-FULL-SISTER-ONE-SIXTH",
+      "fixtureIds": [
+        "KZ-FR-019-PATERNAL-SISTER-GROUP-WITH-FULL-SISTER-ONE-SIXTH-POS",
+        "KZ-FR-019-PATERNAL-SISTER-GROUP-WITH-FULL-SISTER-ONE-SIXTH-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "e0fd3cc78630685fb59d33a3c7e415b9ff1f4691d10f8a3adb017a536729100e"
+    },
+    {
+      "ruleId": "KZ-FR-019-PATERNAL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY",
+      "productionFile": "src/rules/production/KZ-FR-019-PATERNAL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-PATERNAL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY",
+      "fixtureIds": [
+        "KZ-FR-019-PATERNAL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY-POS",
+        "KZ-FR-019-PATERNAL-SISTER-WITH-FEMALE-DESCENDANT-RESIDUARY-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "a712d4d0baafbb8d6e7bfcf537828682ebfe7cfb7f6d04764cfe3d57b7911661"
+    },
+    {
+      "ruleId": "KZ-FR-019-SON-BLOCKS-MATERNAL-SISTER",
+      "productionFile": "src/rules/production/KZ-FR-019-SON-BLOCKS-MATERNAL-SISTER.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-SON-BLOCKS-MATERNAL-SISTER",
+      "fixtureIds": [
+        "KZ-FR-019-SON-BLOCKS-MATERNAL-SISTER-POS",
+        "KZ-FR-019-SON-BLOCKS-MATERNAL-SISTER-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "fe2d41c1e06611f833b70d12bc2b3304ca223b32efd290c59c7be4badc0eb079"
+    },
+    {
+      "ruleId": "KZ-FR-019-SON-BLOCKS-SISTER-GROUP",
+      "productionFile": "src/rules/production/KZ-FR-019-SON-BLOCKS-SISTER-GROUP.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-SON-BLOCKS-SISTER-GROUP",
+      "fixtureIds": [
+        "KZ-FR-019-SON-BLOCKS-SISTER-GROUP-POS",
+        "KZ-FR-019-SON-BLOCKS-SISTER-GROUP-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "a192490c4019b2915587ffeb5b3d47e27f0137cee12fcd9d526ed1f83e6f94f3"
+    },
+    {
+      "ruleId": "KZ-FR-019-SONS-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP",
+      "productionFile": "src/rules/production/KZ-FR-019-SONS-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-SONS-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP",
+      "fixtureIds": [
+        "KZ-FR-019-SONS-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP-POS",
+        "KZ-FR-019-SONS-DAUGHTER-BLOCKS-UTERINE-SIBLING-GROUP-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "348bc79cfeb927b4c10c668fd16773319af3249a7c3bde4ab93acfd397282410"
+    },
+    {
+      "ruleId": "KZ-FR-019-SONS-SON-BLOCKS-FULL-PATERNAL-SIBLINGS",
+      "productionFile": "src/rules/production/KZ-FR-019-SONS-SON-BLOCKS-FULL-PATERNAL-SIBLINGS.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-SONS-SON-BLOCKS-FULL-PATERNAL-SIBLINGS",
+      "fixtureIds": [
+        "KZ-FR-019-SONS-SON-BLOCKS-FULL-PATERNAL-SIBLINGS-POS",
+        "KZ-FR-019-SONS-SON-BLOCKS-FULL-PATERNAL-SIBLINGS-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "cd36509189df4592da1baa15060281670e3361747e1ab9b5399f9cb718f9f319"
+    },
+    {
+      "ruleId": "KZ-FR-019-SONS-SON-BLOCKS-UTERINE-SIBLING-GROUP",
+      "productionFile": "src/rules/production/KZ-FR-019-SONS-SON-BLOCKS-UTERINE-SIBLING-GROUP.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-SONS-SON-BLOCKS-UTERINE-SIBLING-GROUP",
+      "fixtureIds": [
+        "KZ-FR-019-SONS-SON-BLOCKS-UTERINE-SIBLING-GROUP-POS",
+        "KZ-FR-019-SONS-SON-BLOCKS-UTERINE-SIBLING-GROUP-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-ORDINARY-HEIRS",
+      "sha256": "b415e4c67f821a204175eb7ee507858787531a16cbbc9eb492abddab64d7d2b2"
+    },
+    {
+      "ruleId": "KZ-FR-016-PATERNAL-GRANDFATHER-BLOCKS-UTERINE-SIBLING-GROUP",
+      "productionFile": "src/rules/production/KZ-FR-016-PATERNAL-GRANDFATHER-BLOCKS-UTERINE-SIBLING-GROUP.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-016-PATERNAL-GRANDFATHER-BLOCKS-UTERINE-SIBLING-GROUP",
+      "fixtureIds": [
+        "KZ-FR-016-PATERNAL-GRANDFATHER-BLOCKS-UTERINE-SIBLING-GROUP-POS",
+        "KZ-FR-016-PATERNAL-GRANDFATHER-BLOCKS-UTERINE-SIBLING-GROUP-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-ADVANCED-SHAFII-INHERITANCE",
+      "sha256": "722ffaf850037bc385d7056cc2687e5c3854b4bbff3804fccf63a2b884849355"
+    },
+    {
+      "ruleId": "KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS-RESIDUE",
+      "productionFile": "src/rules/production/KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS-RESIDUE.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS-RESIDUE",
+      "fixtureIds": [
+        "KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS-RESIDUE-POS",
+        "KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-PLUS-RESIDUE-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-ADVANCED-SHAFII-INHERITANCE",
+      "sha256": "c5f5c5a925efcedca49c143266eeb36aea4a261b1b11557af25a520458151cbd"
+    },
+    {
+      "ruleId": "KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH",
+      "productionFile": "src/rules/production/KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH",
+      "fixtureIds": [
+        "KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-POS",
+        "KZ-FR-016-PATERNAL-GRANDFATHER-ONE-SIXTH-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-ADVANCED-SHAFII-INHERITANCE",
+      "sha256": "1ad09c149cedc454e71b17a8545ead29a2ed78559103da8c092e241414644071"
+    },
+    {
+      "ruleId": "KZ-FR-016-PATERNAL-GRANDFATHER-RESIDUARY",
+      "productionFile": "src/rules/production/KZ-FR-016-PATERNAL-GRANDFATHER-RESIDUARY.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-016-PATERNAL-GRANDFATHER-RESIDUARY",
+      "fixtureIds": [
+        "KZ-FR-016-PATERNAL-GRANDFATHER-RESIDUARY-POS",
+        "KZ-FR-016-PATERNAL-GRANDFATHER-RESIDUARY-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-ADVANCED-SHAFII-INHERITANCE",
+      "sha256": "b84dc1127af658b131b3637ac259919cbb2fdfd78d11ecd3ac004dea2e9083f3"
+    },
+    {
+      "ruleId": "KZ-FR-018-MUSHTARAKA-CANONICAL",
+      "productionFile": "src/rules/production/KZ-FR-018-MUSHTARAKA-CANONICAL.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-018-MUSHTARAKA-CANONICAL",
+      "fixtureIds": ["KZ-FR-018-MUSHTARAKA-CANONICAL-POS", "KZ-FR-018-MUSHTARAKA-CANONICAL-NEG"],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-ADVANCED-SHAFII-INHERITANCE",
+      "sha256": "94911c0e6276d186589306b6f1c34559d8f70666b3a28001193bd4a96249ee6a"
+    },
+    {
+      "ruleId": "KZ-FR-020-GRANDFATHER-SIBLING-RESIDUE-DISTRIBUTION",
+      "productionFile": "src/rules/production/KZ-FR-020-GRANDFATHER-SIBLING-RESIDUE-DISTRIBUTION.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-020-GRANDFATHER-SIBLING-RESIDUE-DISTRIBUTION",
+      "fixtureIds": [
+        "KZ-FR-020-GRANDFATHER-SIBLING-RESIDUE-DISTRIBUTION-POS",
+        "KZ-FR-020-GRANDFATHER-SIBLING-RESIDUE-DISTRIBUTION-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-ADVANCED-SHAFII-INHERITANCE",
+      "sha256": "86932564770293176e79e89b32995579fe62007240bbe77999d109982e3d91fb"
+    },
+    {
+      "ruleId": "KZ-FR-020-GRANDFATHER-SIBLINGS-NO-FIXED-SHARE-COMPARISON",
+      "productionFile": "src/rules/production/KZ-FR-020-GRANDFATHER-SIBLINGS-NO-FIXED-SHARE-COMPARISON.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-020-GRANDFATHER-SIBLINGS-NO-FIXED-SHARE-COMPARISON",
+      "fixtureIds": [
+        "KZ-FR-020-GRANDFATHER-SIBLINGS-NO-FIXED-SHARE-COMPARISON-POS",
+        "KZ-FR-020-GRANDFATHER-SIBLINGS-NO-FIXED-SHARE-COMPARISON-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-ADVANCED-SHAFII-INHERITANCE",
+      "sha256": "935e67cc020865334de8db7ce36eac0b85e4a00e29d7760296e3af019c3200bc"
+    },
+    {
+      "ruleId": "KZ-FR-020-GRANDFATHER-SIBLINGS-WITH-FIXED-SHARE-COMPARISON",
+      "productionFile": "src/rules/production/KZ-FR-020-GRANDFATHER-SIBLINGS-WITH-FIXED-SHARE-COMPARISON.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-020-GRANDFATHER-SIBLINGS-WITH-FIXED-SHARE-COMPARISON",
+      "fixtureIds": [
+        "KZ-FR-020-GRANDFATHER-SIBLINGS-WITH-FIXED-SHARE-COMPARISON-POS",
+        "KZ-FR-020-GRANDFATHER-SIBLINGS-WITH-FIXED-SHARE-COMPARISON-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-ADVANCED-SHAFII-INHERITANCE",
+      "sha256": "2a20ffc2c967d7c10f59e30b117201c210447632aabf3ddb9500d59105c4559b"
+    },
+    {
+      "ruleId": "KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION",
+      "productionFile": "src/rules/production/KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION",
+      "fixtureIds": [
+        "KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION-POS",
+        "KZ-FR-021-GRANDFATHER-ONE-SIXTH-EXHAUSTION-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-ADVANCED-SHAFII-INHERITANCE",
+      "sha256": "619bd0edc7422e41f1dd963082bccc351c31fd97f524cb9437a391e801c2ca32"
+    },
+    {
+      "ruleId": "KZ-FR-022-MUADDA-FULL-MALE-LINE",
+      "productionFile": "src/rules/production/KZ-FR-022-MUADDA-FULL-MALE-LINE.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-022-MUADDA-FULL-MALE-LINE",
+      "fixtureIds": ["KZ-FR-022-MUADDA-FULL-MALE-LINE-POS", "KZ-FR-022-MUADDA-FULL-MALE-LINE-NEG"],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-ADVANCED-SHAFII-INHERITANCE",
+      "sha256": "4085f98a930782934668b6db6abf08693b88239bdf190bab08e509453639375b"
+    },
+    {
+      "ruleId": "KZ-FR-022-MUADDA-ONE-FULL-SISTER-WORKED-BRANCH",
+      "productionFile": "src/rules/production/KZ-FR-022-MUADDA-ONE-FULL-SISTER-WORKED-BRANCH.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-022-MUADDA-ONE-FULL-SISTER-WORKED-BRANCH",
+      "fixtureIds": [
+        "KZ-FR-022-MUADDA-ONE-FULL-SISTER-WORKED-BRANCH-POS",
+        "KZ-FR-022-MUADDA-ONE-FULL-SISTER-WORKED-BRANCH-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-SHAFII-GAPS",
+      "sha256": "18d96a6f0b029c73536a3e9afea182dc389e5ece901fd76d1b57af012dc8556c"
+    },
+    {
+      "ruleId": "KZ-FR-022-MUADDA-TWO-FULL-SISTERS-WORKED-BRANCH",
+      "productionFile": "src/rules/production/KZ-FR-022-MUADDA-TWO-FULL-SISTERS-WORKED-BRANCH.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-022-MUADDA-TWO-FULL-SISTERS-WORKED-BRANCH",
+      "fixtureIds": [
+        "KZ-FR-022-MUADDA-TWO-FULL-SISTERS-WORKED-BRANCH-POS",
+        "KZ-FR-022-MUADDA-TWO-FULL-SISTERS-WORKED-BRANCH-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-REMAINING-SHAFII-GAPS",
+      "sha256": "3eb35da0bf3f22964c9379afe8168999d781eb29214779cce144469558132420"
+    },
+    {
+      "ruleId": "KZ-FR-023-AKDARIYYA-FULL-SISTER",
+      "productionFile": "src/rules/production/KZ-FR-023-AKDARIYYA-FULL-SISTER.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-023-AKDARIYYA-FULL-SISTER",
+      "fixtureIds": ["KZ-FR-023-AKDARIYYA-FULL-SISTER-POS", "KZ-FR-023-AKDARIYYA-FULL-SISTER-NEG"],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-ADVANCED-SHAFII-INHERITANCE",
+      "sha256": "412b0b82c520d56b934350329b85e03d0e5408dfc7a2a3f9f3a5a03a85fe02ea"
+    },
+    {
+      "ruleId": "KZ-FR-023-AKDARIYYA-PATERNAL-SISTER",
+      "productionFile": "src/rules/production/KZ-FR-023-AKDARIYYA-PATERNAL-SISTER.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-023-AKDARIYYA-PATERNAL-SISTER",
+      "fixtureIds": [
+        "KZ-FR-023-AKDARIYYA-PATERNAL-SISTER-POS",
+        "KZ-FR-023-AKDARIYYA-PATERNAL-SISTER-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-ADVANCED-SHAFII-INHERITANCE",
+      "sha256": "963017f1c5652d7f08304f89b88c0732e8b802cf8789cb25b13cd41c98257ef4"
+    },
+    {
+      "ruleId": "KZ-FR-002-EMANCIPATOR-RESIDUARY",
+      "productionFile": "src/rules/production/KZ-FR-002-EMANCIPATOR-RESIDUARY.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-002-EMANCIPATOR-RESIDUARY",
+      "fixtureIds": ["KZ-FR-002-EMANCIPATOR-RESIDUARY-POS", "KZ-FR-002-EMANCIPATOR-RESIDUARY-NEG"],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-EXTENDED-RESIDUARY-PRIORITY",
+      "sha256": "d6ea9efa6a5a67b77e09611f11c80677dc50c4e833fcebd33c9a4b2c5f980af2"
+    },
+    {
+      "ruleId": "KZ-FR-002-NASAB-ASABAH-BLOCKS-EMANCIPATOR",
+      "productionFile": "src/rules/production/KZ-FR-002-NASAB-ASABAH-BLOCKS-EMANCIPATOR.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-002-NASAB-ASABAH-BLOCKS-EMANCIPATOR",
+      "fixtureIds": [
+        "KZ-FR-002-NASAB-ASABAH-BLOCKS-EMANCIPATOR-POS",
+        "KZ-FR-002-NASAB-ASABAH-BLOCKS-EMANCIPATOR-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-EXTENDED-RESIDUARY-PRIORITY",
+      "sha256": "f94841f1de7d175dcadfdfe47042f9901b484ab19ebdf4a805d37661d20bf7e5"
+    },
+    {
+      "ruleId": "KZ-FR-019-FULL-BROTHERS-SON-RESIDUARY",
+      "productionFile": "src/rules/production/KZ-FR-019-FULL-BROTHERS-SON-RESIDUARY.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-FULL-BROTHERS-SON-RESIDUARY",
+      "fixtureIds": [
+        "KZ-FR-019-FULL-BROTHERS-SON-RESIDUARY-POS",
+        "KZ-FR-019-FULL-BROTHERS-SON-RESIDUARY-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-EXTENDED-RESIDUARY-PRIORITY",
+      "sha256": "5cececae80b9cafb0477ccd0a2dbdad43a314a5afa70b2a700d8bce1dc48b92f"
+    },
+    {
+      "ruleId": "KZ-FR-019-NEARER-ASABAH-BLOCKS-FULL-BROTHERS-SON",
+      "productionFile": "src/rules/production/KZ-FR-019-NEARER-ASABAH-BLOCKS-FULL-BROTHERS-SON.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-NEARER-ASABAH-BLOCKS-FULL-BROTHERS-SON",
+      "fixtureIds": [
+        "KZ-FR-019-NEARER-ASABAH-BLOCKS-FULL-BROTHERS-SON-POS",
+        "KZ-FR-019-NEARER-ASABAH-BLOCKS-FULL-BROTHERS-SON-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-EXTENDED-RESIDUARY-PRIORITY",
+      "sha256": "8fb0ba33f37cde9d2a00ce579fef14caffa37f06a281ce5bd6d71778dc2b6407"
+    },
+    {
+      "ruleId": "KZ-FR-019-PATERNAL-BROTHERS-SON-RESIDUARY",
+      "productionFile": "src/rules/production/KZ-FR-019-PATERNAL-BROTHERS-SON-RESIDUARY.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-PATERNAL-BROTHERS-SON-RESIDUARY",
+      "fixtureIds": [
+        "KZ-FR-019-PATERNAL-BROTHERS-SON-RESIDUARY-POS",
+        "KZ-FR-019-PATERNAL-BROTHERS-SON-RESIDUARY-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-EXTENDED-RESIDUARY-PRIORITY",
+      "sha256": "5d435d5c937751aee5ba937f2c5ebd63a8ef4b9562d4a44fc0df2ebd22acccc0"
+    },
+    {
+      "ruleId": "KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-BROTHERS-SON",
+      "productionFile": "src/rules/production/KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-BROTHERS-SON.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-BROTHERS-SON",
+      "fixtureIds": [
+        "KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-BROTHERS-SON-POS",
+        "KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-BROTHERS-SON-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-EXTENDED-RESIDUARY-PRIORITY",
+      "sha256": "307a3e2d3bb60929415b866183c96c06ba423ecdf7fc963df83adb352edabef2"
+    },
+    {
+      "ruleId": "KZ-FR-019-FULL-PATERNAL-UNCLE-RESIDUARY",
+      "productionFile": "src/rules/production/KZ-FR-019-FULL-PATERNAL-UNCLE-RESIDUARY.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-FULL-PATERNAL-UNCLE-RESIDUARY",
+      "fixtureIds": [
+        "KZ-FR-019-FULL-PATERNAL-UNCLE-RESIDUARY-POS",
+        "KZ-FR-019-FULL-PATERNAL-UNCLE-RESIDUARY-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-EXTENDED-RESIDUARY-PRIORITY",
+      "sha256": "c891d701599315a6ecbdf42e18331c98c6ded7da8b0c4c724409f867038d464a"
+    },
+    {
+      "ruleId": "KZ-FR-019-NEARER-ASABAH-BLOCKS-FULL-PATERNAL-UNCLE",
+      "productionFile": "src/rules/production/KZ-FR-019-NEARER-ASABAH-BLOCKS-FULL-PATERNAL-UNCLE.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-NEARER-ASABAH-BLOCKS-FULL-PATERNAL-UNCLE",
+      "fixtureIds": [
+        "KZ-FR-019-NEARER-ASABAH-BLOCKS-FULL-PATERNAL-UNCLE-POS",
+        "KZ-FR-019-NEARER-ASABAH-BLOCKS-FULL-PATERNAL-UNCLE-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-EXTENDED-RESIDUARY-PRIORITY",
+      "sha256": "225964cfb2680017260a52b85200fe80d956c85f7a6e4f4c3a62408fc0a8dda4"
+    },
+    {
+      "ruleId": "KZ-FR-019-PATERNAL-UNCLE-RESIDUARY",
+      "productionFile": "src/rules/production/KZ-FR-019-PATERNAL-UNCLE-RESIDUARY.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-PATERNAL-UNCLE-RESIDUARY",
+      "fixtureIds": [
+        "KZ-FR-019-PATERNAL-UNCLE-RESIDUARY-POS",
+        "KZ-FR-019-PATERNAL-UNCLE-RESIDUARY-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-EXTENDED-RESIDUARY-PRIORITY",
+      "sha256": "4f5498f46da07b5ae7d2d81ccc993afefbcfbe527d7883722812faf710558c7e"
+    },
+    {
+      "ruleId": "KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-UNCLE",
+      "productionFile": "src/rules/production/KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-UNCLE.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-UNCLE",
+      "fixtureIds": [
+        "KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-UNCLE-POS",
+        "KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-UNCLE-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-EXTENDED-RESIDUARY-PRIORITY",
+      "sha256": "f0dac7732f6172855378fb388ba7846da5882fe09799046f18b47c82efa1d53e"
+    },
+    {
+      "ruleId": "KZ-FR-019-FULL-PATERNAL-UNCLES-SON-RESIDUARY",
+      "productionFile": "src/rules/production/KZ-FR-019-FULL-PATERNAL-UNCLES-SON-RESIDUARY.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-FULL-PATERNAL-UNCLES-SON-RESIDUARY",
+      "fixtureIds": [
+        "KZ-FR-019-FULL-PATERNAL-UNCLES-SON-RESIDUARY-POS",
+        "KZ-FR-019-FULL-PATERNAL-UNCLES-SON-RESIDUARY-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-EXTENDED-RESIDUARY-PRIORITY",
+      "sha256": "b53f96d0f1b482e9d605ffbf15e1e6bb09f3b8904474e241b514211b1fcc1b7c"
+    },
+    {
+      "ruleId": "KZ-FR-019-NEARER-ASABAH-BLOCKS-FULL-PATERNAL-UNCLES-SON",
+      "productionFile": "src/rules/production/KZ-FR-019-NEARER-ASABAH-BLOCKS-FULL-PATERNAL-UNCLES-SON.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-NEARER-ASABAH-BLOCKS-FULL-PATERNAL-UNCLES-SON",
+      "fixtureIds": [
+        "KZ-FR-019-NEARER-ASABAH-BLOCKS-FULL-PATERNAL-UNCLES-SON-POS",
+        "KZ-FR-019-NEARER-ASABAH-BLOCKS-FULL-PATERNAL-UNCLES-SON-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-EXTENDED-RESIDUARY-PRIORITY",
+      "sha256": "fc0e8bfcdbc869573f85534fa2a009ac16f87a173fddd7b1f2867223cce0e87e"
+    },
+    {
+      "ruleId": "KZ-FR-019-PATERNAL-UNCLES-SON-RESIDUARY",
+      "productionFile": "src/rules/production/KZ-FR-019-PATERNAL-UNCLES-SON-RESIDUARY.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-PATERNAL-UNCLES-SON-RESIDUARY",
+      "fixtureIds": [
+        "KZ-FR-019-PATERNAL-UNCLES-SON-RESIDUARY-POS",
+        "KZ-FR-019-PATERNAL-UNCLES-SON-RESIDUARY-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-EXTENDED-RESIDUARY-PRIORITY",
+      "sha256": "17b36bdb9640c4dcd0825eec8b1824ba1d0d8889b104a3b1310123042129245f"
+    },
+    {
+      "ruleId": "KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-UNCLES-SON",
+      "productionFile": "src/rules/production/KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-UNCLES-SON.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-UNCLES-SON",
+      "fixtureIds": [
+        "KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-UNCLES-SON-POS",
+        "KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-UNCLES-SON-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-EXTENDED-RESIDUARY-PRIORITY",
+      "sha256": "48925f29da8ab33db337bfee2515febbdbb35258939e6407796b40fe03bdc8d6"
+    },
+    {
+      "ruleId": "KZ-FR-024-UNCERTAIN-DEATH-ORDER-SAFETY-GATE",
+      "productionFile": "src/rules/production/KZ-FR-024-UNCERTAIN-DEATH-ORDER-SAFETY-GATE.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-024-UNCERTAIN-DEATH-ORDER-SAFETY-GATE",
+      "fixtureIds": [
+        "KZ-FR-024-UNCERTAIN-DEATH-ORDER-SAFETY-GATE-POS",
+        "KZ-FR-024-UNCERTAIN-DEATH-ORDER-SAFETY-GATE-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-KZ-FR-024-UNCERTAIN-DEATH-ORDER",
+      "sha256": "777fe08323d1402a0473ecca8a45fde2949a1bdd119f28238c48cf38c8febf14"
+    },
+    {
+      "ruleId": "KZ-FR-013-DIRECT-SON-BLOCKS-SON-LINE-DESCENDANTS",
+      "productionFile": "src/rules/production/KZ-FR-013-DIRECT-SON-BLOCKS-SON-LINE-DESCENDANTS.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-013-DIRECT-SON-BLOCKS-SON-LINE-DESCENDANTS",
+      "fixtureIds": [
+        "KZ-FR-013-DIRECT-SON-BLOCKS-SON-LINE-DESCENDANTS-POS",
+        "KZ-FR-013-DIRECT-SON-BLOCKS-SON-LINE-DESCENDANTS-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-DESCENDANT-LINEAGE-HIERARCHY",
+      "sha256": "2817ca9175969f08381d01a2e928cfd9efdcbe1b48af742a9236a6a04ece2a62"
+    },
+    {
+      "ruleId": "KZ-FR-013-NEARER-MALE-DESCENDANT-BLOCKS-FARTHER",
+      "productionFile": "src/rules/production/KZ-FR-013-NEARER-MALE-DESCENDANT-BLOCKS-FARTHER.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-013-NEARER-MALE-DESCENDANT-BLOCKS-FARTHER",
+      "fixtureIds": [
+        "KZ-FR-013-NEARER-MALE-DESCENDANT-BLOCKS-FARTHER-POS",
+        "KZ-FR-013-NEARER-MALE-DESCENDANT-BLOCKS-FARTHER-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-DESCENDANT-LINEAGE-HIERARCHY",
+      "sha256": "9e0f862536c6b513543abc96c993ff9db7641e0d0355d4df37aa36670ca00526"
+    },
+    {
+      "ruleId": "KZ-FR-013-NEARER-FEMALE-DESCENDANT-BLOCKS-FARTHER",
+      "productionFile": "src/rules/production/KZ-FR-013-NEARER-FEMALE-DESCENDANT-BLOCKS-FARTHER.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-013-NEARER-FEMALE-DESCENDANT-BLOCKS-FARTHER",
+      "fixtureIds": [
+        "KZ-FR-013-NEARER-FEMALE-DESCENDANT-BLOCKS-FARTHER-POS",
+        "KZ-FR-013-NEARER-FEMALE-DESCENDANT-BLOCKS-FARTHER-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-DESCENDANT-LINEAGE-HIERARCHY",
+      "sha256": "0c106c682cf716cd64c0e75e1d9029c382bf93c970a6e51c67b16f20df89528b"
+    },
+    {
+      "ruleId": "KZ-FR-013-DEEPER-MALE-DESCENDANT-RESIDUARY",
+      "productionFile": "src/rules/production/KZ-FR-013-DEEPER-MALE-DESCENDANT-RESIDUARY.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-013-DEEPER-MALE-DESCENDANT-RESIDUARY",
+      "fixtureIds": [
+        "KZ-FR-013-DEEPER-MALE-DESCENDANT-RESIDUARY-POS",
+        "KZ-FR-013-DEEPER-MALE-DESCENDANT-RESIDUARY-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-DESCENDANT-LINEAGE-HIERARCHY",
+      "sha256": "c3aa5fa5d4242e7c265bb201a7202b75722dd2dd0eca7b392631cb7337145e16"
+    },
+    {
+      "ruleId": "KZ-FR-013-DEEPER-FEMALE-DESCENDANT-ONE-HALF",
+      "productionFile": "src/rules/production/KZ-FR-013-DEEPER-FEMALE-DESCENDANT-ONE-HALF.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-013-DEEPER-FEMALE-DESCENDANT-ONE-HALF",
+      "fixtureIds": [
+        "KZ-FR-013-DEEPER-FEMALE-DESCENDANT-ONE-HALF-POS",
+        "KZ-FR-013-DEEPER-FEMALE-DESCENDANT-ONE-HALF-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-DESCENDANT-LINEAGE-HIERARCHY",
+      "sha256": "66c515b17b277b537ed053c1b5b5aa79dc5358c6d84da36243340cbbd915a5ba"
+    },
+    {
+      "ruleId": "KZ-FR-013-DEEPER-FEMALE-DESCENDANT-GROUP-TWO-THIRDS",
+      "productionFile": "src/rules/production/KZ-FR-013-DEEPER-FEMALE-DESCENDANT-GROUP-TWO-THIRDS.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-013-DEEPER-FEMALE-DESCENDANT-GROUP-TWO-THIRDS",
+      "fixtureIds": [
+        "KZ-FR-013-DEEPER-FEMALE-DESCENDANT-GROUP-TWO-THIRDS-POS",
+        "KZ-FR-013-DEEPER-FEMALE-DESCENDANT-GROUP-TWO-THIRDS-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-DESCENDANT-LINEAGE-HIERARCHY",
+      "sha256": "9456b3371fa886b0977cd80c8d44d72ce1762b2e842247898c79600b108b88a0"
+    },
+    {
+      "ruleId": "KZ-FR-013-DEEPER-FEMALE-DESCENDANT-COMPLEMENT-ONE-SIXTH",
+      "productionFile": "src/rules/production/KZ-FR-013-DEEPER-FEMALE-DESCENDANT-COMPLEMENT-ONE-SIXTH.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-013-DEEPER-FEMALE-DESCENDANT-COMPLEMENT-ONE-SIXTH",
+      "fixtureIds": [
+        "KZ-FR-013-DEEPER-FEMALE-DESCENDANT-COMPLEMENT-ONE-SIXTH-POS",
+        "KZ-FR-013-DEEPER-FEMALE-DESCENDANT-COMPLEMENT-ONE-SIXTH-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-DESCENDANT-LINEAGE-HIERARCHY",
+      "sha256": "42bdf4ceeb5cf8568128536fb6b307a5b908f67c67c11889cc88f8c608b7b862"
+    },
+    {
+      "ruleId": "KZ-FR-013-LINEAGE-DESCENDANTS-TWO-TO-ONE",
+      "productionFile": "src/rules/production/KZ-FR-013-LINEAGE-DESCENDANTS-TWO-TO-ONE.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-013-LINEAGE-DESCENDANTS-TWO-TO-ONE",
+      "fixtureIds": [
+        "KZ-FR-013-LINEAGE-DESCENDANTS-TWO-TO-ONE-POS",
+        "KZ-FR-013-LINEAGE-DESCENDANTS-TWO-TO-ONE-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-DESCENDANT-LINEAGE-HIERARCHY",
+      "sha256": "1c7be23f1c08b5a8bb9d037878f8e3e28bf2bd6d010283fd20749888f899bb0d"
+    },
+    {
+      "ruleId": "KZ-FR-017-LINEAGE-GRANDMOTHER-GROUP-ONE-SIXTH",
+      "productionFile": "src/rules/production/KZ-FR-017-LINEAGE-GRANDMOTHER-GROUP-ONE-SIXTH.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-017-LINEAGE-GRANDMOTHER-GROUP-ONE-SIXTH",
+      "fixtureIds": [
+        "KZ-FR-017-LINEAGE-GRANDMOTHER-GROUP-ONE-SIXTH-POS",
+        "KZ-FR-017-LINEAGE-GRANDMOTHER-GROUP-ONE-SIXTH-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-GRANDMOTHER-LINEAGE-HIERARCHY",
+      "sha256": "a085ce48a0834496fd513b32241ba67108d5c1596fc1f3937f2de738fc1fd1dc"
+    },
+    {
+      "ruleId": "KZ-FR-017-MOTHER-BLOCKS-LINEAGE-GRANDMOTHERS",
+      "productionFile": "src/rules/production/KZ-FR-017-MOTHER-BLOCKS-LINEAGE-GRANDMOTHERS.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-017-MOTHER-BLOCKS-LINEAGE-GRANDMOTHERS",
+      "fixtureIds": [
+        "KZ-FR-017-MOTHER-BLOCKS-LINEAGE-GRANDMOTHERS-POS",
+        "KZ-FR-017-MOTHER-BLOCKS-LINEAGE-GRANDMOTHERS-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-GRANDMOTHER-LINEAGE-HIERARCHY",
+      "sha256": "350841286d083b1cd9e29cef0f093d1e4445a7479dcf1bc3203b4d4e47d7f1c6"
+    },
+    {
+      "ruleId": "KZ-FR-017-NEARER-GRANDMOTHER-BLOCKS-FARTHER",
+      "productionFile": "src/rules/production/KZ-FR-017-NEARER-GRANDMOTHER-BLOCKS-FARTHER.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-017-NEARER-GRANDMOTHER-BLOCKS-FARTHER",
+      "fixtureIds": [
+        "KZ-FR-017-NEARER-GRANDMOTHER-BLOCKS-FARTHER-POS",
+        "KZ-FR-017-NEARER-GRANDMOTHER-BLOCKS-FARTHER-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-GRANDMOTHER-LINEAGE-HIERARCHY",
+      "sha256": "217bf7fec27849d2d54f40356928a759c2aa3487c88967489f1146f6237ad90d"
+    },
+    {
+      "ruleId": "KZ-FR-017-NEARER-MATERNAL-GRANDMOTHER-BLOCKS-FARTHER-PATERNAL",
+      "productionFile": "src/rules/production/KZ-FR-017-NEARER-MATERNAL-GRANDMOTHER-BLOCKS-FARTHER-PATERNAL.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-017-NEARER-MATERNAL-GRANDMOTHER-BLOCKS-FARTHER-PATERNAL",
+      "fixtureIds": [
+        "KZ-FR-017-NEARER-MATERNAL-GRANDMOTHER-BLOCKS-FARTHER-PATERNAL-POS",
+        "KZ-FR-017-NEARER-MATERNAL-GRANDMOTHER-BLOCKS-FARTHER-PATERNAL-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-GRANDMOTHER-LINEAGE-HIERARCHY",
+      "sha256": "954fa4a1a2470bed7cb92413c2571fc04eab8072c12ad3a35c47a93c993c139b"
+    },
+    {
+      "ruleId": "KZ-FR-017-MALE-ASCENDANT-BLOCKS-OWN-MOTHER",
+      "productionFile": "src/rules/production/KZ-FR-017-MALE-ASCENDANT-BLOCKS-OWN-MOTHER.ts",
+      "admissionRecordId": "ADMISSION-20260810-KZ-FR-017-MALE-ASCENDANT-BLOCKS-OWN-MOTHER",
+      "fixtureIds": [
+        "KZ-FR-017-MALE-ASCENDANT-BLOCKS-OWN-MOTHER-POS",
+        "KZ-FR-017-MALE-ASCENDANT-BLOCKS-OWN-MOTHER-NEG"
+      ],
+      "sourceComparisonId": "SOURCE-COMPARISON-20260810-GRANDMOTHER-LINEAGE-HIERARCHY",
+      "sha256": "f6963895420f8e5822c550df4b266847682d516dd6719ec7313aa39d54e70da6"
     }
   ]
 }

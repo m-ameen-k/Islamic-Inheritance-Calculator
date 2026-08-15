@@ -1,0 +1,25 @@
+{
+  "admissionRecordId": "ADMISSION-20260809-KZ-FR-029-SINGLE-CLASS-CORRECTION",
+  "ruleId": "KZ-FR-029-SINGLE-CLASS-CORRECTION",
+  "lifecycleStatus": "CALCULATION_READY",
+  "sourceComparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-029",
+  "reviewRecordIds": [
+    "SOURCE-COMPARISON-20260809-KZ-FR-029"
+  ],
+  "fixtureIds": [
+    "KZ-FR-029-SINGLE-CLASS-CORRECTION-POS",
+    "KZ-FR-029-SINGLE-CLASS-CORRECTION-NEG"
+  ],
+  "checks": {
+    "sourceComparisonComplete": true,
+    "executableConditionsUnambiguous": true,
+    "exclusionsComplete": true,
+    "blockingInteractionsExplicit": true,
+    "priorityExplicit": true,
+    "exactSourceDerivedFixturesExist": true,
+    "allAdmissionChecksPass": true
+  },
+  "decision": "ADMITTED",
+  "notes": "Admitted only as the exact atomic relationship or exact bigint correction transform stated by the corroborated parent record."
+}
+

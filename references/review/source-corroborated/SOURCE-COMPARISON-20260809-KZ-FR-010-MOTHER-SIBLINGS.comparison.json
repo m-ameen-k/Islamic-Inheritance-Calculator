@@ -1,0 +1,35 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260809-KZ-FR-010-MOTHER-SIBLINGS",
+  "ruleId": "KZ-FR-010-MOTHER-ONE-SIXTH-SIBLINGS",
+  "parentRuleId": "KZ-FR-010",
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_WITH_IMPLEMENTATION_GAP",
+  "executable": false,
+  "kanzAlMahalliRecord": {
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "evidenceRecordIds": ["KZ-FR-010", "MANUAL-20260727-KZ-FR-010"],
+    "locator": "Printed page 138; local PDF page 9.",
+    "statement": "The mother receives one sixth when two siblings, male or female, are present."
+  },
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locator": "references/source-notes/khulasa/khulasa-full.pdf; printed pages 270 and 272–273; mother fixed-share statement and decrement table.",
+    "printedPages": [270, 272, 273],
+    "visuallyConfirmed": true,
+    "statement": "The mother is reduced from one third to one sixth by a counted plurality of brothers and/or sisters."
+  },
+  "sourceAgreement": {
+    "agrees": true,
+    "detail": "Read together, the sources establish a threshold of two or more siblings, including any male/female combination."
+  },
+  "conditions": ["Mother is present.", "At least two source-counted siblings are present."],
+  "exclusions": [
+    "One sibling does not trigger this branch.",
+    "The descendant branch remains a separate atom."
+  ],
+  "unresolvedQuestions": [
+    "The existing project records do not expressly resolve which siblings still count when another admitted rule totally blocks them from inheriting."
+  ],
+  "readyForAdmission": false,
+  "admissionBlocker": "Blocked-sibling counting is an execution interaction and remains source-incomplete in the available structured records."
+}

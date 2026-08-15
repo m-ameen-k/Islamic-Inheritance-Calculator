@@ -1,0 +1,41 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Manual scan comparison only; this record is not independently executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-024",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "chapter": "كتاب الفرائض",
+    "printedPages": [148],
+    "localPdfPages": [19],
+    "sourceSummary": "Potential mutual heirs who die together or whose death order is unknown do not inherit from one another; each estate passes to that person's other heirs."
+  },
+  "review": {
+    "reviewId": "MANUAL-20260810-KZ-FR-024-UNCERTAIN-DEATH-ORDER",
+    "extractedRuleId": "KZ-FR-024",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "reviewStatus": "MANUALLY_CHECKED",
+    "statusHistory": ["EXTRACTED_NOT_VERIFIED", "MANUAL_SCAN_CHECK_PENDING", "MANUALLY_CHECKED"],
+    "exactArabicChecked": true,
+    "printedPageChecked": true,
+    "localPdfPageChecked": true,
+    "chapterChecked": true,
+    "arabicCorrections": [],
+    "unresolvedWords": [],
+    "explicitConditions": ["The deaths were simultaneous or the earlier death cannot be established."],
+    "explicitExclusions": ["A known death order follows ordinary separate-estate processing."],
+    "explicitOutcome": ["No mutual inheritance is assumed; each estate belongs to that decedent's other heirs."],
+    "reviewExplanation": "The simultaneous/unknown death-order sentence was visually checked on the trusted local Kanz/al-Mahalli scan.",
+    "inferredDetails": [],
+    "missingInformation": ["The current single-estate UI cannot represent the two separate heir snapshots required to distribute both estates."],
+    "conflictingSources": [],
+    "reviewerName": "OpenAI Codex",
+    "reviewerRole": "AI visual transcription assistant; manual scan comparison only; not a qualified Shafi'i scholar",
+    "reviewDate": "2026-08-10",
+    "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED",
+    "approvedCaseIds": [],
+    "implementationSpecification": null,
+    "notes": "Admit a pre-calculation safety gate, not a fabricated linked-estate distribution."
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "templateVersion": "0.1",
+  "warning": "Manual scan comparison only; this record is not independently executable.",
+  "executable": false,
+  "sourceSnapshot": {
+    "extractedRuleId": "KZ-FR-022",
+    "sourceId": "KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3",
+    "originalStatus": "EXTRACTED_NOT_VERIFIED",
+    "printedPages": [147],
+    "localPdfPages": [18],
+    "sourceSummary": "Full siblings count paternal siblings against the grandfather in muqasama. The passage separately treats a present full brother, one full sister completing to one half, and two or more full sisters completing to two thirds; the local Khulasa passage supplies two exact female worked examples."
+  },
+  "review": {
+    "reviewId": "MANUAL-20260810-KZ-FR-022",
+    "extractedRuleId": "KZ-FR-022",
+    "reviewStatus": "MANUALLY_CHECKED",
+    "exactArabicChecked": true,
+    "printedPageChecked": true,
+    "localPdfPageChecked": true,
+    "explicitConditions": [
+      "Grandfather, both full and paternal sibling classes, and at least one full brother.",
+      "Both sibling classes count in the grandfather comparison.",
+      "In the exact first female worked example: one grandfather, one full sister, one paternal brother, and one paternal sister.",
+      "In the exact second female worked example: one grandfather, two full sisters, and one paternal brother."
+    ],
+    "explicitExclusions": [
+      "The existing full-male-line atom does not execute the female completion branches.",
+      "Only the two exact female worked compositions are ready for separate atomic admission; variants with additional fixed-share heirs or different sibling pluralities remain unresolved."
+    ],
+    "unresolvedWords": [],
+    "conflictingSources": [],
+    "reviewerName": "OpenAI Codex",
+    "reviewerRole": "AI visual transcription assistant; not a qualified Shafi'i scholar",
+    "reviewDate": "2026-08-10",
+    "reviewerDecision": "MANUAL_SCAN_CHECK_PASSED_ONLY_NOT_SCHOLAR_VERIFIED"
+  }
+}

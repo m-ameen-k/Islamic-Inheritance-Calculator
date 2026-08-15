@@ -1,0 +1,64 @@
+{
+  "comparisonId": "SOURCE-COMPARISON-20260810-EXTENDED-RESIDUARY-PRIORITY",
+  "parentRuleIds": ["KZ-FR-002", "KZ-FR-019"],
+  "lifecycleStatus": "SOURCE_CORROBORATED",
+  "comparisonStatus": "SOURCE_CORROBORATED_EXACT_FINITE_UI_PRIORITY",
+  "executable": false,
+  "kanzAlMahalliRecords": [
+    {
+      "ruleId": "KZ-FR-019",
+      "locator": "Printed pages 144–145; local PDF pages 15–16.",
+      "scope": "Full and consanguine brother's sons, full and consanguine paternal uncles, their sons, priority, and residue entitlement."
+    },
+    {
+      "ruleId": "KZ-FR-002",
+      "locator": "Printed pages 145–146; local PDF pages 16–17.",
+      "scope": "Direct male/female emancipator follows all nasab residuaries."
+    }
+  ],
+  "khulasaRecord": {
+    "sourceId": "KHULASAT_AL_FIQH_AL_ISLAMI",
+    "locator": "references/source-notes/khulasa/khulasa-full.pdf; printed pages 275 and 277.",
+    "scope": "The male-blocker table enumerates each nearer class, and the distribution paragraph gives the same complete finite priority order through the emancipator."
+  },
+  "shortParaphrase": "After the nearer descendants, ascendants, and sibling residuaries, the first eligible named brother's-son/uncle class receives residue; direct wala' follows all nasab residuaries.",
+  "conditions": [
+    "The heir is one of the exact relationship categories already represented by the UI/domain model.",
+    "All source-prioritized nearer residuaries are absent or actually blocked.",
+    "Members of the same modeled male category share its collective residue equally."
+  ],
+  "exclusions": [
+    "No unmodeled farther agnate, lineage depth, emancipator's agnate, or multiple-emancipator branch is inferred.",
+    "A fixed-share heir is not treated as a blocker unless that heir is actually residuary in the selected case."
+  ],
+  "blockingAndPriorityInteractions": [
+    "Full brother's son precedes consanguine brother's son.",
+    "Consanguine brother's son precedes full paternal uncle.",
+    "Full paternal uncle precedes consanguine paternal uncle.",
+    "Consanguine paternal uncle precedes full paternal uncle's son.",
+    "Full paternal uncle's son precedes consanguine paternal uncle's son.",
+    "Every eligible nasab residuary precedes direct wala'."
+  ],
+  "sourceAgreement": {
+    "agrees": true,
+    "detail": "The two Shafi'i sources give the same finite priority sequence and nasab-before-wala' rule for the modeled categories."
+  },
+  "unresolvedQuestions": [],
+  "readyForAdmission": true,
+  "readyAtomicRuleIds": [
+    "KZ-FR-019-FULL-BROTHERS-SON-RESIDUARY",
+    "KZ-FR-019-NEARER-ASABAH-BLOCKS-FULL-BROTHERS-SON",
+    "KZ-FR-019-PATERNAL-BROTHERS-SON-RESIDUARY",
+    "KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-BROTHERS-SON",
+    "KZ-FR-019-FULL-PATERNAL-UNCLE-RESIDUARY",
+    "KZ-FR-019-NEARER-ASABAH-BLOCKS-FULL-PATERNAL-UNCLE",
+    "KZ-FR-019-PATERNAL-UNCLE-RESIDUARY",
+    "KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-UNCLE",
+    "KZ-FR-019-FULL-PATERNAL-UNCLES-SON-RESIDUARY",
+    "KZ-FR-019-NEARER-ASABAH-BLOCKS-FULL-PATERNAL-UNCLES-SON",
+    "KZ-FR-019-PATERNAL-UNCLES-SON-RESIDUARY",
+    "KZ-FR-019-NEARER-ASABAH-BLOCKS-PATERNAL-UNCLES-SON",
+    "KZ-FR-002-EMANCIPATOR-RESIDUARY",
+    "KZ-FR-002-NASAB-ASABAH-BLOCKS-EMANCIPATOR"
+  ]
+}

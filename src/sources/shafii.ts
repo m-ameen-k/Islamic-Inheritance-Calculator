@@ -65,8 +65,8 @@ export const KHULASAT_AL_FIQH_AL_ISLAMI = {
 } as const satisfies BibliographicSourceRecord;
 
 /**
- * Bibliographic metadata only. The private PDF is not stored or referenced as
- * a repository file, and this catalog contains no executable fiqh rules.
+ * Bibliographic metadata only. Runtime source traceability does not depend on
+ * a local PDF path, and this catalog contains no executable fiqh rules.
  */
 export const SHAFII_BIBLIOGRAPHIC_SOURCES: readonly BibliographicSourceRecord[] = Object.freeze([
   KANZ_AL_RAGHIBIN_MAHALLI_DAR_AL_MINHAJ_2013_V2_P3,
